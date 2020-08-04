@@ -4,8 +4,6 @@ class LemmyAPI {
   /// url of this lemmy instance
   String instanceUrl;
 
-  /// JSON Web Token (https://jwt.io)
-  String jwt;
   V1 v1;
 
   /// initialize lemmy api instance
