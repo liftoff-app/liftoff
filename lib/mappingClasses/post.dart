@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'utility.dart';
+
 part 'post.g.dart';
 
 //TODO: Add methods and fields for comments associated with post.
@@ -57,11 +59,6 @@ class PostView {
     _saved = saved;
   }
 
-  //TODO: Parse date from Json.
-  static DateTime ParseDateFromJson(t) {
-    throw Exception("Not implemented exception");
-  }
-
   @JsonKey(name: "id")
   final int id;
 
@@ -86,10 +83,10 @@ class PostView {
   @JsonKey(name: "locked")
   final bool locked;
 
-  @JsonKey(name: "published", fromJson: ParseDateFromJson)
+  @JsonKey(name: "published", fromJson: UtilityClass.ParseDateFromJson)
   final DateTime published;
 
-  @JsonKey(name: "updated", fromJson: ParseDateFromJson)
+  @JsonKey(name: "updated", fromJson: UtilityClass.ParseDateFromJson)
   final DateTime updated;
 
   @JsonKey(name: "deleted")
@@ -128,7 +125,7 @@ class PostView {
   @JsonKey(name: "creator_name")
   final String creatorName;
 
-  @JsonKey(name: "creator_published", fromJson: ParseDateFromJson)
+  @JsonKey(name: "creator_published", fromJson: UtilityClass.ParseDateFromJson)
   final DateTime creatorPublished;
 
   @JsonKey(name: "creator_avatar")
@@ -173,44 +170,35 @@ class PostView {
   @JsonKey(name: "hot_rank")
   final int hotRank;
 
-  @JsonKey(name: "newest_activity_time", fromJson: ParseDateFromJson)
+  @JsonKey(
+      name: "newest_activity_time", fromJson: UtilityClass.ParseDateFromJson)
   final DateTime newestActivityTime;
 
-  int get userId {
-    return _userId;
-  }
+  int get userId => _userId;
 
   void set userId(int userId) => _userId = userId;
   @JsonKey(name: "user_id")
   int _userId;
 
-  int get myVote {
-    return _myVote;
-  }
+  int get myVote => _myVote;
 
   void set myVote(int myVote) => _myVote = myVote > 0 ? 1 : myVote < 0 ? -1 : 0;
   @JsonKey(name: "my_vote")
   int _myVote;
 
-  bool get subscribed {
-    return _subscribed;
-  }
+  bool get subscribed => _subscribed;
 
   void set subscribed(bool subscribed) => _subscribed = subscribed;
   @JsonKey(name: "subscribed")
   bool _subscribed;
 
-  bool get read {
-    return _read;
-  }
+  bool get read => _read;
 
   void set read(bool read) => _read = read;
   @JsonKey(name: "read")
   bool _read;
 
-  bool get saved {
-    return _saved;
-  }
+  bool get saved => _saved;
 
   void set saved(bool saved) => _saved = saved;
   @JsonKey(name: "saved")
