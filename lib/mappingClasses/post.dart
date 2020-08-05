@@ -2,52 +2,54 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'post.g.dart';
 
+//TODO: Add methods and fields for comments associated with post.
 @JsonSerializable()
 class PostView {
   PostView(
-      this.id,
-      this.postName,
-      this.url,
-      this.body,
-      this.creatorId,
-      this.communityId,
-      this.removed,
-      this.locked,
-      this.published,
-      this.updated,
-      this.deleted,
-      this.nsfw,
-      this.stickied,
-      this.embedTitle,
-      this.embedDescription,
-      this.embedHtml,
-      this.thumbnailUrl,
-      this.apId,
-      this.local,
-      this.creatorActorId,
-      this.creatorLocal,
-      this.creatorName,
-      this.creatorPublished,
-      this.creatorAvatar,
-      this.banned,
-      this.bannedFromCommunity,
-      this.communityActorId,
-      this.communityLocal,
-      this.communityName,
-      this.communityRemoved,
-      this.communityDeleted,
-      this.communityNsfw,
-      this.numberOfComments,
-      this.score,
-      this.upvotes,
-      this.downvotes,
-      this.hotRank,
-      this.newestActivityTime,
-      int userId,
-      int myVote,
-      bool subscribed,
-      bool read,
-      bool saved) {
+    this.id,
+    this.postName,
+    this.url,
+    this.body,
+    this.creatorId,
+    this.communityId,
+    this.removed,
+    this.locked,
+    this.published,
+    this.updated,
+    this.deleted,
+    this.nsfw,
+    this.stickied,
+    this.embedTitle,
+    this.embedDescription,
+    this.embedHtml,
+    this.thumbnailUrl,
+    this.apId,
+    this.local,
+    this.creatorActorId,
+    this.creatorLocal,
+    this.creatorName,
+    this.creatorPublished,
+    this.creatorAvatar,
+    this.banned,
+    this.bannedFromCommunity,
+    this.communityActorId,
+    this.communityLocal,
+    this.communityName,
+    this.communityRemoved,
+    this.communityDeleted,
+    this.communityNsfw,
+    this.numberOfComments,
+    this.score,
+    this.upvotes,
+    this.downvotes,
+    this.hotRank,
+    this.newestActivityTime,
+    int userId,
+    int myVote,
+    bool subscribed,
+    bool read,
+    bool saved,
+  ) {
     _userId = userId;
     _myVote = myVote;
     _subscribed = subscribed;
@@ -186,7 +188,7 @@ class PostView {
     return _myVote;
   }
 
-  void set myVote(int myVote) => _myVote = myVote>0?1:myVote<0?-1:0;
+  void set myVote(int myVote) => _myVote = myVote > 0 ? 1 : myVote < 0 ? -1 : 0;
   @JsonKey(name: "my_vote")
   int _myVote;
 
