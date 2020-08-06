@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lemmur/client/v1/main.dart';
-import 'package:lemmur/client/v1/user_endpoint.dart';
+import 'v1/main.dart';
 
 class LemmyAPI {
   /// url of this lemmy instance
