@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-class UserEndpoint {
-  String instanceUrl;
-  UserEndpoint(this.instanceUrl);
+import 'main.dart';
 
+extension UserEndpoint on V1 {
   /// POST /user/login
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#login
   String login({
@@ -32,7 +31,7 @@ class UserEndpoint {
 
   /// GET /user
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-user-details
-  String getDetails({
+  String getUserDetails({
     int userId,
     String username,
     @required String sort,
@@ -47,7 +46,7 @@ class UserEndpoint {
 
   /// PUT /save_user_settings
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#save-user-settings
-  String updateSettings({
+  String saveUserSettings({
     @required bool showNsfw,
     @required String theme,
     @required int defaultSortType,
@@ -71,7 +70,7 @@ class UserEndpoint {
 
   /// GET /user/mentions
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-user-mentions
-  String getMentions({
+  String getUserMentions({
     String sort,
     @required int page,
     @required int limit,
@@ -83,7 +82,7 @@ class UserEndpoint {
 
   /// POST /user/mention/mark_as_read
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#mark-user-mention-as-read
-  String markMentionsAsRead({
+  String markUserMentionAsRead({
     @required int userMentionId,
     @required bool read,
     @required String auth,
@@ -114,7 +113,7 @@ class UserEndpoint {
 
   /// PUT /private_message
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#edit-private-message
-  String updatePrivateMessage({
+  String editPrivateMessage({
     @required int editId,
     @required String content,
     @required String auth,
@@ -144,7 +143,7 @@ class UserEndpoint {
 
   /// POST /user/mark_all_as_read
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#mark-all-as-read
-  String markAllPrivateMessagesAsRead({
+  String markAllAsRead({
     @required String auth,
   }) {
     throw UnimplementedError();

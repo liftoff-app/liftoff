@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 
-class PostEndpoint {
-  String instanceUrl;
-  PostEndpoint(this.instanceUrl);
+import 'main.dart';
 
+extension PostEndpoint on V1 {
   /// POST /post
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#post
-  String create({
+  String createPost({
     @required String name,
     String url,
     String body,
@@ -19,7 +18,7 @@ class PostEndpoint {
 
   /// GET /post
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-post
-  String get({
+  String getPost({
     @required int id,
     String auth,
   }) {
@@ -27,8 +26,8 @@ class PostEndpoint {
   }
 
   /// GET /post/list
-  ///
-  String getList({
+  /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-posts
+  String getPosts({
     @required String type,
     @required String sort,
     int page,
@@ -40,8 +39,8 @@ class PostEndpoint {
   }
 
   /// POST /post/like
-  ///
-  String vote({
+  /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-post-like
+  String createPostLike({
     @required int postId,
     @required int score,
     @required String auth,
@@ -51,7 +50,7 @@ class PostEndpoint {
 
   /// PUT /post
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#edit-post
-  String update({
+  String editPost({
     @required int editId,
     @required String name,
     String url,
@@ -65,7 +64,7 @@ class PostEndpoint {
   /// POST /post/delete
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#delete-post
   /// delete a post in a user deleting their own kind of way
-  String delete({
+  String deletePost({
     @required int editId,
     @required bool deleted,
     @required String auth,
@@ -76,7 +75,7 @@ class PostEndpoint {
   /// POST /post/remove
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#remove-post
   /// remove post in an admin kind of way
-  String remove({
+  String removePost({
     @required int editId,
     @required bool removed,
     String reason,
@@ -87,7 +86,7 @@ class PostEndpoint {
 
   /// POST /post/save
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#save-post
-  String save({
+  String savePost({
     @required int postId,
     @required bool save,
     @required String auth,

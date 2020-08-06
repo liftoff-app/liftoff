@@ -1,16 +1,13 @@
 import 'package:flutter/foundation.dart';
-import 'post_endpoint.dart';
-import 'user_endpoint.dart';
+
+export 'comment_endpoint.dart';
+export 'post_endpoint.dart';
+export 'user_endpoint.dart';
 
 class V1 {
   String instanceUrl;
 
-  UserEndpoint user;
-  PostEndpoint post;
-
-  V1(this.instanceUrl)
-      : user = UserEndpoint(instanceUrl),
-        post = PostEndpoint(instanceUrl);
+  V1(this.instanceUrl);
 
   /// GET /categories
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#list-categories

@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 
-class CommentEndpoint {
-  String instanceUrl;
-  CommentEndpoint(this.instanceUrl);
+import 'main.dart';
 
+extension CommentEndpoint on V1 {
   /// POST /comment
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-comment
-  String create({
+  String createComment({
     @required String content,
     int parentId,
     @required int postId,
@@ -18,7 +17,7 @@ class CommentEndpoint {
 
   /// PUT /comment
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#edit-comment
-  String edit({
+  String editComment({
     @required String content,
     @required int editId,
     String formId,
@@ -30,7 +29,7 @@ class CommentEndpoint {
   /// POST /comment/delete
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#delete-comment
   /// Only the creator can delete the comment
-  String delete({
+  String deleteComment({
     @required int editId,
     @required bool deleted,
     @required String auth,
@@ -41,7 +40,7 @@ class CommentEndpoint {
   /// POST /comment/remove
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#remove-comment
   /// Only a mod or admin can remove the comment
-  String remove({
+  String removeComment({
     @required int editId,
     @required bool removed,
     String reason,
@@ -52,7 +51,7 @@ class CommentEndpoint {
 
   /// POST /comment/mark_as_read
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#mark-comment-as-read
-  String markAsRead({
+  String markCommentAsRead({
     @required int editId,
     @required bool read,
     @required String auth,
@@ -62,7 +61,7 @@ class CommentEndpoint {
 
   /// POST /comment/save
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#save-comment
-  String save({
+  String saveComment({
     @required int commentId,
     @required bool save,
     @required String auth,
@@ -72,7 +71,7 @@ class CommentEndpoint {
 
   /// POST /comment/like
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-comment-like
-  String vote({
+  String createCommentLike({
     @required int commentId,
     @required int score,
     @required String auth,
