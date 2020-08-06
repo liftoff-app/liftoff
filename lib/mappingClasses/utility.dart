@@ -1,6 +1,7 @@
 class UtilityClass {
-  //TODO: Parse date from Json.
-  static DateTime ParseDateFromJson(t) {
-    throw Exception("Not implemented exception");
+  ///Parses date from Json.
+  ///May return null on wrong argument
+  static DateTime ParseDateFromJson(String t) {
+    return DateTime.tryParse(t);
   }
 }
