@@ -29,3 +29,22 @@ class V1 {
     throw UnimplementedError();
   }
 }
+
+enum Vote {
+  up,
+  none,
+  down,
+}
+
+extension VoteValue on Vote {
+  int get value {
+    switch (this) {
+      case Vote.up:
+        return 1;
+      case Vote.none:
+        return 0;
+      case Vote.down:
+        return -1;
+    }
+  }
+}

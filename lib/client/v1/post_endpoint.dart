@@ -42,7 +42,7 @@ extension PostEndpoint on V1 {
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-post-like
   String createPostLike({
     @required int postId,
-    @required int score,
+    @required Vote score,
     @required String auth,
   }) {
     throw UnimplementedError();

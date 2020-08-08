@@ -73,7 +73,7 @@ extension CommentEndpoint on V1 {
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-comment-like
   String createCommentLike({
     @required int commentId,
-    @required int score,
+    @required Vote score,
     @required String auth,
   }) {
     throw UnimplementedError();
