@@ -68,7 +68,7 @@ class PostView {
   /// can be null
   final bool saved;
 
-  PostView({
+  const PostView({
     this.id,
     this.name,
     this.url,

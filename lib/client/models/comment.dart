@@ -53,36 +53,36 @@ class CommentView {
 
   const CommentView({
     this.id,
-    this.creatorId
+    this.creatorId,
     this.postId,
     this.postName,
     this.parentId,
-    this.content
-    this.removed
+    this.content,
+    this.removed,
     this.read,
-    this.published
-    this.updated
-    this.deleted
+    this.published,
+    this.updated,
+    this.deleted,
     this.apId,
-    this.local
-    this.communityId
+    this.local,
+    this.communityId,
     this.communityActorId,
     this.communityLocal,
-    this.communityName
-    this.communityIcon
+    this.communityName,
+    this.communityIcon,
     this.banned,
-    this.bannedFromCommunity
+    this.bannedFromCommunity,
     this.creatorActorId,
     this.creatorLocal,
-    this.creatorName
+    this.creatorName,
     this.creatorPreferredUsername,
     this.creatorPublished,
-    this.creatorAvatar
-    this.score
-    this.upvotes
-    this.downvotes
-    this.hotRank
-    this.hotRankActive
+    this.creatorAvatar,
+    this.score,
+    this.upvotes,
+    this.downvotes,
+    this.hotRank,
+    this.hotRankActive,
     this.userId,
     this.myVote,
     this.subscribed,
