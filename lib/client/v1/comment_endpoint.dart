@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 
+import '../models/comment.dart';
 import 'main.dart';
 
 extension CommentEndpoint on V1 {
   /// POST /comment
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-comment
-  String createComment({
+  Future<CommentView> createComment({
     @required String content,
     int parentId,
     @required int postId,
@@ -17,7 +18,7 @@ extension CommentEndpoint on V1 {
 
   /// PUT /comment
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#edit-comment
-  String editComment({
+  Future<CommentView> editComment({
     @required String content,
     @required int editId,
     String formId,
@@ -29,7 +30,7 @@ extension CommentEndpoint on V1 {
   /// POST /comment/delete
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#delete-comment
   /// Only the creator can delete the comment
-  String deleteComment({
+  Future<CommentView> deleteComment({
     @required int editId,
     @required bool deleted,
     @required String auth,
@@ -40,7 +41,7 @@ extension CommentEndpoint on V1 {
   /// POST /comment/remove
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#remove-comment
   /// Only a mod or admin can remove the comment
-  String removeComment({
+  Future<CommentView> removeComment({
     @required int editId,
     @required bool removed,
     String reason,
@@ -51,7 +52,7 @@ extension CommentEndpoint on V1 {
 
   /// POST /comment/mark_as_read
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#mark-comment-as-read
-  String markCommentAsRead({
+  Future<CommentView> markCommentAsRead({
     @required int editId,
     @required bool read,
     @required String auth,
@@ -61,7 +62,7 @@ extension CommentEndpoint on V1 {
 
   /// POST /comment/save
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#save-comment
-  String saveComment({
+  Future<CommentView> saveComment({
     @required int commentId,
     @required bool save,
     @required String auth,
@@ -71,7 +72,7 @@ extension CommentEndpoint on V1 {
 
   /// POST /comment/like
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-comment-like
-  String createCommentLike({
+  Future<CommentView> createCommentLike({
     @required int commentId,
     @required Vote score,
     @required String auth,

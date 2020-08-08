@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 
+import '../models/post.dart';
 import 'main.dart';
 
 extension PostEndpoint on V1 {
   /// POST /post
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#post
-  String createPost({
+  Future<PostView> createPost({
     @required String name,
     String url,
     String body,
@@ -27,7 +28,7 @@ extension PostEndpoint on V1 {
 
   /// GET /post/list
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-posts
-  String getPosts({
+  Future<PostView> getPosts({
     @required String type,
     @required String sort,
     int page,
@@ -40,7 +41,7 @@ extension PostEndpoint on V1 {
 
   /// POST /post/like
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-post-like
-  String createPostLike({
+  Future<PostView> createPostLike({
     @required int postId,
     @required Vote score,
     @required String auth,
@@ -50,7 +51,7 @@ extension PostEndpoint on V1 {
 
   /// PUT /post
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#edit-post
-  String editPost({
+  Future<PostView> editPost({
     @required int editId,
     @required String name,
     String url,
@@ -64,7 +65,7 @@ extension PostEndpoint on V1 {
   /// POST /post/delete
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#delete-post
   /// delete a post in a user deleting their own kind of way
-  String deletePost({
+  Future<PostView> deletePost({
     @required int editId,
     @required bool deleted,
     @required String auth,
@@ -75,7 +76,7 @@ extension PostEndpoint on V1 {
   /// POST /post/remove
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#remove-post
   /// remove post in an admin kind of way
-  String removePost({
+  Future<PostView> removePost({
     @required int editId,
     @required bool removed,
     String reason,
@@ -86,7 +87,7 @@ extension PostEndpoint on V1 {
 
   /// POST /post/save
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#save-post
-  String savePost({
+  Future<PostView> savePost({
     @required int postId,
     @required bool save,
     @required String auth,
