@@ -7,8 +7,10 @@ part 'post.g.dart';
 class PostView {
   final int id;
   final String name;
+
   /// can be null
   final String url;
+
   /// can be null
   final String body;
   final int creatorId;
@@ -16,18 +18,22 @@ class PostView {
   final bool removed;
   final bool locked;
   final DateTime published;
+
   /// can be null
-  @JsonKey(fromJson: DateTime.tryParse)
   final DateTime updated;
   final bool deleted;
   final bool nsfw;
   final bool stickied;
+
   /// can be null
   final String embedTitle;
+
   /// can be null
   final String embedDescription;
+
   /// can be null
   final String embedHtml;
+
   /// can be null
   final String thumbnailUrl;
   final String apId;
@@ -35,9 +41,11 @@ class PostView {
   final String creatorActorId;
   final bool creatorLocal;
   final String creatorName;
+
   /// can be null
   final String creatorPreferredUsername;
   final DateTime creatorPublished;
+
   /// can be null
   final String creatorAvatar;
   final bool banned;
@@ -45,6 +53,7 @@ class PostView {
   final String communityActorId;
   final bool communityLocal;
   final String communityName;
+
   /// can be null
   final String communityIcon;
   final bool communityRemoved;
@@ -57,14 +66,19 @@ class PostView {
   final int hotRank;
   final int hotRankActive;
   final DateTime newestActivityTime;
+
   /// can be null
   final int userId;
+
   /// can be null
   final int myVote;
+
   /// can be null
   final bool subscribed;
+
   /// can be null
   final bool read;
+
   /// can be null
   final bool saved;
 

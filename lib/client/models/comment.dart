@@ -9,14 +9,15 @@ class CommentView {
   final int creatorId;
   final int postId;
   final String postName;
+
   /// can be null
   final int parentId;
   final String content;
   final bool removed;
   final bool read;
   final DateTime published;
+
   /// can be null
-  @JsonKey(fromJson: DateTime.tryParse)
   final DateTime updated;
   final bool deleted;
   final String apId;
@@ -25,6 +26,7 @@ class CommentView {
   final String communityActorId;
   final bool communityLocal;
   final String communityName;
+
   /// can be null
   final String communityIcon;
   final bool banned;
@@ -32,9 +34,11 @@ class CommentView {
   final String creatorActorId;
   final bool creatorLocal;
   final String creatorName;
+
   /// can be null
   final String creatorPreferredUsername;
   final DateTime creatorPublished;
+
   /// can be null
   final String creatorAvatar;
   final int score;
@@ -42,12 +46,16 @@ class CommentView {
   final int downvotes;
   final int hotRank;
   final int hotRankActive;
+
   /// can be null
   final int userId;
+
   /// can be null
   final int myVote;
+
   /// can be null
   final bool subscribed;
+
   /// can be null
   final bool saved;
 

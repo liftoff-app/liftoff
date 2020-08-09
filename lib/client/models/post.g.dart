@@ -19,7 +19,9 @@ PostView _$PostViewFromJson(Map<String, dynamic> json) {
     published: json['published'] == null
         ? null
         : DateTime.parse(json['published'] as String),
-    updated: DateTime.tryParse(json['updated'] as String),
+    updated: json['updated'] == null
+        ? null
+        : DateTime.parse(json['updated'] as String),
     deleted: json['deleted'] as bool,
     nsfw: json['nsfw'] as bool,
     stickied: json['stickied'] as bool,

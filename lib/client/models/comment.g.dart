@@ -19,7 +19,9 @@ CommentView _$CommentViewFromJson(Map<String, dynamic> json) {
     published: json['published'] == null
         ? null
         : DateTime.parse(json['published'] as String),
-    updated: DateTime.tryParse(json['updated'] as String),
+    updated: json['updated'] == null
+        ? null
+        : DateTime.parse(json['updated'] as String),
     deleted: json['deleted'] as bool,
     apId: json['ap_id'] as String,
     local: json['local'] as bool,
