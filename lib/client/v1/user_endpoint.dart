@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:lemmur/client/models/captcha.dart';
 import '../models/private_message.dart';
 
 import 'main.dart';
