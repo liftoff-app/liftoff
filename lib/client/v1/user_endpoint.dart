@@ -25,7 +25,7 @@ extension UserEndpoint on V1 {
 
   /// GET /user/get_captcha
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-captcha
-  String getCaptcha() {
+  Future<Captcha> getCaptcha() {
     throw UnimplementedError();
   }
 

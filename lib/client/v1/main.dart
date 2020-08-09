@@ -49,3 +49,12 @@ extension VoteValue on Vote {
     throw Exception("unreachable");
   }
 }
+
+class Captcha {
+  final String png;
+
+  /// can be null
+  final String wav;
+  final String uuid;
+  Captcha({this.png, this.wav, this.uuid});
+}
