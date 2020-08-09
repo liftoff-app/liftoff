@@ -108,12 +108,14 @@ class ReplyView {
   final int creatorId;
   final int postId;
   final String postName;
+
   /// can be null
   final int parentId;
   final String content;
   final bool removed;
   final bool read;
   final DateTime published;
+
   /// can be null
   final DateTime updated;
   final bool deleted;
@@ -123,6 +125,7 @@ class ReplyView {
   final String communityActorId;
   final bool communityLocal;
   final String communityName;
+
   /// can be null
   final String communityIcon;
   final bool banned;
@@ -130,8 +133,10 @@ class ReplyView {
   final String creatorActorId;
   final bool creatorLocal;
   final String creatorName;
+
   /// can be null
   final String creatorPreferredUsername;
+
   /// can be null
   final String creatorAvatar;
   final DateTime creatorPublished;
@@ -140,12 +145,16 @@ class ReplyView {
   final int downvotes;
   final int hotRank;
   final int hotRankActive;
+
   /// can be null
   final int userId;
+
   /// can be null
   final int myVote;
+
   /// can be null
   final bool subscribed;
+
   /// can be null
   final bool saved;
   final int recipientId;

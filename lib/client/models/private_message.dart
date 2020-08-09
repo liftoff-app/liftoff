@@ -12,20 +12,25 @@ class PrivateMessageView {
   final bool deleted;
   final bool read;
   final DateTime published;
+
   /// can be null
   final DateTime updated;
   final String apId;
   final bool local;
   final String creatorName;
+
   /// can be null
   final String creatorPreferredUsername;
+
   /// can be null
   final String creatorAvatar;
   final String creatorActorId;
   final bool creatorLocal;
   final String recipientName;
+
   /// can be null
   final String recipientPreferredUsername;
+
   /// can be null
   final String recipientAvatar;
   final String recipientActorId;

@@ -8,16 +8,20 @@ class CommunityView {
   final int id;
   final String name;
   final String title;
+
   /// can be null
   final String icon;
+
   /// can be null
   final String banner;
+
   /// can be null
   final String description;
   final int categoryId;
   final int creatorId;
   final bool removed;
   final DateTime published;
+
   /// can be null
   final DateTime updated;
   final bool deleted;
@@ -28,8 +32,10 @@ class CommunityView {
   final String creatorActorId;
   final bool creatorLocal;
   final String creatorName;
+
   /// can be null
   final String creatorPreferredUsername;
+
   /// can be null
   final String creatorAvatar;
   final String categoryName;
@@ -37,8 +43,10 @@ class CommunityView {
   final int numberOfPosts;
   final int numberOfComments;
   final int hotRank;
+
   /// can be null
   final int userId;
+
   /// can be null
   final bool subscribed;
 
