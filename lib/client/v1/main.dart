@@ -46,5 +46,6 @@ extension VoteValue on Vote {
       case Vote.down:
         return -1;
     }
+    throw Exception("unreachable");
   }
 }
