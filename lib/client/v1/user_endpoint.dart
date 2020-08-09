@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../models/private_message.dart';
 
 import 'main.dart';
 
@@ -92,7 +93,7 @@ extension UserEndpoint on V1 {
 
   /// GET /private_message/list
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-private-messages
-  String getPrivateMessages({
+  Future<List<PrivateMessageView>> getPrivateMessages({
     @required bool unreadOnly,
     int page,
     int limit,
@@ -103,7 +104,7 @@ extension UserEndpoint on V1 {
 
   /// POST /private_message
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#create-private-message
-  String createPrivateMessage({
+  Future<PrivateMessageView> createPrivateMessage({
     @required String content,
     @required int recipientId,
     @required String auth,
@@ -113,7 +114,7 @@ extension UserEndpoint on V1 {
 
   /// PUT /private_message
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#edit-private-message
-  String editPrivateMessage({
+  Future<PrivateMessageView> editPrivateMessage({
     @required int editId,
     @required String content,
     @required String auth,
@@ -123,7 +124,7 @@ extension UserEndpoint on V1 {
 
   /// POST /private_message/delete
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#delete-private-message
-  String deletePrivateMessage({
+  Future<PrivateMessageView> deletePrivateMessage({
     @required int editId,
     @required bool deleted,
     @required String auth,
@@ -133,7 +134,7 @@ extension UserEndpoint on V1 {
 
   /// POST /private_message/mark_as_read
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#mark-private-message-as-read
-  String markPrivateMessageAsRead({
+  Future<PrivateMessageView> markPrivateMessageAsRead({
     @required int editId,
     @required bool read,
     @required String auth,
