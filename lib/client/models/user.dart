@@ -8,16 +8,22 @@ class UserView {
   final int id;
   final String actorId;
   final String name;
+
   /// can be null
   final String preferredUsername;
+
   /// can be null
   final String avatar;
+
   /// can be null
   final String banner;
+
   /// can be null
   final String email;
+
   /// can be null
   final String matrixUserId;
+
   /// can be null
   final String bio;
   final bool local;
@@ -31,6 +37,27 @@ class UserView {
   final int numberOfComments;
   final int commentScore;
 
+  const UserView({
+    this.id,
+    this.actorId,
+    this.name,
+    this.preferredUsername,
+    this.avatar,
+    this.banner,
+    this.email,
+    this.matrixUserId,
+    this.bio,
+    this.local,
+    this.admin,
+    this.banned,
+    this.showAvatars,
+    this.sendNotificationsToEmail,
+    this.published,
+    this.numberOfPosts,
+    this.postScore,
+    this.numberOfComments,
+    this.commentScore,
+  });
   factory UserView.fromJson(Map<String, dynamic> json) =>
       _$UserViewFromJson(json);
 }
