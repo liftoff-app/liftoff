@@ -52,3 +52,58 @@ extension VoteValue on Vote {
     throw Exception("unreachable");
   }
 }
+
+enum PostType {
+  all,
+  subscribed,
+  community,
+}
+
+extension PostTypeValue on PostType {
+  String get value {
+    switch (this) {
+      case PostType.all:
+        return "All";
+      case PostType.subscribed:
+        return "Subscribed";
+      case PostType.community:
+        return "Community";
+    }
+    throw Exception("unreachable");
+  }
+}
+
+enum SortType {
+  active,
+  hot,
+  new_,
+  topDay,
+  topWeek,
+  topMonth,
+  topYear,
+  topAll,
+}
+
+extension SortTypeValue on SortType {
+  String get value {
+    switch (this) {
+      case SortType.active:
+        return "Active";
+      case SortType.hot:
+        return "Hot";
+      case SortType.new_:
+        return "New";
+      case SortType.topDay:
+        return "TopDay";
+      case SortType.topWeek:
+        return "TopWeek";
+      case SortType.topMonth:
+        return "TopMonth";
+      case SortType.topYear:
+        return "TopYear";
+      case SortType.topAll:
+        return "TopAll";
+    }
+    throw Exception("unreachable");
+  }
+}
