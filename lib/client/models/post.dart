@@ -1,5 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import './comment.dart';
+import './community.dart';
+
 part 'post.g.dart';
 
 /// based on https://github.com/LemmyNet/lemmy/blob/464ea862b10fa7b226b2550268e40d8e685a939c/server/lemmy_db/src/post_view.rs#L113
@@ -133,4 +136,23 @@ class PostView {
 
   factory PostView.fromJson(Map<String, dynamic> json) =>
       _$PostViewFromJson(json);
+}
+
+/// based on https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-post
+@JsonSerializable(createToJson: false)
+class FullPost {
+  final PostView post;
+  final List<CommentView> comments;
+  final CommunityView community;
+  final List<CommunityModeratorView> moderators;
+
+  const FullPost({
+    this.post,
+    this.comments,
+    this.community,
+    this.moderators,
+  });
+
+  factory FullPost.fromJson(Map<String, dynamic> json) =>
+    _$FullPostFromJson(json);
 }

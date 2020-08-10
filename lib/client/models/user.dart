@@ -1,5 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import './comment.dart';
+import './post.dart';
+import './community.dart';
+
 part 'user.g.dart';
 
 /// based on https://github.com/LemmyNet/lemmy/blob/464ea862b10fa7b226b2550268e40d8e685a939c/server/lemmy_db/src/user_view.rs#L58
@@ -158,4 +162,26 @@ class UserMentionView {
 
   factory UserMentionView.fromJson(Map<String, dynamic> json) =>
       _$UserMentionViewFromJson(json);
+}
+
+
+/// based on https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-user-details
+@JsonSerializable(createToJson: false)
+class UserDetails {
+  final UserView user;
+  final List<CommunityFollowerView> follows;
+  final List<CommunityModeratorView> moderates;
+  final List<CommentView> comments;
+  final List<PostView> posts;
+
+  const UserDetails({
+    this.user,
+    this.follows,
+    this.moderates,
+    this.comments,
+    this.posts,
+  });
+
+  factory UserDetails.fromJson(Map<String, dynamic> json) =>
+        _$UserDetailsFromJson(json);
 }
