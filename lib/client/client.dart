@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show required;
 import 'v1/main.dart';
 
 class LemmyAPI {
