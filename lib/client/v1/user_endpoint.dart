@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:lemmur/client/models/captcha.dart';
+import 'package:lemmur/client/models/comment.dart';
+import 'package:lemmur/client/models/user.dart';
 import '../models/private_message.dart';
 
 import 'main.dart';
@@ -7,7 +9,8 @@ import 'main.dart';
 extension UserEndpoint on V1 {
   /// POST /user/login
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#login
-  String login({
+  /// returns jwt
+  Future<String> login({
     String usernameOrEmail,
     String password,
   }) {
@@ -17,7 +20,8 @@ extension UserEndpoint on V1 {
 
   /// POST /user/register
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#register
-  String register({
+  /// returns jwt
+  Future<String> register({
     @required String username,
     String email,
     String password,
@@ -33,7 +37,7 @@ extension UserEndpoint on V1 {
 
   /// GET /user
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-user-details
-  String getUserDetails({
+  Future<UserDetails> getUserDetails({
     int userId,
     String username,
     @required String sort,
@@ -48,7 +52,8 @@ extension UserEndpoint on V1 {
 
   /// PUT /save_user_settings
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#save-user-settings
-  String saveUserSettings({
+  /// returns jwt
+  Future<String> saveUserSettings({
     @required bool showNsfw,
     @required String theme,
     @required int defaultSortType,
@@ -60,7 +65,7 @@ extension UserEndpoint on V1 {
 
   /// GET /user/replies
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-replies--inbox
-  String getReplies({
+  Future<List<ReplyView>> getReplies({
     @required String sort,
     int page,
     int limit,
@@ -72,7 +77,7 @@ extension UserEndpoint on V1 {
 
   /// GET /user/mentions
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-user-mentions
-  String getUserMentions({
+  Future<List<UserMentionView>> getUserMentions({
     String sort,
     @required int page,
     @required int limit,
@@ -84,7 +89,7 @@ extension UserEndpoint on V1 {
 
   /// POST /user/mention/mark_as_read
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#mark-user-mention-as-read
-  String markUserMentionAsRead({
+  Future<UserMentionView> markUserMentionAsRead({
     @required int userMentionId,
     @required bool read,
     @required String auth,
@@ -145,7 +150,7 @@ extension UserEndpoint on V1 {
 
   /// POST /user/mark_all_as_read
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#mark-all-as-read
-  String markAllAsRead({
+  Future<List<ReplyView>> markAllAsRead({
     @required String auth,
   }) {
     throw UnimplementedError();
@@ -153,7 +158,8 @@ extension UserEndpoint on V1 {
 
   /// POST /user/delete_account
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#delete-account
-  String deleteAccount({
+  /// returns jwt
+  Future<String> deleteAccount({
     @required String password,
     @required String auth,
   }) {

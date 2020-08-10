@@ -19,7 +19,7 @@ extension PostEndpoint on V1 {
 
   /// GET /post
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-post
-  String getPost({
+  Future<FullPost> getPost({
     @required int id,
     String auth,
   }) {
