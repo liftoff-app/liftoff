@@ -58,6 +58,104 @@ class UserView {
     this.numberOfComments,
     this.commentScore,
   });
+
   factory UserView.fromJson(Map<String, dynamic> json) =>
       _$UserViewFromJson(json);
+}
+
+/// based on https://github.com/LemmyNet/lemmy/blob/464ea862b10fa7b226b2550268e40d8e685a939c/server/lemmy_db/src/user_mention_view.rs#L90
+@JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
+class UserMentionView {
+  final int id;
+  final int userMentionId;
+  final int creatorId;
+  final String creatorActorId;
+  final bool creatorLocal;
+  final int postId;
+  final String postName;
+  
+  /// can be null
+  final int parentId;
+  final String content;
+  final bool removed;
+  final bool read;
+  final DateTime published;
+  
+  /// can be null
+  final DateTime updated;
+  final bool deleted;
+  final int communityId;
+  final String communityActorId;
+  final bool communityLocal;
+  final String communityName;
+  
+  /// can be null
+  final String communityIcon;
+  final bool banned;
+  final bool bannedFromCommunity;
+  final String creatorName;
+  
+  /// can be null
+  final String creatorPreferredUsername;
+  
+  /// can be null
+  final String creatorAvatar;
+  final int score;
+  final int upvotes;
+  final int downvotes;
+  final int hotRank;
+  final int hotRankActive;
+  
+  /// can be null
+  final int userId;
+  
+  /// can be null
+  final int myVote;
+  
+  /// can be null
+  final bool saved;
+  final int recipientId;
+  final String recipientActorId;
+  final bool recipientLocal;
+
+  const UserMentionView({
+    this.id,
+    this.userMentionId,
+    this.creatorId,
+    this.creatorActorId,
+    this.creatorLocal,
+    this.postId,
+    this.postName,
+    this.parentId,
+    this.content,
+    this.removed,
+    this.read,
+    this.published,
+    this.updated,
+    this.deleted,
+    this.communityId,
+    this.communityActorId,
+    this.communityLocal,
+    this.communityName,
+    this.communityIcon,
+    this.banned,
+    this.bannedFromCommunity,
+    this.creatorName,
+    this.creatorPreferredUsername,
+    this.creatorAvatar,
+    this.score,
+    this.upvotes,
+    this.downvotes,
+    this.hotRank,
+    this.hotRankActive,
+    this.userId,
+    this.myVote,
+    this.saved,
+    this.recipientId,
+    this.recipientActorId,
+    this.recipientLocal,
+  });
+
+  factory UserMentionView.fromJson(Map<String, dynamic> json) =>
+      _$UserMentionViewFromJson(json);
 }
