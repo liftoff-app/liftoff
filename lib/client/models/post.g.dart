@@ -64,3 +64,23 @@ PostView _$PostViewFromJson(Map<String, dynamic> json) {
     saved: json['saved'] as bool,
   );
 }
+
+FullPost _$FullPostFromJson(Map<String, dynamic> json) {
+  return FullPost(
+    post: json['post'] == null
+        ? null
+        : PostView.fromJson(json['post'] as Map<String, dynamic>),
+    comments: (json['comments'] as List)
+        ?.map((e) =>
+            e == null ? null : CommentView.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    community: json['community'] == null
+        ? null
+        : CommunityView.fromJson(json['community'] as Map<String, dynamic>),
+    moderators: (json['moderators'] as List)
+        ?.map((e) => e == null
+            ? null
+            : CommunityModeratorView.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}

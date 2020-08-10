@@ -44,3 +44,45 @@ CommunityView _$CommunityViewFromJson(Map<String, dynamic> json) {
     subscribed: json['subscribed'] as bool,
   );
 }
+
+CommunityFollowerView _$CommunityFollowerViewFromJson(
+    Map<String, dynamic> json) {
+  return CommunityFollowerView(
+    id: json['id'] as int,
+    communityId: json['community_id'] as int,
+    userId: json['user_id'] as int,
+    published: json['published'] == null
+        ? null
+        : DateTime.parse(json['published'] as String),
+    userActorId: json['user_actor_id'] as String,
+    userLocal: json['user_local'] as bool,
+    userName: json['user_name'] as String,
+    userPreferredUsername: json['user_preferred_username'] as String,
+    avatar: json['avatar'] as String,
+    communityActorId: json['community_actor_id'] as String,
+    communityLocal: json['community_local'] as bool,
+    communityName: json['community_name'] as String,
+    communityIcon: json['community_icon'] as String,
+  );
+}
+
+CommunityModeratorView _$CommunityModeratorViewFromJson(
+    Map<String, dynamic> json) {
+  return CommunityModeratorView(
+    id: json['id'] as int,
+    communityId: json['community_id'] as int,
+    userId: json['user_id'] as int,
+    published: json['published'] == null
+        ? null
+        : DateTime.parse(json['published'] as String),
+    userActorId: json['user_actor_id'] as String,
+    userLocal: json['user_local'] as bool,
+    userName: json['user_name'] as String,
+    userPreferredUsername: json['user_preferred_username'] as String,
+    avatar: json['avatar'] as String,
+    communityActorId: json['community_actor_id'] as String,
+    communityLocal: json['community_local'] as bool,
+    communityName: json['community_name'] as String,
+    communityIcon: json['community_icon'] as String,
+  );
+}
