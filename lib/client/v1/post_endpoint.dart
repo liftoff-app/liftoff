@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show required;
 
 import '../models/post.dart';
 import 'main.dart';

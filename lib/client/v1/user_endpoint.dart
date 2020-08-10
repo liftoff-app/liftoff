@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show required;
 import 'package:lemmur/client/models/captcha.dart';
 import 'package:lemmur/client/models/comment.dart';
 import 'package:lemmur/client/models/user.dart';
