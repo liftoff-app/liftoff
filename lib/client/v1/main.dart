@@ -1,4 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show required;
+import 'package:lemmur/client/models/search.dart';
+
+import '../models/category.dart';
 
 export 'comment_endpoint.dart';
 export 'post_endpoint.dart';
@@ -11,13 +14,13 @@ class V1 {
 
   /// GET /categories
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#list-categories
-  String listCategories() {
+  Future<List<Category>> listCategories() {
     throw UnimplementedError();
   }
 
   /// POST /search
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#search
-  String search({
+  Search search({
     @required String q,
     @required String type,
     String communityId,
