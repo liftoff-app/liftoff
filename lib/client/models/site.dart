@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'site.g.dart';
 
@@ -7,28 +7,28 @@ part 'site.g.dart';
 class SiteView {
   final int id;
   final String name;
-  
+
   /// can be null
   final String description;
   final int creatorId;
   final DateTime published;
-  
+
   /// can be null
   final DateTime updated;
   final bool enableDownvotes;
   final bool openRegistration;
   final bool enableNsfw;
-  
+
   /// can be null
   final String icon;
-  
+
   /// can be null
   final String banner;
   final String creatorName;
-  
+
   /// can be null
   final String creatorPreferredUsername;
-  
+
   /// can be null
   final String creatorAvatar;
   final int numberOfUsers;
