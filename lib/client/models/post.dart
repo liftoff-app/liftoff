@@ -154,5 +154,5 @@ class FullPost {
   });
 
   factory FullPost.fromJson(Map<String, dynamic> json) =>
-    _$FullPostFromJson(json);
+      _$FullPostFromJson(json);
 }

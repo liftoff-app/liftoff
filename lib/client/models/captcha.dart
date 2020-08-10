@@ -10,11 +10,11 @@ class Captcha {
   /// can be null
   final String wav;
   final String uuid;
-  
+
   const Captcha({
     this.png,
     this.wav,
-    this.uuid
+    this.uuid,
   });
 
   factory Captcha.fromJson(Map<String, dynamic> json) =>

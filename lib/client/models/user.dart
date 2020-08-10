@@ -77,14 +77,14 @@ class UserMentionView {
   final bool creatorLocal;
   final int postId;
   final String postName;
-  
+
   /// can be null
   final int parentId;
   final String content;
   final bool removed;
   final bool read;
   final DateTime published;
-  
+
   /// can be null
   final DateTime updated;
   final bool deleted;
@@ -92,16 +92,16 @@ class UserMentionView {
   final String communityActorId;
   final bool communityLocal;
   final String communityName;
-  
+
   /// can be null
   final String communityIcon;
   final bool banned;
   final bool bannedFromCommunity;
   final String creatorName;
-  
+
   /// can be null
   final String creatorPreferredUsername;
-  
+
   /// can be null
   final String creatorAvatar;
   final int score;
@@ -109,13 +109,13 @@ class UserMentionView {
   final int downvotes;
   final int hotRank;
   final int hotRankActive;
-  
+
   /// can be null
   final int userId;
-  
+
   /// can be null
   final int myVote;
-  
+
   /// can be null
   final bool saved;
   final int recipientId;
@@ -164,7 +164,6 @@ class UserMentionView {
       _$UserMentionViewFromJson(json);
 }
 
-
 /// based on https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-user-details
 @JsonSerializable(createToJson: false)
 class UserDetails {
@@ -183,5 +182,5 @@ class UserDetails {
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json) =>
-        _$UserDetailsFromJson(json);
+      _$UserDetailsFromJson(json);
 }
