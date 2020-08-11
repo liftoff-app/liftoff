@@ -8,7 +8,7 @@ part of 'search.dart';
 
 Search _$SearchFromJson(Map<String, dynamic> json) {
   return Search(
-    type_: json['type_'] as String,
+    type: json['type_'] as String,
     comments: (json['comments'] as List)
         ?.map((e) =>
             e == null ? null : CommentView.fromJson(e as Map<String, dynamic>))
