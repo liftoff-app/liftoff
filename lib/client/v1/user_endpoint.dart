@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart' show required;
 import 'package:lemmur/client/models/captcha.dart';
 import 'package:lemmur/client/models/comment.dart';
 import 'package:lemmur/client/models/user.dart';
-import '../models/private_message.dart';
 
+import '../models/private_message.dart';
 import 'main.dart';
 
 extension UserEndpoint on V1 {
@@ -40,7 +40,7 @@ extension UserEndpoint on V1 {
   Future<UserDetails> getUserDetails({
     int userId,
     String username,
-    @required String sort,
+    @required SortType sort,
     int page,
     int limit,
     int communityId,
@@ -56,8 +56,8 @@ extension UserEndpoint on V1 {
   Future<String> saveUserSettings({
     @required bool showNsfw,
     @required String theme,
-    @required int defaultSortType,
-    @required int defaultListingType,
+    @required SortType defaultSortType,
+    @required PostListingType defaultListingType,
     @required String auth,
   }) {
     throw UnimplementedError();
@@ -66,7 +66,7 @@ extension UserEndpoint on V1 {
   /// GET /user/replies
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-replies--inbox
   Future<List<ReplyView>> getReplies({
-    @required String sort,
+    @required SortType sort,
     int page,
     int limit,
     @required bool unreadOnly,

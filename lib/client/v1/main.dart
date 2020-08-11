@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show required;
-import 'package:lemmur/client/models/search.dart';
 
 import '../models/category.dart';
+import '../models/search.dart';
 
 export 'comment_endpoint.dart';
 export 'post_endpoint.dart';
@@ -24,7 +24,7 @@ class V1 {
     @required String q,
     @required SearchType type,
     String communityId,
-    @required String sort,
+    @required SortType sort,
     int page,
     int limit,
     String auth,

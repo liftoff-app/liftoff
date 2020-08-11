@@ -32,8 +32,8 @@ extension PostEndpoint on V1 {
   /// GET /post/list
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-posts
   Future<List<PostView>> getPosts({
-    @required String type,
-    @required String sort,
+    @required PostListingType type,
+    @required SortType sort,
     int page,
     int limit,
     int communityId,
@@ -46,8 +46,8 @@ extension PostEndpoint on V1 {
       instanceUrl,
       "/api/v1/post/list",
       {
-        'type_': type,
-        'sort': sort,
+        'type_': type.value,
+        'sort': sort.value,
         if (page != null) 'page': page.toString(),
         if (limit != null) 'limit': limit.toString(),
         if (communityId != null) 'community_id': communityId.toString(),
