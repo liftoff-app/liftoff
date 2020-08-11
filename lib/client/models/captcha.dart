@@ -12,7 +12,10 @@ class Captcha {
   final String uuid;
 
   const Captcha({
+    /// A Base64 encoded png
     this.png,
+
+    /// A Base64 encoded wav audio file
     this.wav,
     this.uuid,
   });
