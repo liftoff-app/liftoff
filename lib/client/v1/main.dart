@@ -53,20 +53,20 @@ extension VoteValue on Vote {
   }
 }
 
-enum PostType {
+enum PostListingType {
   all,
   subscribed,
   community,
 }
 
-extension PostTypeValue on PostType {
+extension PostTypeValue on PostListingType {
   String get value {
     switch (this) {
-      case PostType.all:
+      case PostListingType.all:
         return "All";
-      case PostType.subscribed:
+      case PostListingType.subscribed:
         return "Subscribed";
-      case PostType.community:
+      case PostListingType.community:
         return "Community";
     }
     throw Exception("unreachable");
