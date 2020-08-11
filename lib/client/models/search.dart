@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import './comment.dart';
-import './post.dart';
 import './community.dart';
+import './post.dart';
 import './user.dart';
 
 part 'search.g.dart';
