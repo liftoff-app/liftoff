@@ -22,7 +22,7 @@ class V1 {
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#search
   Search search({
     @required String q,
-    @required String type,
+    @required SearchType type,
     String communityId,
     @required String sort,
     int page,
@@ -103,6 +103,35 @@ extension SortTypeValue on SortType {
         return "TopYear";
       case SortType.topAll:
         return "TopAll";
+    }
+    throw Exception("unreachable");
+  }
+}
+
+enum SearchType {
+  all,
+  comments,
+  posts,
+  communities,
+  users,
+  url,
+}
+
+extension SearchTypeValue on SearchType {
+  String get value {
+    switch (this) {
+      case SearchType.all:
+        return "All";
+      case SearchType.comments:
+        return "Comments";
+      case SearchType.posts:
+        return "Posts";
+      case SearchType.communities:
+        return "Communities";
+      case SearchType.users:
+        return "Users";
+      case SearchType.url:
+        return "Url";
     }
     throw Exception("unreachable");
   }
