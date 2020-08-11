@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart' show required;
+import 'package:http/http.dart' as http;
 
 import '../models/post.dart';
 import 'main.dart';
@@ -28,15 +31,31 @@ extension PostEndpoint on V1 {
 
   /// GET /post/list
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-posts
-  Future<PostView> getPosts({
+  Future<List<PostView>> getPosts({
     @required String type,
     @required String sort,
     int page,
     int limit,
     int communityId,
     String communityName,
-  }) {
-    throw UnimplementedError();
+  }) async {
+    assert(type != null);
+    assert(sort != null);
+
+    var res = await http.get(Uri.https(
+      instanceUrl,
+      "/api/v1/post/list",
+      {
+        'type_': type,
+        'sort': sort,
+        if (page != null) 'page': page.toString(),
+        if (limit != null) 'limit': limit.toString(),
+        if (communityId != null) 'community_id': communityId.toString(),
+        if (communityName != null) 'community_name': communityName,
+      },
+    ));
+    List<dynamic> json = jsonDecode(res.body)["posts"];
+    return json.map((e) => PostView.fromJson(e)).toList();
   }
 
   /// POST /post/like
