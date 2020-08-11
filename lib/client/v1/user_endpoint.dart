@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart' show required;
-import 'package:lemmur/client/models/captcha.dart';
-import 'package:lemmur/client/models/comment.dart';
-import 'package:lemmur/client/models/user.dart';
 
+import '../models/captcha.dart';
+import '../models/comment.dart';
 import '../models/private_message.dart';
+import '../models/user.dart';
 import 'main.dart';
 
 extension UserEndpoint on V1 {
