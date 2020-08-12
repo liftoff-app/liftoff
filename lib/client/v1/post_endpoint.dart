@@ -17,6 +17,11 @@ extension PostEndpoint on V1 {
     @required int communityId,
     @required String auth,
   }) {
+    assert(name != null);
+    assert(nsfw != null);
+    assert(communityId != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -26,6 +31,8 @@ extension PostEndpoint on V1 {
     @required int id,
     String auth,
   }) {
+    assert(id != null);
+
     throw UnimplementedError();
   }
 
@@ -65,6 +72,10 @@ extension PostEndpoint on V1 {
     @required Vote score,
     @required String auth,
   }) {
+    assert(postId != null);
+    assert(score != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -78,6 +89,11 @@ extension PostEndpoint on V1 {
     @required bool nsfw,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(name != null);
+    assert(nsfw != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -89,6 +105,10 @@ extension PostEndpoint on V1 {
     @required bool deleted,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(deleted != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -101,6 +121,10 @@ extension PostEndpoint on V1 {
     String reason,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(removed != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -111,6 +135,10 @@ extension PostEndpoint on V1 {
     @required bool save,
     @required String auth,
   }) {
+    assert(postId != null);
+    assert(save != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 }
