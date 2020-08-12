@@ -13,6 +13,10 @@ extension CommentEndpoint on V1 {
     int formId,
     @required String auth,
   }) {
+    assert(content != null);
+    assert(postId != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -24,6 +28,10 @@ extension CommentEndpoint on V1 {
     String formId,
     @required String auth,
   }) {
+    assert(content != null);
+    assert(editId != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -35,6 +43,10 @@ extension CommentEndpoint on V1 {
     @required bool deleted,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(deleted != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -47,6 +59,10 @@ extension CommentEndpoint on V1 {
     String reason,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(removed != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -57,6 +73,10 @@ extension CommentEndpoint on V1 {
     @required bool read,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(read != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -67,6 +87,10 @@ extension CommentEndpoint on V1 {
     @required bool save,
     @required String auth,
   }) {
+    assert(commentId != null);
+    assert(save != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -77,6 +101,10 @@ extension CommentEndpoint on V1 {
     @required Vote score,
     @required String auth,
   }) {
+    assert(commentId != null);
+    assert(score != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 }

@@ -20,7 +20,7 @@ class V1 {
 
   /// POST /search
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#search
-  Search search({
+  Future<Search> search({
     @required String q,
     @required SearchType type,
     String communityId,
@@ -29,6 +29,10 @@ class V1 {
     int limit,
     String auth,
   }) {
+    assert(q != null);
+    assert(type != null);
+    assert(sort != null);
+
     throw UnimplementedError();
   }
 }
@@ -76,6 +80,7 @@ extension PostTypeValue on PostListingType {
 enum SortType {
   active,
   hot,
+  // ignore: constant_identifier_names
   new_,
   topDay,
   topWeek,
