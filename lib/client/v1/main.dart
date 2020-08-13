@@ -22,7 +22,7 @@ class V1 with HttpHelper {
     throw UnimplementedError();
   }
 
-  /// POST /search
+  /// ~~POST~~ GET /search
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#search
   Future<Search> search({
     @required String q,
@@ -32,12 +32,22 @@ class V1 with HttpHelper {
     int page,
     int limit,
     String auth,
-  }) {
+  }) async {
     assert(q != null);
     assert(type != null);
     assert(sort != null);
 
-    throw UnimplementedError();
+    var res = await get('/search', {
+      'q': q,
+      'type_': type.value,
+      if (communityId != null) 'community_id': communityId,
+      'sort': sort.value,
+      if (page != null) 'page': page.toString(),
+      if (limit != null) 'limit': limit.toString(),
+      if (auth != null) 'auth': auth,
+    });
+
+    return Search.fromJson(res);
   }
 }
 
