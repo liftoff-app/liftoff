@@ -11,11 +11,17 @@ extension UserEndpoint on V1 {
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#login
   /// returns jwt
   Future<String> login({
-    String usernameOrEmail,
-    String password,
-  }) {
+    @required String usernameOrEmail,
+    @required String password,
+  }) async {
     assert(usernameOrEmail != null, password != null);
-    throw UnimplementedError();
+
+    final res = await post('/user/login', {
+      'username_or_email': usernameOrEmail,
+      'password': password,
+    });
+
+    return res['jwt'];
   }
 
   /// POST /user/register
