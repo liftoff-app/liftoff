@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show required;
 
+import '../http_helper.dart';
 import '../models/category.dart';
 import '../models/search.dart';
 
@@ -7,10 +8,13 @@ export 'comment_endpoint.dart';
 export 'post_endpoint.dart';
 export 'user_endpoint.dart';
 
-class V1 {
-  String instanceUrl;
+class V1 extends HttpHelper {
+  @override
+  final String host;
+  @override
+  final String extraPath = "/api/v1";
 
-  V1(this.instanceUrl);
+  V1(this.host);
 
   /// GET /categories
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#list-categories
