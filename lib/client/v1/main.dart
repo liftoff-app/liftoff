@@ -8,7 +8,7 @@ export 'comment_endpoint.dart';
 export 'post_endpoint.dart';
 export 'user_endpoint.dart';
 
-class V1 extends HttpHelper {
+class V1 with HttpHelper {
   @override
   final String host;
   @override

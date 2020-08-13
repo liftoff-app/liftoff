@@ -7,7 +7,7 @@ extension OkResponse on http.Response {
   bool get ok => statusCode >= 200 && statusCode < 300;
 }
 
-abstract class HttpHelper {
+mixin HttpHelper {
   String host;
   String extraPath;
 
