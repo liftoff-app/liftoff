@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lemmur/client/models/user.dart';
 
 void main() {
-  test("UserView test", () {
-    Map<String, dynamic> userJson = jsonDecode("""
+  test('UserView test', () {
+    Map<String, dynamic> userJson = jsonDecode('''
       {
         "id": 13709,
         "actor_id": "https://dev.lemmy.ml/u/krawieck",
@@ -26,13 +26,13 @@ void main() {
         "post_score": 0,
         "number_of_comments": 0,
         "comment_score": 0
-      }""");
+      }''');
 
     var user = UserView.fromJson(userJson);
 
     expect(user.id, 13709);
-    expect(user.actorId, "https://dev.lemmy.ml/u/krawieck");
-    expect(user.name, "krawieck");
+    expect(user.actorId, 'https://dev.lemmy.ml/u/krawieck');
+    expect(user.name, 'krawieck');
     expect(user.preferredUsername, null);
     expect(user.avatar, null);
     expect(user.banner, null);
@@ -44,7 +44,7 @@ void main() {
     expect(user.banned, false);
     expect(user.showAvatars, true);
     expect(user.sendNotificationsToEmail, false);
-    expect(user.published, DateTime.parse("2020-08-03T12:22:12.389085"));
+    expect(user.published, DateTime.parse('2020-08-03T12:22:12.389085'));
     expect(user.numberOfPosts, 0);
     expect(user.postScore, 0);
     expect(user.numberOfComments, 0);

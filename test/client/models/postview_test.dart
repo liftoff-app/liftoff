@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lemmur/client/models/post.dart';
 
 void main() {
-  test("PostView test", () {
-    Map<String, dynamic> postJson = jsonDecode("""
+  test('PostView test', () {
+    Map<String, dynamic> postJson = jsonDecode('''
       {
         "id": 38501,
         "name": "Niklaus Wirth was right and that is a problem",
@@ -53,41 +53,41 @@ void main() {
         "subscribed": false,
         "read": false,
         "saved": false
-      }""");
+      }''');
 
     var post = PostView.fromJson(postJson);
 
     expect(post.id, 38501);
-    expect(post.name, "Niklaus Wirth was right and that is a problem");
+    expect(post.name, 'Niklaus Wirth was right and that is a problem');
     expect(post.url,
-        "https://bowero.nl/blog/2020/07/31/niklaus-wirth-was-right-and-that-is-a-problem/");
+        'https://bowero.nl/blog/2020/07/31/niklaus-wirth-was-right-and-that-is-a-problem/');
     expect(post.body, null);
     expect(post.creatorId, 8218);
     expect(post.communityId, 14680);
     expect(post.removed, false);
     expect(post.locked, false);
-    expect(post.published, DateTime.parse("2020-08-02T01:56:28.072727"));
+    expect(post.published, DateTime.parse('2020-08-02T01:56:28.072727'));
     expect(post.updated, null);
     expect(post.deleted, false);
     expect(post.nsfw, false);
     expect(post.stickied, false);
-    expect(post.embedTitle, "Niklaus Wirth was right and that is a problem");
+    expect(post.embedTitle, 'Niklaus Wirth was right and that is a problem');
     expect(post.embedDescription, null);
     expect(post.embedHtml, null);
     expect(post.thumbnailUrl, null);
-    expect(post.apId, "https://dev.lemmy.ml/post/38501");
+    expect(post.apId, 'https://dev.lemmy.ml/post/38501');
     expect(post.local, true);
-    expect(post.creatorActorId, "https://dev.lemmy.ml/u/yogthos");
+    expect(post.creatorActorId, 'https://dev.lemmy.ml/u/yogthos');
     expect(post.creatorLocal, true);
-    expect(post.creatorName, "yogthos");
+    expect(post.creatorName, 'yogthos');
     expect(post.creatorPreferredUsername, null);
-    expect(post.creatorPublished, DateTime.parse("2020-01-18T04:02:39.254957"));
-    expect(post.creatorAvatar, "https://dev.lemmy.ml/pictrs/image/bwk1q2.png");
+    expect(post.creatorPublished, DateTime.parse('2020-01-18T04:02:39.254957'));
+    expect(post.creatorAvatar, 'https://dev.lemmy.ml/pictrs/image/bwk1q2.png');
     expect(post.banned, false);
     expect(post.bannedFromCommunity, false);
-    expect(post.communityActorId, "https://dev.lemmy.ml/c/programming");
+    expect(post.communityActorId, 'https://dev.lemmy.ml/c/programming');
     expect(post.communityLocal, true);
-    expect(post.communityName, "programming");
+    expect(post.communityName, 'programming');
     expect(post.communityIcon, null);
     expect(post.communityRemoved, false);
     expect(post.communityDeleted, false);
@@ -99,7 +99,7 @@ void main() {
     expect(post.hotRank, 1);
     expect(post.hotRankActive, 1);
     expect(
-        post.newestActivityTime, DateTime.parse("2020-08-02T20:31:19.303284"));
+        post.newestActivityTime, DateTime.parse('2020-08-02T20:31:19.303284'));
     expect(post.userId, 13709);
     expect(post.myVote, 0);
     expect(post.subscribed, false);
