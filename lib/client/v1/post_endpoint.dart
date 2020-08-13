@@ -46,7 +46,7 @@ extension PostEndpoint on V1 {
     assert(type != null);
     assert(sort != null);
 
-    var json = await get("/post/list", {
+    var json = await get('/post/list', {
       'type_': type.value,
       'sort': sort.value,
       if (page != null) 'page': page.toString(),
@@ -55,7 +55,7 @@ extension PostEndpoint on V1 {
       if (communityName != null) 'community_name': communityName,
     });
 
-    List<dynamic> posts = json["posts"];
+    List<dynamic> posts = json['posts'];
     return posts.map((e) => PostView.fromJson(e)).toList();
   }
 

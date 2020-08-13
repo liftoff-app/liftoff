@@ -13,7 +13,7 @@ mixin HttpHelper {
 
   Future<Map<String, dynamic>> get(
       String path, Map<String, String> query) async {
-    var res = await http.get(Uri.https(host, "$extraPath$path", query));
+    var res = await http.get(Uri.https(host, '$extraPath$path', query));
 
     if (!res.ok) {
       // failed request, handle here
@@ -25,7 +25,7 @@ mixin HttpHelper {
   Future<Map<String, dynamic>> post(
       String path, Map<String, dynamic> body) async {
     var res = await http.post(
-      Uri.https(host, "$extraPath$path"),
+      Uri.https(host, '$extraPath$path'),
       body: jsonEncode(body),
       headers: {HttpHeaders.contentTypeHeader: ContentType.json.mimeType},
     );

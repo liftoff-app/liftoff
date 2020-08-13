@@ -12,7 +12,7 @@ class V1 with HttpHelper {
   @override
   final String host;
   @override
-  final String extraPath = "/api/v1";
+  final String extraPath = '/api/v1';
 
   V1(this.host);
 
@@ -57,7 +57,7 @@ extension VoteValue on Vote {
       case Vote.down:
         return -1;
     }
-    throw Exception("unreachable");
+    throw Exception('unreachable');
   }
 }
 
@@ -71,13 +71,13 @@ extension PostTypeValue on PostListingType {
   String get value {
     switch (this) {
       case PostListingType.all:
-        return "All";
+        return 'All';
       case PostListingType.subscribed:
-        return "Subscribed";
+        return 'Subscribed';
       case PostListingType.community:
-        return "Community";
+        return 'Community';
     }
-    throw Exception("unreachable");
+    throw Exception('unreachable');
   }
 }
 
@@ -97,23 +97,23 @@ extension SortTypeValue on SortType {
   String get value {
     switch (this) {
       case SortType.active:
-        return "Active";
+        return 'Active';
       case SortType.hot:
-        return "Hot";
+        return 'Hot';
       case SortType.new_:
-        return "New";
+        return 'New';
       case SortType.topDay:
-        return "TopDay";
+        return 'TopDay';
       case SortType.topWeek:
-        return "TopWeek";
+        return 'TopWeek';
       case SortType.topMonth:
-        return "TopMonth";
+        return 'TopMonth';
       case SortType.topYear:
-        return "TopYear";
+        return 'TopYear';
       case SortType.topAll:
-        return "TopAll";
+        return 'TopAll';
     }
-    throw Exception("unreachable");
+    throw Exception('unreachable');
   }
 }
 
@@ -130,18 +130,18 @@ extension SearchTypeValue on SearchType {
   String get value {
     switch (this) {
       case SearchType.all:
-        return "All";
+        return 'All';
       case SearchType.comments:
-        return "Comments";
+        return 'Comments';
       case SearchType.posts:
-        return "Posts";
+        return 'Posts';
       case SearchType.communities:
-        return "Communities";
+        return 'Communities';
       case SearchType.users:
-        return "Users";
+        return 'Users';
       case SearchType.url:
-        return "Url";
+        return 'Url';
     }
-    throw Exception("unreachable");
+    throw Exception('unreachable');
   }
 }

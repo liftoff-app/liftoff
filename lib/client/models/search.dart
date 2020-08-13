@@ -10,7 +10,7 @@ part 'search.g.dart';
 /// based on https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#search
 @JsonSerializable(createToJson: false)
 class Search {
-  @JsonKey(name: "type_")
+  @JsonKey(name: 'type_')
   final String type;
   final List<CommentView> comments;
   final List<PostView> posts;
