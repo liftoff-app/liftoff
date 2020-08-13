@@ -11,8 +11,8 @@ mixin HttpHelper {
   String host;
   String extraPath;
 
-  Future<Map<String, dynamic>> get(
-      String path, Map<String, String> query) async {
+  Future<Map<String, dynamic>> get(String path,
+      [Map<String, String> query]) async {
     var res = await http.get(Uri.https(host, '$extraPath$path', query));
 
     if (!res.ok) {
