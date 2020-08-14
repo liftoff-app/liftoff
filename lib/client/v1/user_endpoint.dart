@@ -83,6 +83,12 @@ extension UserEndpoint on V1 {
     @required PostListingType defaultListingType,
     @required String auth,
   }) {
+    assert(showNsfw != null);
+    assert(theme != null);
+    assert(defaultSortType != null);
+    assert(defaultListingType != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -95,18 +101,24 @@ extension UserEndpoint on V1 {
     @required bool unreadOnly,
     @required String auth,
   }) {
-    throw UnimplementedError();
+    assert(sort != null);
+    assert(unreadOnly != null);
+    assert(auth != null);
   }
 
   /// GET /user/mentions
   /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-user-mentions
   Future<List<UserMentionView>> getUserMentions({
-    String sort,
-    @required int page,
-    @required int limit,
-    bool unreadOnly,
-    String auth,
+    @required String sort,
+    int page,
+    int limit,
+    @required bool unreadOnly,
+    @required String auth,
   }) {
+    assert(sort != null);
+    assert(unreadOnly != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -117,6 +129,10 @@ extension UserEndpoint on V1 {
     @required bool read,
     @required String auth,
   }) {
+    assert(userMentionId != null);
+    assert(read != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -128,6 +144,9 @@ extension UserEndpoint on V1 {
     int limit,
     @required String auth,
   }) {
+    assert(unreadOnly != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -138,6 +157,10 @@ extension UserEndpoint on V1 {
     @required int recipientId,
     @required String auth,
   }) {
+    assert(content != null);
+    assert(recipientId != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -148,6 +171,10 @@ extension UserEndpoint on V1 {
     @required String content,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(content != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -158,6 +185,10 @@ extension UserEndpoint on V1 {
     @required bool deleted,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(deleted != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -168,6 +199,10 @@ extension UserEndpoint on V1 {
     @required bool read,
     @required String auth,
   }) {
+    assert(editId != null);
+    assert(read != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -176,6 +211,8 @@ extension UserEndpoint on V1 {
   Future<List<ReplyView>> markAllAsRead({
     @required String auth,
   }) {
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 
@@ -186,6 +223,9 @@ extension UserEndpoint on V1 {
     @required String password,
     @required String auth,
   }) {
+    assert(password != null);
+    assert(auth != null);
+
     throw UnimplementedError();
   }
 }
