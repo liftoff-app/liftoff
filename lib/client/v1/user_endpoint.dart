@@ -50,10 +50,27 @@ extension UserEndpoint on V1 {
     int page,
     int limit,
     int communityId,
-    bool savedOnly,
+    @required bool savedOnly,
     String auth,
-  }) {
-    throw UnimplementedError();
+  }) async {
+    assert(sort != null);
+    assert(savedOnly != null);
+    assert((userId != null) ^ (username != null));
+    assert(limit == null || limit >= 0);
+    assert(page == null || page > 0);
+
+    var res = await get('/user', {
+      if (userId != null) 'user_id': userId.toString(),
+      if (username != null) 'username': username,
+      'sort': sort.value,
+      if (page != null) 'page': page.toString(),
+      if (limit != null) 'limit': limit.toString(),
+      if (communityId != null) 'community_id': communityId.toString(),
+      if (savedOnly != null) 'saved_only': savedOnly.toString(),
+      if (auth != null) 'auth': auth,
+    });
+
+    return UserDetails.fromJson(res);
   }
 
   /// PUT /save_user_settings
