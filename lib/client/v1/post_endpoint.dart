@@ -27,10 +27,15 @@ extension PostEndpoint on V1 {
   Future<FullPost> getPost({
     @required int id,
     String auth,
-  }) {
+  }) async {
     assert(id != null);
 
-    throw UnimplementedError();
+    var res = await get('/post', {
+      'id': id.toString(),
+      if (auth != null) 'auth': auth,
+    });
+
+    return FullPost.fromJson(res);
   }
 
   /// GET /post/list
