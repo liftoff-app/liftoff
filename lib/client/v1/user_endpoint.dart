@@ -100,10 +100,20 @@ extension UserEndpoint on V1 {
     int limit,
     @required bool unreadOnly,
     @required String auth,
-  }) {
+  }) async {
     assert(sort != null);
     assert(unreadOnly != null);
     assert(auth != null);
+
+    var res = await get('/user/replies', {
+      'sort': sort.value,
+      if (page != null) 'page': page.toString(),
+      if (limit != null) 'limit': limit.toString(),
+      'unread_only': unreadOnly.toString(),
+      'auth': auth,
+    });
+    List<dynamic> replies = res['replies'];
+    return replies.map((e) => ReplyView.fromJson(e)).toList();
   }
 
   /// GET /user/mentions
