@@ -30,8 +30,18 @@ extension UserEndpoint on V1 {
   Future<String> register({
     @required String username,
     String email,
-    String password,
+    @required String password,
+    @required String passwordVerify,
+    @required bool admin,
+    String captchaUuid,
+    String captchaAnswer,
   }) {
+    assert(username != null);
+    assert(password != null);
+    assert(passwordVerify != null);
+    assert(admin != null);
+    assert(((captchaUuid != null) ^ (captchaAnswer != null)));
+
     throw UnimplementedError();
   }
 
