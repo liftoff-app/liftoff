@@ -170,3 +170,14 @@ class CommunityModeratorView {
   factory CommunityModeratorView.fromJson(Map<String, dynamic> json) =>
       _$CommunityModeratorViewFromJson(json);
 }
+
+@JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
+class FullCommunityView {
+  final CommunityView community;
+  final List<CommunityModeratorView> moderators;
+
+  FullCommunityView({this.community, this.moderators});
+
+  factory FullCommunityView.fromJson(Map<String, dynamic> json) =>
+      _$FullCommunityViewFromJson(json);
+}

@@ -5,6 +5,7 @@ import '../models/category.dart';
 import '../models/search.dart';
 
 export 'comment_endpoint.dart';
+export 'community_endpoint.dart';
 export 'post_endpoint.dart';
 export 'user_endpoint.dart';
 

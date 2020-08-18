@@ -86,3 +86,16 @@ CommunityModeratorView _$CommunityModeratorViewFromJson(
     communityIcon: json['community_icon'] as String,
   );
 }
+
+FullCommunityView _$FullCommunityViewFromJson(Map<String, dynamic> json) {
+  return FullCommunityView(
+    community: json['community'] == null
+        ? null
+        : CommunityView.fromJson(json['community'] as Map<String, dynamic>),
+    moderators: (json['moderators'] as List)
+        ?.map((e) => e == null
+            ? null
+            : CommunityModeratorView.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
