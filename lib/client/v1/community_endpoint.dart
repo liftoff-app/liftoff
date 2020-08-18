@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show required;
-import 'package:lemmur/client/models/community.dart';
 
+import '../models/community.dart';
 import 'main.dart';
 
 extension CommunityEndpoint on V1 {
@@ -56,5 +56,18 @@ extension CommunityEndpoint on V1 {
     });
 
     return CommunityView.fromJson(res['community']);
+  }
+
+  /// GET /user/followed_communities
+  /// https://dev.lemmy.ml/docs/contributing_websocket_http_api.html#get-followed-communities
+  Future<List<CommunityFollowerView>> getFollowedCommunities({
+    @required String auth,
+  }) async {
+    final res = await get('/user/followed_communities', {
+      'auth': auth,
+    });
+    final List<dynamic> communities = res['communities'];
+
+    return communities.map((e) => CommunityFollowerView.fromJson(e)).toList();
   }
 }

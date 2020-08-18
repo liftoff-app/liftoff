@@ -70,12 +70,18 @@ extension PostEndpoint on V1 {
     @required int postId,
     @required Vote score,
     @required String auth,
-  }) {
+  }) async {
     assert(postId != null);
     assert(score != null);
     assert(auth != null);
 
-    throw UnimplementedError();
+    var res = await post('/post/like', {
+      'post_id': postId,
+      'score': score.value,
+      'auth': auth,
+    });
+
+    return PostView.fromJson(res);
   }
 
   /// PUT /post

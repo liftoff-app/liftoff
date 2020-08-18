@@ -32,3 +32,24 @@ SiteView _$SiteViewFromJson(Map<String, dynamic> json) {
     numberOfCommunities: json['number_of_communities'] as int,
   );
 }
+
+FullSiteView _$FullSiteViewFromJson(Map<String, dynamic> json) {
+  return FullSiteView(
+    site: json['site'] == null
+        ? null
+        : SiteView.fromJson(json['site'] as Map<String, dynamic>),
+    admins: (json['admins'] as List)
+        ?.map((e) =>
+            e == null ? null : UserView.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    banned: (json['banned'] as List)
+        ?.map((e) =>
+            e == null ? null : UserView.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    online: json['online'] as int,
+    version: json['version'] as String,
+    myUser: json['my_user'] == null
+        ? null
+        : UserView.fromJson(json['my_user'] as Map<String, dynamic>),
+  );
+}
