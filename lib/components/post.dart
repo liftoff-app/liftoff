@@ -13,14 +13,57 @@ class PostWidget extends StatelessWidget {
   final String linkPostDomain;
 
   ThemeData _theme;
-//https://images-assets.nasa.gov/image/PIA04921/PIA04921~orig.jpg
+
   PostWidget(this.post)
       : hostUrl = post.communityActorId.split('/')[2],
         linkPostDomain = post.url != null ? post.url.split('/')[2] : null;
 
+  // == ACTIONS ==
+
+  void _openLink() {
+    print('OPEN LINK');
+  }
+
+  void _goToUser() {
+    print('GO TO USER');
+  }
+
+  void _goToPost() {
+    print('GO OT POST');
+  }
+
+  void _goToCommunity() {
+    print('GO TO COMMUNITY');
+  }
+
+  void _goToInstance() {
+    print('GO TO INSTANCE');
+  }
+
+  // POST ACTIONS
+
+  void _savePost() {
+    print('SAVE POST');
+  }
+
+  void _upvotePost() {
+    print('UPVOTE POST');
+  }
+
+  void _downvotePost() {
+    print('DOWNVOTE POST');
+  }
+
+  void _showMoreMenu() {
+    print('SHOW MORE MENU');
+  }
+
+  // == UI ==
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
         boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black54)],
@@ -28,9 +71,7 @@ class PostWidget extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: InkWell(
-        onTap: () {
-          print('GO TO POST');
-        },
+        onTap: _openLink,
         child: Column(
           children: [
             _info(),
@@ -55,7 +96,7 @@ class PostWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: InkWell(
-                    onTap: () => print('GO TO COMMUNITY'),
+                    onTap: _goToCommunity,
                     child: SizedBox(
                       height: 40,
                       width: 40,
@@ -94,7 +135,7 @@ class PostWidget extends StatelessWidget {
                           text: post.communityName,
                           style: TextStyle(fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => print('GO TO COMMUNITY')),
+                            ..onTap = _goToCommunity),
                       TextSpan(
                           text: '@',
                           style: TextStyle(fontWeight: FontWeight.w300)),
@@ -102,7 +143,7 @@ class PostWidget extends StatelessWidget {
                           text: hostUrl,
                           style: TextStyle(fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => print('GO TO INSTANCE')),
+                            ..onTap = _goToInstance),
                     ],
                   ),
                 )
@@ -122,8 +163,7 @@ class PostWidget extends StatelessWidget {
                           text:
                               ''' ${post.creatorPreferredUsername ?? post.creatorName}''',
                           style: TextStyle(fontWeight: FontWeight.w600),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => print('GO TO USER'),
+                          recognizer: TapGestureRecognizer()..onTap = _goToUser,
                         ),
                         TextSpan(
                             text:
@@ -141,7 +181,7 @@ class PostWidget extends StatelessWidget {
           Column(
             children: [
               IconButton(
-                onPressed: () => print('POPUP MENU'),
+                onPressed: _showMoreMenu,
                 icon: Icon(Icons.more_vert),
               )
             ],
@@ -166,7 +206,7 @@ class PostWidget extends StatelessWidget {
           ),
           if (post.thumbnailUrl != null)
             InkWell(
-              onTap: () => print('OPEN LINK'),
+              onTap: _openLink,
               child: Stack(children: [
                 ClipRRect(
                     borderRadius: BorderRadius.circular(20),
@@ -221,7 +261,7 @@ class PostWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: InkWell(
-        onTap: () => print('OPEN LINK'),
+        onTap: _openLink,
         child: Container(
           decoration: BoxDecoration(
               border: Border.all(width: 1),
@@ -270,13 +310,11 @@ class PostWidget extends StatelessWidget {
               icon: post.saved == true
                   ? Icon(Icons.bookmark)
                   : Icon(Icons.bookmark_border),
-              onPressed: () => print('SAVE')),
-          IconButton(
-              icon: Icon(Icons.arrow_upward), onPressed: () => print('UPVOTE')),
+              onPressed: _savePost),
+          IconButton(icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
           Text(post.score.toString()),
           IconButton(
-              icon: Icon(Icons.arrow_downward),
-              onPressed: () => print('DOWNVOTE')),
+              icon: Icon(Icons.arrow_downward), onPressed: _downvotePost),
         ],
       ),
     );
