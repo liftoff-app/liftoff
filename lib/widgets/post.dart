@@ -2,8 +2,26 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+enum MediaType {
+  image,
+  gallery,
+  video,
+  other,
+}
+
+MediaType whatType(String url) {
+  if (url == null) return MediaType.other;
+
+  // @TODO: make detection more nuanced
+  if (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.gif')) {
+    return MediaType.image;
+  }
+  return MediaType.other;
+}
 
 class PostWidget extends StatelessWidget {
   final PostView post;
@@ -40,6 +58,10 @@ class PostWidget extends StatelessWidget {
     print('GO TO INSTANCE');
   }
 
+  void _openFullImage() {
+    print('OPEN FULL IMAGE');
+  }
+
   // POST ACTIONS
 
   void _savePost() {
@@ -71,12 +93,16 @@ class PostWidget extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: InkWell(
-        onTap: _openLink,
+        onTap: _goToPost,
         child: Column(
           children: [
             _info(),
             _title(),
-            _content(),
+            if (whatType(post.url) != MediaType.other)
+              _postImage()
+            else if (post.url != null)
+              _linkPreview(),
+            if (post.body != null) _textBody(),
             _actions(),
           ],
         ),
@@ -204,7 +230,13 @@ class PostWidget extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
-          if (post.thumbnailUrl != null)
+          if (post.url != null &&
+              !(whatType(post.url) != MediaType.other) &&
+              post.thumbnailUrl != null)
+            Spacer(),
+          if (post.url != null &&
+              !(whatType(post.url) != MediaType.other) &&
+              post.thumbnailUrl != null)
             InkWell(
               onTap: _openLink,
               child: Stack(children: [
@@ -233,21 +265,17 @@ class PostWidget extends StatelessWidget {
     );
   }
 
-  Widget _content() {
-    if (post.url == null) return Container();
-    // naive implementation for now but will have
-    // to add system for detecting type of media
-    if (post.url.endsWith('.jpg') ||
-        post.url.endsWith('.png') ||
-        post.url.endsWith('.gif')) {
-      return CachedNetworkImage(
+  Widget _postImage() {
+    assert(post.url != null);
+
+    return InkWell(
+      onTap: _openFullImage,
+      child: CachedNetworkImage(
         imageUrl: post.url,
         progressIndicatorBuilder: (context, url, progress) =>
             CircularProgressIndicator(value: progress.progress),
-      );
-    } else {
-      return _linkPreview();
-    }
+      ),
+    );
   }
 
   Widget _linkPreview() {
@@ -289,6 +317,13 @@ class PostWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _textBody() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Text(post.body),
     );
   }
 
