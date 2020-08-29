@@ -298,9 +298,17 @@ class PostWidget extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.comment),
-          post.numberOfComments == 1
-              ? Text('  1 comment')
-              : Text('  ${post.numberOfComments} comments'),
+          if (post.numberOfComments == 1)
+            Text('  1 comment')
+          else
+            Expanded(
+              flex: 999,
+              child: Text(
+                '''  ${NumberFormat.compact().format(post.numberOfComments)} comments''',
+                overflow: TextOverflow.fade,
+                softWrap: false,
+              ),
+            ),
           Spacer(),
           IconButton(
               icon: Icon(Icons.share),
