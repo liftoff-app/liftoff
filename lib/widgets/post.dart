@@ -8,6 +8,8 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../url_launcher.dart';
+
 enum MediaType {
   image,
   gallery,
@@ -33,6 +35,7 @@ class PostWidget extends StatelessWidget {
   final String linkPostDomain;
 
   ThemeData _theme;
+  BuildContext _context;
 
   PostWidget(this.post)
       : hostUrl = post.communityActorId.split('/')[2],
@@ -87,6 +90,7 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
+    _context = context;
 
     return Container(
       decoration: BoxDecoration(
@@ -329,7 +333,10 @@ class PostWidget extends StatelessWidget {
         data: post.body,
         extensionSet: md.ExtensionSet.gitHubWeb,
         onTapLink: (href) {
-          //
+          urlLauncher(href)
+              .catchError((e) => Scaffold.of(_context).showSnackBar(SnackBar(
+                    content: Text('couldn\'t open link'),
+                  )));
         },
       ),
     );
