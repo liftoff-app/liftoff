@@ -348,17 +348,14 @@ class PostWidget extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.comment),
-          if (post.numberOfComments == 1)
-            Text('  1 comment')
-          else
-            Expanded(
-              flex: 999,
-              child: Text(
-                '''  ${NumberFormat.compact().format(post.numberOfComments)} comments''',
-                overflow: TextOverflow.fade,
-                softWrap: false,
-              ),
+          Expanded(
+            flex: 999,
+            child: Text(
+              '''  ${NumberFormat.compact().format(post.numberOfComments)} comment${post.numberOfComments == 1 ? '' : 's'}''',
+              overflow: TextOverflow.fade,
+              softWrap: false,
             ),
+          ),
           Spacer(),
           IconButton(
               icon: Icon(Icons.share),
@@ -370,7 +367,7 @@ class PostWidget extends StatelessWidget {
                   : Icon(Icons.bookmark_border),
               onPressed: _savePost),
           IconButton(icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
-          Text(post.score.toString()),
+          Text(NumberFormat.compact().format(post.score)),
           IconButton(
               icon: Icon(Icons.arrow_downward), onPressed: _downvotePost),
         ],
