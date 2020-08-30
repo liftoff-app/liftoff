@@ -20,7 +20,7 @@ enum MediaType {
 MediaType whatType(String url) {
   if (url == null) return MediaType.other;
 
-  // @TODO: make detection more nuanced
+  // TODO: make detection more nuanced
   if (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.gif')) {
     return MediaType.image;
   }
@@ -155,7 +155,7 @@ class PostWidget extends StatelessWidget {
             children: [
               Row(children: [
                 RichText(
-                  overflow: TextOverflow.ellipsis, // @TODO: fix overflowing
+                  overflow: TextOverflow.ellipsis, // TODO: fix overflowing
                   text: TextSpan(
                     style: TextStyle(
                         fontSize: 15, color: _theme.textTheme.bodyText1.color),
@@ -363,7 +363,7 @@ class PostWidget extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.share),
               onPressed: () => Share.text('Share post url', post.apId,
-                  'text/plain')), // @TODO: find a way to mark it as url
+                  'text/plain')), // TODO: find a way to mark it as url
           IconButton(
               icon: post.saved == true
                   ? Icon(Icons.bookmark)
