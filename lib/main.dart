@@ -1,19 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+
+import 'stores/config_store.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<ConfigStore>(
+          create: (_) => ConfigStore()..load(),
+          dispose: (_, store) => store.dispose(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: 'Flutter Demo',
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-    ),
-    home: MyHomePage(title: 'Flutter Demo Home Page'),
-  );
+  Widget build(BuildContext context) {
+    return Observer(
+      builder: (ctx) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          themeMode: ctx.watch<ConfigStore>().theme,
+          darkTheme: ThemeData.dark(),
+          theme: ThemeData(
+            primarySwatch: ctx.watch<ConfigStore>().accentColor,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: MyHomePage(title: 'Flutter Demo Home Page'),
+        );
+      },
+    );
+  }
 }
 
 class MyHomePage extends StatefulWidget {
