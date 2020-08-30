@@ -21,6 +21,7 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
+  url_launcher: ^5.5.1
   markdown: ^2.1.8
   flutter_markdown: ^0.4.3
   esys_flutter_share: ^1.0.2
