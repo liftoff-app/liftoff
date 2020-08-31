@@ -19,7 +19,7 @@ class MarkdownText extends StatelessWidget {
                     content: Row(
                       children: [
                         Icon(Icons.warning),
-                        Text('couldn\'t open link'),
+                        Text("couldn't open link"),
                       ],
                     ),
                   )));
@@ -29,7 +29,7 @@ class MarkdownText extends StatelessWidget {
           errorWidget: (context, url, error) => Row(
             children: [
               Icon(Icons.warning),
-              Text('couldn\'t load image, ${error.toString()}')
+              Text("couldn't load image, ${error.toString()}")
             ],
           ),
         ),
