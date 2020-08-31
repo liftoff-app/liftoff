@@ -1,19 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MyApp());
+import 'stores/config_store.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  var configStore = ConfigStore();
+  await configStore.load();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<ConfigStore>(
+          create: (_) => configStore,
+          dispose: (_, store) => store.dispose(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: 'Flutter Demo',
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-    ),
-    home: MyHomePage(title: 'Flutter Demo Home Page'),
-  );
+  Widget build(BuildContext context) => Observer(
+        builder: (ctx) => MaterialApp(
+          title: 'Flutter Demo',
+          themeMode: ctx.watch<ConfigStore>().theme,
+          darkTheme: ThemeData.dark(),
+          theme: ThemeData(
+            primarySwatch: ctx.watch<ConfigStore>().accentColor,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: MyHomePage(title: 'Flutter hello world'),
+        ),
+      );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -36,25 +59,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text(widget.title),
-    ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text('You have pushed the button this many times:'),
-          Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.headline4,
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('You have pushed the button this many times:'),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: _incrementCounter,
-      tooltip: 'Increment',
-      child: Icon(Icons.add),
-    ),
-  );
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ),
+      );
 }
