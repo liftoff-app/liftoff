@@ -24,10 +24,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Observer(
-      builder: (ctx) {
-        return MaterialApp(
+  Widget build(BuildContext context) => Observer(
+        builder: (ctx) => MaterialApp(
           title: 'Flutter Demo',
           themeMode: ctx.watch<ConfigStore>().theme,
           darkTheme: ThemeData.dark(),
@@ -37,10 +35,8 @@ class MyApp extends StatelessWidget {
           ),
           home: UserProfileTab(User.fromJson(jsonDecode(
               '''{"id":13917,"name":"shilangyu","preferred_username":null,"password_encrypted":"","email":"xmarcinmarcin@gmail.com","avatar":null,"admin":false,"banned":false,"published":"2020-08-23T07:13:23.229279","updated":"2020-08-29T21:11:11.508707","show_nsfw":true,"theme":"minty","default_sort_type":0,"default_listing_type":1,"lang":"browser","show_avatars":true,"send_notifications_to_email":false,"matrix_user_id":null,"actor_id":"https://dev.lemmy.ml/u/shilangyu","bio":null,"local":true,"private_key":null,"public_key":null,"last_refreshed_at":"2020-08-23T07:13:23.229279","banner":null}'''))),
-        );
-      },
-    );
-  }
+        ),
+      );
 }
 
 class MyHomePage extends StatefulWidget {
