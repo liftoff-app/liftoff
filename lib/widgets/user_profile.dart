@@ -53,7 +53,7 @@ class UserProfile extends HookWidget {
                     if (user.bio == null)
                       Center(
                         child: Text(
-                          'No bio.',
+                          'no bio',
                           style: const TextStyle(fontStyle: FontStyle.italic),
                         ),
                       )
