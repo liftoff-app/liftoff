@@ -17,7 +17,6 @@ class Comments extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var sorting = useState(SortType.active);
     return Column(children: [
       // sorting menu goes here
       if (comments.isEmpty)
