@@ -27,7 +27,7 @@ class UserProfileTab extends HookWidget {
             children: [
               Text(
                 '@${user.name}',
-                style: TextStyle(color: theme.accentTextTheme.bodyText1.color),
+                style: TextStyle(color: Colors.white),
               ),
               Icon(
                 Icons.expand_more,
@@ -39,13 +39,22 @@ class UserProfileTab extends HookWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.settings,
+            icon: Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  blurRadius: 10,
+                  color: Colors.black54,
+                )
+              ]),
+              child: Icon(
+                Icons.settings,
+                color: user.banner == null ? theme.iconTheme.color : null,
+              ),
             ),
             onPressed: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => Settings()));
-            }, // TODO: go to settings
+            },
           )
         ],
       ),

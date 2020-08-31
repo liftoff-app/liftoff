@@ -30,7 +30,7 @@ class Settings extends StatelessWidget {
               title: Text('Appearance'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => _appearanceConfig()));
+                    MaterialPageRoute(builder: (_) => _AppearanceConfig()));
               },
             )
           ],
@@ -40,7 +40,7 @@ class Settings extends StatelessWidget {
   }
 }
 
-class _appearanceConfig extends StatelessWidget {
+class _AppearanceConfig extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);

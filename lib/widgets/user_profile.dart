@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
@@ -22,11 +23,60 @@ class UserProfile extends HookWidget {
 
     var userViewSnap = useFuture(_userView);
 
+    Widget _tabs() => DefaultTabController(
+          length: 3,
+          child: Column(
+            children: [
+              TabBar(
+                labelColor: theme.textTheme.bodyText1.color,
+                tabs: [
+                  Tab(text: 'Posts'),
+                  Tab(text: 'Comments'),
+                  Tab(text: 'About'),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    Center(
+                        child: Text(
+                      'Posts',
+                      style: const TextStyle(fontSize: 36),
+                    )),
+                    Center(
+                        child: Text(
+                      'Comments',
+                      style: const TextStyle(fontSize: 36),
+                    )),
+                    if (user.bio == null)
+                      Center(
+                        child: Text(
+                          'No bio.',
+                          style: const TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      )
+                    else
+                      Text(user.bio),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+
     return Center(
       child: Stack(
         children: [
-          Image.network(
-              'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg'), // TODO: should be the banner
+          if (user.banner != null)
+            CachedNetworkImage(
+              imageUrl: user.banner,
+            )
+          else
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: theme.primaryColor,
+            ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 60),
@@ -45,23 +95,31 @@ class UserProfile extends HookWidget {
           SafeArea(
             child: Column(
               children: [
-                SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(blurRadius: 6, color: Colors.black54)
-                      ],
-                      color:
-                          theme.backgroundColor, // TODO: add avatar, not color
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      border: Border.all(color: Colors.white, width: 3),
+                if (user.avatar != null)
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: Container(
+                      // clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(blurRadius: 6, color: Colors.black54)
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        border: Border.all(color: Colors.white, width: 3),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        child: CachedNetworkImage(
+                          imageUrl: user.avatar,
+                        ),
+                      ),
                     ),
                   ),
-                ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: user.avatar == null
+                      ? const EdgeInsets.only(top: 70)
+                      : const EdgeInsets.only(top: 8.0),
                   child: Text(
                     user.preferredUsername ?? user.name,
                     style: theme.textTheme.headline6,
@@ -79,21 +137,19 @@ class UserProfile extends HookWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _badge(
-                        context: context,
+                      _Badge(
                         icon: Icons.comment, // TODO: should be article icon
                         text: '''
 ${compactNumber(userViewSnap.data?.numberOfPosts ?? 0)} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}''',
-                        loading: !userViewSnap.hasData,
+                        isLoading: !userViewSnap.hasData,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0),
-                        child: _badge(
-                          context: context,
+                        child: _Badge(
                           icon: Icons.comment,
                           text: '''
 ${compactNumber(userViewSnap.data?.numberOfComments ?? 0)} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 1)}''',
-                          loading: !userViewSnap.hasData,
+                          isLoading: !userViewSnap.hasData,
                         ),
                       ),
                     ],
@@ -130,68 +186,42 @@ ${compactNumber(userViewSnap.data?.numberOfComments ?? 0)} Comment${pluralS(user
       ),
     );
   }
+}
 
-  Widget _badge(
-          {IconData icon, String text, bool loading, BuildContext context}) =>
-      Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).accentColor,
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: loading
-              ? CircularProgressIndicator()
-              : Row(
-                  children: [
-                    Icon(icon, size: 15, color: Colors.white),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Text(text, style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
-                ),
-        ),
-      );
+class _Badge extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final bool isLoading;
 
-  Widget _tabs() => DefaultTabController(
-        length: 3,
-        child: Column(
-          children: [
-            TabBar(
-              labelColor: Colors.black,
-              tabs: [
-                Tab(text: 'Posts'),
-                Tab(text: 'Comments'),
-                Tab(text: 'About'),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
+  _Badge({
+    @required this.icon,
+    @required this.isLoading,
+    @required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.accentColor,
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Row(
                 children: [
-                  Center(
-                      child: Text(
-                    'Posts',
-                    style: const TextStyle(fontSize: 36),
-                  )),
-                  Center(
-                      child: Text(
-                    'Comments',
-                    style: const TextStyle(fontSize: 36),
-                  )),
-                  if (user.bio == null)
-                    Center(
-                      child: Text(
-                        'No bio.',
-                        style: const TextStyle(fontStyle: FontStyle.italic),
-                      ),
-                    )
-                  else
-                    Text(user.bio),
+                  Icon(icon, size: 15, color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Text(text),
+                  ),
                 ],
               ),
-            )
-          ],
-        ),
-      );
+      ),
+    );
+  }
 }
