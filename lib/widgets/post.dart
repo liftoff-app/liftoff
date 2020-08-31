@@ -86,164 +86,161 @@ class Post extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // TODO: add NSFW, locked, removed, deleted, stickied
     /// assemble info section
-    Widget info() {
-      // TODO: add NSFW, locked, removed, deleted, stickied
-      return Column(children: [
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (post.communityIcon != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: InkWell(
-                      onTap: _goToCommunity,
-                      child: SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: CachedNetworkImage(
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: imageProvider,
+    Widget info() => Column(children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (post.communityIcon != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: InkWell(
+                        onTap: _goToCommunity,
+                        child: SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: CachedNetworkImage(
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: imageProvider,
+                                ),
                               ),
                             ),
+                            imageUrl: post.communityIcon,
+                            errorWidget: (context, url, error) =>
+                                Text(error.toString()),
                           ),
-                          imageUrl: post.communityIcon,
-                          errorWidget: (context, url, error) =>
-                              Text(error.toString()),
                         ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-            Column(
-              children: [
-                Row(children: [
-                  RichText(
-                    overflow: TextOverflow.ellipsis, // TODO: fix overflowing
-                    text: TextSpan(
-                      style: TextStyle(
-                          fontSize: 15, color: theme.textTheme.bodyText1.color),
-                      children: [
-                        TextSpan(
-                            text: '!',
-                            style: TextStyle(fontWeight: FontWeight.w300)),
-                        TextSpan(
-                            text: post.communityName,
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = _goToCommunity),
-                        TextSpan(
-                            text: '@',
-                            style: TextStyle(fontWeight: FontWeight.w300)),
-                        TextSpan(
-                            text: instanceUrl,
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = _goToInstance),
-                      ],
-                    ),
-                  )
-                ]),
-                Row(children: [
-                  RichText(
-                      overflow: TextOverflow.ellipsis,
+                ],
+              ),
+              Column(
+                children: [
+                  Row(children: [
+                    RichText(
+                      overflow: TextOverflow.ellipsis, // TODO: fix overflowing
                       text: TextSpan(
                         style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 15,
                             color: theme.textTheme.bodyText1.color),
                         children: [
                           TextSpan(
-                              text: 'by',
+                              text: '!',
                               style: TextStyle(fontWeight: FontWeight.w300)),
                           TextSpan(
-                            text:
-                                ''' ${post.creatorPreferredUsername ?? post.creatorName}''',
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = _goToUser,
-                          ),
+                              text: post.communityName,
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = _goToCommunity),
                           TextSpan(
-                              text:
-                                  ''' · ${timeago.format(post.published, locale: 'en_short')}'''),
-                          if (postUrlDomain != null)
-                            TextSpan(text: ' · $postUrlDomain'),
-                          if (post.locked) TextSpan(text: ' · 🔒'),
+                              text: '@',
+                              style: TextStyle(fontWeight: FontWeight.w300)),
+                          TextSpan(
+                              text: instanceUrl,
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = _goToInstance),
                         ],
-                      ))
-                ]),
-              ],
-              crossAxisAlignment: CrossAxisAlignment.start,
-            ),
-            Spacer(),
-            Column(
-              children: [
-                IconButton(
-                  onPressed: _showMoreMenu,
-                  icon: Icon(Icons.more_vert),
-                )
-              ],
-            )
-          ]),
-        ),
-      ]);
-    }
+                      ),
+                    )
+                  ]),
+                  Row(children: [
+                    RichText(
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: theme.textTheme.bodyText1.color),
+                          children: [
+                            TextSpan(
+                                text: 'by',
+                                style: TextStyle(fontWeight: FontWeight.w300)),
+                            TextSpan(
+                              text:
+                                  ''' ${post.creatorPreferredUsername ?? post.creatorName}''',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = _goToUser,
+                            ),
+                            TextSpan(
+                                text:
+                                    ''' · ${timeago.format(post.published, locale: 'en_short')}'''),
+                            if (postUrlDomain != null)
+                              TextSpan(text: ' · $postUrlDomain'),
+                            if (post.locked) TextSpan(text: ' · 🔒'),
+                          ],
+                        ))
+                  ]),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              Spacer(),
+              Column(
+                children: [
+                  IconButton(
+                    onPressed: _showMoreMenu,
+                    icon: Icon(Icons.more_vert),
+                  )
+                ],
+              )
+            ]),
+          ),
+        ]);
 
     /// assemble title section
-    Widget title() {
-      return Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        child: Row(
-          children: [
-            Flexible(
-              child: Text(
-                '${post.name}',
-                textAlign: TextAlign.left,
-                softWrap: true,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+    Widget title() => Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+          child: Row(
+            children: [
+              Flexible(
+                child: Text(
+                  '${post.name}',
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-            if (post.url != null &&
-                whatType(post.url) == MediaType.other &&
-                post.thumbnailUrl != null)
-              Spacer(),
-            if (post.url != null &&
-                whatType(post.url) == MediaType.other &&
-                post.thumbnailUrl != null)
-              InkWell(
-                onTap: _openLink,
-                child: Stack(children: [
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: CachedNetworkImage(
-                        imageUrl: post.thumbnailUrl,
-                        width: 70,
-                        height: 70,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) =>
-                            Text(error.toString()),
-                      )),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Icon(
-                      Icons.launch,
-                      size: 20,
-                    ),
-                  )
-                ]),
-              )
-          ],
-        ),
-      );
-    }
+              if (post.url != null &&
+                  whatType(post.url) == MediaType.other &&
+                  post.thumbnailUrl != null)
+                Spacer(),
+              if (post.url != null &&
+                  whatType(post.url) == MediaType.other &&
+                  post.thumbnailUrl != null)
+                InkWell(
+                  onTap: _openLink,
+                  child: Stack(children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: CachedNetworkImage(
+                          imageUrl: post.thumbnailUrl,
+                          width: 70,
+                          height: 70,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) =>
+                              Text(error.toString()),
+                        )),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Icon(
+                        Icons.launch,
+                        size: 20,
+                      ),
+                    )
+                  ]),
+                )
+            ],
+          ),
+        );
 
     /// assemble link preview
     Widget linkPreview() {
@@ -303,38 +300,37 @@ class Post extends StatelessWidget {
     }
 
     /// assemble actions section
-    Widget actions() {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        child: Row(
-          children: [
-            Icon(Icons.comment),
-            Expanded(
-              flex: 999,
-              child: Text(
-                '''  ${NumberFormat.compact().format(post.numberOfComments)} comment${post.numberOfComments == 1 ? '' : 's'}''',
-                overflow: TextOverflow.fade,
-                softWrap: false,
+    Widget actions() => Padding(
+          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+          child: Row(
+            children: [
+              Icon(Icons.comment),
+              Expanded(
+                flex: 999,
+                child: Text(
+                  '''  ${NumberFormat.compact().format(post.numberOfComments)} comment${post.numberOfComments == 1 ? '' : 's'}''',
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                ),
               ),
-            ),
-            Spacer(),
-            IconButton(
-                icon: Icon(Icons.share),
-                onPressed: () => Share.text('Share post url', post.apId,
-                    'text/plain')), // TODO: find a way to mark it as url
-            IconButton(
-                icon: post.saved == true
-                    ? Icon(Icons.bookmark)
-                    : Icon(Icons.bookmark_border),
-                onPressed: _savePost),
-            IconButton(icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
-            Text(NumberFormat.compact().format(post.score)),
-            IconButton(
-                icon: Icon(Icons.arrow_downward), onPressed: _downvotePost),
-          ],
-        ),
-      );
-    }
+              Spacer(),
+              IconButton(
+                  icon: Icon(Icons.share),
+                  onPressed: () => Share.text('Share post url', post.apId,
+                      'text/plain')), // TODO: find a way to mark it as url
+              IconButton(
+                  icon: post.saved == true
+                      ? Icon(Icons.bookmark)
+                      : Icon(Icons.bookmark_border),
+                  onPressed: _savePost),
+              IconButton(
+                  icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
+              Text(NumberFormat.compact().format(post.score)),
+              IconButton(
+                  icon: Icon(Icons.arrow_downward), onPressed: _downvotePost),
+            ],
+          ),
+        );
 
     return Container(
       decoration: BoxDecoration(
