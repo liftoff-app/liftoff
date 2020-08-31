@@ -235,11 +235,11 @@ class Post extends StatelessWidget {
             ),
           ),
           if (post.url != null &&
-              !(whatType(post.url) != MediaType.other) &&
+              whatType(post.url) == MediaType.other &&
               post.thumbnailUrl != null)
             Spacer(),
           if (post.url != null &&
-              !(whatType(post.url) != MediaType.other) &&
+              whatType(post.url) == MediaType.other &&
               post.thumbnailUrl != null)
             InkWell(
               onTap: _openLink,
