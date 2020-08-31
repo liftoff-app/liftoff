@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'comment_tree.dart';
-import 'markdown_text.dart';
+import 'widgets/comment_tree.dart';
+import 'widgets/markdown_text.dart';
 
-class CommentWidget extends StatelessWidget {
+class Comment extends StatelessWidget {
   final int indent;
   final int postCreatorId;
   final CommentTree commentTree;
-  CommentWidget(
+  Comment(
     this.commentTree, {
     this.indent = 0,
     @required this.postCreatorId,
@@ -47,8 +47,7 @@ class CommentWidget extends StatelessWidget {
         style: TextStyle(fontStyle: FontStyle.italic),
       ));
     } else {
-      body =
-          Flexible(child: MarkdownText(commentTree.comment.content, context));
+      body = Flexible(child: MarkdownText(commentTree.comment.content));
     }
     return Column(
       children: [
@@ -108,7 +107,7 @@ class CommentWidget extends StatelessWidget {
                   top: BorderSide(width: 0.2))),
         ),
         for (var c in commentTree.children)
-          CommentWidget(
+          Comment(
             c,
             indent: indent + 1,
             postCreatorId: postCreatorId,

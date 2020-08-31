@@ -25,7 +25,7 @@ MediaType whatType(String url) {
   return MediaType.other;
 }
 
-class PostWidget extends StatelessWidget {
+class Post extends StatelessWidget {
   final PostView post;
   final String hostUrl;
 
@@ -35,7 +35,7 @@ class PostWidget extends StatelessWidget {
   ThemeData _theme;
   BuildContext _context;
 
-  PostWidget(this.post)
+  Post(this.post)
       : hostUrl = post.communityActorId.split('/')[2],
         linkPostDomain = post.url != null ? post.url.split('/')[2] : null;
 
@@ -327,7 +327,7 @@ class PostWidget extends StatelessWidget {
   Widget _textBody() {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: MarkdownText(post.body, _context),
+      child: MarkdownText(post.body),
     );
   }
 
