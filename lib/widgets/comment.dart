@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'widgets/comment_tree.dart';
-import 'widgets/markdown_text.dart';
+import '../comment_tree.dart';
+import 'markdown_text.dart';
 
 class Comment extends StatelessWidget {
   final int indent;
