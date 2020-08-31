@@ -10,9 +10,11 @@ import '../util/intl.dart';
 class UserProfile extends HookWidget {
   final User user;
   final Future<UserView> _userView;
+  final String _instanceUrl;
 
   UserProfile(this.user)
-      : _userView = LemmyApi('dev.lemmy.ml')
+      : _instanceUrl = user.actorId.split('/')[2],
+        _userView = LemmyApi(user.actorId.split('/')[2])
             .v1
             .search(q: user.name, type: SearchType.users, sort: SortType.active)
             .then((res) => res.users[0]);
@@ -128,7 +130,7 @@ class UserProfile extends HookWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0),
                   child: Text(
-                    '@${user.name}@', // TODO: add instance host uri
+                    '@${user.name}@$_instanceUrl',
                     style: theme.textTheme.caption,
                   ),
                 ),
