@@ -21,88 +21,152 @@ class UserProfileTab extends HookWidget {
     var userViewSnap = useFuture(_userView);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('hello'),
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        centerTitle: true,
+        title: FlatButton(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '@${user.name}',
+                style: TextStyle(color: theme.accentTextTheme.bodyText1.color),
+              ),
+              Icon(
+                Icons.expand_more,
+                color: theme.primaryIconTheme.color,
+              ),
+            ],
+          ),
+          onPressed: () {}, // TODO: should open bottomsheet
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+            ),
+            onPressed: () {}, // TODO: go to settings
+          )
+        ],
       ),
       body: Center(
-        child: Column(
+        child: Stack(
           children: [
-            SizedBox(
-              width: 65,
-              height: 65,
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [BoxShadow(blurRadius: 6, color: Colors.black54)],
-                  color: theme.backgroundColor, // TODO: add avatar, not color
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                  border: Border.all(color: Colors.white, width: 3),
+            Image.network(
+                'https://c4.wallpaperflare.com/wallpaper/500/442/354/outrun-vaporwave-hd-wallpaper-preview.jpg'), // TODO: should be the banner
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 60),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(40)),
+                      color: theme.scaffoldBackgroundColor,
+                    ),
+                  ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                user.preferredUsername ?? user.name,
-                style: theme.textTheme.headline6,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                '@${user.name}@', // TODO: add instance host uri
-                style: theme.textTheme.caption,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            SafeArea(
+              child: Column(
                 children: [
-                  _blueBadge(
-                    icon: Icons.comment,
-                    text: '''
-${NumberFormat.compact().format(userViewSnap.data.numberOfPosts ?? 0)} Posts''',
-                    loading: !userViewSnap.hasData,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: _blueBadge(
-                      icon: Icons.comment,
-                      text: '''
-${NumberFormat.compact().format(userViewSnap.data.numberOfPosts ?? 0)} Comments''',
-                      loading: !userViewSnap.hasData,
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(blurRadius: 6, color: Colors.black54)
+                        ],
+                        color: theme
+                            .backgroundColor, // TODO: add avatar, not color
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        border: Border.all(color: Colors.white, width: 3),
+                      ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      user.preferredUsername ?? user.name,
+                      style: theme.textTheme.headline6,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      '@${user.name}@', // TODO: add instance host uri
+                      style: theme.textTheme.caption,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _badge(
+                          context: context,
+                          icon: Icons.comment,
+                          text: '''
+${NumberFormat.compact().format(userViewSnap.data?.numberOfPosts ?? 0)} Posts''',
+                          loading: !userViewSnap.hasData,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: _badge(
+                            context: context,
+                            icon: Icons.comment,
+                            text: '''
+${NumberFormat.compact().format(userViewSnap.data?.numberOfPosts ?? 0)} Comments''',
+                            loading: !userViewSnap.hasData,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      'Joined ${timeago.format(user.published)}',
+                      style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.cake,
+                        size: 13,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          DateFormat('MMM dd, yyyy').format(user.published),
+                          style: theme.textTheme.bodyText1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(child: _tabs())
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text('''Joined ${timeago.format(user.published)}'''),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.cake,
-                  size: 13,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child:
-                      Text(DateFormat('MMM dd, yyyy').format(user.published)),
-                ),
-              ],
-            )
           ],
         ),
       ),
     );
   }
 
-  Widget _blueBadge({IconData icon, String text, bool loading}) => Container(
+  Widget _badge(
+          {IconData icon, String text, bool loading, BuildContext context}) =>
+      Container(
         decoration: BoxDecoration(
-          color: Colors.blue[300],
+          color: Theme.of(context).accentColor,
           borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
         child: Padding(
@@ -118,6 +182,47 @@ ${NumberFormat.compact().format(userViewSnap.data.numberOfPosts ?? 0)} Comments'
                     ),
                   ],
                 ),
+        ),
+      );
+
+  Widget _tabs() => DefaultTabController(
+        length: 3,
+        child: Column(
+          children: [
+            TabBar(
+              labelColor: Colors.black,
+              tabs: [
+                Tab(text: 'Posts'),
+                Tab(text: 'Comments'),
+                Tab(text: 'About'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  Center(
+                      child: Text(
+                    'Posts',
+                    style: const TextStyle(fontSize: 36),
+                  )),
+                  Center(
+                      child: Text(
+                    'Comments',
+                    style: const TextStyle(fontSize: 36),
+                  )),
+                  if (user.bio == null)
+                    Center(
+                      child: Text(
+                        'No bio.',
+                        style: const TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                    )
+                  else
+                    Text(user.bio),
+                ],
+              ),
+            )
+          ],
         ),
       );
 }
