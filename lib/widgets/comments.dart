@@ -9,15 +9,26 @@ import 'comment_tree.dart';
 class CommentsWidget extends HookWidget {
   final List<CommentView> rawComments;
   final List<CommentTree> comments;
+  final int postCreatorId;
 
-  CommentsWidget(this.rawComments)
+  CommentsWidget(this.rawComments, this.postCreatorId)
       : comments = CommentTree.fromList(rawComments);
 
   @override
   Widget build(BuildContext context) {
+    var sorting = useState(SortType.active);
     return Column(children: [
       // sorting menu goes here
-      for (var com in comments) CommentWidget(com),
+      if (comments.length == 0)
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 50),
+          child: Text(
+            'no comments yet',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        ),
+      for (var com in comments)
+        CommentWidget(com, postCreatorId: postCreatorId),
     ]);
   }
 }
