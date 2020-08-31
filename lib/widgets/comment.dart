@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'comment_tree.dart';
+import 'markdown_text.dart';
 
 class CommentWidget extends StatelessWidget {
   final int indent;
@@ -13,6 +14,23 @@ class CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var comment = commentTree.comment;
+    var body;
+    if (comment.deleted) {
+      body = Flexible(
+          child: Text(
+        'comment deleted by creator',
+        style: TextStyle(fontStyle: FontStyle.italic),
+      ));
+    } else if (comment.removed) {
+      body = Flexible(
+          child: Text(
+        'comment deleted by moderator',
+        style: TextStyle(fontStyle: FontStyle.italic),
+      ));
+    } else {
+      body =
+          Flexible(child: MarkdownText(commentTree.comment.content, context));
+    }
     return Column(
       children: [
         Container(
@@ -23,9 +41,7 @@ class CommentWidget extends StatelessWidget {
                 Spacer(),
                 Text(comment.score.toString()),
               ]),
-              Row(children: [
-                Flexible(child: Text(commentTree.comment.content)),
-              ]),
+              Row(children: [body]),
               Row(children: [
                 Spacer(),
                 // actions go here
