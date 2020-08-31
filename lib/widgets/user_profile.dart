@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../util/intl.dart';
+
 class UserProfile extends HookWidget {
   final User user;
   final Future<UserView> _userView;
@@ -79,9 +81,9 @@ class UserProfile extends HookWidget {
                     children: [
                       _badge(
                         context: context,
-                        icon: Icons.comment,
+                        icon: Icons.comment, // TODO: should be article icon
                         text: '''
-${NumberFormat.compact().format(userViewSnap.data?.numberOfPosts ?? 0)} Posts''',
+${compactNumber(userViewSnap.data?.numberOfPosts ?? 0)} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}''',
                         loading: !userViewSnap.hasData,
                       ),
                       Padding(
@@ -90,7 +92,7 @@ ${NumberFormat.compact().format(userViewSnap.data?.numberOfPosts ?? 0)} Posts'''
                           context: context,
                           icon: Icons.comment,
                           text: '''
-${NumberFormat.compact().format(userViewSnap.data?.numberOfPosts ?? 0)} Comments''',
+${compactNumber(userViewSnap.data?.numberOfComments ?? 0)} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 1)}''',
                           loading: !userViewSnap.hasData,
                         ),
                       ),
