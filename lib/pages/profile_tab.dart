@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../widgets/user_profile.dart';
+import 'settings.dart';
 
 class UserProfileTab extends HookWidget {
   final User user;
@@ -41,7 +42,10 @@ class UserProfileTab extends HookWidget {
             icon: Icon(
               Icons.settings,
             ),
-            onPressed: () {}, // TODO: go to settings
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Settings()));
+            }, // TODO: go to settings
           )
         ],
       ),

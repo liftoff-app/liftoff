@@ -12,7 +12,7 @@ abstract class _ConfigStore with Store {
 
   _ConfigStore() {
     // persitently save settings each time they are changed
-    _saveReactionDisposer = reaction((_) => theme, (_) {
+    _saveReactionDisposer = reaction((_) => [theme], (_) {
       save();
     });
   }
