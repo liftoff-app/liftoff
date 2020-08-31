@@ -14,6 +14,16 @@ class CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var comment = commentTree.comment;
+
+    // decide which username to use
+    var username;
+    if (comment.creatorPreferredUsername != null &&
+        comment.creatorPreferredUsername != '') {
+      username = comment.creatorPreferredUsername;
+    } else {
+      username = '@${comment.creatorName}';
+    }
+
     var body;
     if (comment.deleted) {
       body = Flexible(
