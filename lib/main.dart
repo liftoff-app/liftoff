@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/profile_tab.dart';
 import 'stores/config_store.dart';
 
 void main() {
@@ -31,7 +35,8 @@ class MyApp extends StatelessWidget {
             primarySwatch: ctx.watch<ConfigStore>().accentColor,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          home: MyHomePage(title: 'Flutter Demo Home Page'),
+          home: UserProfileTab(User.fromJson(jsonDecode(
+              '''{"id":13917,"name":"shilangyu","preferred_username":null,"password_encrypted":"","email":"xmarcinmarcin@gmail.com","avatar":null,"admin":false,"banned":false,"published":"2020-08-23T07:13:23.229279","updated":"2020-08-29T21:11:11.508707","show_nsfw":true,"theme":"minty","default_sort_type":0,"default_listing_type":1,"lang":"browser","show_avatars":true,"send_notifications_to_email":false,"matrix_user_id":null,"actor_id":"https://dev.lemmy.ml/u/shilangyu","bio":null,"local":true,"private_key":null,"public_key":null,"last_refreshed_at":"2020-08-23T07:13:23.229279","banner":null}'''))),
         );
       },
     );
@@ -58,25 +63,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text(widget.title),
-    ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text('You have pushed the button this many times:'),
-          Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.headline4,
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('You have pushed the button this many times:'),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: _incrementCounter,
-      tooltip: 'Increment',
-      child: Icon(Icons.add),
-    ),
-  );
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ),
+      );
 }
