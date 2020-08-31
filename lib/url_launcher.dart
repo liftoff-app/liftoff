@@ -5,6 +5,6 @@ Future<void> urlLauncher(String url) async {
     await ul.launch(url);
   } else {
     throw Exception();
-    // @TODO handle opening links to stuff in app
+    // TODO: handle opening links to stuff in app
   }
 }
