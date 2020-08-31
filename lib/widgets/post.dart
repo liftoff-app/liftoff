@@ -2,13 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
-import 'package:markdown/markdown.dart' as md;
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../url_launcher.dart';
+import 'markdown_text.dart';
 
 enum MediaType {
   image,
@@ -329,16 +327,7 @@ class PostWidget extends StatelessWidget {
   Widget _textBody() {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: MarkdownBody(
-        data: post.body,
-        extensionSet: md.ExtensionSet.gitHubWeb,
-        onTapLink: (href) {
-          urlLauncher(href)
-              .catchError((e) => Scaffold.of(_context).showSnackBar(SnackBar(
-                    content: Text('couldn\'t open link'),
-                  )));
-        },
-      ),
+      child: MarkdownText(post.body, _context),
     );
   }
 
