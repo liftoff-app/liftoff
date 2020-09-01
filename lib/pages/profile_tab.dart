@@ -1,67 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 
+import '../stores/accounts_store.dart';
 import '../widgets/user_profile.dart';
 import 'settings.dart';
 
 class UserProfileTab extends HookWidget {
-  final User user;
-
-  UserProfileTab(this.user);
+  UserProfileTab();
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
-        title: FlatButton(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '@${user.name}',
-                style: TextStyle(color: Colors.white),
+    return Observer(
+      builder: (ctx) {
+        var user = ctx.watch<AccountsStore>().defaultUser;
+
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            centerTitle: true,
+            title: FlatButton(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '@${user.name}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Icon(
+                    Icons.expand_more,
+                    color: theme.primaryIconTheme.color,
+                  ),
+                ],
               ),
-              Icon(
-                Icons.expand_more,
-                color: theme.primaryIconTheme.color,
-              ),
+              onPressed: () {}, // TODO: should open bottomsheet
+            ),
+            actions: [
+              IconButton(
+                icon: Container(
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                      blurRadius: 10,
+                      color: Colors.black54,
+                    )
+                  ]),
+                  child: Icon(
+                    Icons.settings,
+                    color: user.banner == null ? theme.iconTheme.color : null,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => Settings()));
+                },
+              )
             ],
           ),
-          onPressed: () {}, // TODO: should open bottomsheet
-        ),
-        actions: [
-          IconButton(
-            icon: Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  blurRadius: 10,
-                  color: Colors.black54,
-                )
-              ]),
-              child: Icon(
-                Icons.settings,
-                color: user.banner == null ? theme.iconTheme.color : null,
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => Settings()));
-            },
-          )
-        ],
-      ),
-      body: UserProfile(
-        userId: user.id,
-        instanceUrl: user.actorId.split('/')[2],
-      ),
+          body: UserProfile(
+            userId: user.id,
+            instanceUrl: user.actorId.split('/')[2],
+          ),
+        );
+      },
     );
   }
 }

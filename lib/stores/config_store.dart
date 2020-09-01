@@ -23,8 +23,9 @@ abstract class _ConfigStore with Store {
 
   void load() async {
     var prefs = await SharedPreferences.getInstance();
-    // set saved settings or create defaults
+    // load saved settings or create defaults
     theme = _themeModeFromString(prefs.getString('theme') ?? 'system');
+    // TODO: persistently save and load accent color
   }
 
   void save() async {
