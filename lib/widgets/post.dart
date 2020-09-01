@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../pages/full_post.dart';
 import 'markdown_text.dart';
 
 enum MediaType {
@@ -28,11 +29,12 @@ MediaType whatType(String url) {
 class Post extends StatelessWidget {
   final PostView post;
   final String instanceUrl;
+  final bool fullPost;
 
   /// nullable
   final String postUrlDomain;
 
-  Post(this.post)
+  Post(this.post, {this.fullPost = false})
       : instanceUrl = post.communityActorId.split('/')[2],
         postUrlDomain = post.url != null ? post.url.split('/')[2] : null;
 
@@ -47,7 +49,10 @@ class Post extends StatelessWidget {
   }
 
   void _goToPost(BuildContext context) {
-    print('GO TO POST');
+    final api = LemmyApi(instanceUrl).v1;
+    final p = api.getPost(id: post.id);
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => FullPostPage.fromFuture(p, post: post)));
   }
 
   void _goToCommunity() {
@@ -183,14 +188,15 @@ class Post extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
               ),
               Spacer(),
-              Column(
-                children: [
-                  IconButton(
-                    onPressed: _showMoreMenu,
-                    icon: Icon(Icons.more_vert),
-                  )
-                ],
-              )
+              if (!fullPost)
+                Column(
+                  children: [
+                    IconButton(
+                      onPressed: _showMoreMenu,
+                      icon: Icon(Icons.more_vert),
+                    )
+                  ],
+                )
             ]),
           ),
         ]);
@@ -314,15 +320,17 @@ class Post extends StatelessWidget {
                 ),
               ),
               Spacer(),
-              IconButton(
-                  icon: Icon(Icons.share),
-                  onPressed: () => Share.text('Share post url', post.apId,
-                      'text/plain')), // TODO: find a way to mark it as url
-              IconButton(
-                  icon: post.saved == true
-                      ? Icon(Icons.bookmark)
-                      : Icon(Icons.bookmark_border),
-                  onPressed: _savePost),
+              if (!fullPost)
+                IconButton(
+                    icon: Icon(Icons.share),
+                    onPressed: () => Share.text('Share post url', post.apId,
+                        'text/plain')), // TODO: find a way to mark it as url
+              if (!fullPost)
+                IconButton(
+                    icon: post.saved == true
+                        ? Icon(Icons.bookmark)
+                        : Icon(Icons.bookmark_border),
+                    onPressed: _savePost),
               IconButton(
                   icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
               Text(NumberFormat.compact().format(post.score)),
@@ -339,7 +347,7 @@ class Post extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: InkWell(
-        onTap: () => _goToPost(context),
+        onTap: fullPost ? null : () => _goToPost(context),
         child: Column(
           children: [
             info(),
