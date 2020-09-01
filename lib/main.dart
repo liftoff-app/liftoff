@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
           themeMode: ctx.watch<ConfigStore>().theme,
           darkTheme: ThemeData.dark(),
           theme: ThemeData(
-            primarySwatch: ctx.watch<ConfigStore>().accentColor,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: MyHomePage(title: 'Flutter hello world'),

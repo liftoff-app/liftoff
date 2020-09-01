@@ -69,11 +69,6 @@ class _AppearanceConfig extends StatelessWidget {
                   ctx.read<ConfigStore>().theme = selected;
                 },
               ),
-            Text(
-              'Accent color',
-              style: theme.textTheme.headline6,
-            ),
-            // TODO: add accent color picking
           ],
         ),
       ),

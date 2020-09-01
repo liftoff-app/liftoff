@@ -25,7 +25,6 @@ abstract class _ConfigStore with Store {
     var prefs = await SharedPreferences.getInstance();
     // load saved settings or create defaults
     theme = _themeModeFromString(prefs.getString('theme') ?? 'system');
-    // TODO: persistently save and load accent color
   }
 
   void save() async {
@@ -37,8 +36,7 @@ abstract class _ConfigStore with Store {
   @observable
   ThemeMode theme;
 
-  @observable
-  MaterialColor accentColor;
+  // TODO: add amoledDarkMode switch
 }
 
 ThemeMode _themeModeFromString(String theme) =>
