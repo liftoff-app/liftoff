@@ -66,15 +66,11 @@ abstract class _AccountsStore with Store {
     return tokens[userTag[1]][userTag[0]];
   }
 
-  User defaultUserFor(String instanceUrl) => Computed(() {
-        var userTag = _defaultAccounts[instanceUrl].split('@');
-        return users[userTag[1]][userTag[0]];
-      }).value;
+  User defaultUserFor(String instanceUrl) =>
+      Computed(() => users[instanceUrl][_defaultAccounts[instanceUrl]]).value;
 
-  Jwt defaultTokenFor(String instanceUrl) => Computed(() {
-        var userTag = _defaultAccounts[instanceUrl].split('@');
-        return tokens[userTag[1]][userTag[0]];
-      }).value;
+  Jwt defaultTokenFor(String instanceUrl) =>
+      Computed(() => tokens[instanceUrl][_defaultAccounts[instanceUrl]]).value;
 
   @action
   void setDefaultAccount(String instanceUrl, String username) {
