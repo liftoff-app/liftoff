@@ -58,7 +58,10 @@ class UserProfileTab extends HookWidget {
           )
         ],
       ),
-      body: UserProfile(user),
+      body: UserProfile(
+        userId: user.id,
+        instanceUrl: user.actorId.split('/')[2],
+      ),
     );
   }
 }
