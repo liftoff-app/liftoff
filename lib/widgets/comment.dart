@@ -25,30 +25,33 @@ class Comment extends StatelessWidget {
     var comment = commentTree.comment;
 
     // decide which username to use
-    var username;
-    if (comment.creatorPreferredUsername != null &&
-        comment.creatorPreferredUsername != '') {
-      username = comment.creatorPreferredUsername;
-    } else {
-      username = '@${comment.creatorName}';
-    }
+    final username = () {
+      if (comment.creatorPreferredUsername != null &&
+          comment.creatorPreferredUsername != '') {
+        return comment.creatorPreferredUsername;
+      } else {
+        return '@${comment.creatorName}';
+      }
+    }();
 
-    var body;
-    if (comment.deleted) {
-      body = Flexible(
-          child: Text(
-        'comment deleted by creator',
-        style: TextStyle(fontStyle: FontStyle.italic),
-      ));
-    } else if (comment.removed) {
-      body = Flexible(
-          child: Text(
-        'comment deleted by moderator',
-        style: TextStyle(fontStyle: FontStyle.italic),
-      ));
-    } else {
-      body = Flexible(child: MarkdownText(commentTree.comment.content));
-    }
+    final body = () {
+      if (comment.deleted) {
+        return Flexible(
+            child: Text(
+          'comment deleted by creator',
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ));
+      } else if (comment.removed) {
+        return Flexible(
+            child: Text(
+          'comment deleted by moderator',
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ));
+      } else {
+        return Flexible(child: MarkdownText(commentTree.comment.content));
+      }
+    }();
+
     return Column(
       children: [
         Container(
