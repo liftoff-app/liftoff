@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../stores/accounts_store.dart';
+import '../widgets/bottom_modal.dart';
 import '../widgets/user_profile.dart';
 import 'settings.dart';
 
@@ -39,7 +40,51 @@ class UserProfileTab extends HookWidget {
                   ),
                 ],
               ),
-              onPressed: () {}, // TODO: should open bottomsheet
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) {
+                    var userTags = <String>[];
+
+                    ctx
+                        .read<AccountsStore>()
+                        .users
+                        .forEach((instanceUrl, value) {
+                      value.forEach((username, _) {
+                        userTags.add('$username@$instanceUrl');
+                      });
+                    });
+
+                    return Observer(
+                      builder: (ctx) {
+                        var user = ctx.watch<AccountsStore>().defaultUser;
+                        var instanceUrl = user.actorId.split('/')[2];
+
+                        return BottomModal(
+                          title: 'account',
+                          child: Column(
+                            children: [
+                              for (final tag in userTags)
+                                RadioListTile<String>(
+                                  value: tag,
+                                  title: Text(tag),
+                                  groupValue: '${user.name}@$instanceUrl',
+                                  onChanged: (selected) {
+                                    var userTag = selected.split('@');
+                                    ctx.read<AccountsStore>().setDefaultAccount(
+                                        userTag[1], userTag[0]);
+                                    Navigator.of(ctx).pop();
+                                  },
+                                )
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
             ),
             actions: [
               IconButton(

@@ -23,7 +23,7 @@ class UserProfile extends HookWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    var userViewSnap = useFuture(_userView);
+    var userViewSnap = useFuture(_userView, preserveState: false);
 
     Widget bio;
 
