@@ -6,6 +6,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../util/intl.dart';
+import 'badge.dart';
 
 class UserProfile extends HookWidget {
   final int userId;
@@ -155,19 +156,39 @@ class UserProfile extends HookWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _Badge(
-                        icon: Icons.comment, // TODO: should be article icon
-                        text: '''
-${compactNumber(userViewSnap.data?.numberOfPosts ?? 0)} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}''',
-                        isLoading: !userViewSnap.hasData,
+                      Badge(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.comment, // TODO: should be article icon
+                              size: 15,
+                              color: Colors.white,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Text('''
+${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfPosts) : '-'} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}'''),
+                            ),
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0),
-                        child: _Badge(
-                          icon: Icons.comment,
-                          text: '''
-${compactNumber(userViewSnap.data?.numberOfComments ?? 0)} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 1)}''',
-                          isLoading: !userViewSnap.hasData,
+                        child: Badge(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.comment,
+                                size: 15,
+                                color: Colors.white,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: Text('''
+${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfComments) : '-'} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 0)}'''),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -205,44 +226,6 @@ Joined ${userViewSnap.hasData ? timeago.format(userViewSnap.data.published) : ''
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final bool isLoading;
-
-  _Badge({
-    @required this.icon,
-    @required this.isLoading,
-    @required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.accentColor,
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: isLoading
-            ? CircularProgressIndicator()
-            : Row(
-                children: [
-                  Icon(icon, size: 15, color: Colors.white),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Text(text),
-                  ),
-                ],
-              ),
       ),
     );
   }
