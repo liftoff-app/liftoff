@@ -80,10 +80,10 @@ class Comment extends StatelessWidget {
             children: [
               Row(children: [
                 if (comment.creatorAvatar != null)
-                  InkWell(
-                    onTap: _goToUser,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: InkWell(
+                      onTap: _goToUser,
                       child: CachedNetworkImage(
                         imageUrl: comment.creatorAvatar,
                         height: 20,
@@ -112,9 +112,9 @@ class Comment extends StatelessWidget {
                 if (comment.bannedFromCommunity)
                   _CommentTag('BANNED FROM COMMUNITY', Colors.red),
                 Spacer(),
-                Text(timeago.format(comment.published, locale: 'en_short')),
-                Text(' · '),
                 Text(comment.score.toString()),
+                Text(' · '),
+                Text(timeago.format(comment.published, locale: 'en_short')),
               ]),
               Row(children: [body]),
               Row(children: [
