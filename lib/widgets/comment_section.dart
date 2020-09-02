@@ -29,9 +29,11 @@ class CommentSection extends HookWidget {
     var comms = useState(comments);
 
     void sortComments(CommentSortType sort) {
-      if (sort == sorting.value || sort == CommentSortType.chat) return;
+      if (sort != sorting.value && sort != CommentSortType.chat) {
+        CommentTree.sortList(sort, comms.value);
+      }
 
-      CommentTree.sortList(sort, comms.value);
+      sorting.value = sort;
     }
 
     return Column(children: [
