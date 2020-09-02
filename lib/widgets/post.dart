@@ -7,6 +7,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../pages/full_post.dart';
+import '../url_launcher.dart';
 import 'markdown_text.dart';
 
 enum MediaType {
@@ -42,6 +43,7 @@ class Post extends StatelessWidget {
 
   void _openLink() {
     print('OPEN LINK');
+    urlLauncher(post.url);
   }
 
   void _goToUser() {
