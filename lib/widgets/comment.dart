@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../comment_tree.dart';
@@ -16,8 +17,24 @@ class Comment extends StatelessWidget {
     @required this.postCreatorId,
   });
 
+  void _openMoreMenu() {
+    print('OPEN MORE MENU');
+  }
+
   void _goToUser() {
     print('GO TO USER');
+  }
+
+  void _save(bool save) {
+    print('SAVE COMMENT, $save');
+  }
+
+  void _reply() {
+    print('OPEN REPLY BOX');
+  }
+
+  void _vote(VoteType vote) {
+    print('COMMENT VOTE: ${vote.toString()}');
   }
 
   bool get isOP => commentTree.comment.creatorId == postCreatorId;
@@ -25,6 +42,8 @@ class Comment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final comment = commentTree.comment;
+
+    final saved = comment.saved ?? false;
 
     // decide which username to use
     final username = () {
@@ -100,7 +119,31 @@ class Comment extends StatelessWidget {
               Row(children: [body]),
               Row(children: [
                 Spacer(),
-                // actions go here
+                _CommentAction(
+                  icon: Icons.more_horiz,
+                  onPressed: _openMoreMenu,
+                  tooltip: 'more',
+                ),
+                _CommentAction(
+                  icon: saved ? Icons.bookmark : Icons.bookmark_border,
+                  onPressed: () => _save(!saved),
+                  tooltip: '${saved ? 'unsave' : 'save'} comment',
+                ),
+                _CommentAction(
+                  icon: Icons.reply,
+                  onPressed: _reply,
+                  tooltip: 'reply',
+                ),
+                _CommentAction(
+                  icon: Icons.arrow_upward,
+                  onPressed: () => _vote(VoteType.up),
+                  tooltip: 'upvote',
+                ),
+                _CommentAction(
+                  icon: Icons.arrow_downward,
+                  onPressed: () => _vote(VoteType.down),
+                  tooltip: 'downvote',
+                ),
               ])
             ],
           ),
@@ -146,5 +189,32 @@ class CommentTag extends StatelessWidget {
                 fontWeight: FontWeight.w800,
               )),
         ),
+      );
+}
+
+class _CommentAction extends StatelessWidget {
+  final IconData icon;
+  final void Function() onPressed;
+  final String tooltip;
+
+  const _CommentAction({
+    Key key,
+    @required this.icon,
+    @required this.onPressed,
+    @required this.tooltip,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        constraints: BoxConstraints.tight(Size(32, 26)),
+        icon: Icon(
+          icon,
+          color: Theme.of(context).iconTheme.color.withAlpha(190),
+        ),
+        splashRadius: 25,
+        onPressed: onPressed,
+        iconSize: 22,
+        tooltip: tooltip,
+        padding: EdgeInsets.all(0),
       );
 }
