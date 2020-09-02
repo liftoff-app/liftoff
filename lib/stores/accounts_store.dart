@@ -12,8 +12,9 @@ abstract class _AccountsStore with Store {
   ReactionDisposer _saveReactionDisposer;
 
   _AccountsStore() {
-    // persitently save settings each time they are changed
+    // persistently save settings each time they are changed
     _saveReactionDisposer = reaction(
+      // TODO: does not react to deep changes in users and tokens
       (_) => [
         users.asObservable(),
         tokens.asObservable(),
@@ -43,9 +44,11 @@ abstract class _AccountsStore with Store {
 
   void save() async {
     var prefs = await SharedPreferences.getInstance();
-    // TODO: save users and tokens
+
     await prefs.setString('defaultAccount', _defaultAccount);
     await prefs.setString('defaultAccounts', jsonEncode(_defaultAccounts));
+    await prefs.setString('users', jsonEncode(users));
+    await prefs.setString('tokens', jsonEncode(tokens));
   }
 
   /// if path to tokens map exists, it exists for users as well
