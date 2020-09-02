@@ -6,26 +6,44 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../util/intl.dart';
+import 'badge.dart';
 
 class UserProfile extends HookWidget {
-  final User user;
+  final int userId;
   final Future<UserView> _userView;
-  final String _instanceUrl;
+  final String instanceUrl;
 
-  UserProfile(this.user)
-      : _instanceUrl = user.actorId.split('/')[2],
-        _userView = LemmyApi(user.actorId.split('/')[2])
+  UserProfile({@required this.userId, @required this.instanceUrl})
+      : _userView = LemmyApi(instanceUrl)
             .v1
-            .search(q: user.name, type: SearchType.users, sort: SortType.active)
-            .then((res) => res.users[0]);
+            .getUserDetails(
+                userId: userId, savedOnly: true, sort: SortType.active)
+            .then((res) => res.user);
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    var userViewSnap = useFuture(_userView);
+    var userViewSnap = useFuture(_userView, preserveState: false);
 
-    Widget _tabs() => DefaultTabController(
+    Widget bio;
+
+    if (userViewSnap.hasData) {
+      if (userViewSnap.data.bio != null) {
+        bio = Text(userViewSnap.data.bio);
+      } else {
+        bio = Center(
+          child: Text(
+            'no bio',
+            style: const TextStyle(fontStyle: FontStyle.italic),
+          ),
+        );
+      }
+    } else {
+      bio = Center(child: CircularProgressIndicator());
+    }
+
+    Widget tabs() => DefaultTabController(
           length: 3,
           child: Column(
             children: [
@@ -41,24 +59,18 @@ class UserProfile extends HookWidget {
                 child: TabBarView(
                   children: [
                     Center(
-                        child: Text(
-                      'Posts',
-                      style: const TextStyle(fontSize: 36),
-                    )),
+                      child: Text(
+                        'Posts',
+                        style: const TextStyle(fontSize: 36),
+                      ),
+                    ),
                     Center(
-                        child: Text(
-                      'Comments',
-                      style: const TextStyle(fontSize: 36),
-                    )),
-                    if (user.bio == null)
-                      Center(
-                        child: Text(
-                          'no bio',
-                          style: const TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      )
-                    else
-                      Text(user.bio),
+                      child: Text(
+                        'Comments',
+                        style: const TextStyle(fontSize: 36),
+                      ),
+                    ),
+                    bio,
                   ],
                 ),
               )
@@ -69,9 +81,9 @@ class UserProfile extends HookWidget {
     return Center(
       child: Stack(
         children: [
-          if (user.banner != null)
+          if (userViewSnap.data?.banner != null)
             CachedNetworkImage(
-              imageUrl: user.banner,
+              imageUrl: userViewSnap.data.banner,
             )
           else
             Container(
@@ -87,7 +99,10 @@ class UserProfile extends HookWidget {
                 height: double.infinity,
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(40),
+                      topLeft: Radius.circular(40),
+                    ),
                     color: theme.scaffoldBackgroundColor,
                   ),
                 ),
@@ -97,7 +112,7 @@ class UserProfile extends HookWidget {
           SafeArea(
             child: Column(
               children: [
-                if (user.avatar != null)
+                if (userViewSnap.data?.avatar != null)
                   SizedBox(
                     width: 80,
                     height: 80,
@@ -113,24 +128,26 @@ class UserProfile extends HookWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                         child: CachedNetworkImage(
-                          imageUrl: user.avatar,
+                          imageUrl: userViewSnap.data.avatar,
                         ),
                       ),
                     ),
                   ),
                 Padding(
-                  padding: user.avatar == null
-                      ? const EdgeInsets.only(top: 70)
-                      : const EdgeInsets.only(top: 8.0),
+                  padding: userViewSnap.data?.avatar != null
+                      ? const EdgeInsets.only(top: 8.0)
+                      : const EdgeInsets.only(top: 70),
                   child: Text(
-                    user.preferredUsername ?? user.name,
+                    userViewSnap.data?.preferredUsername ??
+                        userViewSnap.data?.name ??
+                        '',
                     style: theme.textTheme.headline6,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0),
                   child: Text(
-                    '@${user.name}@$_instanceUrl',
+                    '@${userViewSnap.data?.name ?? ''}@$instanceUrl',
                     style: theme.textTheme.caption,
                   ),
                 ),
@@ -139,19 +156,39 @@ class UserProfile extends HookWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _Badge(
-                        icon: Icons.comment, // TODO: should be article icon
-                        text: '''
-${compactNumber(userViewSnap.data?.numberOfPosts ?? 0)} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}''',
-                        isLoading: !userViewSnap.hasData,
+                      Badge(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.comment, // TODO: should be article icon
+                              size: 15,
+                              color: Colors.white,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Text('''
+${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfPosts) : '-'} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}'''),
+                            ),
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0),
-                        child: _Badge(
-                          icon: Icons.comment,
-                          text: '''
-${compactNumber(userViewSnap.data?.numberOfComments ?? 0)} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 1)}''',
-                          isLoading: !userViewSnap.hasData,
+                        child: Badge(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.comment,
+                                size: 15,
+                                color: Colors.white,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: Text('''
+${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfComments) : '-'} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 0)}'''),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -160,7 +197,8 @@ ${compactNumber(userViewSnap.data?.numberOfComments ?? 0)} Comment${pluralS(user
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
-                    'Joined ${timeago.format(user.published)}',
+                    '''
+Joined ${userViewSnap.hasData ? timeago.format(userViewSnap.data.published) : ''}''',
                     style: theme.textTheme.bodyText1,
                   ),
                 ),
@@ -174,55 +212,20 @@ ${compactNumber(userViewSnap.data?.numberOfComments ?? 0)} Comment${pluralS(user
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0),
                       child: Text(
-                        DateFormat('MMM dd, yyyy').format(user.published),
+                        userViewSnap.hasData
+                            ? DateFormat('MMM dd, yyyy')
+                                .format(userViewSnap.data.published)
+                            : '',
                         style: theme.textTheme.bodyText1,
                       ),
                     ),
                   ],
                 ),
-                Expanded(child: _tabs())
+                Expanded(child: tabs())
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final bool isLoading;
-
-  _Badge({
-    @required this.icon,
-    @required this.isLoading,
-    @required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.accentColor,
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: isLoading
-            ? CircularProgressIndicator()
-            : Row(
-                children: [
-                  Icon(icon, size: 15, color: Colors.white),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Text(text),
-                  ),
-                ],
-              ),
       ),
     );
   }
