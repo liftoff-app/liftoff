@@ -10,16 +10,29 @@ class CommentSection extends HookWidget {
   final List<CommentView> rawComments;
   final List<CommentTree> comments;
   final int postCreatorId;
+  final CommentSortType sortType;
 
-  CommentSection(this.rawComments, {@required this.postCreatorId})
-      : comments = CommentTree.fromList(rawComments),
+  CommentSection(
+    List<CommentView> rawComments, {
+    @required this.postCreatorId,
+    this.sortType = CommentSortType.hot,
+  })  : comments =
+            CommentTree.sortList(sortType, CommentTree.fromList(rawComments)),
+        rawComments = rawComments
+          ..sort((b, a) => a.published.compareTo(b.published)),
         assert(postCreatorId != null);
 
   @override
   Widget build(BuildContext context) {
+    var sorting = useState(sortType);
     var rawComms = useState(rawComments);
     var comms = useState(comments);
-    var sorting = useState(CommentSortType.hot);
+
+    void sortComments(CommentSortType sort) {
+      if (sort == sorting.value || sort == CommentSortType.chat) return;
+
+      CommentTree.sortList(sort, comms.value);
+    }
 
     return Column(children: [
       Padding(
@@ -36,16 +49,7 @@ class CommentSection extends HookWidget {
                 // TODO: change it to universal BottomModal
                 underline: Container(),
                 isDense: true,
-                // ignore: avoid_types_on_closure_parameters
-                onChanged: (CommentSortType val) {
-                  if (val != sorting.value && val != CommentSortType.chat) {
-                    CommentTree.sortList(val, comms.value);
-                  } else {
-                    rawComms.value
-                        .sort((a, b) => a.published.compareTo(b.published));
-                  }
-                  sorting.value = val;
-                },
+                onChanged: sortComments,
                 value: sorting.value,
                 items: [
                   DropdownMenuItem(

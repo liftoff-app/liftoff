@@ -45,7 +45,8 @@ class CommentTree {
   void sort(CommentSortType sortType) {
     switch (sortType) {
       case CommentSortType.chat:
-        throw Exception('i dont do this kinda stuff kido');
+        // throw Exception('i dont do this kinda stuff kido');
+        return;
       case CommentSortType.hot:
         return _sort((b, a) =>
             a.comment.computedHotRank.compareTo(b.comment.computedHotRank));
@@ -67,7 +68,8 @@ class CommentTree {
     }
   }
 
-  static void sortList(CommentSortType sortType, List<CommentTree> comms) {
+  static List<CommentTree> sortList(
+      CommentSortType sortType, List<CommentTree> comms) {
     switch (sortType) {
       case CommentSortType.chat:
         throw Exception('i dont do this kinda stuff kido');
@@ -77,27 +79,31 @@ class CommentTree {
         for (var i = 0; i < comms.length; i++) {
           comms[i].sort(sortType);
         }
-        break;
+        return comms;
+
       case CommentSortType.new_:
         comms
             .sort((b, a) => a.comment.published.compareTo(b.comment.published));
         for (var i = 0; i < comms.length; i++) {
           comms[i].sort(sortType);
         }
-        break;
+        return comms;
+
       case CommentSortType.old:
         comms
             .sort((b, a) => b.comment.published.compareTo(a.comment.published));
         for (var i = 0; i < comms.length; i++) {
           comms[i].sort(sortType);
         }
-        break;
+        return comms;
+
       case CommentSortType.top:
         comms.sort((b, a) => a.comment.score.compareTo(b.comment.score));
         for (var i = 0; i < comms.length; i++) {
           comms[i].sort(sortType);
         }
-        break;
+        return comms;
     }
+    throw Exception('unreachable');
   }
 }
