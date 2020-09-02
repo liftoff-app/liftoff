@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,9 +13,17 @@ abstract class _AccountsStore with Store {
 
   _AccountsStore() {
     // persitently save settings each time they are changed
-    _saveReactionDisposer = reaction((_) => [users, tokens], (_) {
-      save();
-    });
+    _saveReactionDisposer = reaction(
+      (_) => [
+        users.asObservable(),
+        tokens.asObservable(),
+        _defaultAccount,
+        _defaultAccounts.asObservable(),
+      ],
+      (_) {
+        save();
+      },
+    );
   }
 
   void dispose() {
@@ -23,15 +33,19 @@ abstract class _AccountsStore with Store {
   void load() async {
     var prefs = await SharedPreferences.getInstance();
     // set saved settings or create defaults
-    // TODO: load saved
+    // TODO: load saved users and tokens
     users = ObservableMap();
     tokens = ObservableMap();
-    _defaultAccounts = ObservableMap();
+    _defaultAccount = prefs.getString('defaultAccount');
+    _defaultAccounts = ObservableMap.of(Map.castFrom(
+        jsonDecode(prefs.getString('defaultAccounts') ?? 'null') ?? {}));
   }
 
   void save() async {
     var prefs = await SharedPreferences.getInstance();
-    // TODO: save
+    // TODO: save users and tokens
+    await prefs.setString('defaultAccount', _defaultAccount);
+    await prefs.setString('defaultAccounts', jsonEncode(_defaultAccounts));
   }
 
   /// if path to tokens map exists, it exists for users as well
