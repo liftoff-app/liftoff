@@ -107,10 +107,10 @@ class Comment extends StatelessWidget {
                       )),
                   onLongPress: _goToUser,
                 ),
-                if (isOP) CommentTag('OP', Theme.of(context).accentColor),
-                if (comment.banned) CommentTag('BANNED', Colors.red),
+                if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
+                if (comment.banned) _CommentTag('BANNED', Colors.red),
                 if (comment.bannedFromCommunity)
-                  CommentTag('BANNED FROM COMMUNITY', Colors.red),
+                  _CommentTag('BANNED FROM COMMUNITY', Colors.red),
                 Spacer(),
                 Text(timeago.format(comment.published, locale: 'en_short')),
                 Text(' · '),
@@ -167,11 +167,11 @@ class Comment extends StatelessWidget {
   }
 }
 
-class CommentTag extends StatelessWidget {
+class _CommentTag extends StatelessWidget {
   final String text;
   final Color bgColor;
 
-  const CommentTag(this.text, this.bgColor);
+  const _CommentTag(this.text, this.bgColor);
 
   @override
   Widget build(BuildContext context) => Padding(
