@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../comment_tree.dart';
+import '../util/text_color.dart';
 import 'markdown_text.dart';
 
 class Comment extends StatelessWidget {
@@ -22,7 +24,7 @@ class Comment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var comment = commentTree.comment;
+    final comment = commentTree.comment;
 
     // decide which username to use
     final username = () {
@@ -91,6 +93,8 @@ class Comment extends StatelessWidget {
                 if (comment.bannedFromCommunity)
                   CommentTag('BANNED FROM COMMUNITY', Colors.red),
                 Spacer(),
+                Text(timeago.format(comment.published, locale: 'en_short')),
+                Text(' · '),
                 Text(comment.score.toString()),
               ]),
               Row(children: [body]),
@@ -137,7 +141,7 @@ class CommentTag extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
           child: Text(text,
               style: TextStyle(
-                color: Colors.white,
+                color: textColorBasedOnBackground(bgColor),
                 fontSize: Theme.of(context).textTheme.bodyText1.fontSize - 5,
                 fontWeight: FontWeight.w800,
               )),
