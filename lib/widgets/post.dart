@@ -265,7 +265,9 @@ class Post extends StatelessWidget {
           onTap: _openLink,
           child: Container(
             decoration: BoxDecoration(
-                border: Border.all(width: 1),
+                border: Border.all(
+                    width: 1,
+                    color: Theme.of(context).iconTheme.color.withAlpha(170)),
                 borderRadius: BorderRadius.circular(5)),
             child: Padding(
               padding: const EdgeInsets.all(10),
