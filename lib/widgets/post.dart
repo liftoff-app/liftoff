@@ -180,9 +180,17 @@ class Post extends StatelessWidget {
                             TextSpan(
                                 text:
                                     ''' · ${timeago.format(post.published, locale: 'en_short')}'''),
+                            if (post.locked) TextSpan(text: ' · 🔒'),
+                            if (post.stickied) TextSpan(text: ' · 📌'),
+                            if (post.nsfw) TextSpan(text: ' · '),
+                            if (post.nsfw)
+                              TextSpan(
+                                  text: 'NSFW',
+                                  style: TextStyle(color: Colors.red)),
                             if (postUrlDomain != null)
                               TextSpan(text: ' · $postUrlDomain'),
-                            if (post.locked) TextSpan(text: ' · 🔒'),
+                            if (post.removed) TextSpan(text: ' · REMOVED'),
+                            if (post.deleted) TextSpan(text: ' · DELETED'),
                           ],
                         ))
                   ]),
