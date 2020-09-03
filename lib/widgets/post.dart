@@ -51,10 +51,8 @@ class Post extends StatelessWidget {
   }
 
   void _goToPost(BuildContext context) {
-    final api = LemmyApi(instanceUrl).v1;
-    final p = api.getPost(id: post.id);
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => FullPostPage.fromFuture(p, post: post)));
+        builder: (context) => FullPostPage.fromPostView(post)));
   }
 
   void _goToCommunity() {

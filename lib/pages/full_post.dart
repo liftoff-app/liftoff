@@ -1,6 +1,7 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:lemmy_api_client/src/models/post.dart';
 
 import '../widgets/comment_section.dart';
@@ -10,9 +11,15 @@ class FullPostPage extends HookWidget {
   final Future<FullPost> fullPost;
   final PostView post;
 
-  FullPostPage(FullPost fullPost, {this.post})
-      : fullPost = Future(() => fullPost);
-  FullPostPage.fromFuture(this.fullPost, {this.post});
+  FullPostPage({@required int id, @required String instanceUrl})
+      : assert(id != null),
+        assert(instanceUrl != null),
+        fullPost = LemmyApi(instanceUrl).v1.getPost(id: id),
+        post = null;
+  FullPostPage.fromPostView(this.post)
+      : fullPost = LemmyApi(post.communityActorId.split('/')[2])
+            .v1
+            .getPost(id: post.id);
 
   void sharePost() => Share.text('Share post', post.apId, 'text/plain');
 
@@ -22,7 +29,6 @@ class FullPostPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final post
     var fullPostFuture = useFuture(this.fullPost);
 
     var fullPost = fullPostFuture.data;
