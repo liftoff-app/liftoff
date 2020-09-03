@@ -16,7 +16,7 @@ class BottomModal extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
-            color: theme.backgroundColor,
+            color: theme.scaffoldBackgroundColor,
             borderRadius: BorderRadius.all(const Radius.circular(10.0)),
           ),
           child: Column(
