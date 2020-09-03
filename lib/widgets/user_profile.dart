@@ -6,6 +6,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../util/intl.dart';
+import '../util/text_color.dart';
 import 'badge.dart';
 
 class UserProfile extends HookWidget {
@@ -23,6 +24,8 @@ class UserProfile extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    final colorOnTopOfAccentColor =
+        textColorBasedOnBackground(theme.accentColor);
 
     var userViewSnap = useFuture(_userView, preserveState: false);
 
@@ -162,12 +165,16 @@ class UserProfile extends HookWidget {
                             Icon(
                               Icons.comment, // TODO: should be article icon
                               size: 15,
-                              color: Colors.white,
+                              color: colorOnTopOfAccentColor,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 4.0),
-                              child: Text('''
-${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfPosts) : '-'} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}'''),
+                              child: Text(
+                                '''
+${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfPosts) : '-'} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}''',
+                                style:
+                                    TextStyle(color: colorOnTopOfAccentColor),
+                              ),
                             ),
                           ],
                         ),
@@ -180,12 +187,16 @@ ${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfPosts) : '-'} P
                               Icon(
                                 Icons.comment,
                                 size: 15,
-                                color: Colors.white,
+                                color: colorOnTopOfAccentColor,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 4.0),
-                                child: Text('''
-${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfComments) : '-'} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 0)}'''),
+                                child: Text(
+                                  '''
+${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfComments) : '-'} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 0)}''',
+                                  style:
+                                      TextStyle(color: colorOnTopOfAccentColor),
+                                ),
                               ),
                             ],
                           ),
