@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../stores/config_store.dart';
 
-class Settings extends StatelessWidget {
+class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
