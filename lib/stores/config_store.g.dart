@@ -24,26 +24,10 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  final _$accentColorAtom = Atom(name: '_ConfigStore.accentColor');
-
-  @override
-  MaterialColor get accentColor {
-    _$accentColorAtom.reportRead();
-    return super.accentColor;
-  }
-
-  @override
-  set accentColor(MaterialColor value) {
-    _$accentColorAtom.reportWrite(value, super.accentColor, () {
-      super.accentColor = value;
-    });
-  }
-
   @override
   String toString() {
     return '''
-theme: ${theme},
-accentColor: ${accentColor}
+theme: ${theme}
     ''';
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
+import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
 Future<void> main() async {
@@ -10,11 +11,18 @@ Future<void> main() async {
   var configStore = ConfigStore();
   await configStore.load();
 
+  var accountsStore = AccountsStore();
+  await accountsStore.load();
+
   runApp(
     MultiProvider(
       providers: [
         Provider<ConfigStore>(
           create: (_) => configStore,
+          dispose: (_, store) => store.dispose(),
+        ),
+        Provider<AccountsStore>(
+          create: (_) => accountsStore,
           dispose: (_, store) => store.dispose(),
         ),
       ],
@@ -31,7 +39,6 @@ class MyApp extends StatelessWidget {
           themeMode: ctx.watch<ConfigStore>().theme,
           darkTheme: ThemeData.dark(),
           theme: ThemeData(
-            primarySwatch: ctx.watch<ConfigStore>().accentColor,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: MyHomePage(title: 'Flutter hello world'),
