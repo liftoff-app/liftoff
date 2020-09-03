@@ -156,11 +156,15 @@ class UserProfile extends HookWidget {
                   padding: userViewSnap.data?.avatar != null
                       ? const EdgeInsets.only(top: 8.0)
                       : const EdgeInsets.only(top: 70),
-                  child: Text(
-                    userViewSnap.data?.preferredUsername ??
-                        userViewSnap.data?.name ??
-                        '',
-                    style: theme.textTheme.headline6,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: userViewSnap.data?.avatar == null ? 10 : 0),
+                    child: Text(
+                      userViewSnap.data?.preferredUsername ??
+                          userViewSnap.data?.name ??
+                          '',
+                      style: theme.textTheme.headline6,
+                    ),
                   ),
                 ),
                 Padding(
@@ -171,7 +175,7 @@ class UserProfile extends HookWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -222,31 +226,34 @@ ${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfComments) : '-'
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Text(
                     '''
 Joined ${userViewSnap.hasData ? timeago.format(userViewSnap.data.published) : ''}''',
                     style: theme.textTheme.bodyText1,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.cake,
-                      size: 13,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Text(
-                        userViewSnap.hasData
-                            ? DateFormat('MMM dd, yyyy')
-                                .format(userViewSnap.data.published)
-                            : '',
-                        style: theme.textTheme.bodyText1,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.cake,
+                        size: 13,
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          userViewSnap.hasData
+                              ? DateFormat('MMM dd, yyyy')
+                                  .format(userViewSnap.data.published)
+                              : '',
+                          style: theme.textTheme.bodyText1,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(child: tabs())
               ],
