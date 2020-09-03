@@ -29,12 +29,11 @@ class FullPostPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var fullPostFuture = useFuture(this.fullPost);
-
-    var fullPost = fullPostFuture.data;
+    final fullPostSnap = useFuture(this.fullPost);
+    final fullPost = fullPostSnap.data;
 
     final savedIcon = () {
-      if (fullPost != null) {
+      if (fullPostSnap.hasData) {
         if (fullPost.post.saved == null || !fullPost.post.saved) {
           return Icons.bookmark_border;
         } else {
@@ -63,18 +62,18 @@ class FullPostPage extends HookWidget {
               icon: Icon(Icons.more_vert), onPressed: () {}), // TODO: more menu
         ],
       ),
-      body: fullPost != null || post != null
+      body: fullPostSnap.hasData || post != null
           // FUTURE SUCCESS
           ? ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
-                if (fullPost != null)
+                if (fullPostSnap.hasData)
                   Post(fullPost.post, fullPost: true)
                 else if (post != null)
                   Post(post, fullPost: true)
                 else
                   CircularProgressIndicator(),
-                if (fullPost != null)
+                if (fullPostSnap.hasData)
                   CommentSection(fullPost.comments,
                       postCreatorId: fullPost.post.creatorId)
                 else
@@ -84,7 +83,7 @@ class FullPostPage extends HookWidget {
                   ),
               ],
             )
-          : fullPostFuture.error != null
+          : fullPostSnap.hasError
               // FUTURE FAILURE
               ? Center(
                   child: Column(
@@ -92,7 +91,7 @@ class FullPostPage extends HookWidget {
                     children: [
                       Icon(Icons.error, size: 30),
                       Padding(padding: EdgeInsets.all(5)),
-                      Text('ERROR: ${fullPostFuture.error.toString()}'),
+                      Text('ERROR: ${fullPostSnap.error.toString()}'),
                     ],
                   ),
                 )
