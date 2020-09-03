@@ -89,17 +89,9 @@ class UserProfileTab extends HookWidget {
             ),
             actions: [
               IconButton(
-                icon: Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      blurRadius: 10,
-                      color: Colors.black54,
-                    )
-                  ]),
-                  child: Icon(
-                    Icons.settings,
-                    color: user.banner == null ? theme.iconTheme.color : null,
-                  ),
+                icon: Icon(
+                  Icons.settings,
+                  color: user.banner == null ? theme.iconTheme.color : null,
                 ),
                 onPressed: () {
                   Navigator.of(context)

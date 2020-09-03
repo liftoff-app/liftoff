@@ -94,6 +94,19 @@ class UserProfile extends HookWidget {
               height: double.infinity,
               color: theme.primaryColor,
             ),
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                colors: [
+                  Colors.black26,
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 60),
