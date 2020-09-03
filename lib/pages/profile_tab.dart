@@ -89,10 +89,7 @@ class UserProfileTab extends HookWidget {
             ),
             actions: [
               IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color: user.banner == null ? theme.iconTheme.color : null,
-                ),
+                icon: Icon(Icons.settings),
                 onPressed: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => SettingsPage()));
