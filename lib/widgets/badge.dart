@@ -16,7 +16,7 @@ class Badge extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         child: child,
       ),
     );
