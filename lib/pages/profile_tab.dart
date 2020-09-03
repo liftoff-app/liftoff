@@ -102,7 +102,7 @@ class UserProfileTab extends HookWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => Settings()));
+                      .push(MaterialPageRoute(builder: (_) => SettingsPage()));
                 },
               )
             ],

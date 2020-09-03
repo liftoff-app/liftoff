@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../comment_tree.dart';
+import '../util/text_color.dart';
 import 'markdown_text.dart';
 
 class Comment extends StatelessWidget {
@@ -14,41 +17,62 @@ class Comment extends StatelessWidget {
     @required this.postCreatorId,
   });
 
+  void _openMoreMenu() {
+    print('OPEN MORE MENU');
+  }
+
   void _goToUser() {
     print('GO TO USER');
+  }
+
+  void _save(bool save) {
+    print('SAVE COMMENT, $save');
+  }
+
+  void _reply() {
+    print('OPEN REPLY BOX');
+  }
+
+  void _vote(VoteType vote) {
+    print('COMMENT VOTE: ${vote.toString()}');
   }
 
   bool get isOP => commentTree.comment.creatorId == postCreatorId;
 
   @override
   Widget build(BuildContext context) {
-    var comment = commentTree.comment;
+    final comment = commentTree.comment;
+
+    final saved = comment.saved ?? false;
 
     // decide which username to use
-    var username;
-    if (comment.creatorPreferredUsername != null &&
-        comment.creatorPreferredUsername != '') {
-      username = comment.creatorPreferredUsername;
-    } else {
-      username = '@${comment.creatorName}';
-    }
+    final username = () {
+      if (comment.creatorPreferredUsername != null &&
+          comment.creatorPreferredUsername != '') {
+        return comment.creatorPreferredUsername;
+      } else {
+        return '@${comment.creatorName}';
+      }
+    }();
 
-    var body;
-    if (comment.deleted) {
-      body = Flexible(
-          child: Text(
-        'comment deleted by creator',
-        style: TextStyle(fontStyle: FontStyle.italic),
-      ));
-    } else if (comment.removed) {
-      body = Flexible(
-          child: Text(
-        'comment deleted by moderator',
-        style: TextStyle(fontStyle: FontStyle.italic),
-      ));
-    } else {
-      body = Flexible(child: MarkdownText(commentTree.comment.content));
-    }
+    final body = () {
+      if (comment.deleted) {
+        return Flexible(
+            child: Text(
+          'comment deleted by creator',
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ));
+      } else if (comment.removed) {
+        return Flexible(
+            child: Text(
+          'comment deleted by moderator',
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ));
+      } else {
+        return Flexible(child: MarkdownText(commentTree.comment.content));
+      }
+    }();
+
     return Column(
       children: [
         Container(
@@ -56,10 +80,10 @@ class Comment extends StatelessWidget {
             children: [
               Row(children: [
                 if (comment.creatorAvatar != null)
-                  InkWell(
-                    onTap: _goToUser,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: InkWell(
+                      onTap: _goToUser,
                       child: CachedNetworkImage(
                         imageUrl: comment.creatorAvatar,
                         height: 20,
@@ -83,17 +107,43 @@ class Comment extends StatelessWidget {
                       )),
                   onLongPress: _goToUser,
                 ),
-                if (isOP) CommentTag('OP', Theme.of(context).accentColor),
-                if (comment.banned) CommentTag('BANNED', Colors.red),
+                if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
+                if (comment.banned) _CommentTag('BANNED', Colors.red),
                 if (comment.bannedFromCommunity)
-                  CommentTag('BANNED FROM COMMUNITY', Colors.red),
+                  _CommentTag('BANNED FROM COMMUNITY', Colors.red),
                 Spacer(),
                 Text(comment.score.toString()),
+                Text(' · '),
+                Text(timeago.format(comment.published, locale: 'en_short')),
               ]),
               Row(children: [body]),
               Row(children: [
                 Spacer(),
-                // actions go here
+                _CommentAction(
+                  icon: Icons.more_horiz,
+                  onPressed: _openMoreMenu,
+                  tooltip: 'more',
+                ),
+                _CommentAction(
+                  icon: saved ? Icons.bookmark : Icons.bookmark_border,
+                  onPressed: () => _save(!saved),
+                  tooltip: '${saved ? 'unsave' : 'save'} comment',
+                ),
+                _CommentAction(
+                  icon: Icons.reply,
+                  onPressed: _reply,
+                  tooltip: 'reply',
+                ),
+                _CommentAction(
+                  icon: Icons.arrow_upward,
+                  onPressed: () => _vote(VoteType.up),
+                  tooltip: 'upvote',
+                ),
+                _CommentAction(
+                  icon: Icons.arrow_downward,
+                  onPressed: () => _vote(VoteType.down),
+                  tooltip: 'downvote',
+                ),
               ])
             ],
           ),
@@ -117,11 +167,11 @@ class Comment extends StatelessWidget {
   }
 }
 
-class CommentTag extends StatelessWidget {
+class _CommentTag extends StatelessWidget {
   final String text;
   final Color bgColor;
 
-  const CommentTag(this.text, this.bgColor);
+  const _CommentTag(this.text, this.bgColor);
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -134,10 +184,37 @@ class CommentTag extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
           child: Text(text,
               style: TextStyle(
-                color: Colors.white,
+                color: textColorBasedOnBackground(bgColor),
                 fontSize: Theme.of(context).textTheme.bodyText1.fontSize - 5,
                 fontWeight: FontWeight.w800,
               )),
         ),
+      );
+}
+
+class _CommentAction extends StatelessWidget {
+  final IconData icon;
+  final void Function() onPressed;
+  final String tooltip;
+
+  const _CommentAction({
+    Key key,
+    @required this.icon,
+    @required this.onPressed,
+    @required this.tooltip,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        constraints: BoxConstraints.tight(Size(32, 26)),
+        icon: Icon(
+          icon,
+          color: Theme.of(context).iconTheme.color.withAlpha(190),
+        ),
+        splashRadius: 25,
+        onPressed: onPressed,
+        iconSize: 22,
+        tooltip: tooltip,
+        padding: EdgeInsets.all(0),
       );
 }

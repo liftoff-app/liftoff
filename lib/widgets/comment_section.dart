@@ -10,22 +10,84 @@ class CommentSection extends HookWidget {
   final List<CommentView> rawComments;
   final List<CommentTree> comments;
   final int postCreatorId;
+  final CommentSortType sortType;
 
-  CommentSection(this.rawComments, {@required this.postCreatorId})
-      : comments = CommentTree.fromList(rawComments),
+  CommentSection(
+    List<CommentView> rawComments, {
+    @required this.postCreatorId,
+    this.sortType = CommentSortType.hot,
+  })  : comments =
+            CommentTree.sortList(sortType, CommentTree.fromList(rawComments)),
+        rawComments = rawComments
+          ..sort((b, a) => a.published.compareTo(b.published)),
         assert(postCreatorId != null);
 
   @override
-  Widget build(BuildContext context) => Column(children: [
-        // sorting menu goes here
-        if (comments.isEmpty)
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 50),
-            child: Text(
-              'no comments yet',
-              style: TextStyle(fontStyle: FontStyle.italic),
+  Widget build(BuildContext context) {
+    var sorting = useState(sortType);
+    var rawComms = useState(rawComments);
+    var comms = useState(comments);
+
+    void sortComments(CommentSortType sort) {
+      if (sort != sorting.value && sort != CommentSortType.chat) {
+        CommentTree.sortList(sort, comms.value);
+      }
+
+      sorting.value = sort;
+    }
+
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black45),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: DropdownButton(
+                // TODO: change it to universal BottomModal
+                underline: Container(),
+                isDense: true,
+                onChanged: sortComments,
+                value: sorting.value,
+                items: [
+                  DropdownMenuItem(
+                      child: Text('Hot'), value: CommentSortType.hot),
+                  DropdownMenuItem(
+                      child: Text('Top'), value: CommentSortType.top),
+                  DropdownMenuItem(
+                      child: Text('New'), value: CommentSortType.new_),
+                  DropdownMenuItem(
+                      child: Text('Old'), value: CommentSortType.old),
+                  DropdownMenuItem(
+                      child: Text('Chat'), value: CommentSortType.chat),
+                ],
+              ),
             ),
+            Spacer(),
+          ],
+        ),
+      ),
+      // sorting menu goes here
+      if (comments.isEmpty)
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 50),
+          child: Text(
+            'no comments yet',
+            style: TextStyle(fontStyle: FontStyle.italic),
           ),
-        for (var com in comments) Comment(com, postCreatorId: postCreatorId),
-      ]);
+        )
+      else if (sorting.value == CommentSortType.chat)
+        for (final com in rawComms.value)
+          Comment(
+            CommentTree(com),
+            postCreatorId: postCreatorId,
+          )
+      else
+        for (var com in comms.value) Comment(com, postCreatorId: postCreatorId),
+    ]);
+  }
 }
