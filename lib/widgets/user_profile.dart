@@ -33,7 +33,10 @@ class UserProfile extends HookWidget {
 
     if (userViewSnap.hasData) {
       if (userViewSnap.data.bio != null) {
-        bio = Text(userViewSnap.data.bio);
+        bio = Padding(
+          padding: const EdgeInsets.all(10),
+          child: Text(userViewSnap.data.bio),
+        );
       } else {
         bio = Center(
           child: Text(
