@@ -31,8 +31,9 @@ class UserProfileTab extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '@${user.name}',
-                    style: TextStyle(color: Colors.white),
+                    '@${user.name}', // TODO: fix overflow issues
+                    style: theme.primaryTextTheme.headline6,
+                    overflow: TextOverflow.fade,
                   ),
                   Icon(
                     Icons.expand_more,
