@@ -14,6 +14,7 @@ class UserProfile extends HookWidget {
   final Future<UserView> _userView;
   final String instanceUrl;
 
+  // TODO: add `.fromUser` constructor
   UserProfile({@required this.userId, @required this.instanceUrl})
       : _userView = LemmyApi(instanceUrl)
             .v1
