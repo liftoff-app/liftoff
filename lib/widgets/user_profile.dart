@@ -29,25 +29,25 @@ class UserProfile extends HookWidget {
 
     var userViewSnap = useFuture(_userView, preserveState: false);
 
-    Widget bio;
-
-    if (userViewSnap.hasData) {
-      if (userViewSnap.data.bio != null) {
-        bio = Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(userViewSnap.data.bio),
-        );
+    Widget bio = () {
+      if (userViewSnap.hasData) {
+        if (userViewSnap.data.bio != null) {
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(userViewSnap.data.bio),
+          );
+        } else {
+          return Center(
+            child: Text(
+              'no bio',
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          );
+        }
       } else {
-        bio = Center(
-          child: Text(
-            'no bio',
-            style: const TextStyle(fontStyle: FontStyle.italic),
-          ),
-        );
+        return Center(child: CircularProgressIndicator());
       }
-    } else {
-      bio = Center(child: CircularProgressIndicator());
-    }
+    }();
 
     Widget tabs() => DefaultTabController(
           length: 3,
