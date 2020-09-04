@@ -58,12 +58,9 @@ class _AppearanceConfig extends StatelessWidget {
         centerTitle: true,
       ),
       body: Observer(
-        builder: (ctx) => Column(
+        builder: (ctx) => ListView(
           children: [
-            Text(
-              'Theme',
-              style: theme.textTheme.headline6,
-            ),
+            _SectionHeading('Theme'),
             for (final theme in ThemeMode.values)
               RadioListTile<ThemeMode>(
                 value: theme,
@@ -98,26 +95,24 @@ class _AccountsConfig extends StatelessWidget {
           var accountsStore = ctx.watch<AccountsStore>();
           var theme = Theme.of(context);
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
+          return ListView(
             children: [
               for (var entry in accountsStore.users.entries) ...[
-                Text(
-                  entry.key,
-                  style: theme.textTheme.subtitle2,
-                ),
+                _SectionHeading(entry.key),
                 for (var username in entry.value.keys) ...[
                   ListTile(
                     trailing:
                         username == accountsStore.defaultUserFor(entry.key).name
-                            ? Icon(Icons.check_circle_outline)
+                            ? Icon(
+                                Icons.check_circle_outline,
+                                color: theme.accentColor,
+                              )
                             : null,
-                    selected: username ==
-                        accountsStore.defaultUserFor(entry.key).name,
                     title: Text(username),
                     onLongPress: () {
                       accountsStore.setDefaultAccountFor(entry.key, username);
                     },
+
                     onTap: () {}, // TODO: go to managing account
                   ),
                 ],
@@ -127,6 +122,22 @@ class _AccountsConfig extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _SectionHeading extends StatelessWidget {
+  final String text;
+
+  const _SectionHeading(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      child: Text(text.toUpperCase(),
+          style: theme.textTheme.subtitle2.copyWith(color: theme.accentColor)),
+      padding: EdgeInsets.only(left: 20, top: 40),
     );
   }
 }

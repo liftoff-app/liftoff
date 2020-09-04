@@ -6,6 +6,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../util/intl.dart';
+import '../util/text_color.dart';
 import 'badge.dart';
 
 class UserProfile extends HookWidget {
@@ -13,6 +14,7 @@ class UserProfile extends HookWidget {
   final Future<UserView> _userView;
   final String instanceUrl;
 
+  // TODO: add `.fromUser` constructor
   UserProfile({@required this.userId, @required this.instanceUrl})
       : _userView = LemmyApi(instanceUrl)
             .v1
@@ -23,25 +25,30 @@ class UserProfile extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    final colorOnTopOfAccentColor =
+        textColorBasedOnBackground(theme.accentColor);
 
     var userViewSnap = useFuture(_userView, preserveState: false);
 
-    Widget bio;
-
-    if (userViewSnap.hasData) {
-      if (userViewSnap.data.bio != null) {
-        bio = Text(userViewSnap.data.bio);
+    Widget bio = () {
+      if (userViewSnap.hasData) {
+        if (userViewSnap.data.bio != null) {
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(userViewSnap.data.bio),
+          );
+        } else {
+          return Center(
+            child: Text(
+              'no bio',
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          );
+        }
       } else {
-        bio = Center(
-          child: Text(
-            'no bio',
-            style: const TextStyle(fontStyle: FontStyle.italic),
-          ),
-        );
+        return Center(child: CircularProgressIndicator());
       }
-    } else {
-      bio = Center(child: CircularProgressIndicator());
-    }
+    }();
 
     Widget tabs() => DefaultTabController(
           length: 3,
@@ -91,6 +98,19 @@ class UserProfile extends HookWidget {
               height: double.infinity,
               color: theme.primaryColor,
             ),
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                colors: [
+                  Colors.black26,
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 60),
@@ -137,11 +157,15 @@ class UserProfile extends HookWidget {
                   padding: userViewSnap.data?.avatar != null
                       ? const EdgeInsets.only(top: 8.0)
                       : const EdgeInsets.only(top: 70),
-                  child: Text(
-                    userViewSnap.data?.preferredUsername ??
-                        userViewSnap.data?.name ??
-                        '',
-                    style: theme.textTheme.headline6,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: userViewSnap.data?.avatar == null ? 10 : 0),
+                    child: Text(
+                      userViewSnap.data?.preferredUsername ??
+                          userViewSnap.data?.name ??
+                          '',
+                      style: theme.textTheme.headline6,
+                    ),
                   ),
                 ),
                 Padding(
@@ -152,7 +176,7 @@ class UserProfile extends HookWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -162,12 +186,16 @@ class UserProfile extends HookWidget {
                             Icon(
                               Icons.comment, // TODO: should be article icon
                               size: 15,
-                              color: Colors.white,
+                              color: colorOnTopOfAccentColor,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 4.0),
-                              child: Text('''
-${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfPosts) : '-'} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}'''),
+                              child: Text(
+                                '''
+${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfPosts) : '-'} Post${pluralS(userViewSnap.data?.numberOfPosts ?? 0)}''',
+                                style:
+                                    TextStyle(color: colorOnTopOfAccentColor),
+                              ),
                             ),
                           ],
                         ),
@@ -180,12 +208,16 @@ ${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfPosts) : '-'} P
                               Icon(
                                 Icons.comment,
                                 size: 15,
-                                color: Colors.white,
+                                color: colorOnTopOfAccentColor,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 4.0),
-                                child: Text('''
-${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfComments) : '-'} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 0)}'''),
+                                child: Text(
+                                  '''
+${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfComments) : '-'} Comment${pluralS(userViewSnap.data?.numberOfComments ?? 0)}''',
+                                  style:
+                                      TextStyle(color: colorOnTopOfAccentColor),
+                                ),
                               ),
                             ],
                           ),
@@ -195,31 +227,34 @@ ${userViewSnap.hasData ? compactNumber(userViewSnap.data.numberOfComments) : '-'
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Text(
                     '''
 Joined ${userViewSnap.hasData ? timeago.format(userViewSnap.data.published) : ''}''',
                     style: theme.textTheme.bodyText1,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.cake,
-                      size: 13,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Text(
-                        userViewSnap.hasData
-                            ? DateFormat('MMM dd, yyyy')
-                                .format(userViewSnap.data.published)
-                            : '',
-                        style: theme.textTheme.bodyText1,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.cake,
+                        size: 13,
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          userViewSnap.hasData
+                              ? DateFormat('MMM dd, yyyy')
+                                  .format(userViewSnap.data.published)
+                              : '',
+                          style: theme.textTheme.bodyText1,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(child: tabs())
               ],

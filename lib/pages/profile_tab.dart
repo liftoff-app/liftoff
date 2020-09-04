@@ -31,8 +31,9 @@ class UserProfileTab extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '@${user.name}',
-                    style: TextStyle(color: Colors.white),
+                    '@${user.name}', // TODO: fix overflow issues
+                    style: theme.primaryTextTheme.headline6,
+                    overflow: TextOverflow.fade,
                   ),
                   Icon(
                     Icons.expand_more,
@@ -88,18 +89,7 @@ class UserProfileTab extends HookWidget {
             ),
             actions: [
               IconButton(
-                icon: Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      blurRadius: 10,
-                      color: Colors.black54,
-                    )
-                  ]),
-                  child: Icon(
-                    Icons.settings,
-                    color: user.banner == null ? theme.iconTheme.color : null,
-                  ),
-                ),
+                icon: Icon(Icons.settings),
                 onPressed: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => SettingsPage()));
