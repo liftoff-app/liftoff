@@ -30,6 +30,18 @@ class CommunityPage extends HookWidget {
     print('OPEN MORE MENU');
   }
 
+  void _goToUser(int id) {
+    print('GO TO USER $id');
+  }
+
+  void _goToModlog() {
+    print('GO TO MODLOG');
+  }
+
+  void _goToCategories() {
+    print('GO RO CATEGORIES');
+  }
+
   CommunityPage({@required String communityName, @required this.instanceUrl})
       : assert(communityName != null, instanceUrl != null),
         _fullCommunityFuture =
@@ -105,10 +117,12 @@ class CommunityPage extends HookWidget {
                       icon: Icon(Icons.more_vert), onPressed: _openMoreMenu),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
-                  background: _CommunityOverview(community,
-                      instanceUrl: instanceUrl,
-                      goToInstance: _goToInstance,
-                      subscribe: _subscribe),
+                  background: _CommunityOverview(
+                    community,
+                    instanceUrl: instanceUrl,
+                    goToInstance: _goToInstance,
+                    subscribe: _subscribe,
+                  ),
                 ),
               ),
               SliverPersistentHeader(
@@ -142,8 +156,12 @@ class CommunityPage extends HookWidget {
                 ],
               ),
               _AboutSection(
-                  community: community,
-                  moderators: fullCommunitySnap.data?.moderators),
+                community: community,
+                moderators: fullCommunitySnap.data?.moderators,
+                goToUser: _goToUser,
+                goToModlog: _goToModlog,
+                goToCategories: _goToCategories,
+              ),
             ],
           ),
         ),
@@ -350,10 +368,18 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class _AboutSection extends StatelessWidget {
   final CommunityView community;
   final List<CommunityModeratorView> moderators;
+  final Function(int id) goToUser;
+  final Function() goToModlog;
+  final Function() goToCategories;
 
-  const _AboutSection(
-      {Key key, @required this.community, @required this.moderators})
-      : super(key: key);
+  const _AboutSection({
+    Key key,
+    @required this.community,
+    @required this.moderators,
+    @required this.goToUser,
+    @required this.goToModlog,
+    @required this.goToCategories,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -362,27 +388,60 @@ class _AboutSection extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.only(top: 20),
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: MarkdownText(community.description),
-        ),
-        _Divider(),
+        if (community.description != null) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: MarkdownText(community.description),
+          ),
+          _Divider(),
+        ],
         SizedBox(
           height: 25,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
+              // TODO: consider using Chips
               Padding(
                 padding: const EdgeInsets.only(left: 7),
                 child: _Badge('X users online'),
               ),
-              _Badge('${community.numberOfSubscribers} subscribers'),
-              _Badge('${community.numberOfPosts}'),
-              _Badge('${community.numberOfComments} comments'),
+              _Badge(
+                  '''${community.numberOfSubscribers} subscriber${pluralS(community.numberOfSubscribers)}'''),
+              _Badge(
+                  '''${community.numberOfPosts} post${pluralS(community.numberOfPosts)}'''),
+              _Badge(
+                  '''${community.numberOfComments} comment${pluralS(community.numberOfComments)}'''),
             ],
           ),
         ),
         _Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+          child: FlatButton(
+            child: Text('Category: ${community.categoryName}'),
+            onPressed: goToCategories,
+          ),
+        ),
+        _Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: FlatButton(
+            child: Text('Modlog'),
+            onPressed: goToModlog,
+          ),
+        ),
+        _Divider(),
+        if (moderators != null && moderators.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text('Mods:', style: theme.textTheme.subtitle2),
+          ),
+          for (final mod in moderators)
+            ListTile(
+              title: Text(mod.userPreferredUsername ?? '@${mod.userName}'),
+              onTap: () => goToUser(mod.id),
+            ),
+        ]
       ],
     );
   }
