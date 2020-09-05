@@ -409,8 +409,11 @@ class _AboutTab extends StatelessWidget {
                   '''${community.numberOfSubscribers} subscriber${pluralS(community.numberOfSubscribers)}'''),
               _Badge(
                   '''${community.numberOfPosts} post${pluralS(community.numberOfPosts)}'''),
-              _Badge(
-                  '''${community.numberOfComments} comment${pluralS(community.numberOfComments)}'''),
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: _Badge(
+                    '''${community.numberOfComments} comment${pluralS(community.numberOfComments)}'''),
+              ),
             ],
           ),
         ),
