@@ -155,7 +155,7 @@ class CommunityPage extends HookWidget {
                   Center(child: Text('comments go here')),
                 ],
               ),
-              _AboutSection(
+              _AboutTab(
                 community: community,
                 moderators: fullCommunitySnap.data?.moderators,
                 goToUser: _goToUser,
@@ -365,14 +365,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class _AboutSection extends StatelessWidget {
+class _AboutTab extends StatelessWidget {
   final CommunityView community;
   final List<CommunityModeratorView> moderators;
   final Function(int id) goToUser;
   final Function() goToModlog;
   final Function() goToCategories;
 
-  const _AboutSection({
+  const _AboutTab({
     Key key,
     @required this.community,
     @required this.moderators,
