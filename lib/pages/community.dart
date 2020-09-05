@@ -421,6 +421,9 @@ class _AboutTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
           child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Text('Category: ${community.categoryName}'),
             onPressed: goToCategories,
           ),
@@ -429,6 +432,9 @@ class _AboutTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Text('Modlog'),
             onPressed: goToModlog,
           ),
