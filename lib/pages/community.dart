@@ -6,6 +6,8 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../util/intl.dart';
 import '../util/text_color.dart';
+import '../widgets/badge.dart';
+import '../widgets/markdown_text.dart';
 
 class CommunityPage extends HookWidget {
   final Future<FullCommunityView> _fullCommunityFuture;
@@ -128,20 +130,20 @@ class CommunityPage extends HookWidget {
           body: TabBarView(
             children: [
               ListView(
+                padding: EdgeInsets.all(0),
                 children: [
-                  // posts go here
+                  Center(child: Text('posts go here')),
                 ],
               ),
               ListView(
+                padding: EdgeInsets.all(0),
                 children: [
-                  // comments go here
+                  Center(child: Text('comments go here')),
                 ],
               ),
-              ListView(
-                children: [
-                  // info goes here
-                ],
-              ),
+              _AboutSection(
+                  community: community,
+                  moderators: fullCommunitySnap.data?.moderators),
             ],
           ),
         ),
@@ -342,5 +344,80 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
+  }
+}
+
+class _AboutSection extends StatelessWidget {
+  final CommunityView community;
+  final List<CommunityModeratorView> moderators;
+
+  const _AboutSection(
+      {Key key, @required this.community, @required this.moderators})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return ListView(
+      padding: EdgeInsets.only(top: 20),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: MarkdownText(community.description),
+        ),
+        _Divider(),
+        SizedBox(
+          height: 25,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 7),
+                child: _Badge('X users online'),
+              ),
+              _Badge('${community.numberOfSubscribers} subscribers'),
+              _Badge('${community.numberOfPosts}'),
+              _Badge('${community.numberOfComments} comments'),
+            ],
+          ),
+        ),
+        _Divider(),
+      ],
+    );
+  }
+}
+
+class _Badge extends StatelessWidget {
+  final String text;
+  final bool noPad;
+
+  _Badge(this.text, {this.noPad = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: noPad ? const EdgeInsets.all(0) : const EdgeInsets.only(left: 8),
+      child: Badge(
+        child: Text(
+          text,
+          style:
+              TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
+        ),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: Divider(),
+    );
   }
 }
