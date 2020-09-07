@@ -15,7 +15,8 @@ class CommunityPage extends HookWidget {
   final String instanceUrl;
 
   CommunityPage({@required String communityName, @required this.instanceUrl})
-      : assert(communityName != null, instanceUrl != null),
+      : assert(communityName != null),
+        assert(instanceUrl != null),
         _fullCommunityFuture =
             LemmyApi(instanceUrl).v1.getCommunity(name: communityName),
         _community = null;
