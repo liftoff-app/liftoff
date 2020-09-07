@@ -93,6 +93,13 @@ mixin _$AccountsStore on _AccountsStore, Store {
         .run(() => super.addAccount(instanceUrl, usernameOrEmail, password));
   }
 
+  final _$addInstanceAsyncAction = AsyncAction('_AccountsStore.addInstance');
+
+  @override
+  Future<void> addInstance(String instanceUrl) {
+    return _$addInstanceAsyncAction.run(() => super.addInstance(instanceUrl));
+  }
+
   final _$_AccountsStoreActionController =
       ActionController(name: '_AccountsStore');
 
@@ -113,17 +120,6 @@ mixin _$AccountsStore on _AccountsStore, Store {
         name: '_AccountsStore.setDefaultAccountFor');
     try {
       return super.setDefaultAccountFor(instanceUrl, username);
-    } finally {
-      _$_AccountsStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void addInstance(String instanceUrl) {
-    final _$actionInfo = _$_AccountsStoreActionController.startAction(
-        name: '_AccountsStore.addInstance');
-    try {
-      return super.addInstance(instanceUrl);
     } finally {
       _$_AccountsStoreActionController.endAction(_$actionInfo);
     }

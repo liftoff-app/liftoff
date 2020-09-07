@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -77,18 +78,64 @@ class _AppearanceConfig extends StatelessWidget {
   }
 }
 
-class _AccountsConfig extends StatelessWidget {
+class _AccountsConfig extends HookWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var textFieldController = useTextEditingController();
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         shadowColor: Colors.transparent,
         iconTheme: theme.iconTheme,
         title: Text('Accounts', style: theme.textTheme.headline6),
         centerTitle: true,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text('Add instance'),
+              content: TextField(
+                controller: textFieldController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Instance url',
+                ),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Add'),
+                  onPressed: () async {
+                    try {
+                      await context
+                          .read<AccountsStore>()
+                          .addInstance(textFieldController.text);
+                    } on Exception catch (err) {
+                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(err.toString()),
+                      ));
+                    }
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ),
+          );
+          textFieldController.clear();
+        },
+        child: Icon(Icons.add),
       ),
       body: Observer(
         builder: (ctx) {
