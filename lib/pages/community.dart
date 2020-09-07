@@ -14,6 +14,17 @@ class CommunityPage extends HookWidget {
   final CommunityView _community;
   final String instanceUrl;
 
+  CommunityPage({@required String communityName, @required this.instanceUrl})
+      : assert(communityName != null, instanceUrl != null),
+        _fullCommunityFuture =
+            LemmyApi(instanceUrl).v1.getCommunity(name: communityName),
+        _community = null;
+  CommunityPage.fromCommunityView(this._community)
+      : instanceUrl = _community.actorId.split('/')[2],
+        _fullCommunityFuture = LemmyApi(_community.actorId.split('/')[2])
+            .v1
+            .getCommunity(name: _community.name);
+
   void _goToInstance() {
     print('GO TO INSTANCE');
   }
@@ -41,17 +52,6 @@ class CommunityPage extends HookWidget {
   void _goToCategories() {
     print('GO RO CATEGORIES');
   }
-
-  CommunityPage({@required String communityName, @required this.instanceUrl})
-      : assert(communityName != null, instanceUrl != null),
-        _fullCommunityFuture =
-            LemmyApi(instanceUrl).v1.getCommunity(name: communityName),
-        _community = null;
-  CommunityPage.fromCommunityView(this._community)
-      : instanceUrl = _community.actorId.split('/')[2],
-        _fullCommunityFuture = LemmyApi(_community.actorId.split('/')[2])
-            .v1
-            .getCommunity(name: _community.name);
 
   @override
   Widget build(BuildContext context) {
