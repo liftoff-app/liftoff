@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
@@ -30,7 +31,9 @@ class SortPostsPicker extends HookWidget {
                   RadioListTile<SortType>(
                     value: x,
                     groupValue: sort.value,
-                    title: Text(x.toString()),
+                    // TODO: use something more robust and user-friendly
+                    //       than describeEnum
+                    title: Text(describeEnum(x)),
                     onChanged: (val) {
                       sort.value = val;
                       onChange(val);
@@ -54,7 +57,7 @@ class SortPostsPicker extends HookWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(sort.value.toString()),
+                Text(describeEnum(sort.value)),
                 const SizedBox(width: 8),
                 Icon(Icons.arrow_drop_down),
               ],
