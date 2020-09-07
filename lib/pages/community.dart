@@ -144,13 +144,11 @@ class CommunityPage extends HookWidget {
           body: TabBarView(
             children: [
               ListView(
-                padding: EdgeInsets.all(0),
                 children: [
                   Center(child: Text('posts go here')),
                 ],
               ),
               ListView(
-                padding: EdgeInsets.all(0),
                 children: [
                   Center(child: Text('comments go here')),
                 ],
