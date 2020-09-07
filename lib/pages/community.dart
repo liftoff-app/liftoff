@@ -14,11 +14,18 @@ class CommunityPage extends HookWidget {
   final CommunityView _community;
   final String instanceUrl;
 
-  CommunityPage({@required String communityName, @required this.instanceUrl})
+  CommunityPage.fromName(
+      {@required String communityName, @required this.instanceUrl})
       : assert(communityName != null),
         assert(instanceUrl != null),
         _fullCommunityFuture =
             LemmyApi(instanceUrl).v1.getCommunity(name: communityName),
+        _community = null;
+  CommunityPage.fromId({@required int communityId, @required this.instanceUrl})
+      : assert(communityId != null),
+        assert(instanceUrl != null),
+        _fullCommunityFuture =
+            LemmyApi(instanceUrl).v1.getCommunity(id: communityId),
         _community = null;
   CommunityPage.fromCommunityView(this._community)
       : instanceUrl = _community.actorId.split('/')[2],
