@@ -420,18 +420,18 @@ class _AboutTab extends StatelessWidget {
         _Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-          child: FlatButton(
+          child: OutlineButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text('Category: ${community.categoryName}'),
+            child: Text('${community.categoryName}'),
             onPressed: goToCategories,
           ),
         ),
         _Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: FlatButton(
+          child: OutlineButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
