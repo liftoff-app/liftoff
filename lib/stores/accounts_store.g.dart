@@ -119,6 +119,17 @@ mixin _$AccountsStore on _AccountsStore, Store {
   }
 
   @override
+  void addInstance(String instanceUrl) {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore.addInstance');
+    try {
+      return super.addInstance(instanceUrl);
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 users: ${users},
