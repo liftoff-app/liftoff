@@ -49,18 +49,6 @@ class CommunityPage extends HookWidget {
     print('OPEN MORE MENU');
   }
 
-  void _goToUser(int id) {
-    print('GO TO USER $id');
-  }
-
-  void _goToModlog() {
-    print('GO TO MODLOG');
-  }
-
-  void _goToCategories() {
-    print('GO RO CATEGORIES');
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -164,9 +152,6 @@ class CommunityPage extends HookWidget {
               _AboutTab(
                 community: community,
                 moderators: fullCommunitySnap.data?.moderators,
-                goToUser: _goToUser,
-                goToModlog: _goToModlog,
-                goToCategories: _goToCategories,
               ),
             ],
           ),
@@ -374,18 +359,24 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class _AboutTab extends StatelessWidget {
   final CommunityView community;
   final List<CommunityModeratorView> moderators;
-  final Function(int id) goToUser;
-  final Function() goToModlog;
-  final Function() goToCategories;
 
   const _AboutTab({
     Key key,
     @required this.community,
     @required this.moderators,
-    @required this.goToUser,
-    @required this.goToModlog,
-    @required this.goToCategories,
   }) : super(key: key);
+
+  void goToUser(int id) {
+    print('GO TO USER $id');
+  }
+
+  void goToModlog() {
+    print('GO TO MODLOG');
+  }
+
+  void goToCategories() {
+    print('GO TO CATEGORIES');
+  }
 
   @override
   Widget build(BuildContext context) {
