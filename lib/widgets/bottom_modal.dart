@@ -13,29 +13,34 @@ class BottomModal extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.only(top: 10),
-          decoration: BoxDecoration(
-            color: theme.scaffoldBackgroundColor,
-            borderRadius: BorderRadius.all(const Radius.circular(10.0)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (title != null) ...[
-                Padding(
-                  padding: const EdgeInsets.only(left: 70),
-                  child: Text(
-                    'account',
-                    style: theme.textTheme.subtitle2,
-                    textAlign: TextAlign.left,
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              color: theme.scaffoldBackgroundColor,
+              borderRadius: BorderRadius.all(const Radius.circular(10.0)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (title != null) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 70),
+                    child: Text(
+                      title,
+                      style: theme.textTheme.subtitle2,
+                      textAlign: TextAlign.left,
+                    ),
                   ),
-                ),
-                Divider()
+                  Divider(
+                    indent: 20,
+                    endIndent: 20,
+                  )
+                ],
+                child,
               ],
-              child,
-            ],
+            ),
           ),
         ),
       ),

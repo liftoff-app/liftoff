@@ -7,7 +7,7 @@ import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
 
 class FullPostPage extends HookWidget {
-  final Future<FullPost> fullPost;
+  final Future<FullPostView> fullPost;
   final PostView post;
 
   FullPostPage({@required int id, @required String instanceUrl})
