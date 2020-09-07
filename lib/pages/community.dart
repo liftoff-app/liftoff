@@ -95,48 +95,46 @@ class CommunityPage extends HookWidget {
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[
-              // TODO: change top section to be more flexible
-              SliverAppBar(
-                expandedHeight: 300,
-                floating: false,
-                pinned: true,
-                elevation: 0,
-                backgroundColor: theme.cardColor,
-                iconTheme: theme.iconTheme,
-                title: Text('!${community.name}',
-                    style: TextStyle(color: colorOnCard)),
-                actions: [
-                  IconButton(icon: Icon(Icons.share), onPressed: _share),
-                  IconButton(
-                      icon: Icon(Icons.more_vert), onPressed: _openMoreMenu),
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  background: _CommunityOverview(
-                    community,
-                    instanceUrl: instanceUrl,
-                    goToInstance: _goToInstance,
-                    subscribe: _subscribe,
-                  ),
+          headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
+            // TODO: change top section to be more flexible
+            SliverAppBar(
+              expandedHeight: 300,
+              floating: false,
+              pinned: true,
+              elevation: 0,
+              backgroundColor: theme.cardColor,
+              iconTheme: theme.iconTheme,
+              title: Text('!${community.name}',
+                  style: TextStyle(color: colorOnCard)),
+              actions: [
+                IconButton(icon: Icon(Icons.share), onPressed: _share),
+                IconButton(
+                    icon: Icon(Icons.more_vert), onPressed: _openMoreMenu),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                background: _CommunityOverview(
+                  community,
+                  instanceUrl: instanceUrl,
+                  goToInstance: _goToInstance,
+                  subscribe: _subscribe,
                 ),
               ),
-              SliverPersistentHeader(
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-                    labelColor: theme.textTheme.bodyText1.color,
-                    unselectedLabelColor: Colors.grey,
-                    tabs: [
-                      Tab(text: 'Posts'),
-                      Tab(text: 'Comments'),
-                      Tab(text: 'About'),
-                    ],
-                  ),
+            ),
+            SliverPersistentHeader(
+              delegate: _SliverAppBarDelegate(
+                TabBar(
+                  labelColor: theme.textTheme.bodyText1.color,
+                  unselectedLabelColor: Colors.grey,
+                  tabs: [
+                    Tab(text: 'Posts'),
+                    Tab(text: 'Comments'),
+                    Tab(text: 'About'),
+                  ],
                 ),
-                pinned: true,
               ),
-            ];
-          },
+              pinned: true,
+            ),
+          ],
           body: TabBarView(
             children: [
               ListView(
@@ -351,9 +349,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
 }
 
 class _AboutTab extends StatelessWidget {
@@ -479,10 +475,8 @@ class _Badge extends StatelessWidget {
 
 class _Divider extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: Divider(),
-    );
-  }
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: Divider(),
+      );
 }
