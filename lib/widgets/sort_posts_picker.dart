@@ -5,7 +5,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'bottom_modal.dart';
 
 class SortPostsPicker extends HookWidget {
-  final Function(SortType sort) onChange;
+  final void Function(SortType sort) onChange;
   final SortType defaultSort;
 
   SortPostsPicker({
