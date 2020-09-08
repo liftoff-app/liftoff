@@ -17,6 +17,27 @@ class UserProfileTab extends HookWidget {
 
     return Observer(
       builder: (ctx) {
+        if (ctx.watch<AccountsStore>().hasNoAccount) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('No account was added.'),
+                  FlatButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => AccountsConfigPage()));
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('Add account'),
+                  )
+                ],
+              ),
+            ),
+          );
+        }
+
         var user = ctx.watch<AccountsStore>().defaultUser;
 
         return Scaffold(
