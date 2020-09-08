@@ -18,15 +18,23 @@ class UsersListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text(title ?? ''),
+          title: Text(title ?? '', style: theme.textTheme.headline6),
           centerTitle: true,
+          backgroundColor: theme.cardColor,
+          iconTheme: theme.iconTheme,
         ),
         body: ListView.builder(
           itemBuilder: (context, i) => ListTile(
             title: Text(users[i].preferredUsername ?? '@${users[i].name}'),
-            subtitle: users[i].bio != null ? MarkdownText(users[i].bio) : null,
+            subtitle: users[i].bio != null
+                ? Opacity(
+                    opacity: 0.5,
+                    child: MarkdownText(users[i].bio),
+                  )
+                : null,
             onTap: () => goToUser(context, users[i].id),
             leading: users[i].avatar != null
                 ? CachedNetworkImage(
