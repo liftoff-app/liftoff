@@ -102,6 +102,9 @@ abstract class _AccountsStore with Store {
   bool isAnonymousFor(String instanceUrl) =>
       Computed(() => users[instanceUrl].isEmpty).value;
 
+  @computed
+  bool get hasNoAccount => users.values.every((e) => e.isEmpty);
+
   /// adds a new account
   /// if it's the first account ever the account is
   /// set as default for the app
@@ -129,7 +132,7 @@ abstract class _AccountsStore with Store {
     // first account for this instance
     if (users[instanceUrl].isEmpty) {
       // first account ever
-      if (users.values.every((e) => e.isEmpty)) {
+      if (hasNoAccount) {
         setDefaultAccount(instanceUrl, userData.name);
       }
 
