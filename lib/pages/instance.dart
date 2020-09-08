@@ -174,6 +174,26 @@ class _AboutTab extends HookWidget {
   const _AboutTab(this.site, {@required this.communitiesFuture})
       : assert(communitiesFuture != null);
 
+  void goToUser(int id) {
+    print('GO TO USER $id');
+  }
+
+  void goToModLog() {
+    print('GO TO MODLOG');
+  }
+
+  void goToBannedUsers() {
+    print('GO TO BANNED USERS');
+  }
+
+  void goToCommunity(int id) {
+    print('GO TO COMMUNITY $id');
+  }
+
+  void goToCommunities() {
+    print('GO TO COMMUNITIES');
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -212,7 +232,7 @@ class _AboutTab extends HookWidget {
             ),
             if (commSnap.hasData)
               ...commSnap.data.getRange(0, 6).map((e) => ListTile(
-                    onTap: () => print('GO TO COMMUNITY ${e.name}'),
+                    onTap: () => goToCommunity(e.id),
                     title: Text(e.name),
                     leading: e.icon != null
                         ? CachedNetworkImage(
@@ -242,7 +262,7 @@ class _AboutTab extends HookWidget {
               ),
             ListTile(
               title: Center(child: Text('See all')),
-              onTap: () => print('GO TO COMMUNITIES'),
+              onTap: goToCommunities,
             ),
             _Divider(),
             ListTile(
@@ -256,7 +276,7 @@ class _AboutTab extends HookWidget {
             ...site.admins.map((e) => ListTile(
                   title: Text(e.preferredUsername ?? '@${e.name}'),
                   subtitle: e.bio != null ? Text('${e.bio}') : null,
-                  onTap: () => print('GO TO USER ${e.name}'),
+                  onTap: () => goToUser(e.id),
                   leading: e.avatar != null
                       ? CachedNetworkImage(
                           height: 50,
@@ -286,17 +306,17 @@ class _AboutTab extends HookWidget {
                       (e.preferredUsername == null || e.preferredUsername == '')
                           ? '@${e.name}'
                           : e.preferredUsername),
-                  onTap: () => print('GO TO USER ${e.name}'),
+                  onTap: () => goToUser(e.id),
                   leading: SizedBox(width: 50),
                 )),
             ListTile(
               title: Center(child: Text('See all')),
-              onTap: () => print('GO TO BANNED USERS PAGE'),
+              onTap: goToBannedUsers,
             ),
             _Divider(),
             ListTile(
               title: Center(child: Text('Modlog')),
-              onTap: () => print('GO TO MODLOG'),
+              onTap: goToModLog,
             ),
             SizedBox(height: 20),
           ],
