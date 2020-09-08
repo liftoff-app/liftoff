@@ -31,7 +31,7 @@ class UserPage extends HookWidget {
         actions: [
           if (userViewSnap.hasData) ...[
             IconButton(
-              icon: Icon(Icons.chat),
+              icon: Icon(Icons.email),
               onPressed: () {}, // TODO: go to messaging page
             ),
             IconButton(
