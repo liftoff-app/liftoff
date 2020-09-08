@@ -143,9 +143,8 @@ class _AccountsConfig extends HookWidget {
                     );
                   },
                 ),
-                Divider(),
               ]
-            ]..removeLast(), // removes trailing Divider
+            ],
           );
         },
       ),
