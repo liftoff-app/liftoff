@@ -26,8 +26,8 @@ class SettingsPage extends StatelessWidget {
               leading: Icon(Icons.person),
               title: Text('Accounts'),
               onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => _AccountsConfig()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => AccountsConfigPage()));
               },
             ),
             ListTile(
@@ -35,7 +35,7 @@ class SettingsPage extends StatelessWidget {
               title: Text('Appearance'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => _AppearanceConfig()));
+                    MaterialPageRoute(builder: (_) => AppearanceConfigPage()));
               },
             )
           ],
@@ -45,7 +45,7 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class _AppearanceConfig extends StatelessWidget {
+class AppearanceConfigPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -84,7 +84,7 @@ class _AppearanceConfig extends StatelessWidget {
   }
 }
 
-class _AccountsConfig extends HookWidget {
+class AccountsConfigPage extends HookWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
