@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
@@ -13,9 +14,7 @@ class InstancePage extends HookWidget {
   final Future<FullSiteView> siteFuture;
   final Future<List<CommunityView>> communitiesFuture;
 
-  void _share() {
-    print('SHARE');
-  }
+  void _share() => Share.text('Share instance', instanceUrl, 'text/plain');
 
   void _openMoreMenu() {
     print('OPEN MORE MENU');
