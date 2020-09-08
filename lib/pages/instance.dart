@@ -9,6 +9,7 @@ import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/markdown_text.dart';
+import 'communities_list.dart';
 import 'users_list.dart';
 
 class InstancePage extends HookWidget {
@@ -99,7 +100,8 @@ class InstancePage extends HookWidget {
                 actions: [
                   IconButton(icon: Icon(Icons.share), onPressed: _share),
                   IconButton(
-                      icon: Icon(Icons.more_vert), onPressed: _openMoreMenu),
+                      icon: Icon(Icons.more_vert),
+                      onPressed: () => _openMoreMenu(context)),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(children: [
@@ -212,14 +214,18 @@ class _AboutTab extends HookWidget {
     print('GO TO COMMUNITY $id');
   }
 
-  void goToCommunities() {
-    print('GO TO COMMUNITIES');
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final commSnap = useFuture(communitiesFuture);
+
+    void goToCommunities() {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => CommunitiesListPage(
+            communities: commSnap.data,
+            title: 'Communities of ${site.site.name}'),
+      ));
+    }
 
     return SingleChildScrollView(
       child: SafeArea(
