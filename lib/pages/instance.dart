@@ -244,6 +244,32 @@ class _AboutTab extends HookWidget {
               title: Center(child: Text('See all')),
               onTap: () => print('GO TO COMMUNITIES'),
             ),
+            _Divider(),
+            ListTile(
+              title: Center(
+                child: Text(
+                  'Admins:',
+                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                ),
+              ),
+            ),
+            ...site.admins.map((e) => ListTile(
+                  title: Text(e.preferredUsername ?? '@${e.name}'),
+                  onTap: () => print('GO TO USER ${e.name}'),
+                  leading: e.avatar != null
+                      ? CachedNetworkImage(
+                          height: 50,
+                          width: 50,
+                          imageUrl: e.avatar,
+                          imageBuilder: (context, imageProvider) => Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover, image: imageProvider),
+                                ),
+                              ))
+                      : SizedBox(width: 50),
+                )),
             SizedBox(height: 20),
           ],
         ),
