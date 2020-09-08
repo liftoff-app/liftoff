@@ -23,6 +23,16 @@ class UserPage extends HookWidget {
   Widget build(BuildContext context) {
     var userViewSnap = useFuture(_userView);
 
+    var body = () {
+      if (userViewSnap.hasData) {
+        return UserProfile.fromUserView(userViewSnap.data);
+      } else if (userViewSnap.hasError) {
+        return Center(child: Text('Could not find that user.'));
+      } else {
+        return Center(child: CircularProgressIndicator());
+      }
+    }();
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -42,9 +52,7 @@ class UserPage extends HookWidget {
           ]
         ],
       ),
-      body: userViewSnap.hasData
-          ? UserProfile.fromUserView(userViewSnap.data)
-          : Center(child: CircularProgressIndicator()),
+      body: body,
     );
   }
 }
