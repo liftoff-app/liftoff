@@ -178,6 +178,12 @@ class _AccountsConfigAddInstanceDialog extends HookWidget {
       ),
       actions: <Widget>[
         FlatButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        FlatButton(
           child: !loading.value ? Text('Add') : CircularProgressIndicator(),
           onPressed: instanceController.text.isEmpty
               ? null
@@ -197,12 +203,6 @@ class _AccountsConfigAddInstanceDialog extends HookWidget {
                   Navigator.of(context).pop();
                 },
         ),
-        FlatButton(
-          child: Text('Cancel'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        )
       ],
     );
   }
@@ -252,6 +252,12 @@ class _AccountsConfigAddAccountDialog extends HookWidget {
       ),
       actions: <Widget>[
         FlatButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        FlatButton(
           child: !loading.value ? Text('Add') : CircularProgressIndicator(),
           onPressed:
               usernameController.text.isEmpty || passwordController.text.isEmpty
@@ -273,12 +279,6 @@ class _AccountsConfigAddAccountDialog extends HookWidget {
                       Navigator.of(context).pop();
                     },
         ),
-        FlatButton(
-          child: Text('Cancel'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        )
       ],
     );
   }
