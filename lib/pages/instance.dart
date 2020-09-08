@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
@@ -19,27 +20,6 @@ class InstancePage extends HookWidget {
 
   void _share() =>
       Share.text('Share instance', 'https://$instanceUrl', 'text/plain');
-
-  void _openMoreMenu(BuildContext c) {
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      context: c,
-      builder: (context) => BottomModal(
-        child: Column(
-          children: [
-            ListTile(
-              leading: Icon(Icons.open_in_browser),
-              title: Text('Open in browser'),
-              onTap: () async => await ul.canLaunch('https://$instanceUrl')
-                  ? ul.launch('https://$instanceUrl')
-                  : Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text("can't open in browser"))),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   InstancePage({@required this.instanceUrl})
       : assert(instanceUrl != null),
@@ -79,6 +59,76 @@ class InstancePage extends HookWidget {
     }
 
     final site = siteSnap.data;
+
+    void _openMoreMenu(BuildContext c) {
+      showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: c,
+        builder: (context) => BottomModal(
+          child: Column(
+            children: [
+              ListTile(
+                leading: Icon(Icons.open_in_browser),
+                title: Text('Open in browser'),
+                onTap: () async => await ul.canLaunch('https://$instanceUrl')
+                    ? ul.launch('https://$instanceUrl')
+                    : Scaffold.of(context).showSnackBar(
+                        SnackBar(content: Text("can't open in browser"))),
+              ),
+              ListTile(
+                leading: Icon(Icons.info_outline),
+                title: Text('Nerd stuff'),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      child: SimpleDialog(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 15,
+                          ),
+                          children: [
+                            Table(
+                              children: [
+                                TableRow(children: [
+                                  Text('url:'),
+                                  Text(instanceUrl),
+                                ]),
+                                TableRow(children: [
+                                  Text('creator:'),
+                                  Text('@${site.site.creatorName}')
+                                ]),
+                                TableRow(children: [
+                                  Text('version:'),
+                                  Text(site.version),
+                                ]),
+                                TableRow(children: [
+                                  Text('enableDownvotes:'),
+                                  Text(site.site.enableDownvotes.toString()),
+                                ]),
+                                TableRow(children: [
+                                  Text('enableNsfw:'),
+                                  Text(site.site.enableNsfw.toString()),
+                                ]),
+                                TableRow(children: [
+                                  Text('published:'),
+                                  Text(DateFormat.yMMMMd()
+                                      .format(site.site.published)),
+                                ]),
+                                TableRow(children: [
+                                  Text('updated:'),
+                                  Text(DateFormat.yMMMMd()
+                                      .format(site.site.updated)),
+                                ]),
+                              ],
+                            ),
+                          ]));
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       body: DefaultTabController(
