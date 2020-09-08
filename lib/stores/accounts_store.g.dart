@@ -93,6 +93,13 @@ mixin _$AccountsStore on _AccountsStore, Store {
         .run(() => super.addAccount(instanceUrl, usernameOrEmail, password));
   }
 
+  final _$addInstanceAsyncAction = AsyncAction('_AccountsStore.addInstance');
+
+  @override
+  Future<void> addInstance(String instanceUrl) {
+    return _$addInstanceAsyncAction.run(() => super.addInstance(instanceUrl));
+  }
+
   final _$_AccountsStoreActionController =
       ActionController(name: '_AccountsStore');
 

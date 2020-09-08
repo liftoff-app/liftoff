@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -77,18 +78,31 @@ class _AppearanceConfig extends StatelessWidget {
   }
 }
 
-class _AccountsConfig extends StatelessWidget {
+class _AccountsConfig extends HookWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         shadowColor: Colors.transparent,
         iconTheme: theme.iconTheme,
         title: Text('Accounts', style: theme.textTheme.headline6),
         centerTitle: true,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) =>
+                _AccountsConfigAddInstanceDialog(scaffoldKey: _scaffoldKey),
+          );
+        },
+        child: Icon(Icons.add),
       ),
       body: Observer(
         builder: (ctx) {
@@ -116,12 +130,153 @@ class _AccountsConfig extends StatelessWidget {
                     onTap: () {}, // TODO: go to managing account
                   ),
                 ],
-                Divider(),
+                ListTile(
+                  leading: Icon(Icons.add),
+                  title: Text('Add account'),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => _AccountsConfigAddAccountDialog(
+                        scaffoldKey: _scaffoldKey,
+                        instanceUrl: entry.key,
+                      ),
+                    );
+                  },
+                ),
               ]
-            ]..removeLast(), // removes trailing Divider
+            ],
           );
         },
       ),
+    );
+  }
+}
+
+class _AccountsConfigAddInstanceDialog extends HookWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const _AccountsConfigAddInstanceDialog({@required this.scaffoldKey})
+      : assert(scaffoldKey != null);
+
+  @override
+  Widget build(BuildContext context) {
+    var instanceController = useTextEditingController();
+    useValueListenable(instanceController);
+
+    var loading = useState(false);
+
+    handleOnAdd() async {
+      try {
+        loading.value = true;
+        await context
+            .read<AccountsStore>()
+            .addInstance(instanceController.text);
+        scaffoldKey.currentState.hideCurrentSnackBar();
+      } on Exception catch (err) {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(err.toString()),
+        ));
+      }
+      loading.value = false;
+      Navigator.of(context).pop();
+    }
+
+    return AlertDialog(
+      title: Text('Add instance'),
+      content: TextField(
+        autofocus: true,
+        controller: instanceController,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'Instance url',
+        ),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('Cancel'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        FlatButton(
+          child: !loading.value ? Text('Add') : CircularProgressIndicator(),
+          onPressed: instanceController.text.isEmpty ? null : handleOnAdd,
+        ),
+      ],
+    );
+  }
+}
+
+class _AccountsConfigAddAccountDialog extends HookWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  final String instanceUrl;
+
+  const _AccountsConfigAddAccountDialog(
+      {@required this.scaffoldKey, @required this.instanceUrl})
+      : assert(scaffoldKey != null),
+        assert(instanceUrl != null);
+
+  @override
+  Widget build(BuildContext context) {
+    var usernameController = useTextEditingController();
+    var passwordController = useTextEditingController();
+    useValueListenable(usernameController);
+    useValueListenable(passwordController);
+
+    var loading = useState(false);
+
+    handleOnAdd() async {
+      try {
+        loading.value = true;
+        await context.read<AccountsStore>().addAccount(
+              instanceUrl,
+              usernameController.text,
+              passwordController.text,
+            );
+      } on Exception catch (err) {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(err.toString()),
+        ));
+      }
+      loading.value = false;
+      Navigator.of(context).pop();
+    }
+
+    return AlertDialog(
+      title: Text('Add account'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            autofocus: true,
+            controller: usernameController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Username or email',
+            ),
+          ),
+          const SizedBox(height: 5),
+          TextField(
+            controller: passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Password',
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('Cancel'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        FlatButton(
+          child: !loading.value ? Text('Add') : CircularProgressIndicator(),
+          onPressed:
+              usernameController.text.isEmpty || passwordController.text.isEmpty
+                  ? null
+                  : handleOnAdd,
+        ),
+      ],
     );
   }
 }

@@ -99,6 +99,9 @@ abstract class _AccountsStore with Store {
     _defaultAccounts[instanceUrl] = username;
   }
 
+  bool isAnonymousFor(String instanceUrl) =>
+      Computed(() => users[instanceUrl].isEmpty).value;
+
   /// adds a new account
   /// if it's the first account ever the account is
   /// set as default for the app
@@ -110,6 +113,10 @@ abstract class _AccountsStore with Store {
     String usernameOrEmail,
     String password,
   ) async {
+    if (!users.containsKey(instanceUrl)) {
+      throw Exception('No such instance was added');
+    }
+
     var lemmy = LemmyApi(instanceUrl).v1;
 
     var token = await lemmy.login(
@@ -119,17 +126,37 @@ abstract class _AccountsStore with Store {
     var userData =
         await lemmy.getSite(auth: token.raw).then((value) => value.myUser);
 
-    if (!users.containsKey(instanceUrl)) {
-      if (users.isEmpty) {
+    // first account for this instance
+    if (users[instanceUrl].isEmpty) {
+      // first account ever
+      if (users.values.every((e) => e.isEmpty)) {
         setDefaultAccount(instanceUrl, userData.name);
       }
 
-      users[instanceUrl] = ObservableMap();
-      tokens[instanceUrl] = ObservableMap();
       setDefaultAccountFor(instanceUrl, userData.name);
     }
-
     users[instanceUrl][userData.name] = userData;
     tokens[instanceUrl][userData.name] = token;
   }
+
+  /// adds a new instance with no accounts associated with it.
+  /// Additionally makes a test GET /site request to check if the instance exists
+  @action
+  Future<void> addInstance(String instanceUrl) async {
+    if (users.containsKey(instanceUrl)) {
+      throw Exception('This instance has already been added');
+    }
+
+    try {
+      await LemmyApi(instanceUrl).v1.getSite();
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      throw Exception('This instance seems to not exist');
+    }
+
+    users[instanceUrl] = ObservableMap();
+    tokens[instanceUrl] = ObservableMap();
+  }
+
+  // TODO: add a way of removing accounts/instances
 }
