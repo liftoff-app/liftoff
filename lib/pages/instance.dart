@@ -3,9 +3,11 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
+import '../widgets/bottom_modal.dart';
 import '../widgets/markdown_text.dart';
 import 'users_list.dart';
 
@@ -14,10 +16,28 @@ class InstancePage extends HookWidget {
   final Future<FullSiteView> siteFuture;
   final Future<List<CommunityView>> communitiesFuture;
 
-  void _share() => Share.text('Share instance', instanceUrl, 'text/plain');
+  void _share() =>
+      Share.text('Share instance', 'https://$instanceUrl', 'text/plain');
 
-  void _openMoreMenu() {
-    print('OPEN MORE MENU');
+  void _openMoreMenu(BuildContext c) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: c,
+      builder: (context) => BottomModal(
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.open_in_browser),
+              title: Text('Open in browser'),
+              onTap: () async => await ul.canLaunch('https://$instanceUrl')
+                  ? ul.launch('https://$instanceUrl')
+                  : Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text("can't open in browser"))),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   InstancePage({@required this.instanceUrl})
