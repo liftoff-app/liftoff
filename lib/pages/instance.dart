@@ -255,6 +255,7 @@ class _AboutTab extends HookWidget {
             ),
             ...site.admins.map((e) => ListTile(
                   title: Text(e.preferredUsername ?? '@${e.name}'),
+                  subtitle: e.bio != null ? Text('${e.bio}') : null,
                   onTap: () => print('GO TO USER ${e.name}'),
                   leading: e.avatar != null
                       ? CachedNetworkImage(
@@ -270,6 +271,33 @@ class _AboutTab extends HookWidget {
                               ))
                       : SizedBox(width: 50),
                 )),
+            _Divider(),
+            ListTile(
+              title: Center(
+                child: Text(
+                  'Recently banned:',
+                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                ),
+              ),
+            ),
+            ...site.banned.getRange(0, 5).map((e) => ListTile(
+                  // subtitle: Text(),
+                  title: Text(
+                      (e.preferredUsername == null || e.preferredUsername == '')
+                          ? '@${e.name}'
+                          : e.preferredUsername),
+                  onTap: () => print('GO TO USER ${e.name}'),
+                  leading: SizedBox(width: 50),
+                )),
+            ListTile(
+              title: Center(child: Text('See all')),
+              onTap: () => print('GO TO BANNED USERS PAGE'),
+            ),
+            _Divider(),
+            ListTile(
+              title: Center(child: Text('Modlog')),
+              onTap: () => print('GO TO MODLOG'),
+            ),
             SizedBox(height: 20),
           ],
         ),
