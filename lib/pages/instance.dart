@@ -84,66 +84,64 @@ class InstancePage extends HookWidget {
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                expandedHeight: 200,
-                floating: false,
-                pinned: true,
-                elevation: 0,
-                backgroundColor: theme.cardColor,
-                iconTheme: theme.iconTheme,
-                title: Text(
-                  '${site.site.name}',
-                  style: TextStyle(color: colorOnCard),
-                ),
-                actions: [
-                  IconButton(icon: Icon(Icons.share), onPressed: _share),
-                  IconButton(
-                      icon: Icon(Icons.more_vert),
-                      onPressed: () => _openMoreMenu(context)),
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(children: [
-                    if (site.site.banner != null)
-                      CachedNetworkImage(imageUrl: site.site.banner),
-                    SafeArea(
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 40),
-                              child: CachedNetworkImage(
-                                  width: 100,
-                                  height: 100,
-                                  imageUrl: site.site.icon),
-                            ),
-                            Text(site.site.name,
-                                style: theme.textTheme.headline6),
-                            Text(instanceUrl, style: theme.textTheme.caption)
-                          ],
-                        ),
+          headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
+            SliverAppBar(
+              expandedHeight: 200,
+              floating: false,
+              pinned: true,
+              elevation: 0,
+              backgroundColor: theme.cardColor,
+              iconTheme: theme.iconTheme,
+              title: Text(
+                '${site.site.name}',
+                style: TextStyle(color: colorOnCard),
+              ),
+              actions: [
+                IconButton(icon: Icon(Icons.share), onPressed: _share),
+                IconButton(
+                    icon: Icon(Icons.more_vert),
+                    onPressed: () => _openMoreMenu(context)),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(children: [
+                  if (site.site.banner != null)
+                    CachedNetworkImage(imageUrl: site.site.banner),
+                  SafeArea(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 40),
+                            child: CachedNetworkImage(
+                                width: 100,
+                                height: 100,
+                                imageUrl: site.site.icon),
+                          ),
+                          Text(site.site.name,
+                              style: theme.textTheme.headline6),
+                          Text(instanceUrl, style: theme.textTheme.caption)
+                        ],
                       ),
                     ),
-                  ]),
-                ),
-              ),
-              SliverPersistentHeader(
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-                    labelColor: theme.textTheme.bodyText1.color,
-                    unselectedLabelColor: Colors.grey,
-                    tabs: [
-                      Tab(text: 'Posts'),
-                      Tab(text: 'Comments'),
-                      Tab(text: 'About'),
-                    ],
                   ),
-                ),
-                pinned: true,
+                ]),
               ),
-            ];
-          },
+            ),
+            SliverPersistentHeader(
+              delegate: _SliverAppBarDelegate(
+                TabBar(
+                  labelColor: theme.textTheme.bodyText1.color,
+                  unselectedLabelColor: Colors.grey,
+                  tabs: [
+                    Tab(text: 'Posts'),
+                    Tab(text: 'Comments'),
+                    Tab(text: 'About'),
+                  ],
+                ),
+              ),
+              pinned: true,
+            ),
+          ],
           body: TabBarView(
             children: [
               ListView(
@@ -183,9 +181,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
 }
 
 class _AboutTab extends HookWidget {
@@ -383,10 +379,8 @@ class _Badge extends StatelessWidget {
 
 class _Divider extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: Divider(),
-    );
-  }
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: Divider(),
+      );
 }
