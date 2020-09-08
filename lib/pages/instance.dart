@@ -6,6 +6,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/markdown_text.dart';
+import 'users_list.dart';
 
 class InstancePage extends HookWidget {
   final String instanceUrl;
@@ -30,7 +31,6 @@ class InstancePage extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final siteSnap = useFuture(siteFuture);
-    final commsSnap = useFuture(communitiesFuture);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
 
     if (!siteSnap.hasData) {
@@ -182,8 +182,11 @@ class _AboutTab extends HookWidget {
     print('GO TO MODLOG');
   }
 
-  void goToBannedUsers() {
-    print('GO TO BANNED USERS');
+  void goToBannedUsers(BuildContext c) {
+    Navigator.of(c).push(MaterialPageRoute(
+      builder: (_) => UsersListPage(
+          users: site.banned.reversed.toList(), title: 'Banned users'),
+    ));
   }
 
   void goToCommunity(int id) {
@@ -275,7 +278,7 @@ class _AboutTab extends HookWidget {
             ),
             ...site.admins.map((e) => ListTile(
                   title: Text(e.preferredUsername ?? '@${e.name}'),
-                  subtitle: e.bio != null ? Text('${e.bio}') : null,
+                  subtitle: e.bio != null ? MarkdownText('${e.bio}') : null,
                   onTap: () => goToUser(e.id),
                   leading: e.avatar != null
                       ? CachedNetworkImage(
@@ -300,7 +303,7 @@ class _AboutTab extends HookWidget {
                 ),
               ),
             ),
-            ...site.banned.getRange(0, 5).map((e) => ListTile(
+            ...site.banned.reversed.take(5).map((e) => ListTile(
                   // subtitle: Text(),
                   title: Text(
                       (e.preferredUsername == null || e.preferredUsername == '')
@@ -311,7 +314,7 @@ class _AboutTab extends HookWidget {
                 )),
             ListTile(
               title: Center(child: Text('See all')),
-              onTap: goToBannedUsers,
+              onTap: () => goToBannedUsers(context),
             ),
             _Divider(),
             ListTile(
