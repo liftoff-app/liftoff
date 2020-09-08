@@ -10,6 +10,7 @@ import '../widgets/markdown_text.dart';
 class InstancePage extends HookWidget {
   final String instanceUrl;
   final Future<FullSiteView> siteFuture;
+  final Future<List<CommunityView>> communitiesFuture;
 
   void _share() {
     print('SHARE');
@@ -21,12 +22,15 @@ class InstancePage extends HookWidget {
 
   InstancePage({@required this.instanceUrl})
       : assert(instanceUrl != null),
-        siteFuture = LemmyApi(instanceUrl).v1.getSite();
+        siteFuture = LemmyApi(instanceUrl).v1.getSite(),
+        communitiesFuture =
+            LemmyApi(instanceUrl).v1.listCommunities(sort: SortType.hot);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final siteSnap = useFuture(siteFuture);
+    final commsSnap = useFuture(communitiesFuture);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
 
     if (!siteSnap.hasData) {
@@ -131,7 +135,7 @@ class InstancePage extends HookWidget {
                   Center(child: Text('comments go here')),
                 ],
               ),
-              _AboutTab(site),
+              _AboutTab(site, communitiesFuture: communitiesFuture),
             ],
           ),
         ),
@@ -163,13 +167,18 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class _AboutTab extends StatelessWidget {
+class _AboutTab extends HookWidget {
   final FullSiteView site;
+  final Future<List<CommunityView>> communitiesFuture;
 
-  const _AboutTab(this.site);
+  const _AboutTab(this.site, {@required this.communitiesFuture})
+      : assert(communitiesFuture != null);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final commSnap = useFuture(communitiesFuture);
+
     return SingleChildScrollView(
       child: SafeArea(
         top: false,
@@ -197,8 +206,45 @@ class _AboutTab extends StatelessWidget {
               ),
             ),
             _Divider(),
-            Text('Trending communities:'),
-            // TODO: put here trending communities
+            Text(
+              'Trending communities:',
+              style: theme.textTheme.headline6.copyWith(fontSize: 18),
+            ),
+            if (commSnap.hasData)
+              ...commSnap.data.getRange(0, 6).map((e) => ListTile(
+                    onTap: () => print('GO TO COMMUNITY ${e.name}'),
+                    title: Text(e.name),
+                    leading: e.icon != null
+                        ? CachedNetworkImage(
+                            height: 50,
+                            width: 50,
+                            imageUrl: e.icon,
+                            imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: imageProvider,
+                                    ),
+                                  ),
+                                ))
+                        : SizedBox(width: 50),
+                  ))
+            else if (commSnap.hasError)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Can't load communities, ${commSnap.error}"),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: CircularProgressIndicator(),
+              ),
+            ListTile(
+              title: Center(child: Text('See all')),
+              onTap: () => print('GO TO COMMUNITIES'),
+            ),
+            SizedBox(height: 20),
           ],
         ),
       ),
