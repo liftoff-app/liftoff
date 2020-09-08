@@ -178,9 +178,7 @@ class _AccountsConfigAddInstanceDialog extends HookWidget {
       actions: <Widget>[
         FlatButton(
           child: Text('Cancel'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
         FlatButton(
           child: !loading.value ? Text('Add') : CircularProgressIndicator(),
@@ -252,9 +250,7 @@ class _AccountsConfigAddAccountDialog extends HookWidget {
       actions: <Widget>[
         FlatButton(
           child: Text('Cancel'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
         FlatButton(
           child: !loading.value ? Text('Add') : CircularProgressIndicator(),
