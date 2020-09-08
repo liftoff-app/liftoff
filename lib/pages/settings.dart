@@ -71,6 +71,12 @@ class _AppearanceConfig extends StatelessWidget {
                   ctx.read<ConfigStore>().theme = selected;
                 },
               ),
+            SwitchListTile(
+                title: Text('AMOLED dark mode'),
+                value: ctx.watch<ConfigStore>().amoledDarkMode,
+                onChanged: (checked) {
+                  ctx.read<ConfigStore>().amoledDarkMode = checked;
+                })
           ],
         ),
       ),

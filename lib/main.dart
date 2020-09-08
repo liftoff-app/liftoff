@@ -34,15 +34,24 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Observer(
-        builder: (ctx) => MaterialApp(
-          title: 'Flutter Demo',
-          themeMode: ctx.watch<ConfigStore>().theme,
-          darkTheme: ThemeData.dark(),
-          theme: ThemeData(
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: MyHomePage(title: 'Flutter hello world'),
-        ),
+        builder: (ctx) {
+          var maybeAmoledColor =
+              ctx.watch<ConfigStore>().amoledDarkMode ? Colors.black : null;
+
+          return MaterialApp(
+            title: 'Flutter Demo',
+            themeMode: ctx.watch<ConfigStore>().theme,
+            darkTheme: ThemeData.dark().copyWith(
+              scaffoldBackgroundColor: maybeAmoledColor,
+              backgroundColor: maybeAmoledColor,
+              canvasColor: maybeAmoledColor,
+            ),
+            theme: ThemeData(
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: MyHomePage(title: 'Flutter hello world'),
+          );
+        },
       );
 }
 

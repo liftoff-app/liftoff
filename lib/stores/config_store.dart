@@ -12,7 +12,7 @@ abstract class _ConfigStore with Store {
 
   _ConfigStore() {
     // persitently save settings each time they are changed
-    _saveReactionDisposer = reaction((_) => [theme], (_) {
+    _saveReactionDisposer = reaction((_) => [theme, amoledDarkMode], (_) {
       save();
     });
   }
@@ -25,18 +25,21 @@ abstract class _ConfigStore with Store {
     var prefs = await SharedPreferences.getInstance();
     // load saved settings or create defaults
     theme = _themeModeFromString(prefs.getString('theme') ?? 'system');
+    amoledDarkMode = prefs.getBool('amoledDarkMode') ?? false;
   }
 
   void save() async {
     var prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('theme', describeEnum(theme));
+    await prefs.setBool('amoledDarkMode', amoledDarkMode);
   }
 
   @observable
   ThemeMode theme;
 
-  // TODO: add amoledDarkMode switch
+  @observable
+  bool amoledDarkMode;
 }
 
 ThemeMode _themeModeFromString(String theme) =>
