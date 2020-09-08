@@ -10,17 +10,20 @@ import '../util/text_color.dart';
 import 'badge.dart';
 
 class UserProfile extends HookWidget {
-  final int userId;
   final Future<UserView> _userView;
   final String instanceUrl;
 
   // TODO: add `.fromUser` constructor
-  UserProfile({@required this.userId, @required this.instanceUrl})
+  UserProfile({@required int userId, @required this.instanceUrl})
       : _userView = LemmyApi(instanceUrl)
             .v1
             .getUserDetails(
                 userId: userId, savedOnly: true, sort: SortType.active)
             .then((res) => res.user);
+
+  UserProfile.fromUserView(UserView userView)
+      : _userView = Future.value(userView),
+        instanceUrl = userView.actorId.split('/')[2];
 
   @override
   Widget build(BuildContext context) {
