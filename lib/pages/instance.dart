@@ -228,9 +228,13 @@ class _AboutTab extends HookWidget {
               ),
             ),
             _Divider(),
-            Text(
-              'Trending communities:',
-              style: theme.textTheme.headline6.copyWith(fontSize: 18),
+            ListTile(
+              title: Center(
+                child: Text(
+                  'Trending communities:',
+                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                ),
+              ),
             ),
             if (commSnap.hasData)
               ...commSnap.data.getRange(0, 6).map((e) => ListTile(
