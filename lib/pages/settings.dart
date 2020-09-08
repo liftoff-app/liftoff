@@ -165,6 +165,22 @@ class _AccountsConfigAddInstanceDialog extends HookWidget {
 
     var loading = useState(false);
 
+    handleOnAdd() async {
+      try {
+        loading.value = true;
+        await context
+            .read<AccountsStore>()
+            .addInstance(instanceController.text);
+        scaffoldKey.currentState.hideCurrentSnackBar();
+      } on Exception catch (err) {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(err.toString()),
+        ));
+      }
+      loading.value = false;
+      Navigator.of(context).pop();
+    }
+
     return AlertDialog(
       title: Text('Add instance'),
       content: TextField(
@@ -182,23 +198,7 @@ class _AccountsConfigAddInstanceDialog extends HookWidget {
         ),
         FlatButton(
           child: !loading.value ? Text('Add') : CircularProgressIndicator(),
-          onPressed: instanceController.text.isEmpty
-              ? null
-              : () async {
-                  try {
-                    loading.value = true;
-                    await context
-                        .read<AccountsStore>()
-                        .addInstance(instanceController.text);
-                    scaffoldKey.currentState.hideCurrentSnackBar();
-                  } on Exception catch (err) {
-                    scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text(err.toString()),
-                    ));
-                  }
-                  loading.value = false;
-                  Navigator.of(context).pop();
-                },
+          onPressed: instanceController.text.isEmpty ? null : handleOnAdd,
         ),
       ],
     );
@@ -222,6 +222,23 @@ class _AccountsConfigAddAccountDialog extends HookWidget {
     useValueListenable(passwordController);
 
     var loading = useState(false);
+
+    handleOnAdd() async {
+      try {
+        loading.value = true;
+        await context.read<AccountsStore>().addAccount(
+              instanceUrl,
+              usernameController.text,
+              passwordController.text,
+            );
+      } on Exception catch (err) {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(err.toString()),
+        ));
+      }
+      loading.value = false;
+      Navigator.of(context).pop();
+    }
 
     return AlertDialog(
       title: Text('Add account'),
@@ -257,22 +274,7 @@ class _AccountsConfigAddAccountDialog extends HookWidget {
           onPressed:
               usernameController.text.isEmpty || passwordController.text.isEmpty
                   ? null
-                  : () async {
-                      try {
-                        loading.value = true;
-                        await context.read<AccountsStore>().addAccount(
-                              instanceUrl,
-                              usernameController.text,
-                              passwordController.text,
-                            );
-                      } on Exception catch (err) {
-                        scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text(err.toString()),
-                        ));
-                      }
-                      loading.value = false;
-                      Navigator.of(context).pop();
-                    },
+                  : handleOnAdd,
         ),
       ],
     );
