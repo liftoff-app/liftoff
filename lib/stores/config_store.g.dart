@@ -24,10 +24,26 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  final _$amoledDarkModeAtom = Atom(name: '_ConfigStore.amoledDarkMode');
+
+  @override
+  bool get amoledDarkMode {
+    _$amoledDarkModeAtom.reportRead();
+    return super.amoledDarkMode;
+  }
+
+  @override
+  set amoledDarkMode(bool value) {
+    _$amoledDarkModeAtom.reportWrite(value, super.amoledDarkMode, () {
+      super.amoledDarkMode = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
-theme: ${theme}
+theme: ${theme},
+amoledDarkMode: ${amoledDarkMode}
     ''';
   }
 }

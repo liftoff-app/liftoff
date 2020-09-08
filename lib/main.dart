@@ -37,7 +37,10 @@ class MyApp extends StatelessWidget {
         builder: (ctx) => MaterialApp(
           title: 'Flutter Demo',
           themeMode: ctx.watch<ConfigStore>().theme,
-          darkTheme: ThemeData.dark(),
+          darkTheme: ThemeData.dark().copyWith(
+              scaffoldBackgroundColor: ctx.watch<ConfigStore>().amoledDarkMode
+                  ? Colors.black
+                  : null),
           theme: ThemeData(
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
