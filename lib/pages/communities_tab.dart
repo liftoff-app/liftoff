@@ -68,19 +68,21 @@ class CommunitiesTab extends HookWidget {
               (i) => Column(
                 children: [
                   ListTile(
-                    leading: CachedNetworkImage(
-                      height: 50,
-                      width: 50,
-                      imageUrl: instances[i].icon,
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover, image: imageProvider),
-                        ),
-                      ),
-                      errorWidget: (_, __, ___) => SizedBox(width: 50),
-                    ),
+                    leading: instances[i].icon != null
+                        ? CachedNetworkImage(
+                            height: 50,
+                            width: 50,
+                            imageUrl: instances[i].icon,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover, image: imageProvider),
+                              ),
+                            ),
+                            errorWidget: (_, __, ___) => SizedBox(width: 50),
+                          )
+                        : SizedBox(width: 50),
                     title: Text(
                       instances[i].name,
                       style: theme.textTheme.headline6,
@@ -91,19 +93,24 @@ class CommunitiesTab extends HookWidget {
                       padding: const EdgeInsets.only(left: 50),
                       child: ListTile(
                         dense: true,
-                        leading: CachedNetworkImage(
-                          height: 30,
-                          width: 30,
-                          imageUrl: instances[i].icon,
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.cover, image: imageProvider),
-                            ),
-                          ),
-                          errorWidget: (_, __, ___) => SizedBox(width: 30),
-                        ),
+                        leading: comm.communityIcon != null
+                            ? CachedNetworkImage(
+                                height: 30,
+                                width: 30,
+                                imageUrl: comm.communityIcon,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: imageProvider),
+                                  ),
+                                ),
+                                errorWidget: (_, __, ___) =>
+                                    SizedBox(width: 30),
+                              )
+                            : SizedBox(width: 30),
                         title: Text('!${comm.communityName}'),
                         trailing: _CommunitySubscribeToggle(
                           instanceUrl: comm.communityActorId.split('/')[2],
