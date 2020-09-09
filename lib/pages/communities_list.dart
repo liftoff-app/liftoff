@@ -43,12 +43,14 @@ class CommunitiesListPage extends StatelessWidget {
                     width: 50,
                     imageUrl: communities[i].icon,
                     imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover, image: imageProvider),
-                          ),
-                        ))
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.cover, image: imageProvider),
+                      ),
+                    ),
+                    errorWidget: (_, __, ___) => SizedBox(width: 50),
+                  )
                 : SizedBox(width: 50),
             // TODO: add trailing button for un/subscribing to communities
           ),
