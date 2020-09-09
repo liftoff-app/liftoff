@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lemmur/pages/user.dart';
 
 import '../pages/community.dart';
 import '../pages/full_post.dart';
 import '../pages/instance.dart';
-import '../widgets/user_profile.dart';
 
 void goToInstance(BuildContext context, String instanceUrl) =>
     Navigator.of(context).push(MaterialPageRoute(
@@ -32,7 +32,7 @@ abstract class goToUser {
   static void byId(BuildContext context, String instanceUrl, int userId) =>
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
-              UserProfile(instanceUrl: instanceUrl, userId: userId)));
+              UserPage(instanceUrl: instanceUrl, userId: userId)));
 
   static void byName(
           BuildContext context, String instanceUrl, String userName) =>
