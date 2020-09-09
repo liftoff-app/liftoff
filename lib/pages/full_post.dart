@@ -68,7 +68,7 @@ class FullPostPage extends HookWidget {
             IconButton(icon: Icon(savedIcon), onPressed: savePost),
             IconButton(
                 icon: Icon(Icons.more_vert),
-                onPressed: () {}), // TODO: more menu
+                onPressed: () => Post.showMoreMenu(context, post)),
           ],
         ),
         body: ListView(

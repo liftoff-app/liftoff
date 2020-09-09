@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../url_launcher.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
+import 'bottom_modal.dart';
 import 'markdown_text.dart';
 
 enum MediaType {
@@ -58,8 +60,84 @@ class Post extends StatelessWidget {
     print('DOWNVOTE POST');
   }
 
-  void _showMoreMenu() {
-    print('SHOW MORE MENU');
+  static void showMoreMenu(BuildContext context, PostView post) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => BottomModal(
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.open_in_browser),
+              title: Text('Open in browser'),
+              onTap: () async => await ul.canLaunch(post.apId)
+                  ? ul.launch(post.apId)
+                  : Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text("can't open in browser"))),
+            ),
+            ListTile(
+              leading: Icon(Icons.info_outline),
+              title: Text('Nerd stuff'),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  child: SimpleDialog(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
+                    children: [
+                      Table(
+                        children: [
+                          TableRow(children: [
+                            Text('upvotes:'),
+                            Text(post.upvotes.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('downvotes:'),
+                            Text(post.downvotes.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('score:'),
+                            Text(post.score.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('% of upvotes:'),
+                            Text(
+                                '''${(100 * (post.upvotes / (post.upvotes + post.downvotes))).toInt()}%'''),
+                          ]),
+                          TableRow(children: [
+                            Text('hotrank:'),
+                            Text(post.hotRank.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('hotrank active:'),
+                            Text(post.hotRankActive.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('published:'),
+                            Text(
+                                '''${DateFormat.yMMMd().format(post.published)}'''
+                                ''' ${DateFormat.Hms().format(post.published)}'''),
+                          ]),
+                          TableRow(children: [
+                            Text('updated:'),
+                            Text(post.updated != null
+                                ? '''${DateFormat.yMMMd().format(post.updated)}'''
+                                    ''' ${DateFormat.Hms().format(post.updated)}'''
+                                : 'never'),
+                          ]),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // == UI ==
@@ -189,7 +267,7 @@ class Post extends StatelessWidget {
                 Column(
                   children: [
                     IconButton(
-                      onPressed: _showMoreMenu,
+                      onPressed: () => showMoreMenu(context, post),
                       icon: Icon(Icons.more_vert),
                     )
                   ],
