@@ -33,12 +33,7 @@ class Post extends StatelessWidget {
   final String instanceUrl;
   final bool fullPost;
 
-  /// nullable
-  final String postUrlDomain;
-
-  Post(this.post, {this.fullPost = false})
-      : instanceUrl = post.instanceUrl,
-        postUrlDomain = post.url != null ? post.url.split('/')[2] : null;
+  Post(this.post, {this.fullPost = false}) : instanceUrl = post.instanceUrl;
 
   // == ACTIONS ==
 
@@ -72,6 +67,14 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final urlDomain = () {
+      if (post.url == null) return null;
+
+      var url = post.url.split('/')[2];
+      if (url.startsWith('www.')) return url.substring(4);
+      return url;
+    }();
 
     // TODO: add NSFW, locked, removed, deleted, stickied
     /// assemble info section
@@ -171,8 +174,8 @@ class Post extends StatelessWidget {
                               TextSpan(
                                   text: 'NSFW',
                                   style: TextStyle(color: Colors.red)),
-                            if (postUrlDomain != null)
-                              TextSpan(text: ' · $postUrlDomain'),
+                            if (urlDomain != null)
+                              TextSpan(text: ' · $urlDomain'),
                             if (post.removed) TextSpan(text: ' · REMOVED'),
                             if (post.deleted) TextSpan(text: ' · DELETED'),
                           ],
@@ -200,7 +203,8 @@ class Post extends StatelessWidget {
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
           child: Row(
             children: [
-              Flexible(
+              Expanded(
+                flex: 100,
                 child: Text(
                   '${post.name}',
                   textAlign: TextAlign.left,
@@ -210,11 +214,8 @@ class Post extends StatelessWidget {
               ),
               if (post.url != null &&
                   whatType(post.url) == MediaType.other &&
-                  post.thumbnailUrl != null)
+                  post.thumbnailUrl != null) ...[
                 Spacer(),
-              if (post.url != null &&
-                  whatType(post.url) == MediaType.other &&
-                  post.thumbnailUrl != null)
                 InkWell(
                   onTap: _openLink,
                   child: Stack(children: [
@@ -238,6 +239,7 @@ class Post extends StatelessWidget {
                     )
                   ]),
                 )
+              ]
             ],
           ),
         );
@@ -245,11 +247,6 @@ class Post extends StatelessWidget {
     /// assemble link preview
     Widget linkPreview() {
       assert(post.url != null);
-
-      var url = post.url.split('/')[2];
-      if (url.startsWith('www.')) {
-        url = url.substring(4);
-      }
 
       return Padding(
         padding: const EdgeInsets.all(10),
@@ -267,7 +264,7 @@ class Post extends StatelessWidget {
                 children: [
                   Row(children: [
                     Spacer(),
-                    Text('$url ',
+                    Text('$urlDomain ',
                         style: theme.textTheme.caption
                             .apply(fontStyle: FontStyle.italic)),
                     Icon(Icons.launch, size: 12),
