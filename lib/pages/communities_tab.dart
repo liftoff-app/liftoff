@@ -90,6 +90,7 @@ class CommunitiesTab extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 50),
                       child: ListTile(
+                        dense: true,
                         leading: CachedNetworkImage(
                           height: 30,
                           width: 30,
@@ -105,8 +106,8 @@ class CommunitiesTab extends HookWidget {
                         ),
                         title: Text('!${comm.communityName}'),
                         trailing: _CommunitySubscribeToggle(
-                          instanceUrl: 'asd', // TODO: extract instanceUrl
-                          communityId: comm.id,
+                          instanceUrl: comm.communityActorId.split('/')[2],
+                          communityId: comm.communityId,
                         ),
                       ),
                     )
@@ -132,23 +133,46 @@ class _CommunitySubscribeToggle extends HookWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var subed = useState(true);
+    var loading = useState(false);
 
     return InkWell(
-      onTap: () {
-        subed.value = !subed.value;
+      onTap: () async {
+        loading.value = true;
+        try {
+          await LemmyApi(instanceUrl).v1.followCommunity(
+                communityId: communityId,
+                follow: !subed.value,
+                auth: context
+                    .read<AccountsStore>()
+                    .defaultTokenFor(instanceUrl)
+                    .raw,
+              );
+          subed.value = !subed.value;
+        } on Exception catch (err) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('Failed to ${subed.value ? 'un' : ''}follow: $err'),
+          ));
+        }
+        loading.value = false;
       },
       child: Container(
-        decoration: BoxDecoration(
-          color: subed.value ? theme.accentColor : null,
-          border: Border.all(color: theme.accentColor),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Icon(
-          subed.value ? Icons.done : Icons.add,
-          color: subed.value
-              ? textColorBasedOnBackground(theme.accentColor)
-              : theme.accentColor,
-        ),
+        decoration: loading.value
+            ? null
+            : BoxDecoration(
+                color: subed.value ? theme.accentColor : null,
+                border: Border.all(color: theme.accentColor),
+                borderRadius: BorderRadius.circular(5),
+              ),
+        child: loading.value
+            ? Container(
+                width: 20, height: 20, child: CircularProgressIndicator())
+            : Icon(
+                subed.value ? Icons.done : Icons.add,
+                color: subed.value
+                    ? textColorBasedOnBackground(theme.accentColor)
+                    : theme.accentColor,
+                size: 20,
+              ),
       ),
     );
   }
