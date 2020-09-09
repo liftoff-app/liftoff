@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../pages/community.dart';
+import '../pages/full_post.dart';
 import '../pages/instance.dart';
 import '../widgets/user_profile.dart';
 
@@ -41,4 +42,4 @@ abstract class goToUser {
 void goToPost(BuildContext context, String instanceUrl, int postId) =>
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            UserProfile(instanceUrl: instanceUrl, userId: postId)));
+            FullPostPage(instanceUrl: instanceUrl, id: postId)));
