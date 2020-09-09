@@ -277,7 +277,6 @@ class _AboutTab extends HookWidget {
       child: SafeArea(
         top: false,
         child: Column(
-          // padding: EdgeInsets.only(top: 0),
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
