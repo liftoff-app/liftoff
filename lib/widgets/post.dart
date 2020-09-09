@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../pages/full_post.dart';
 import '../url_launcher.dart';
+import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import 'markdown_text.dart';
 
 enum MediaType {
@@ -36,34 +37,15 @@ class Post extends StatelessWidget {
   final String postUrlDomain;
 
   Post(this.post, {this.fullPost = false})
-      : instanceUrl = post.communityActorId.split('/')[2],
+      : instanceUrl = post.instanceUrl,
         postUrlDomain = post.url != null ? post.url.split('/')[2] : null;
 
   // == ACTIONS ==
 
-  void _openLink() {
-    print('OPEN LINK');
-    urlLauncher(post.url);
-  }
-
-  void _goToUser() {
-    print('GO TO USER');
-  }
-
-  void _goToPost(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => FullPostPage.fromPostView(post)));
-  }
-
-  void _goToCommunity() {
-    print('GO TO COMMUNITY');
-  }
-
-  void _goToInstance() {
-    print('GO TO INSTANCE');
-  }
+  void _openLink() => urlLauncher(post.url);
 
   void _openFullImage() {
+    // TODO: fullscreen media view
     print('OPEN FULL IMAGE');
   }
 
@@ -104,7 +86,8 @@ class Post extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: InkWell(
-                        onTap: _goToCommunity,
+                        onTap: () => goToCommunity.byId(
+                            context, instanceUrl, post.communityId),
                         child: SizedBox(
                           height: 40,
                           width: 40,
@@ -144,7 +127,8 @@ class Post extends StatelessWidget {
                               text: post.communityName,
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = _goToCommunity),
+                                ..onTap = () => goToCommunity.byId(
+                                    context, instanceUrl, post.communityId)),
                           TextSpan(
                               text: '@',
                               style: TextStyle(fontWeight: FontWeight.w300)),
@@ -152,7 +136,8 @@ class Post extends StatelessWidget {
                               text: instanceUrl,
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = _goToInstance),
+                                ..onTap =
+                                    () => goToInstance(context, instanceUrl)),
                         ],
                       ),
                     )
@@ -173,7 +158,8 @@ class Post extends StatelessWidget {
                                   ''' ${post.creatorPreferredUsername ?? post.creatorName}''',
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = _goToUser,
+                                ..onTap = () => goToUser.byId(
+                                    context, post.instanceUrl, post.creatorId),
                             ),
                             TextSpan(
                                 text:
@@ -288,11 +274,14 @@ class Post extends StatelessWidget {
                   ]),
                   Row(children: [
                     Flexible(
-                        child: Text(post.embedTitle,
+                        child: Text('${post.embedTitle}',
                             style: theme.textTheme.subtitle1
                                 .apply(fontWeightDelta: 2)))
                   ]),
-                  Row(children: [Flexible(child: Text(post.embedDescription))]),
+                  if (post.embedDescription != null)
+                    Row(children: [
+                      Flexible(child: Text(post.embedDescription))
+                    ]),
                 ],
               ),
             ),
@@ -357,7 +346,7 @@ class Post extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: InkWell(
-        onTap: fullPost ? null : () => _goToPost(context),
+        onTap: fullPost ? null : () => goToPost(context, instanceUrl, post.id),
         child: Column(
           children: [
             info(),

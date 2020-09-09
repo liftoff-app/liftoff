@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lemmur/util/goto.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../comment_tree.dart';
+import '../util/api_extensions.dart';
 import '../util/text_color.dart';
 import 'markdown_text.dart';
 
@@ -19,10 +21,6 @@ class Comment extends StatelessWidget {
 
   void _openMoreMenu() {
     print('OPEN MORE MENU');
-  }
-
-  void _goToUser() {
-    print('GO TO USER');
   }
 
   void _save(bool save) {
@@ -83,7 +81,8 @@ class Comment extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 5),
                     child: InkWell(
-                      onTap: _goToUser,
+                      onTap: () => goToUser.byId(
+                          context, comment.instanceUrl, comment.creatorId),
                       child: CachedNetworkImage(
                         imageUrl: comment.creatorAvatar,
                         height: 20,
@@ -105,7 +104,8 @@ class Comment extends StatelessWidget {
                       style: TextStyle(
                         color: Theme.of(context).accentColor,
                       )),
-                  onLongPress: _goToUser,
+                  onTap: () => goToUser.byId(
+                      context, comment.instanceUrl, comment.creatorId),
                 ),
                 if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
                 if (comment.banned) _CommentTag('BANNED', Colors.red),

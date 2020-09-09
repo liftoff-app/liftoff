@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
+import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
@@ -28,14 +30,10 @@ class CommunityPage extends HookWidget {
             LemmyApi(instanceUrl).v1.getCommunity(id: communityId),
         _community = null;
   CommunityPage.fromCommunityView(this._community)
-      : instanceUrl = _community.actorId.split('/')[2],
-        _fullCommunityFuture = LemmyApi(_community.actorId.split('/')[2])
+      : instanceUrl = _community.instanceUrl,
+        _fullCommunityFuture = LemmyApi(_community.instanceUrl)
             .v1
             .getCommunity(name: _community.name);
-
-  void _goToInstance() {
-    print('GO TO INSTANCE');
-  }
 
   void _subscribe() {
     print('SUBSCRIBE');
@@ -115,7 +113,6 @@ class CommunityPage extends HookWidget {
                 background: _CommunityOverview(
                   community,
                   instanceUrl: instanceUrl,
-                  goToInstance: _goToInstance,
                   subscribe: _subscribe,
                 ),
               ),
@@ -162,13 +159,11 @@ class CommunityPage extends HookWidget {
 class _CommunityOverview extends StatelessWidget {
   final CommunityView community;
   final String instanceUrl;
-  final void Function() goToInstance;
   final void Function() subscribe;
 
   _CommunityOverview(
     this.community, {
     @required this.instanceUrl,
-    @required this.goToInstance,
     @required this.subscribe,
   })  : assert(instanceUrl != null),
         assert(goToInstance != null),
@@ -252,7 +247,7 @@ class _CommunityOverview extends StatelessWidget {
                         text: instanceUrl,
                         style: TextStyle(fontWeight: FontWeight.w600),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = goToInstance),
+                          ..onTap = () => goToInstance(context, instanceUrl)),
                   ],
                 ),
               ),
@@ -362,10 +357,6 @@ class _AboutTab extends StatelessWidget {
     @required this.moderators,
   }) : super(key: key);
 
-  void goToUser(int id) {
-    print('GO TO USER $id');
-  }
-
   void goToModlog() {
     print('GO TO MODLOG');
   }
@@ -441,7 +432,7 @@ class _AboutTab extends StatelessWidget {
           for (final mod in moderators)
             ListTile(
               title: Text(mod.userPreferredUsername ?? '@${mod.userName}'),
-              onTap: () => goToUser(mod.id),
+              onTap: () => goToUser.byId(context, mod.instanceUrl, mod.id),
             ),
         ]
       ],

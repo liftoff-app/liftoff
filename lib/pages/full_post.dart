@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
+import '../util/api_extensions.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
 
@@ -16,9 +17,7 @@ class FullPostPage extends HookWidget {
         fullPost = LemmyApi(instanceUrl).v1.getPost(id: id),
         post = null;
   FullPostPage.fromPostView(this.post)
-      : fullPost = LemmyApi(post.communityActorId.split('/')[2])
-            .v1
-            .getPost(id: post.id);
+      : fullPost = LemmyApi(post.instanceUrl).v1.getPost(id: post.id);
 
   void sharePost() => Share.text('Share post', post.apId, 'text/plain');
 

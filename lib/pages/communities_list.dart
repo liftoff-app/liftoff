@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
+import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import '../widgets/markdown_text.dart';
 
 class CommunitiesListPage extends StatelessWidget {
@@ -11,10 +13,6 @@ class CommunitiesListPage extends StatelessWidget {
   const CommunitiesListPage({Key key, @required this.communities, this.title})
       : assert(communities != null),
         super(key: key);
-
-  void goToCommunity(BuildContext context, int id) {
-    print('GO TO COMMUNITY $id');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +34,8 @@ class CommunitiesListPage extends StatelessWidget {
                     child: MarkdownText(communities[i].description),
                   )
                 : null,
-            onTap: () => goToCommunity(context, communities[i].id),
+            onTap: () => goToCommunity.byId(
+                context, communities[i].instanceUrl, communities[i].id),
             leading: communities[i].icon != null
                 ? CachedNetworkImage(
                     height: 50,

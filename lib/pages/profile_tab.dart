@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../stores/accounts_store.dart';
+import '../util/api_extensions.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/user_profile.dart';
 import 'settings.dart';
@@ -81,7 +82,7 @@ class UserProfileTab extends HookWidget {
                     return Observer(
                       builder: (ctx) {
                         var user = ctx.watch<AccountsStore>().defaultUser;
-                        var instanceUrl = user.actorId.split('/')[2];
+                        var instanceUrl = user.instanceUrl;
 
                         return BottomModal(
                           title: 'account',
@@ -120,7 +121,7 @@ class UserProfileTab extends HookWidget {
           ),
           body: UserProfile(
             userId: user.id,
-            instanceUrl: user.actorId.split('/')[2],
+            instanceUrl: user.instanceUrl,
           ),
         );
       },
