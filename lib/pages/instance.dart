@@ -351,7 +351,10 @@ class _AboutTab extends HookWidget {
               ),
             ),
             ...site.admins.map((e) => ListTile(
-                  title: Text(e.preferredUsername ?? '@${e.name}'),
+                  title: Text((e.preferredUsername == null ||
+                          e.preferredUsername.isEmpty)
+                      ? '@${e.name}'
+                      : e.preferredUsername),
                   subtitle: e.bio != null ? MarkdownText(e.bio) : null,
                   onTap: () => goToUser(e.id),
                   leading: e.avatar != null

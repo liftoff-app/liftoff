@@ -28,7 +28,10 @@ class UsersListPage extends StatelessWidget {
         ),
         body: ListView.builder(
           itemBuilder: (context, i) => ListTile(
-            title: Text(users[i].preferredUsername ?? '@${users[i].name}'),
+            title: Text((users[i].preferredUsername == null ||
+                    users[i].preferredUsername.isEmpty)
+                ? '@${users[i].name}'
+                : users[i].preferredUsername),
             subtitle: users[i].bio != null
                 ? Opacity(
                     opacity: 0.5,
