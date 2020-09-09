@@ -39,6 +39,7 @@ class InstancePage extends HookWidget {
       return Scaffold(
         appBar: AppBar(
           iconTheme: theme.iconTheme,
+          brightness: theme.brightness,
           backgroundColor: theme.cardColor,
           elevation: 0,
         ),
@@ -138,6 +139,7 @@ class InstancePage extends HookWidget {
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
             SliverAppBar(
+              brightness: theme.brightness,
               expandedHeight: 200,
               floating: false,
               pinned: true,
