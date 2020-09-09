@@ -1,9 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../comment_tree.dart';
+import 'bottom_modal.dart';
 import 'comment.dart';
+
+const sortPairs = {
+  CommentSortType.hot: [Icons.whatshot, 'Hot'],
+  CommentSortType.new_: [Icons.new_releases, 'New'],
+  CommentSortType.old: [Icons.calendar_today, 'Old'],
+  CommentSortType.top: [Icons.trending_up, 'Top'],
+  CommentSortType.chat: [Icons.chat, 'Chat'],
+};
 
 /// Manages comments section, sorts them
 class CommentSection extends HookWidget {
@@ -41,29 +51,38 @@ class CommentSection extends HookWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black45),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+            OutlineButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (context) => BottomModal(
+                          title: 'sort by',
+                          child: Column(
+                            children: [
+                              for (final e in sortPairs.entries)
+                                ListTile(
+                                  leading: Icon(e.value[0]),
+                                  title: Text(e.value[1]),
+                                  trailing: sorting.value == e.key
+                                      ? Icon(Icons.check)
+                                      : null,
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                    sorting.value = e.key;
+                                  },
+                                )
+                            ],
+                          ),
+                        ));
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: DropdownButton(
-                // TODO: change it to universal BottomModal
-                underline: Container(),
-                isDense: true,
-                onChanged: sortComments,
-                value: sorting.value,
-                items: [
-                  DropdownMenuItem(
-                      child: Text('Hot'), value: CommentSortType.hot),
-                  DropdownMenuItem(
-                      child: Text('Top'), value: CommentSortType.top),
-                  DropdownMenuItem(
-                      child: Text('New'), value: CommentSortType.new_),
-                  DropdownMenuItem(
-                      child: Text('Old'), value: CommentSortType.old),
-                  DropdownMenuItem(
-                      child: Text('Chat'), value: CommentSortType.chat),
+              child: Row(
+                children: [
+                  Text(sortPairs[sorting.value][1]),
+                  Icon(Icons.arrow_drop_down),
                 ],
               ),
             ),
