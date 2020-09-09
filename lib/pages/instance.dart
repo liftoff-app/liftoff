@@ -143,7 +143,7 @@ class InstancePage extends HookWidget {
               backgroundColor: theme.cardColor,
               iconTheme: theme.iconTheme,
               title: Text(
-                '${site.site.name}',
+                site.site.name,
                 style: TextStyle(color: colorOnCard),
               ),
               actions: [
@@ -353,7 +353,7 @@ class _AboutTab extends HookWidget {
             ),
             ...site.admins.map((e) => ListTile(
                   title: Text(e.preferredUsername ?? '@${e.name}'),
-                  subtitle: e.bio != null ? MarkdownText('${e.bio}') : null,
+                  subtitle: e.bio != null ? MarkdownText(e.bio) : null,
                   onTap: () => goToUser(e.id),
                   leading: e.avatar != null
                       ? CachedNetworkImage(
