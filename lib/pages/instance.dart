@@ -371,27 +371,9 @@ class _AboutTab extends HookWidget {
                 )),
             _Divider(),
             ListTile(
-              title: Center(
-                child: Text(
-                  'Recently banned:',
-                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
-                ),
-              ),
-            ),
-            ...site.banned.reversed.take(5).map((e) => ListTile(
-                  // subtitle: Text(),
-                  title: Text(
-                      (e.preferredUsername == null || e.preferredUsername == '')
-                          ? '@${e.name}'
-                          : e.preferredUsername),
-                  onTap: () => goToUser(e.id),
-                  leading: SizedBox(width: 50),
-                )),
-            ListTile(
-              title: Center(child: Text('See all')),
+              title: Center(child: Text('Banned users')),
               onTap: () => goToBannedUsers(context),
             ),
-            _Divider(),
             ListTile(
               title: Center(child: Text('Modlog')),
               onTap: goToModLog,
