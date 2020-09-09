@@ -104,7 +104,7 @@ class CommunitiesTab extends HookWidget {
                           errorWidget: (_, __, ___) => SizedBox(width: 30),
                         ),
                         title: Text('!${comm.communityName}'),
-                        trailing: _CommunitySubscribe(
+                        trailing: _CommunitySubscribeToggle(
                           instanceUrl: 'asd', // TODO: extract instanceUrl
                           communityId: comm.id,
                         ),
@@ -119,11 +119,12 @@ class CommunitiesTab extends HookWidget {
   }
 }
 
-class _CommunitySubscribe extends HookWidget {
+class _CommunitySubscribeToggle extends HookWidget {
   final int communityId;
   final String instanceUrl;
 
-  _CommunitySubscribe({@required this.instanceUrl, @required this.communityId})
+  _CommunitySubscribeToggle(
+      {@required this.instanceUrl, @required this.communityId})
       : assert(instanceUrl != null),
         assert(communityId != null);
 
