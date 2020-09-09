@@ -12,7 +12,7 @@ class CommunitiesListPage extends StatelessWidget {
       : assert(communities != null),
         super(key: key);
 
-  void goToUser(BuildContext context, int id) {
+  void goToCommunity(BuildContext context, int id) {
     print('GO TO COMMUNITY $id');
   }
 
@@ -29,14 +29,14 @@ class CommunitiesListPage extends StatelessWidget {
         ),
         body: ListView.builder(
           itemBuilder: (context, i) => ListTile(
-            title: Text(communities[i].name ?? '@${communities[i].name}'),
+            title: Text(communities[i].name),
             subtitle: communities[i].description != null
                 ? Opacity(
                     opacity: 0.5,
                     child: MarkdownText(communities[i].description),
                   )
                 : null,
-            onTap: () => goToUser(context, communities[i].id),
+            onTap: () => goToCommunity(context, communities[i].id),
             leading: communities[i].icon != null
                 ? CachedNetworkImage(
                     height: 50,
