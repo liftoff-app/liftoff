@@ -15,7 +15,7 @@ class BottomModal extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.only(top: 10),
+            padding: title != null ? const EdgeInsets.only(top: 10) : null,
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
               borderRadius: BorderRadius.all(const Radius.circular(10.0)),
