@@ -90,11 +90,16 @@ class CommunitiesTab extends HookWidget {
                   ),
                   for (var comm in communities[i])
                     Padding(
-                      padding: const EdgeInsets.only(left: 50),
+                      padding: const EdgeInsets.only(left: 17),
                       child: ListTile(
                         dense: true,
-                        leading: comm.communityIcon != null
-                            ? CachedNetworkImage(
+                        leading: VerticalDivider(
+                          color: theme.hintColor,
+                        ),
+                        title: Row(
+                          children: [
+                            if (comm.communityIcon != null)
+                              CachedNetworkImage(
                                 height: 30,
                                 width: 30,
                                 imageUrl: comm.communityIcon,
@@ -110,8 +115,12 @@ class CommunitiesTab extends HookWidget {
                                 errorWidget: (_, __, ___) =>
                                     SizedBox(width: 30),
                               )
-                            : SizedBox(width: 30),
-                        title: Text('!${comm.communityName}'),
+                            else
+                              SizedBox(width: 30),
+                            SizedBox(width: 10),
+                            Text('!${comm.communityName}'),
+                          ],
+                        ),
                         trailing: _CommunitySubscribeToggle(
                           instanceUrl: comm.communityActorId.split('/')[2],
                           communityId: comm.communityId,
