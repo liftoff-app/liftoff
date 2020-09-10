@@ -13,6 +13,9 @@ class CommunitiesTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var filterController = useTextEditingController();
+    useValueListenable(filterController);
+
     var instancesFut = useMemoized(() {
       var accountsStore = context.watch<AccountsStore>();
 
@@ -60,77 +63,105 @@ class CommunitiesTab extends HookWidget {
     var instances = instancesSnap.data;
     var communities = communitiesSnap.data;
 
+    var filterIcon = () {
+      if (filterController.text.isEmpty) {
+        return Icon(Icons.filter_list);
+      }
+
+      return InkWell(
+        onTap: () {
+          filterController.clear();
+          primaryFocus.unfocus();
+        },
+        child: Icon(Icons.clear),
+      );
+    }();
+
+    filterCommunities(List<CommunityFollowerView> comm) =>
+        comm.where((e) => e.communityName
+            .toLowerCase()
+            .contains(filterController.text.toLowerCase()));
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [Icon(Icons.style)],
+        // TODO: should be smaller
+        title: TextField(
+          controller: filterController,
+          textAlign: TextAlign.center,
+          decoration: InputDecoration(
+            suffixIcon: filterIcon,
+            border: OutlineInputBorder(),
+            hintText: 'filter', // TODO: hint with an filter icon
+          ),
+        ),
+      ),
       body: Column(
-        children: Iterable.generate(instances.length)
-            .map(
-              (i) => Column(
-                children: [
-                  ListTile(
-                    leading: instances[i].icon != null
-                        ? CachedNetworkImage(
-                            height: 50,
-                            width: 50,
-                            imageUrl: instances[i].icon,
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    fit: BoxFit.cover, image: imageProvider),
-                              ),
+        children: [
+          for (var i in Iterable.generate(instances.length))
+            Column(
+              children: [
+                ListTile(
+                  leading: instances[i].icon != null
+                      ? CachedNetworkImage(
+                          height: 50,
+                          width: 50,
+                          imageUrl: instances[i].icon,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  fit: BoxFit.cover, image: imageProvider),
                             ),
-                            errorWidget: (_, __, ___) => SizedBox(width: 50),
-                          )
-                        : SizedBox(width: 50),
-                    title: Text(
-                      instances[i].name,
-                      style: theme.textTheme.headline6,
-                    ),
+                          ),
+                          errorWidget: (_, __, ___) => SizedBox(width: 50),
+                        )
+                      : SizedBox(width: 50),
+                  title: Text(
+                    instances[i].name,
+                    style: theme.textTheme.headline6,
                   ),
-                  for (var comm in communities[i])
-                    Padding(
-                      padding: const EdgeInsets.only(left: 17),
-                      child: ListTile(
-                        dense: true,
-                        leading: VerticalDivider(
-                          color: theme.hintColor,
-                        ),
-                        title: Row(
-                          children: [
-                            if (comm.communityIcon != null)
-                              CachedNetworkImage(
-                                height: 30,
-                                width: 30,
-                                imageUrl: comm.communityIcon,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: imageProvider),
-                                  ),
-                                ),
-                                errorWidget: (_, __, ___) =>
-                                    SizedBox(width: 30),
-                              )
-                            else
-                              SizedBox(width: 30),
-                            SizedBox(width: 10),
-                            Text('!${comm.communityName}'),
-                          ],
-                        ),
-                        trailing: _CommunitySubscribeToggle(
-                          instanceUrl: comm.communityActorId.split('/')[2],
-                          communityId: comm.communityId,
-                        ),
+                ),
+                for (var comm in filterCommunities(communities[i]))
+                  Padding(
+                    padding: const EdgeInsets.only(left: 17),
+                    child: ListTile(
+                      dense: true,
+                      leading: VerticalDivider(
+                        color: theme.hintColor,
                       ),
-                    )
-                ],
-              ),
-            )
-            .toList(),
+                      title: Row(
+                        children: [
+                          if (comm.communityIcon != null)
+                            CachedNetworkImage(
+                              height: 30,
+                              width: 30,
+                              imageUrl: comm.communityIcon,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover, image: imageProvider),
+                                ),
+                              ),
+                              errorWidget: (_, __, ___) => SizedBox(width: 30),
+                            )
+                          else
+                            SizedBox(width: 30),
+                          SizedBox(width: 10),
+                          Text('!${comm.communityName}'),
+                        ],
+                      ),
+                      trailing: _CommunitySubscribeToggle(
+                        instanceUrl: comm.communityActorId.split('/')[2],
+                        communityId: comm.communityId,
+                      ),
+                    ),
+                  )
+              ],
+            ),
+        ],
       ),
     );
   }
