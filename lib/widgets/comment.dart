@@ -83,7 +83,6 @@ class Comment extends StatelessWidget {
   }
 
   _showCommentInfo(BuildContext context) {
-    print('hello');
     final com = commentTree.comment;
     showDialog(
         context: context,
