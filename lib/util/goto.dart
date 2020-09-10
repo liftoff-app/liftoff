@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lemmur/pages/user.dart';
 
 import '../pages/community.dart';
 import '../pages/full_post.dart';
 import '../pages/instance.dart';
+import '../pages/user.dart';
 
 void goToInstance(BuildContext context, String instanceUrl) =>
     Navigator.of(context).push(MaterialPageRoute(
