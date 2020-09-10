@@ -101,10 +101,10 @@ class CommunityPage extends HookWidget {
     void _share() =>
         Share.text('Share instance', community.actorId, 'text/plain');
 
-    void _openMoreMenu(BuildContext c) {
+    void _openMoreMenu() {
       showModalBottomSheet(
         backgroundColor: Colors.transparent,
-        context: c,
+        context: context,
         builder: (context) => BottomModal(
           child: Column(
             children: [
@@ -175,7 +175,7 @@ class CommunityPage extends HookWidget {
                 IconButton(icon: Icon(Icons.share), onPressed: _share),
                 IconButton(
                     icon: Icon(Icons.more_vert),
-                    onPressed: () => _openMoreMenu(context)),
+                    onPressed: () => _openMoreMenu()),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: _CommunityOverview(
