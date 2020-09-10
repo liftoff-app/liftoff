@@ -69,7 +69,7 @@ class CommentSection extends HookWidget {
                                       : null,
                                   onTap: () {
                                     Navigator.of(context).pop();
-                                    sorting.value = e.key;
+                                    sortComments(e.key);
                                   },
                                 )
                             ],
