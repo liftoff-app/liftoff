@@ -7,6 +7,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../pages/full_post.dart';
 import '../url_launcher.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
@@ -417,11 +418,15 @@ class Post extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black54)],
-        color: theme.colorScheme.surface,
+        color: theme.cardColor,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: InkWell(
-        onTap: fullPost ? null : () => goToPost(context, instanceUrl, post.id),
+        onTap: fullPost
+            ? null
+            : () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => FullPostPage.fromPostView(
+                    post))), //, instanceUrl, post.id),
         child: Column(
           children: [
             info(),
