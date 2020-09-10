@@ -68,12 +68,12 @@ class CommunitiesTab extends HookWidget {
         return Icon(Icons.filter_list);
       }
 
-      return InkWell(
-        onTap: () {
+      return IconButton(
+        onPressed: () {
           filterController.clear();
           primaryFocus.unfocus();
         },
-        child: Icon(Icons.clear),
+        icon: Icon(Icons.clear),
       );
     }();
 
@@ -84,7 +84,7 @@ class CommunitiesTab extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [Icon(Icons.style)],
+        actions: [IconButton(icon: Icon(Icons.style))],
         // TODO: should be smaller
         title: TextField(
           controller: filterController,
