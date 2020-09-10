@@ -45,6 +45,8 @@ class MyApp extends StatelessWidget {
               scaffoldBackgroundColor: maybeAmoledColor,
               backgroundColor: maybeAmoledColor,
               canvasColor: maybeAmoledColor,
+              cardColor: maybeAmoledColor,
+              splashColor: maybeAmoledColor,
             ),
             theme: ThemeData(
               visualDensity: VisualDensity.adaptivePlatformDensity,

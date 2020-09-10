@@ -1,12 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
+import '../widgets/bottom_modal.dart';
 import '../widgets/markdown_text.dart';
 
 class CommunityPage extends HookWidget {
@@ -28,25 +34,13 @@ class CommunityPage extends HookWidget {
             LemmyApi(instanceUrl).v1.getCommunity(id: communityId),
         _community = null;
   CommunityPage.fromCommunityView(this._community)
-      : instanceUrl = _community.actorId.split('/')[2],
-        _fullCommunityFuture = LemmyApi(_community.actorId.split('/')[2])
+      : instanceUrl = _community.instanceUrl,
+        _fullCommunityFuture = LemmyApi(_community.instanceUrl)
             .v1
             .getCommunity(name: _community.name);
 
-  void _goToInstance() {
-    print('GO TO INSTANCE');
-  }
-
   void _subscribe() {
     print('SUBSCRIBE');
-  }
-
-  void _share() {
-    print('SHARE');
-  }
-
-  void _openMoreMenu() {
-    print('OPEN MORE MENU');
   }
 
   @override
@@ -66,10 +60,13 @@ class CommunityPage extends HookWidget {
       }
     }();
 
+    // FALLBACK
+
     if (community == null) {
       return Scaffold(
         appBar: AppBar(
           iconTheme: theme.iconTheme,
+          brightness: theme.brightness,
           backgroundColor: theme.cardColor,
           elevation: 0,
         ),
@@ -91,6 +88,64 @@ class CommunityPage extends HookWidget {
       );
     }
 
+    // FUNCTIONS
+    void _share() =>
+        Share.text('Share instance', community.actorId, 'text/plain');
+
+    void _openMoreMenu() {
+      showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) => BottomModal(
+          child: Column(
+            children: [
+              ListTile(
+                leading: Icon(Icons.open_in_browser),
+                title: Text('Open in browser'),
+                onTap: () async => await ul.canLaunch(community.actorId)
+                    ? ul.launch(community.actorId)
+                    : Scaffold.of(context).showSnackBar(
+                        SnackBar(content: Text("can't open in browser"))),
+              ),
+              ListTile(
+                leading: Icon(Icons.info_outline),
+                title: Text('Nerd stuff'),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      child: SimpleDialog(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 15,
+                          ),
+                          children: [
+                            Table(
+                              children: [
+                                TableRow(children: [
+                                  Text('created by:'),
+                                  Text('@${community.creatorName}'),
+                                ]),
+                                TableRow(children: [
+                                  Text('hot rank:'),
+                                  Text(community.hotRank.toString()),
+                                ]),
+                                TableRow(children: [
+                                  Text('published:'),
+                                  Text(
+                                      '''${DateFormat.yMMMd().format(community.published)}'''
+                                      ''' ${DateFormat.Hms().format(community.published)}'''),
+                                ]),
+                              ],
+                            ),
+                          ]));
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: DefaultTabController(
         length: 3,
@@ -103,6 +158,7 @@ class CommunityPage extends HookWidget {
               pinned: true,
               elevation: 0,
               backgroundColor: theme.cardColor,
+              brightness: theme.brightness,
               iconTheme: theme.iconTheme,
               title: Text('!${community.name}',
                   style: TextStyle(color: colorOnCard)),
@@ -115,7 +171,6 @@ class CommunityPage extends HookWidget {
                 background: _CommunityOverview(
                   community,
                   instanceUrl: instanceUrl,
-                  goToInstance: _goToInstance,
                   subscribe: _subscribe,
                 ),
               ),
@@ -162,13 +217,11 @@ class CommunityPage extends HookWidget {
 class _CommunityOverview extends StatelessWidget {
   final CommunityView community;
   final String instanceUrl;
-  final void Function() goToInstance;
   final void Function() subscribe;
 
   _CommunityOverview(
     this.community, {
     @required this.instanceUrl,
-    @required this.goToInstance,
     @required this.subscribe,
   })  : assert(instanceUrl != null),
         assert(goToInstance != null),
@@ -252,7 +305,7 @@ class _CommunityOverview extends StatelessWidget {
                         text: instanceUrl,
                         style: TextStyle(fontWeight: FontWeight.w600),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = goToInstance),
+                          ..onTap = () => goToInstance(context, instanceUrl)),
                   ],
                 ),
               ),
@@ -362,10 +415,6 @@ class _AboutTab extends StatelessWidget {
     @required this.moderators,
   }) : super(key: key);
 
-  void goToUser(int id) {
-    print('GO TO USER $id');
-  }
-
   void goToModlog() {
     print('GO TO MODLOG');
   }
@@ -441,7 +490,7 @@ class _AboutTab extends StatelessWidget {
           for (final mod in moderators)
             ListTile(
               title: Text(mod.userPreferredUsername ?? '@${mod.userName}'),
-              onTap: () => goToUser(mod.id),
+              onTap: () => goToUser.byId(context, mod.instanceUrl, mod.id),
             ),
         ]
       ],

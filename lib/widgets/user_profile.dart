@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'badge.dart';
@@ -23,7 +25,7 @@ class UserProfile extends HookWidget {
 
   UserProfile.fromUserView(UserView userView)
       : _userView = Future.value(userView),
-        instanceUrl = userView.actorId.split('/')[2];
+        instanceUrl = userView.instanceUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -173,9 +175,21 @@ class UserProfile extends HookWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    '@${userViewSnap.data?.name ?? ''}@$instanceUrl',
-                    style: theme.textTheme.caption,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '@${userViewSnap.data?.name ?? ''}@',
+                        style: theme.textTheme.caption,
+                      ),
+                      InkWell(
+                        onTap: () => goToInstance(context, instanceUrl),
+                        child: Text(
+                          '$instanceUrl',
+                          style: theme.textTheme.caption,
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 Padding(

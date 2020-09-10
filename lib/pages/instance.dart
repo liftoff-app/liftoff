@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
@@ -37,6 +39,7 @@ class InstancePage extends HookWidget {
       return Scaffold(
         appBar: AppBar(
           iconTheme: theme.iconTheme,
+          brightness: theme.brightness,
           backgroundColor: theme.cardColor,
           elevation: 0,
         ),
@@ -136,6 +139,7 @@ class InstancePage extends HookWidget {
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
             SliverAppBar(
+              brightness: theme.brightness,
               expandedHeight: 200,
               floating: false,
               pinned: true,
@@ -256,10 +260,6 @@ class _AboutTab extends HookWidget {
     ));
   }
 
-  void goToCommunity(int id) {
-    print('GO TO COMMUNITY $id');
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -309,7 +309,8 @@ class _AboutTab extends HookWidget {
             ),
             if (commSnap.hasData)
               ...commSnap.data.getRange(0, 6).map((e) => ListTile(
-                    onTap: () => goToCommunity(e.id),
+                    onTap: () =>
+                        goToCommunity.byId(context, e.instanceUrl, e.id),
                     title: Text(e.name),
                     leading: e.icon != null
                         ? CachedNetworkImage(

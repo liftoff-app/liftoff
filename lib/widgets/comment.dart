@@ -1,28 +1,74 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../comment_tree.dart';
+import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import '../util/text_color.dart';
+import 'bottom_modal.dart';
 import 'markdown_text.dart';
 
 class Comment extends StatelessWidget {
   final int indent;
   final int postCreatorId;
   final CommentTree commentTree;
+
+  static const colors = [
+    Colors.pink,
+    Colors.green,
+    Colors.amber,
+    Colors.cyan,
+    Colors.indigo,
+  ];
+
   Comment(
     this.commentTree, {
     this.indent = 0,
     @required this.postCreatorId,
   });
 
-  void _openMoreMenu() {
-    print('OPEN MORE MENU');
-  }
-
-  void _goToUser() {
-    print('GO TO USER');
+  void _openMoreMenu(BuildContext context) {
+    final com = commentTree.comment;
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => BottomModal(
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.open_in_browser),
+              title: Text('Open in browser'),
+              onTap: () async => await ul.canLaunch(com.apId)
+                  ? ul.launch(com.apId)
+                  : Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text("can't open in browser"))),
+            ),
+            ListTile(
+              leading: Icon(Icons.share),
+              title: Text('Share url'),
+              onTap: () =>
+                  Share.text('Share comment url', com.apId, 'text/plain'),
+            ),
+            ListTile(
+              leading: Icon(Icons.share),
+              title: Text('Share text'),
+              onTap: () =>
+                  Share.text('Share comment text', com.content, 'text/plain'),
+            ),
+            ListTile(
+              leading: Icon(Icons.info_outline),
+              title: Text('Nerd stuff'),
+              onTap: () => _showCommentInfo(context),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _save(bool save) {
@@ -35,6 +81,60 @@ class Comment extends StatelessWidget {
 
   void _vote(VoteType vote) {
     print('COMMENT VOTE: ${vote.toString()}');
+  }
+
+  _showCommentInfo(BuildContext context) {
+    final com = commentTree.comment;
+    showDialog(
+        context: context,
+        child: SimpleDialog(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 15,
+            ),
+            children: [
+              Table(
+                children: [
+                  TableRow(children: [
+                    Text('upvotes:'),
+                    Text(com.upvotes.toString()),
+                  ]),
+                  TableRow(children: [
+                    Text('downvotes:'),
+                    Text(com.downvotes.toString()),
+                  ]),
+                  TableRow(children: [
+                    Text('score:'),
+                    Text(com.score.toString()),
+                  ]),
+                  TableRow(children: [
+                    Text('% of upvotes:'),
+                    Text(
+                        '''${(100 * (com.upvotes / (com.upvotes + com.downvotes))).toInt()}%'''),
+                  ]),
+                  TableRow(children: [
+                    Text('hotrank:'),
+                    Text(com.hotRank.toString()),
+                  ]),
+                  TableRow(children: [
+                    Text('hotrank active:'),
+                    Text(com.hotRankActive.toString()),
+                  ]),
+                  TableRow(children: [
+                    Text('published:'),
+                    Text('''${DateFormat.yMMMd().format(com.published)}'''
+                        ''' ${DateFormat.Hms().format(com.published)}'''),
+                  ]),
+                  TableRow(children: [
+                    Text('updated:'),
+                    Text(com.updated != null
+                        ? '''${DateFormat.yMMMd().format(com.updated)}'''
+                            ''' ${DateFormat.Hms().format(com.updated)}'''
+                        : 'never'),
+                  ]),
+                ],
+              ),
+            ]));
   }
 
   bool get isOP => commentTree.comment.creatorId == postCreatorId;
@@ -83,7 +183,8 @@ class Comment extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 5),
                     child: InkWell(
-                      onTap: _goToUser,
+                      onTap: () => goToUser.byId(
+                          context, comment.instanceUrl, comment.creatorId),
                       child: CachedNetworkImage(
                         imageUrl: comment.creatorAvatar,
                         height: 20,
@@ -105,23 +206,31 @@ class Comment extends StatelessWidget {
                       style: TextStyle(
                         color: Theme.of(context).accentColor,
                       )),
-                  onLongPress: _goToUser,
+                  onTap: () => goToUser.byId(
+                      context, comment.instanceUrl, comment.creatorId),
                 ),
                 if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
                 if (comment.banned) _CommentTag('BANNED', Colors.red),
                 if (comment.bannedFromCommunity)
                   _CommentTag('BANNED FROM COMMUNITY', Colors.red),
                 Spacer(),
-                Text(comment.score.toString()),
-                Text(' · '),
-                Text(timeago.format(comment.published, locale: 'en_short')),
+                InkWell(
+                  onTap: () => _showCommentInfo(context),
+                  child: Row(
+                    children: [
+                      Text(comment.score.toString()),
+                      Text(' · '),
+                      Text(timeago.format(comment.published)),
+                    ],
+                  ),
+                )
               ]),
               Row(children: [body]),
               Row(children: [
                 Spacer(),
                 _CommentAction(
                   icon: Icons.more_horiz,
-                  onPressed: _openMoreMenu,
+                  onPressed: () => _openMoreMenu(context),
                   tooltip: 'more',
                 ),
                 _CommentAction(
@@ -152,7 +261,8 @@ class Comment extends StatelessWidget {
           decoration: BoxDecoration(
               border: Border(
                   left: indent > 0
-                      ? BorderSide(color: Colors.red, width: 5)
+                      ? BorderSide(
+                          color: colors[indent % colors.length], width: 5)
                       : BorderSide.none,
                   top: BorderSide(width: 0.2))),
         ),

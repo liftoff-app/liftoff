@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../pages/full_post.dart';
 import '../url_launcher.dart';
+import '../util/api_extensions.dart';
+import '../util/goto.dart';
+import 'bottom_modal.dart';
 import 'markdown_text.dart';
 
 enum MediaType {
@@ -32,38 +36,14 @@ class Post extends StatelessWidget {
   final String instanceUrl;
   final bool fullPost;
 
-  /// nullable
-  final String postUrlDomain;
-
-  Post(this.post, {this.fullPost = false})
-      : instanceUrl = post.communityActorId.split('/')[2],
-        postUrlDomain = post.url != null ? post.url.split('/')[2] : null;
+  Post(this.post, {this.fullPost = false}) : instanceUrl = post.instanceUrl;
 
   // == ACTIONS ==
 
-  void _openLink() {
-    print('OPEN LINK');
-    urlLauncher(post.url);
-  }
-
-  void _goToUser() {
-    print('GO TO USER');
-  }
-
-  void _goToPost(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => FullPostPage.fromPostView(post)));
-  }
-
-  void _goToCommunity() {
-    print('GO TO COMMUNITY');
-  }
-
-  void _goToInstance() {
-    print('GO TO INSTANCE');
-  }
+  void _openLink() => urlLauncher(post.url);
 
   void _openFullImage() {
+    // TODO: fullscreen media view
     print('OPEN FULL IMAGE');
   }
 
@@ -81,8 +61,84 @@ class Post extends StatelessWidget {
     print('DOWNVOTE POST');
   }
 
-  void _showMoreMenu() {
-    print('SHOW MORE MENU');
+  static void showMoreMenu(BuildContext context, PostView post) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => BottomModal(
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.open_in_browser),
+              title: Text('Open in browser'),
+              onTap: () async => await ul.canLaunch(post.apId)
+                  ? ul.launch(post.apId)
+                  : Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text("can't open in browser"))),
+            ),
+            ListTile(
+              leading: Icon(Icons.info_outline),
+              title: Text('Nerd stuff'),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  child: SimpleDialog(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
+                    children: [
+                      Table(
+                        children: [
+                          TableRow(children: [
+                            Text('upvotes:'),
+                            Text(post.upvotes.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('downvotes:'),
+                            Text(post.downvotes.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('score:'),
+                            Text(post.score.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('% of upvotes:'),
+                            Text(
+                                '''${(100 * (post.upvotes / (post.upvotes + post.downvotes))).toInt()}%'''),
+                          ]),
+                          TableRow(children: [
+                            Text('hotrank:'),
+                            Text(post.hotRank.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('hotrank active:'),
+                            Text(post.hotRankActive.toString()),
+                          ]),
+                          TableRow(children: [
+                            Text('published:'),
+                            Text(
+                                '''${DateFormat.yMMMd().format(post.published)}'''
+                                ''' ${DateFormat.Hms().format(post.published)}'''),
+                          ]),
+                          TableRow(children: [
+                            Text('updated:'),
+                            Text(post.updated != null
+                                ? '''${DateFormat.yMMMd().format(post.updated)}'''
+                                    ''' ${DateFormat.Hms().format(post.updated)}'''
+                                : 'never'),
+                          ]),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // == UI ==
@@ -90,6 +146,14 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final urlDomain = () {
+      if (post.url == null) return null;
+
+      var url = post.url.split('/')[2];
+      if (url.startsWith('www.')) return url.substring(4);
+      return url;
+    }();
 
     // TODO: add NSFW, locked, removed, deleted, stickied
     /// assemble info section
@@ -104,7 +168,8 @@ class Post extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: InkWell(
-                        onTap: _goToCommunity,
+                        onTap: () => goToCommunity.byId(
+                            context, instanceUrl, post.communityId),
                         child: SizedBox(
                           height: 40,
                           width: 40,
@@ -144,7 +209,8 @@ class Post extends StatelessWidget {
                               text: post.communityName,
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = _goToCommunity),
+                                ..onTap = () => goToCommunity.byId(
+                                    context, instanceUrl, post.communityId)),
                           TextSpan(
                               text: '@',
                               style: TextStyle(fontWeight: FontWeight.w300)),
@@ -152,7 +218,8 @@ class Post extends StatelessWidget {
                               text: instanceUrl,
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = _goToInstance),
+                                ..onTap =
+                                    () => goToInstance(context, instanceUrl)),
                         ],
                       ),
                     )
@@ -173,7 +240,8 @@ class Post extends StatelessWidget {
                                   ''' ${post.creatorPreferredUsername ?? post.creatorName}''',
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = _goToUser,
+                                ..onTap = () => goToUser.byId(
+                                    context, post.instanceUrl, post.creatorId),
                             ),
                             TextSpan(
                                 text:
@@ -185,8 +253,8 @@ class Post extends StatelessWidget {
                               TextSpan(
                                   text: 'NSFW',
                                   style: TextStyle(color: Colors.red)),
-                            if (postUrlDomain != null)
-                              TextSpan(text: ' · $postUrlDomain'),
+                            if (urlDomain != null)
+                              TextSpan(text: ' · $urlDomain'),
                             if (post.removed) TextSpan(text: ' · REMOVED'),
                             if (post.deleted) TextSpan(text: ' · DELETED'),
                           ],
@@ -200,7 +268,7 @@ class Post extends StatelessWidget {
                 Column(
                   children: [
                     IconButton(
-                      onPressed: _showMoreMenu,
+                      onPressed: () => showMoreMenu(context, post),
                       icon: Icon(Icons.more_vert),
                     )
                   ],
@@ -214,7 +282,8 @@ class Post extends StatelessWidget {
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
           child: Row(
             children: [
-              Flexible(
+              Expanded(
+                flex: 100,
                 child: Text(
                   '${post.name}',
                   textAlign: TextAlign.left,
@@ -224,11 +293,8 @@ class Post extends StatelessWidget {
               ),
               if (post.url != null &&
                   whatType(post.url) == MediaType.other &&
-                  post.thumbnailUrl != null)
+                  post.thumbnailUrl != null) ...[
                 Spacer(),
-              if (post.url != null &&
-                  whatType(post.url) == MediaType.other &&
-                  post.thumbnailUrl != null)
                 InkWell(
                   onTap: _openLink,
                   child: Stack(children: [
@@ -252,6 +318,7 @@ class Post extends StatelessWidget {
                     )
                   ]),
                 )
+              ]
             ],
           ),
         );
@@ -259,11 +326,6 @@ class Post extends StatelessWidget {
     /// assemble link preview
     Widget linkPreview() {
       assert(post.url != null);
-
-      var url = post.url.split('/')[2];
-      if (url.startsWith('www.')) {
-        url = url.substring(4);
-      }
 
       return Padding(
         padding: const EdgeInsets.all(10),
@@ -281,18 +343,21 @@ class Post extends StatelessWidget {
                 children: [
                   Row(children: [
                     Spacer(),
-                    Text('$url ',
+                    Text('$urlDomain ',
                         style: theme.textTheme.caption
                             .apply(fontStyle: FontStyle.italic)),
                     Icon(Icons.launch, size: 12),
                   ]),
                   Row(children: [
                     Flexible(
-                        child: Text(post.embedTitle,
+                        child: Text('${post.embedTitle}',
                             style: theme.textTheme.subtitle1
                                 .apply(fontWeightDelta: 2)))
                   ]),
-                  Row(children: [Flexible(child: Text(post.embedDescription))]),
+                  if (post.embedDescription != null)
+                    Row(children: [
+                      Flexible(child: Text(post.embedDescription))
+                    ]),
                 ],
               ),
             ),
@@ -353,11 +418,15 @@ class Post extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black54)],
-        color: theme.colorScheme.surface,
+        color: theme.cardColor,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: InkWell(
-        onTap: fullPost ? null : () => _goToPost(context),
+        onTap: fullPost
+            ? null
+            : () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => FullPostPage.fromPostView(
+                    post))), //, instanceUrl, post.id),
         child: Column(
           children: [
             info(),
