@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
@@ -46,14 +45,6 @@ class CommunityPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark));
-
-      return SystemChrome.restoreSystemUIOverlays;
-    });
-
     final theme = Theme.of(context);
     var fullCommunitySnap = useFuture(_fullCommunityFuture);
 
