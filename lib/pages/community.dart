@@ -46,9 +46,13 @@ class CommunityPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark));
+    useEffect(() {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarColor: Colors.white,
+          statusBarIconBrightness: Brightness.dark));
+
+      return SystemChrome.restoreSystemUIOverlays;
+    });
 
     final theme = Theme.of(context);
     var fullCommunitySnap = useFuture(_fullCommunityFuture);
