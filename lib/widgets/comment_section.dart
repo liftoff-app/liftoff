@@ -7,20 +7,20 @@ import '../comment_tree.dart';
 import 'bottom_modal.dart';
 import 'comment.dart';
 
-const sortPairs = {
-  CommentSortType.hot: [Icons.whatshot, 'Hot'],
-  CommentSortType.new_: [Icons.new_releases, 'New'],
-  CommentSortType.old: [Icons.calendar_today, 'Old'],
-  CommentSortType.top: [Icons.trending_up, 'Top'],
-  CommentSortType.chat: [Icons.chat, 'Chat'],
-};
-
 /// Manages comments section, sorts them
 class CommentSection extends HookWidget {
   final List<CommentView> rawComments;
   final List<CommentTree> comments;
   final int postCreatorId;
   final CommentSortType sortType;
+
+  static const sortPairs = {
+    CommentSortType.hot: [Icons.whatshot, 'Hot'],
+    CommentSortType.new_: [Icons.new_releases, 'New'],
+    CommentSortType.old: [Icons.calendar_today, 'Old'],
+    CommentSortType.top: [Icons.trending_up, 'Top'],
+    CommentSortType.chat: [Icons.chat, 'Chat'],
+  };
 
   CommentSection(
     List<CommentView> rawComments, {

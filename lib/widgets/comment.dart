@@ -13,18 +13,19 @@ import '../util/text_color.dart';
 import 'bottom_modal.dart';
 import 'markdown_text.dart';
 
-const colors = [
-  Colors.pink,
-  Colors.green,
-  Colors.amber,
-  Colors.cyan,
-  Colors.indigo,
-];
-
 class Comment extends StatelessWidget {
   final int indent;
   final int postCreatorId;
   final CommentTree commentTree;
+
+  static const colors = [
+    Colors.pink,
+    Colors.green,
+    Colors.amber,
+    Colors.cyan,
+    Colors.indigo,
+  ];
+
   Comment(
     this.commentTree, {
     this.indent = 0,
