@@ -165,8 +165,7 @@ class CommunityPage extends HookWidget {
               actions: [
                 IconButton(icon: Icon(Icons.share), onPressed: _share),
                 IconButton(
-                    icon: Icon(Icons.more_vert),
-                    onPressed: () => _openMoreMenu()),
+                    icon: Icon(Icons.more_vert), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: _CommunityOverview(
