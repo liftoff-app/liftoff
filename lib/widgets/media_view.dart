@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:photo_view/photo_view.dart';
+
+import 'bottom_modal.dart';
 
 class MediaView extends HookWidget {
   final String url;
@@ -27,6 +30,35 @@ class MediaView extends HookWidget {
       SystemChrome.setEnabledSystemUIOverlays([]);
     }
 
+    share() {
+      showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) => BottomModal(
+          child: Column(
+            children: [
+              ListTile(
+                leading: Icon(Icons.link),
+                title: Text('Share link'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Share.text('Share image url', url, 'text/plain');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.image),
+                title: Text('Share file'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // TODO: share file
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: showButtons.value
           ? AppBar(
@@ -37,7 +69,7 @@ class MediaView extends HookWidget {
                 IconButton(
                   icon: Icon(Icons.share),
                   tooltip: 'share',
-                  onPressed: () {},
+                  onPressed: share,
                 ),
                 IconButton(
                   icon: Icon(Icons.file_download),
