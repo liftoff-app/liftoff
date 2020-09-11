@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -11,6 +12,20 @@ class MediaView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var showButtons = useState(true);
+
+    useEffect(() => () => SystemChrome.setEnabledSystemUIOverlays([
+          SystemUiOverlay.bottom,
+          SystemUiOverlay.top,
+        ]));
+
+    if (showButtons.value) {
+      SystemChrome.setEnabledSystemUIOverlays([
+        SystemUiOverlay.bottom,
+        SystemUiOverlay.top,
+      ]);
+    } else {
+      SystemChrome.setEnabledSystemUIOverlays([]);
+    }
 
     return Scaffold(
       appBar: AppBar(
