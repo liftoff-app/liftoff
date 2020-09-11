@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:photo_view/photo_view.dart';
 
-import 'bottom_modal.dart';
+import '../widgets/bottom_modal.dart';
 
-class MediaView extends HookWidget {
+class MediaViewPage extends HookWidget {
   final String url;
 
-  const MediaView(this.url);
+  const MediaViewPage(this.url);
 
   @override
   Widget build(BuildContext context) {
