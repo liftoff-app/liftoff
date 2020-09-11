@@ -11,6 +11,7 @@ import '../util/goto.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
+import '../widgets/fullscreenable_image.dart';
 import '../widgets/markdown_text.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
@@ -166,10 +167,13 @@ class InstancePage extends HookWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 40),
-                            child: CachedNetworkImage(
-                                width: 100,
-                                height: 100,
-                                imageUrl: site.site.icon),
+                            child: FullscreenableImage(
+                              url: site.site.icon,
+                              child: CachedNetworkImage(
+                                  width: 100,
+                                  height: 100,
+                                  imageUrl: site.site.icon),
+                            ),
                           ),
                           Text(site.site.name,
                               style: theme.textTheme.headline6),

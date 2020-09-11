@@ -5,6 +5,7 @@ import 'package:lemmur/pages/media_view.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../url_launcher.dart';
+import 'fullscreenable_image.dart';
 
 class MarkdownText extends StatelessWidget {
   final String text;
@@ -31,13 +32,16 @@ class MarkdownText extends StatelessWidget {
               builder: (context) => MediaViewPage(uri.toString()),
             ));
           },
-          child: CachedNetworkImage(
-            imageUrl: uri.toString(),
-            errorWidget: (context, url, error) => Row(
-              children: [
-                Icon(Icons.warning),
-                Text("couldn't load image, ${error.toString()}")
-              ],
+          child: FullscreenableImage(
+            url: uri.toString(),
+            child: CachedNetworkImage(
+              imageUrl: uri.toString(),
+              errorWidget: (context, url, error) => Row(
+                children: [
+                  Icon(Icons.warning),
+                  Text("couldn't load image, ${error.toString()}")
+                ],
+              ),
             ),
           ),
         ),

@@ -13,6 +13,7 @@ import '../url_launcher.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
 import 'bottom_modal.dart';
+import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
 
 enum MediaType {
@@ -377,15 +378,12 @@ class Post extends StatelessWidget {
     Widget postImage() {
       assert(post.url != null);
 
-      return InkWell(
-        onTap: () => _openFullImage(context),
-        child: Hero(
-          tag: post.url,
-          child: CachedNetworkImage(
-            imageUrl: post.url,
-            progressIndicatorBuilder: (context, url, progress) =>
-                CircularProgressIndicator(value: progress.progress),
-          ),
+      return FullscreenableImage(
+        url: post.url,
+        child: CachedNetworkImage(
+          imageUrl: post.url,
+          progressIndicatorBuilder: (context, url, progress) =>
+              CircularProgressIndicator(value: progress.progress),
         ),
       );
     }

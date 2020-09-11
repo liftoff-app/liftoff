@@ -13,6 +13,7 @@ import '../util/intl.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
+import '../widgets/fullscreenable_image.dart';
 import '../widgets/markdown_text.dart';
 
 class CommunityPage extends HookWidget {
@@ -251,14 +252,17 @@ class _CommunityOverview extends StatelessWidget {
               Container(
                 width: 83,
                 height: 83,
-                child: CachedNetworkImage(
-                  imageUrl: community.icon,
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: imageProvider,
+                child: FullscreenableImage(
+                  url: community.icon,
+                  child: CachedNetworkImage(
+                    imageUrl: community.icon,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: imageProvider,
+                        ),
                       ),
                     ),
                   ),
