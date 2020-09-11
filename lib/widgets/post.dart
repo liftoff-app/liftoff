@@ -8,6 +8,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../pages/full_post.dart';
+import '../pages/media_view.dart';
 import '../url_launcher.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
@@ -25,7 +26,13 @@ MediaType whatType(String url) {
   if (url == null) return MediaType.other;
 
   // TODO: make detection more nuanced
-  if (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.gif')) {
+  if (url.endsWith('.jpg') ||
+      url.endsWith('.jpeg') ||
+      url.endsWith('.png') ||
+      url.endsWith('.gif') ||
+      url.endsWith('.webp') ||
+      url.endsWith('.bmp') ||
+      url.endsWith('.wbpm')) {
     return MediaType.image;
   }
   return MediaType.other;
@@ -42,10 +49,10 @@ class Post extends StatelessWidget {
 
   void _openLink() => urlLauncher(post.url);
 
-  void _openFullImage() {
-    // TODO: fullscreen media view
-    print('OPEN FULL IMAGE');
-  }
+  void _openFullImage(BuildContext context) =>
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MediaViewPage(post.url),
+      ));
 
   // POST ACTIONS
 
@@ -371,11 +378,14 @@ class Post extends StatelessWidget {
       assert(post.url != null);
 
       return InkWell(
-        onTap: _openFullImage,
-        child: CachedNetworkImage(
-          imageUrl: post.url,
-          progressIndicatorBuilder: (context, url, progress) =>
-              CircularProgressIndicator(value: progress.progress),
+        onTap: () => _openFullImage(context),
+        child: Hero(
+          tag: post.url,
+          child: CachedNetworkImage(
+            imageUrl: post.url,
+            progressIndicatorBuilder: (context, url, progress) =>
+                CircularProgressIndicator(value: progress.progress),
+          ),
         ),
       );
     }
