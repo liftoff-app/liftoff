@@ -8,7 +8,6 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../pages/full_post.dart';
-import '../pages/media_view.dart';
 import '../url_launcher.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
@@ -49,11 +48,6 @@ class Post extends StatelessWidget {
   // == ACTIONS ==
 
   void _openLink() => urlLauncher(post.url);
-
-  void _openFullImage(BuildContext context) =>
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => MediaViewPage(post.url),
-      ));
 
   // POST ACTIONS
 
