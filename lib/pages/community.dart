@@ -275,7 +275,10 @@ class _CommunityOverview extends StatelessWidget {
 
     return Stack(children: [
       if (community.banner != null)
-        CachedNetworkImage(imageUrl: community.banner),
+        FullscreenableImage(
+          url: community.banner,
+          child: CachedNetworkImage(imageUrl: community.banner),
+        ),
       SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(top: 45),
