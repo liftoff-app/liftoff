@@ -160,7 +160,10 @@ class InstancePage extends HookWidget {
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(children: [
                   if (site.site.banner != null)
-                    CachedNetworkImage(imageUrl: site.site.banner),
+                    FullscreenableImage(
+                      url: site.site.banner,
+                      child: CachedNetworkImage(imageUrl: site.site.banner),
+                    ),
                   SafeArea(
                     child: Center(
                       child: Column(
