@@ -14,7 +14,8 @@ class MediaView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var showButtons = useState(true);
+    final showButtons = useState(true);
+    final isZoomedOut = useState(true);
 
     useEffect(() => () => SystemChrome.setEnabledSystemUIOverlays([
           SystemUiOverlay.bottom,
@@ -60,6 +61,8 @@ class MediaView extends HookWidget {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: showButtons.value
           ? AppBar(
               backgroundColor: Colors.black38,
@@ -79,16 +82,30 @@ class MediaView extends HookWidget {
               ],
             )
           : null,
-      extendBodyBehindAppBar: true,
-      body: GestureDetector(
-        onTapUp: (details) => showButtons.value = !showButtons.value,
-        child: PhotoView(
-          minScale: PhotoViewComputedScale.contained,
-          initialScale: PhotoViewComputedScale.contained,
-          imageProvider: CachedNetworkImageProvider(url),
-          heroAttributes: PhotoViewHeroAttributes(tag: url),
-          loadingBuilder: (context, event) =>
-              Center(child: CircularProgressIndicator()),
+      body: Dismissible(
+        direction: DismissDirection.vertical,
+        onDismissed: (_) => Navigator.of(context).pop(),
+        key: const Key('media view'),
+        background: Container(color: Colors.black),
+        dismissThresholds: {
+          DismissDirection.vertical: 0,
+        },
+        confirmDismiss: (direction) => Future.value(isZoomedOut.value),
+        resizeDuration: null,
+        child: GestureDetector(
+          onTapUp: (details) => showButtons.value = !showButtons.value,
+          child: PhotoView(
+            scaleStateChangedCallback: (value) {
+              isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
+                  value == PhotoViewScaleState.initial;
+            },
+            minScale: PhotoViewComputedScale.contained,
+            initialScale: PhotoViewComputedScale.contained,
+            imageProvider: CachedNetworkImageProvider(url),
+            heroAttributes: PhotoViewHeroAttributes(tag: url),
+            loadingBuilder: (context, event) =>
+                Center(child: CircularProgressIndicator()),
+          ),
         ),
       ),
     );
