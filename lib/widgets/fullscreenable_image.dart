@@ -19,13 +19,11 @@ class FullscreenableImage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => _onTap(context),
-      child: Hero(
-        tag: url,
-        child: child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => InkWell(
+        onTap: () => _onTap(context),
+        child: Hero(
+          tag: url,
+          child: child,
+        ),
+      );
 }
