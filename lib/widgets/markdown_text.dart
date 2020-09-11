@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:lemmur/pages/media_view.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../url_launcher.dart';
@@ -24,13 +25,20 @@ class MarkdownText extends StatelessWidget {
                     ),
                   )));
         },
-        imageBuilder: (uri, title, alt) => CachedNetworkImage(
-          imageUrl: uri.toString(),
-          errorWidget: (context, url, error) => Row(
-            children: [
-              Icon(Icons.warning),
-              Text("couldn't load image, ${error.toString()}")
-            ],
+        imageBuilder: (uri, title, alt) => InkWell(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => MediaViewPage(uri.toString()),
+            ));
+          },
+          child: CachedNetworkImage(
+            imageUrl: uri.toString(),
+            errorWidget: (context, url, error) => Row(
+              children: [
+                Icon(Icons.warning),
+                Text("couldn't load image, ${error.toString()}")
+              ],
+            ),
           ),
         ),
       );
