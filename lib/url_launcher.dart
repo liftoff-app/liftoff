@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:lemmur/pages/community.dart';
-import 'package:lemmur/pages/full_post.dart';
-import 'package:lemmur/pages/user.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import 'pages/community.dart';
+import 'pages/full_post.dart';
+import 'pages/user.dart';
 import 'stores/accounts_store.dart';
 
-Future<void> urlLauncher(BuildContext c, String url) async {
-  final instances = c.read<AccountsStore>().users.keys.toList();
-  print(instances);
+Future<void> urlLauncher({
+  @required BuildContext context,
+  @required String url,
+  @required String instanceUrl,
+}) async {
+  push(Widget Function(BuildContext) builder) {
+    Navigator.of(context).push(MaterialPageRoute(builder: builder));
+  }
+
+  final instances = context.read<AccountsStore>().users.keys.toList();
+
+  final chonks = url.split('/');
 
   // CHECK IF LINK TO USER
-
-  // TODO: link to user
+  if (chonks[1] == 'u') {
+    return push((_) =>
+        UserPage.fromName(instanceUrl: instanceUrl, username: chonks[2]));
+  }
 
   // CHECK IF LINK TO COMMUNITY
-
-  // TODO; link to community
+  if (chonks[1] == 'c') {
+    return push((_) => CommunityPage.fromName(
+        communityName: chonks[2], instanceUrl: instanceUrl));
+  }
 
   // CHECK IF REDIRECTS TO A PAGE ON ONE OF ADDED INSTANCES
 
@@ -31,10 +44,6 @@ Future<void> urlLauncher(BuildContext c, String url) async {
   print(rest.length);
 
   if (instances.any((e) => e == match.group(1))) {
-    push(Widget Function(BuildContext) builder) {
-      Navigator.of(c).push(MaterialPageRoute(builder: builder));
-    }
-
     final split = rest.split('/');
     switch (split[1]) {
       case 'c':
@@ -81,7 +90,7 @@ Future<void> urlLauncher(BuildContext c, String url) async {
     }
   }
 
-  // REGULAR LINK STUFF
+  // FALLBACK TO REGULAR LINK STUFF
 
   openInBrowser(url);
 }
