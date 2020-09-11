@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lemmur/pages/community.dart';
+import 'package:lemmur/pages/full_post.dart';
+import 'package:lemmur/pages/user.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
@@ -21,34 +24,51 @@ Future<void> urlLauncher(BuildContext c, String url) async {
   final instanceRegex = RegExp(r'^(?:https?:\/\/)?([\w\.-]+)(.+)$');
   final match = instanceRegex.firstMatch(url);
 
-  final matchedDomain = match.group(1);
+  final matchedInstance = match.group(1);
   final rest = match.group(2);
 
-  print('matched domain: $matchedDomain, rest: $rest');
+  print('matched domain: $matchedInstance, rest: $rest');
   print(rest.length);
 
   if (instances.any((e) => e == match.group(1))) {
-    switch (rest.split('/')[1]) {
+    push(Widget Function(BuildContext) builder) {
+      Navigator.of(c).push(MaterialPageRoute(builder: builder));
+    }
+
+    final split = rest.split('/');
+    switch (split[1]) {
       case 'c':
-        print('comunity');
-        return;
+        return push((_) => CommunityPage.fromName(
+            communityName: split[2], instanceUrl: matchedInstance));
+
       case 'u':
-        print('user');
-        return;
+        return push((_) => UserPage.fromName(
+            instanceUrl: matchedInstance, username: split[2]));
+
       case 'post':
-        print('post');
-        return;
+        return push((_) => FullPostPage(
+            id: int.parse(split[2]), instanceUrl: matchedInstance));
+
       case 'pictrs':
-        print('pictures');
+        // TODO: put here push to media view
         return;
+
       case 'communities':
-        print('communities');
+        // TODO: put here push to communities page
         return;
+
       case 'modlog':
+        // TODO: put here push to modlog
         print('modlog');
         return;
       case 'inbox':
+        // TODO: put here push to inbox
         print('inbox');
+        return;
+      case 'search':
+        // TODO: *maybe* put here push to search. we'll see
+        //        how much web version differs form the app
+        print('search');
         return;
       case 'create_post':
       case 'create_community':
