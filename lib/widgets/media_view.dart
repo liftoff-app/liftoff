@@ -28,13 +28,12 @@ class MediaView extends HookWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor:
-            showButtons.value ? Colors.black38 : Colors.transparent,
-        shadowColor: Colors.transparent,
-        leading: showButtons.value ? CloseButton() : Container(),
-        actions: showButtons.value
-            ? [
+      appBar: showButtons.value
+          ? AppBar(
+              backgroundColor: Colors.black38,
+              shadowColor: Colors.transparent,
+              leading: CloseButton(),
+              actions: [
                 IconButton(
                   icon: Icon(Icons.share),
                   tooltip: 'share',
@@ -45,9 +44,9 @@ class MediaView extends HookWidget {
                   tooltip: 'download',
                   onPressed: () {},
                 ),
-              ]
-            : null,
-      ),
+              ],
+            )
+          : null,
       extendBodyBehindAppBar: true,
       body: GestureDetector(
         onTapUp: (details) => showButtons.value = !showButtons.value,
