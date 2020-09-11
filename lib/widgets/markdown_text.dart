@@ -14,7 +14,7 @@ class MarkdownText extends StatelessWidget {
         data: text,
         extensionSet: md.ExtensionSet.gitHubWeb,
         onTapLink: (href) {
-          urlLauncher(href)
+          urlLauncher(context, href)
               .catchError((e) => Scaffold.of(context).showSnackBar(SnackBar(
                     content: Row(
                       children: [

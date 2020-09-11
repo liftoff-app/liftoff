@@ -40,8 +40,6 @@ class Post extends StatelessWidget {
 
   // == ACTIONS ==
 
-  void _openLink() => urlLauncher(post.url);
-
   void _openFullImage() {
     // TODO: fullscreen media view
     print('OPEN FULL IMAGE');
@@ -146,6 +144,7 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    void _openLink() => urlLauncher(context, post.url);
 
     final urlDomain = () {
       if (post.url == null) return null;
