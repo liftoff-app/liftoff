@@ -18,6 +18,15 @@ class UserPage extends HookWidget {
             .getUserDetails(
                 userId: userId, savedOnly: true, sort: SortType.active)
             .then((res) => res.user);
+  UserPage.fromName({@required this.instanceUrl, @required String username})
+      : assert(instanceUrl != null),
+        assert(username != null),
+        userId = null,
+        _userView = LemmyApi(instanceUrl)
+            .v1
+            .getUserDetails(
+                username: username, savedOnly: true, sort: SortType.active)
+            .then((res) => res.user);
 
   @override
   Widget build(BuildContext context) {
