@@ -169,7 +169,9 @@ class Comment extends StatelessWidget {
           style: TextStyle(fontStyle: FontStyle.italic),
         ));
       } else {
-        return Flexible(child: MarkdownText(commentTree.comment.content));
+        return Flexible(
+            child: MarkdownText(commentTree.comment.content,
+                instanceUrl: commentTree.comment.instanceUrl));
       }
     }();
 

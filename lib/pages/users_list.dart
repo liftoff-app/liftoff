@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
+import '../util/api_extensions.dart';
 import '../widgets/markdown_text.dart';
 
 class UsersListPage extends StatelessWidget {
@@ -35,7 +36,10 @@ class UsersListPage extends StatelessWidget {
             subtitle: users[i].bio != null
                 ? Opacity(
                     opacity: 0.5,
-                    child: MarkdownText(users[i].bio),
+                    child: MarkdownText(
+                      users[i].bio,
+                      instanceUrl: users[i].instanceUrl,
+                    ),
                   )
                 : null,
             onTap: () => goToUser(context, users[i].id),

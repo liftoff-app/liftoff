@@ -6,20 +6,22 @@ import 'package:markdown/markdown.dart' as md;
 import '../url_launcher.dart';
 
 class MarkdownText extends StatelessWidget {
+  final String instanceUrl;
   final String text;
-  MarkdownText(this.text);
+  MarkdownText(this.text, {@required this.instanceUrl})
+      : assert(instanceUrl != null);
 
   @override
   Widget build(BuildContext context) => MarkdownBody(
         data: text,
         extensionSet: md.ExtensionSet.gitHubWeb,
         onTapLink: (href) {
-          urlLauncher(context, href)
+          urlLauncher(context: context, url: href, instanceUrl: instanceUrl)
               .catchError((e) => Scaffold.of(context).showSnackBar(SnackBar(
                     content: Row(
                       children: [
                         Icon(Icons.warning),
-                        Text("couldn't open link"),
+                        Text("couldn't open link, ${e.toString()}"),
                       ],
                     ),
                   )));

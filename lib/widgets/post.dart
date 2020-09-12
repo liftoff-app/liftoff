@@ -144,7 +144,8 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    void _openLink() => urlLauncher(context, post.url);
+    void _openLink() =>
+        urlLauncher(context: context, url: post.url, instanceUrl: instanceUrl);
 
     final urlDomain = () {
       if (post.url == null) return null;
@@ -437,7 +438,7 @@ class Post extends StatelessWidget {
             if (post.body != null)
               Padding(
                   padding: const EdgeInsets.all(10),
-                  child: MarkdownText(post.body)),
+                  child: MarkdownText(post.body, instanceUrl: instanceUrl)),
             actions(),
           ],
         ),

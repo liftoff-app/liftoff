@@ -31,7 +31,10 @@ class CommunitiesListPage extends StatelessWidget {
             subtitle: communities[i].description != null
                 ? Opacity(
                     opacity: 0.5,
-                    child: MarkdownText(communities[i].description),
+                    child: MarkdownText(
+                      communities[i].description,
+                      instanceUrl: communities[i].instanceUrl,
+                    ),
                   )
                 : null,
             onTap: () => goToCommunity.byId(
