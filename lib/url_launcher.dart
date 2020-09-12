@@ -55,8 +55,14 @@ Future<void> urlLauncher({
             instanceUrl: matchedInstance, username: split[2]));
 
       case 'post':
-        return push((_) => FullPostPage(
-            id: int.parse(split[2]), instanceUrl: matchedInstance));
+        if (split.length == 3) {
+          return push((_) => FullPostPage(
+              id: int.parse(split[2]), instanceUrl: matchedInstance));
+        } else if (split.length == 5) {
+          return;
+          // TODO: post with focus on comment thread
+        }
+        break;
 
       case 'pictrs':
         // TODO: put here push to media view
