@@ -18,7 +18,7 @@ class UserPage extends HookWidget {
             .getUserDetails(
                 userId: userId, savedOnly: true, sort: SortType.active)
             .then((res) => res.user);
-  UserPage.fromName({@required this.instanceUrl, @required username})
+  UserPage.fromName({@required this.instanceUrl, @required String username})
       : assert(instanceUrl != null),
         assert(username != null),
         userId = null,
