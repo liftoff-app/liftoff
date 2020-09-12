@@ -8,7 +8,7 @@ import 'pages/instance.dart';
 import 'pages/user.dart';
 import 'stores/accounts_store.dart';
 
-Future<void> urlLauncher({
+Future<void> linkLauncher({
   @required BuildContext context,
   @required String url,
   @required String instanceUrl,

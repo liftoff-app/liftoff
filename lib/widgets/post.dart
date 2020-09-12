@@ -145,7 +145,7 @@ class Post extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     void _openLink() =>
-        urlLauncher(context: context, url: post.url, instanceUrl: instanceUrl);
+        linkLauncher(context: context, url: post.url, instanceUrl: instanceUrl);
 
     final urlDomain = () {
       if (post.url == null) return null;
