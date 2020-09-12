@@ -102,12 +102,12 @@ Future<void> linkLauncher({
 
   // FALLBACK TO REGULAR LINK STUFF
 
-  openInBrowser(url);
+  return openInBrowser(url);
 }
 
-void openInBrowser(String url) async {
+Future<void> openInBrowser(String url) async {
   if (await ul.canLaunch(url)) {
-    await ul.launch(url);
+    return await ul.launch(url);
   } else {
     throw Exception();
     // TODO: handle opening links to stuff in app
