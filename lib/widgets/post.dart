@@ -47,8 +47,6 @@ class Post extends StatelessWidget {
 
   // == ACTIONS ==
 
-  void _openLink() => urlLauncher(post.url);
-
   void _savePost() {
     print('SAVE POST');
   }
