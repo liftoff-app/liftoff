@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'pages/community.dart';
 import 'pages/full_post.dart';
+import 'pages/instance.dart';
 import 'pages/user.dart';
 import 'stores/accounts_store.dart';
 
@@ -34,13 +35,16 @@ Future<void> urlLauncher({
 
   // CHECK IF REDIRECTS TO A PAGE ON ONE OF ADDED INSTANCES
 
-  final instanceRegex = RegExp(r'^(?:https?:\/\/)?([\w\.-]+)(.+)$');
+  final instanceRegex = RegExp(r'^(?:https?:\/\/)?([\w\.-]+)(.*)$');
   final match = instanceRegex.firstMatch(url);
 
-  final matchedInstance = match.group(1);
-  final rest = match.group(2);
+  final matchedInstance = match?.group(1);
+  final rest = match?.group(2);
 
-  if (instances.any((e) => e == match.group(1))) {
+  if (matchedInstance != null && instances.any((e) => e == match.group(1))) {
+    if (rest.isEmpty || rest == '/') {
+      return push((_) => InstancePage(instanceUrl: matchedInstance));
+    }
     final split = rest.split('/');
     switch (split[1]) {
       case 'c':
@@ -90,9 +94,9 @@ Future<void> urlLauncher({
       case 'sponsors':
       case 'instances':
       case 'docs':
-        openInBrowser(url);
-        return;
+        break;
       default:
+        break;
     }
   }
 
