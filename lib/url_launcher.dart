@@ -13,8 +13,8 @@ Future<void> urlLauncher({
   @required String url,
   @required String instanceUrl,
 }) async {
-  push(Widget Function(BuildContext) builder) {
-    Navigator.of(context).push(MaterialPageRoute(builder: builder));
+  push(Widget Function() builder) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (c) => builder()));
   }
 
   final instances = context.read<AccountsStore>().users.keys.toList();
@@ -23,13 +23,13 @@ Future<void> urlLauncher({
 
   // CHECK IF LINK TO USER
   if (chonks[1] == 'u') {
-    return push((_) =>
-        UserPage.fromName(instanceUrl: instanceUrl, username: chonks[2]));
+    return push(
+        () => UserPage.fromName(instanceUrl: instanceUrl, username: chonks[2]));
   }
 
   // CHECK IF LINK TO COMMUNITY
   if (chonks[1] == 'c') {
-    return push((_) => CommunityPage.fromName(
+    return push(() => CommunityPage.fromName(
         communityName: chonks[2], instanceUrl: instanceUrl));
   }
 
@@ -43,21 +43,21 @@ Future<void> urlLauncher({
 
   if (matchedInstance != null && instances.any((e) => e == match.group(1))) {
     if (rest.isEmpty || rest == '/') {
-      return push((_) => InstancePage(instanceUrl: matchedInstance));
+      return push(() => InstancePage(instanceUrl: matchedInstance));
     }
     final split = rest.split('/');
     switch (split[1]) {
       case 'c':
-        return push((_) => CommunityPage.fromName(
+        return push(() => CommunityPage.fromName(
             communityName: split[2], instanceUrl: matchedInstance));
 
       case 'u':
-        return push((_) => UserPage.fromName(
+        return push(() => UserPage.fromName(
             instanceUrl: matchedInstance, username: split[2]));
 
       case 'post':
         if (split.length == 3) {
-          return push((_) => FullPostPage(
+          return push(() => FullPostPage(
               id: int.parse(split[2]), instanceUrl: matchedInstance));
         } else if (split.length == 5) {
           // TODO: post with focus on comment thread
