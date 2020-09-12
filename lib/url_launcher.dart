@@ -40,9 +40,6 @@ Future<void> urlLauncher({
   final matchedInstance = match.group(1);
   final rest = match.group(2);
 
-  print('matched domain: $matchedInstance, rest: $rest');
-  print(rest.length);
-
   if (instances.any((e) => e == match.group(1))) {
     final split = rest.split('/');
     switch (split[1]) {
