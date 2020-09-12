@@ -215,7 +215,9 @@ class InstancePage extends HookWidget {
                   Center(child: Text('comments go here')),
                 ],
               ),
-              _AboutTab(site, communitiesFuture: communitiesFuture),
+              _AboutTab(site,
+                  communitiesFuture: communitiesFuture,
+                  instanceUrl: instanceUrl),
             ],
           ),
         ),
@@ -248,9 +250,12 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class _AboutTab extends HookWidget {
   final FullSiteView site;
   final Future<List<CommunityView>> communitiesFuture;
+  final String instanceUrl;
 
-  const _AboutTab(this.site, {@required this.communitiesFuture})
-      : assert(communitiesFuture != null);
+  const _AboutTab(this.site,
+      {@required this.communitiesFuture, @required this.instanceUrl})
+      : assert(communitiesFuture != null),
+        assert(instanceUrl != null);
 
   void goToUser(int id) {
     print('GO TO USER $id');
@@ -287,7 +292,10 @@ class _AboutTab extends HookWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: MarkdownText(site.site.description),
+              child: MarkdownText(
+                site.site.description,
+                instanceUrl: instanceUrl,
+              ),
             ),
             _Divider(),
             SizedBox(
@@ -363,7 +371,9 @@ class _AboutTab extends HookWidget {
                           e.preferredUsername.isEmpty)
                       ? '@${e.name}'
                       : e.preferredUsername),
-                  subtitle: e.bio != null ? MarkdownText(e.bio) : null,
+                  subtitle: e.bio != null
+                      ? MarkdownText(e.bio, instanceUrl: instanceUrl)
+                      : null,
                   onTap: () => goToUser(e.id),
                   leading: e.avatar != null
                       ? CachedNetworkImage(

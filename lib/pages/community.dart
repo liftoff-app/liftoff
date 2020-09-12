@@ -440,7 +440,8 @@ class _AboutTab extends StatelessWidget {
         if (community.description != null) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: MarkdownText(community.description),
+            child: MarkdownText(community.description,
+                instanceUrl: community.instanceUrl),
           ),
           _Divider(),
         ],
