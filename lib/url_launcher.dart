@@ -56,17 +56,20 @@ Future<void> urlLauncher({
           return push((_) => FullPostPage(
               id: int.parse(split[2]), instanceUrl: matchedInstance));
         } else if (split.length == 5) {
-          return;
           // TODO: post with focus on comment thread
+          print('comment in post');
+          return;
         }
         break;
 
       case 'pictrs':
         // TODO: put here push to media view
+        print('pictrs');
         return;
 
       case 'communities':
         // TODO: put here push to communities page
+        print('communities');
         return;
 
       case 'modlog':
