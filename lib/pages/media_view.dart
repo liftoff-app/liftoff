@@ -26,11 +26,14 @@ class MediaViewPage extends HookWidget {
       } else {
         SystemChrome.setEnabledSystemUIOverlays([]);
       }
-      return () => SystemChrome.setEnabledSystemUIOverlays([
-            SystemUiOverlay.bottom,
-            SystemUiOverlay.top,
-          ]);
-    });
+    }, [showButtons.value]);
+
+    useEffect(
+        () => () => SystemChrome.setEnabledSystemUIOverlays([
+              SystemUiOverlay.bottom,
+              SystemUiOverlay.top,
+            ]),
+        []);
 
     share() {
       showModalBottomSheet(
