@@ -26,6 +26,7 @@ class MediaViewPage extends HookWidget {
       } else {
         SystemChrome.setEnabledSystemUIOverlays([]);
       }
+      return null;
     }, [showButtons.value]);
 
     useEffect(
