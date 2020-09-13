@@ -162,7 +162,10 @@ class InstancePage extends HookWidget {
                   if (site.site.banner != null)
                     FullscreenableImage(
                       url: site.site.banner,
-                      child: CachedNetworkImage(imageUrl: site.site.banner),
+                      child: CachedNetworkImage(
+                        imageUrl: site.site.banner,
+                        errorWidget: (_, __, ___) => Container(),
+                      ),
                     ),
                   SafeArea(
                     child: Center(
@@ -173,9 +176,12 @@ class InstancePage extends HookWidget {
                             child: FullscreenableImage(
                               url: site.site.icon,
                               child: CachedNetworkImage(
-                                  width: 100,
-                                  height: 100,
-                                  imageUrl: site.site.icon),
+                                width: 100,
+                                height: 100,
+                                imageUrl: site.site.icon,
+                                errorWidget: (_, __, ___) =>
+                                    Icon(Icons.warning),
+                              ),
                             ),
                           ),
                           Text(site.site.name,
@@ -332,6 +338,8 @@ class _AboutTab extends HookWidget {
                             height: 50,
                             width: 50,
                             imageUrl: e.icon,
+                            errorWidget: (_, __, ___) =>
+                                SizedBox(width: 50, height: 50),
                             imageBuilder: (context, imageProvider) => Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -380,6 +388,8 @@ class _AboutTab extends HookWidget {
                           height: 50,
                           width: 50,
                           imageUrl: e.avatar,
+                          errorWidget: (_, __, ___) =>
+                              SizedBox(width: 50, height: 50),
                           imageBuilder: (context, imageProvider) => Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,

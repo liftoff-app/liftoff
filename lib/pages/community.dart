@@ -265,6 +265,7 @@ class _CommunityOverview extends StatelessWidget {
                         ),
                       ),
                     ),
+                    errorWidget: (_, __, ___) => Icon(Icons.warning),
                   ),
                 ),
               ),
@@ -277,7 +278,10 @@ class _CommunityOverview extends StatelessWidget {
       if (community.banner != null)
         FullscreenableImage(
           url: community.banner,
-          child: CachedNetworkImage(imageUrl: community.banner),
+          child: CachedNetworkImage(
+            imageUrl: community.banner,
+            errorWidget: (_, __, ___) => Container(),
+          ),
         ),
       SafeArea(
         child: Padding(

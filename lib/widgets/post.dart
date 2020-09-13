@@ -374,6 +374,7 @@ class Post extends StatelessWidget {
         url: post.url,
         child: CachedNetworkImage(
           imageUrl: post.url,
+          errorWidget: (_, __, ___) => Icon(Icons.warning),
           progressIndicatorBuilder: (context, url, progress) =>
               CircularProgressIndicator(value: progress.progress),
         ),
