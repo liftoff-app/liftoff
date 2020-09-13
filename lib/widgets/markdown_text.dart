@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
-import '../pages/media_view.dart';
 import '../url_launcher.dart';
 import 'fullscreenable_image.dart';
 
@@ -28,22 +27,15 @@ class MarkdownText extends StatelessWidget {
                     ),
                   )));
         },
-        imageBuilder: (uri, title, alt) => InkWell(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => MediaViewPage(uri.toString()),
-            ));
-          },
-          child: FullscreenableImage(
-            url: uri.toString(),
-            child: CachedNetworkImage(
-              imageUrl: uri.toString(),
-              errorWidget: (context, url, error) => Row(
-                children: [
-                  Icon(Icons.warning),
-                  Text("couldn't load image, ${error.toString()}")
-                ],
-              ),
+        imageBuilder: (uri, title, alt) => FullscreenableImage(
+          url: uri.toString(),
+          child: CachedNetworkImage(
+            imageUrl: uri.toString(),
+            errorWidget: (context, url, error) => Row(
+              children: [
+                Icon(Icons.warning),
+                Text("couldn't load image, ${error.toString()}")
+              ],
             ),
           ),
         ),
