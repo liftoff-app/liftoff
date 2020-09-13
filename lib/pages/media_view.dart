@@ -17,19 +17,20 @@ class MediaViewPage extends HookWidget {
     final showButtons = useState(true);
     final isZoomedOut = useState(true);
 
-    useEffect(() => () => SystemChrome.setEnabledSystemUIOverlays([
+    useEffect(() {
+      if (showButtons.value) {
+        SystemChrome.setEnabledSystemUIOverlays([
           SystemUiOverlay.bottom,
           SystemUiOverlay.top,
-        ]));
-
-    if (showButtons.value) {
-      SystemChrome.setEnabledSystemUIOverlays([
-        SystemUiOverlay.bottom,
-        SystemUiOverlay.top,
-      ]);
-    } else {
-      SystemChrome.setEnabledSystemUIOverlays([]);
-    }
+        ]);
+      } else {
+        SystemChrome.setEnabledSystemUIOverlays([]);
+      }
+      return () => SystemChrome.setEnabledSystemUIOverlays([
+            SystemUiOverlay.bottom,
+            SystemUiOverlay.top,
+          ]);
+    });
 
     share() {
       showModalBottomSheet(
