@@ -200,6 +200,7 @@ class Comment extends StatelessWidget {
                             ),
                           ),
                         ),
+                        errorWidget: (_, __, ___) => Container(),
                       ),
                     ),
                   ),

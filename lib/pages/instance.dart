@@ -11,6 +11,7 @@ import '../util/goto.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
+import '../widgets/fullscreenable_image.dart';
 import '../widgets/markdown_text.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
@@ -159,17 +160,29 @@ class InstancePage extends HookWidget {
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(children: [
                   if (site.site.banner != null)
-                    CachedNetworkImage(imageUrl: site.site.banner),
+                    FullscreenableImage(
+                      url: site.site.banner,
+                      child: CachedNetworkImage(
+                        imageUrl: site.site.banner,
+                        errorWidget: (_, __, ___) => Container(),
+                      ),
+                    ),
                   SafeArea(
                     child: Center(
                       child: Column(
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 40),
-                            child: CachedNetworkImage(
+                            child: FullscreenableImage(
+                              url: site.site.icon,
+                              child: CachedNetworkImage(
                                 width: 100,
                                 height: 100,
-                                imageUrl: site.site.icon),
+                                imageUrl: site.site.icon,
+                                errorWidget: (_, __, ___) =>
+                                    Icon(Icons.warning),
+                              ),
+                            ),
                           ),
                           Text(site.site.name,
                               style: theme.textTheme.headline6),
@@ -325,6 +338,8 @@ class _AboutTab extends HookWidget {
                             height: 50,
                             width: 50,
                             imageUrl: e.icon,
+                            errorWidget: (_, __, ___) =>
+                                SizedBox(width: 50, height: 50),
                             imageBuilder: (context, imageProvider) => Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -373,6 +388,8 @@ class _AboutTab extends HookWidget {
                           height: 50,
                           width: 50,
                           imageUrl: e.avatar,
+                          errorWidget: (_, __, ___) =>
+                              SizedBox(width: 50, height: 50),
                           imageBuilder: (context, imageProvider) => Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,

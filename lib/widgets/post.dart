@@ -12,6 +12,7 @@ import '../url_launcher.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
 import 'bottom_modal.dart';
+import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
 
 enum MediaType {
@@ -25,7 +26,13 @@ MediaType whatType(String url) {
   if (url == null) return MediaType.other;
 
   // TODO: make detection more nuanced
-  if (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.gif')) {
+  if (url.endsWith('.jpg') ||
+      url.endsWith('.jpeg') ||
+      url.endsWith('.png') ||
+      url.endsWith('.gif') ||
+      url.endsWith('.webp') ||
+      url.endsWith('.bmp') ||
+      url.endsWith('.wbpm')) {
     return MediaType.image;
   }
   return MediaType.other;
@@ -39,13 +46,6 @@ class Post extends StatelessWidget {
   Post(this.post, {this.fullPost = false}) : instanceUrl = post.instanceUrl;
 
   // == ACTIONS ==
-
-  void _openFullImage() {
-    // TODO: fullscreen media view
-    print('OPEN FULL IMAGE');
-  }
-
-  // POST ACTIONS
 
   void _savePost() {
     print('SAVE POST');
@@ -370,10 +370,11 @@ class Post extends StatelessWidget {
     Widget postImage() {
       assert(post.url != null);
 
-      return InkWell(
-        onTap: _openFullImage,
+      return FullscreenableImage(
+        url: post.url,
         child: CachedNetworkImage(
           imageUrl: post.url,
+          errorWidget: (_, __, ___) => Icon(Icons.warning),
           progressIndicatorBuilder: (context, url, progress) =>
               CircularProgressIndicator(value: progress.progress),
         ),

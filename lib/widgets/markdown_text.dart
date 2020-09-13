@@ -4,6 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../url_launcher.dart';
+import 'fullscreenable_image.dart';
 
 class MarkdownText extends StatelessWidget {
   final String instanceUrl;
@@ -26,13 +27,16 @@ class MarkdownText extends StatelessWidget {
                     ),
                   )));
         },
-        imageBuilder: (uri, title, alt) => CachedNetworkImage(
-          imageUrl: uri.toString(),
-          errorWidget: (context, url, error) => Row(
-            children: [
-              Icon(Icons.warning),
-              Text("couldn't load image, ${error.toString()}")
-            ],
+        imageBuilder: (uri, title, alt) => FullscreenableImage(
+          url: uri.toString(),
+          child: CachedNetworkImage(
+            imageUrl: uri.toString(),
+            errorWidget: (context, url, error) => Row(
+              children: [
+                Icon(Icons.warning),
+                Text("couldn't load image, ${error.toString()}")
+              ],
+            ),
           ),
         ),
       );

@@ -21,6 +21,7 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
+  photo_view: ^0.10.2
   url_launcher: ^5.5.1
   markdown: ^2.1.8
   flutter_markdown: ^0.4.3
@@ -51,7 +52,6 @@ dev_dependencies:
   mobx_codegen: ^1.1.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is
