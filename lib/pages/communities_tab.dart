@@ -106,12 +106,12 @@ class CommunitiesTab extends HookWidget {
             onPressed: () {}, // TODO: change styles?
           ),
         ],
-        // TODO: should be smaller
         title: TextField(
           controller: filterController,
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             suffixIcon: filterIcon,
+            isDense: true,
             border: OutlineInputBorder(),
             hintText: 'filter', // TODO: hint with an filter icon
           ),
