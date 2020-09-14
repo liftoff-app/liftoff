@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:provider/provider.dart';
 
 import '../stores/accounts_store.dart';
+import '../util/iterators.dart';
 import '../util/text_color.dart';
 
 class CommunitiesTab extends HookWidget {
@@ -15,6 +16,14 @@ class CommunitiesTab extends HookWidget {
     var theme = Theme.of(context);
     var filterController = useTextEditingController();
     useValueListenable(filterController);
+    var amountOfDisplayInstances = useMemoized(() {
+      var accountsStore = context.watch<AccountsStore>();
+
+      return accountsStore.users.keys
+          .where((e) => !accountsStore.isAnonymousFor(e))
+          .length;
+    });
+    var isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
     var instancesFut = useMemoized(() {
       var accountsStore = context.watch<AccountsStore>();
@@ -61,7 +70,9 @@ class CommunitiesTab extends HookWidget {
     }
 
     var instances = instancesSnap.data;
-    var communities = communitiesSnap.data;
+    var communities = communitiesSnap.data
+      ..forEach(
+          (e) => e.sort((a, b) => a.communityName.compareTo(b.communityName)));
 
     var filterIcon = () {
       if (filterController.text.isEmpty) {
@@ -82,9 +93,17 @@ class CommunitiesTab extends HookWidget {
             .toLowerCase()
             .contains(filterController.text.toLowerCase()));
 
+    toggleCollapse(int i) => isCollapsed.value =
+        isCollapsed.value.mapWithIndex((e, j) => j == i ? !e : e).toList();
+
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(icon: Icon(Icons.style))],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.style),
+            onPressed: () {}, // TODO: change styles?
+          ),
+        ],
         // TODO: should be smaller
         title: TextField(
           controller: filterController,
@@ -96,12 +115,13 @@ class CommunitiesTab extends HookWidget {
           ),
         ),
       ),
-      body: Column(
+      body: ListView(
         children: [
-          for (var i in Iterable.generate(instances.length))
+          for (var i in Iterable.generate(amountOfDisplayInstances))
             Column(
               children: [
                 ListTile(
+                  onLongPress: () => toggleCollapse(i),
                   leading: instances[i].icon != null
                       ? CachedNetworkImage(
                           height: 50,
@@ -121,44 +141,53 @@ class CommunitiesTab extends HookWidget {
                     instances[i].name,
                     style: theme.textTheme.headline6,
                   ),
+                  trailing: IconButton(
+                    icon: Icon(isCollapsed.value[i]
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down),
+                    onPressed: () => toggleCollapse(i),
+                  ),
                 ),
-                for (var comm in filterCommunities(communities[i]))
-                  Padding(
-                    padding: const EdgeInsets.only(left: 17),
-                    child: ListTile(
-                      dense: true,
-                      leading: VerticalDivider(
-                        color: theme.hintColor,
-                      ),
-                      title: Row(
-                        children: [
-                          if (comm.communityIcon != null)
-                            CachedNetworkImage(
-                              height: 30,
-                              width: 30,
-                              imageUrl: comm.communityIcon,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover, image: imageProvider),
+                if (!isCollapsed.value[i])
+                  for (var comm in filterCommunities(communities[i]))
+                    Padding(
+                      padding: const EdgeInsets.only(left: 17),
+                      child: ListTile(
+                        dense: true,
+                        leading: VerticalDivider(
+                          color: theme.hintColor,
+                        ),
+                        title: Row(
+                          children: [
+                            if (comm.communityIcon != null)
+                              CachedNetworkImage(
+                                height: 30,
+                                width: 30,
+                                imageUrl: comm.communityIcon,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: imageProvider),
+                                  ),
                                 ),
-                              ),
-                              errorWidget: (_, __, ___) => SizedBox(width: 30),
-                            )
-                          else
-                            SizedBox(width: 30),
-                          SizedBox(width: 10),
-                          Text('!${comm.communityName}'),
-                        ],
+                                errorWidget: (_, __, ___) =>
+                                    SizedBox(width: 30),
+                              )
+                            else
+                              SizedBox(width: 30),
+                            SizedBox(width: 10),
+                            Text('!${comm.communityName}'),
+                          ],
+                        ),
+                        trailing: _CommunitySubscribeToggle(
+                          instanceUrl: comm.communityActorId.split('/')[2],
+                          communityId: comm.communityId,
+                        ),
                       ),
-                      trailing: _CommunitySubscribeToggle(
-                        instanceUrl: comm.communityActorId.split('/')[2],
-                        communityId: comm.communityId,
-                      ),
-                    ),
-                  )
+                    )
               ],
             ),
         ],
@@ -181,7 +210,7 @@ class _CommunitySubscribeToggle extends HookWidget {
     var theme = Theme.of(context);
     var subed = useState(true);
     var loading = useState(false);
-
+    // TODO: load animation after 500ms
     return InkWell(
       onTap: () async {
         loading.value = true;
