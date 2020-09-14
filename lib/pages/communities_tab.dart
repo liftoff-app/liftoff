@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -210,10 +212,13 @@ class _CommunitySubscribeToggle extends HookWidget {
     var theme = Theme.of(context);
     var subed = useState(true);
     var loading = useState(false);
-    // TODO: load animation after 500ms
+
     return InkWell(
       onTap: () async {
-        loading.value = true;
+        // load animation only after 500ms
+        var timerHandle =
+            Timer(Duration(milliseconds: 500), () => loading.value = true);
+
         try {
           await LemmyApi(instanceUrl).v1.followCommunity(
                 communityId: communityId,
@@ -223,6 +228,7 @@ class _CommunitySubscribeToggle extends HookWidget {
                     .defaultTokenFor(instanceUrl)
                     .raw,
               );
+          timerHandle.cancel();
           subed.value = !subed.value;
         } on Exception catch (err) {
           Scaffold.of(context).showSnackBar(SnackBar(
