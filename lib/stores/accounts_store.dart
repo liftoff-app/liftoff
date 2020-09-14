@@ -16,14 +16,14 @@ abstract class _AccountsStore with Store {
     _saveReactionDisposer = reaction(
       // TODO: does not react to deep changes in users and tokens
       (_) => [
-        users.asObservable(),
-        tokens.asObservable(),
+        users.forEach((k, submap) =>
+            MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
+        tokens.forEach((k, submap) =>
+            MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
         _defaultAccount,
         _defaultAccounts.asObservable(),
       ],
-      (_) {
-        save();
-      },
+      (_) => save(),
     );
   }
 
@@ -33,10 +33,26 @@ abstract class _AccountsStore with Store {
 
   void load() async {
     var prefs = await SharedPreferences.getInstance();
+
+    nestedMapsCast<T>(String key, T f(Map<String, dynamic> json)) =>
+        ObservableMap.of(
+          (jsonDecode(prefs.getString(key) ?? '{}') as Map<String, dynamic>)
+              ?.map(
+            (k, e) => MapEntry(
+              k,
+              ObservableMap.of(
+                (e as Map<String, dynamic>)?.map(
+                  (k, e) => MapEntry(
+                      k, e == null ? null : f(e as Map<String, dynamic>)),
+                ),
+              ),
+            ),
+          ),
+        );
+
     // set saved settings or create defaults
-    // TODO: load saved users and tokens
-    users = ObservableMap();
-    tokens = ObservableMap();
+    users = nestedMapsCast('users', (json) => User.fromJson(json));
+    tokens = nestedMapsCast('tokens', (json) => Jwt(json['raw']));
     _defaultAccount = prefs.getString('defaultAccount');
     _defaultAccounts = ObservableMap.of(Map.castFrom(
         jsonDecode(prefs.getString('defaultAccounts') ?? 'null') ?? {}));
