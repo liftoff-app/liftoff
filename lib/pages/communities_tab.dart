@@ -113,7 +113,7 @@ class CommunitiesTab extends HookWidget {
             suffixIcon: filterIcon,
             isDense: true,
             border: OutlineInputBorder(),
-            hintText: 'filter', // TODO: hint with an filter icon
+            hintText: 'Filter', // TODO: hint with an filter icon
           ),
         ),
       ),
