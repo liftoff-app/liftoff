@@ -27,6 +27,7 @@ class CommunitiesTab extends HookWidget {
     });
     var isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
+    // TODO: use useMemoFuture
     var instancesFut = useMemoized(() {
       var accountsStore = context.watch<AccountsStore>();
 
@@ -210,38 +211,41 @@ class _CommunitySubscribeToggle extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var subed = useState(true);
+    var subbed = useState(true);
+    // TODO: use useDelayedLoading
     var loading = useState(false);
 
-    return InkWell(
-      onTap: () async {
-        // load animation only after 500ms
-        var timerHandle =
-            Timer(Duration(milliseconds: 500), () => loading.value = true);
+    handleTap() async {
+      // load animation only after 500ms
+      var timerHandle =
+          Timer(Duration(milliseconds: 500), () => loading.value = true);
 
-        try {
-          await LemmyApi(instanceUrl).v1.followCommunity(
-                communityId: communityId,
-                follow: !subed.value,
-                auth: context
-                    .read<AccountsStore>()
-                    .defaultTokenFor(instanceUrl)
-                    .raw,
-              );
-          timerHandle.cancel();
-          subed.value = !subed.value;
-        } on Exception catch (err) {
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text('Failed to ${subed.value ? 'un' : ''}follow: $err'),
-          ));
-        }
-        loading.value = false;
-      },
+      try {
+        await LemmyApi(instanceUrl).v1.followCommunity(
+              communityId: communityId,
+              follow: !subbed.value,
+              auth: context
+                  .read<AccountsStore>()
+                  .defaultTokenFor(instanceUrl)
+                  .raw,
+            );
+        subbed.value = !subbed.value;
+      } on Exception catch (err) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to ${subbed.value ? 'un' : ''}follow: $err'),
+        ));
+      }
+      timerHandle.cancel();
+      loading.value = false;
+    }
+
+    return InkWell(
+      onTap: handleTap,
       child: Container(
         decoration: loading.value
             ? null
             : BoxDecoration(
-                color: subed.value ? theme.accentColor : null,
+                color: subbed.value ? theme.accentColor : null,
                 border: Border.all(color: theme.accentColor),
                 borderRadius: BorderRadius.circular(5),
               ),
@@ -249,8 +253,8 @@ class _CommunitySubscribeToggle extends HookWidget {
             ? Container(
                 width: 20, height: 20, child: CircularProgressIndicator())
             : Icon(
-                subed.value ? Icons.done : Icons.add,
-                color: subed.value
+                subbed.value ? Icons.done : Icons.add,
+                color: subbed.value
                     ? textColorBasedOnBackground(theme.accentColor)
                     : theme.accentColor,
                 size: 20,
