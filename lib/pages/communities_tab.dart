@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fuzzy/fuzzy.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:provider/provider.dart';
 
@@ -91,10 +92,15 @@ class CommunitiesTab extends HookWidget {
       );
     }();
 
-    filterCommunities(List<CommunityFollowerView> comm) =>
-        comm.where((e) => e.communityName
-            .toLowerCase()
-            .contains(filterController.text.toLowerCase()));
+    filterCommunities(List<CommunityFollowerView> comm) {
+      var matches = Fuzzy(
+        comm.map((e) => e.communityName).toList(),
+        options: FuzzyOptions(threshold: 0.5),
+      ).search(filterController.text).map((e) => e.item);
+
+      return matches
+          .map((match) => comm.firstWhere((e) => e.communityName == match));
+    }
 
     toggleCollapse(int i) => isCollapsed.value =
         isCollapsed.value.mapWithIndex((e, j) => j == i ? !e : e).toList();
