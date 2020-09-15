@@ -558,13 +558,14 @@ class _FollowButton extends HookWidget {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context).showSnackBar(SnackBar(
-            content: Row(
-          children: [
-            Icon(Icons.warning),
-            SizedBox(width: 10),
-            Text("couldn't ${isSubbed.value ? 'un' : ''}sub :<"),
-          ],
-        )));
+          content: Row(
+            children: [
+              Icon(Icons.warning),
+              SizedBox(width: 10),
+              Text("couldn't ${isSubbed.value ? 'un' : ''}sub :<"),
+            ],
+          ),
+        ));
       }
 
       // clean up
