@@ -9,8 +9,7 @@ import '../stores/accounts_store.dart';
 String tokenOrNull(BuildContext context, String instanceUrl) {
   final store = context.watch<AccountsStore>();
 
-  if (!store.users.containsKey(instanceUrl) ||
-      store.isAnonymousFor(instanceUrl)) {
+  if (store.isAnonymousFor(instanceUrl)) {
     return null;
   }
   return store.defaultTokenFor(instanceUrl).raw;
