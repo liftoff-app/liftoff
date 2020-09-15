@@ -65,8 +65,27 @@ class CommunitiesTab extends HookWidget {
     var communitiesSnap = useFuture(communitiesFut);
     var instancesSnap = useFuture(instancesFut);
 
-    if (!communitiesSnap.hasData || !instancesSnap.hasData) {
+    if (communitiesSnap.hasError || instancesSnap.hasError) {
       return Scaffold(
+        appBar: AppBar(),
+        body: Center(
+          child: Row(
+            children: [
+              Icon(Icons.error),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  communitiesSnap.error?.toString() ??
+                      instancesSnap.error?.toString(),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    } else if (!communitiesSnap.hasData || !instancesSnap.hasData) {
+      return Scaffold(
+        appBar: AppBar(),
         body: Center(
           child: CircularProgressIndicator(),
         ),
