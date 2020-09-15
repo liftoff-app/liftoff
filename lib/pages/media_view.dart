@@ -87,30 +87,26 @@ class MediaViewPage extends HookWidget {
               ],
             )
           : null,
-      body: Dismissible(
-        direction: DismissDirection.vertical,
-        onDismissed: (_) => Navigator.of(context).pop(),
-        key: const Key('media view'),
-        background: Container(color: Colors.black),
-        dismissThresholds: {
-          DismissDirection.vertical: 0,
-        },
-        confirmDismiss: (direction) => Future.value(isZoomedOut.value),
-        resizeDuration: null,
-        child: GestureDetector(
-          onTapUp: (details) => showButtons.value = !showButtons.value,
-          child: PhotoView(
-            scaleStateChangedCallback: (value) {
-              isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
-                  value == PhotoViewScaleState.initial;
-            },
-            minScale: PhotoViewComputedScale.contained,
-            initialScale: PhotoViewComputedScale.contained,
-            imageProvider: CachedNetworkImageProvider(url),
-            heroAttributes: PhotoViewHeroAttributes(tag: url),
-            loadingBuilder: (context, event) =>
-                Center(child: CircularProgressIndicator()),
-          ),
+      body: GestureDetector(
+        onTapUp: (details) => showButtons.value = !showButtons.value,
+        onVerticalDragEnd: isZoomedOut.value
+            ? (details) {
+                if (details.primaryVelocity.abs() > 1000) {
+                  Navigator.of(context).pop();
+                }
+              }
+            : null,
+        child: PhotoView(
+          scaleStateChangedCallback: (value) {
+            isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
+                value == PhotoViewScaleState.initial;
+          },
+          minScale: PhotoViewComputedScale.contained,
+          initialScale: PhotoViewComputedScale.contained,
+          imageProvider: CachedNetworkImageProvider(url),
+          heroAttributes: PhotoViewHeroAttributes(tag: url),
+          loadingBuilder: (context, event) =>
+              Center(child: CircularProgressIndicator()),
         ),
       ),
     );
