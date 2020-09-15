@@ -536,6 +536,8 @@ class _FollowButton extends HookWidget {
     final token = tokenOrNull(context, community.instanceUrl);
 
     final isSubbed = useState(subscribed);
+
+    // TODO: use hook for handling spinner and pending
     final showSpinner = useState(false);
     final isPending = useState(false);
 
