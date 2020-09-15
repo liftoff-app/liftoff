@@ -7,6 +7,7 @@ import 'package:fuzzy/fuzzy.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:provider/provider.dart';
 
+import '../hooks/delayed_loading.dart';
 import '../stores/accounts_store.dart';
 import '../util/extensions/iterators.dart';
 import '../util/text_color.dart';
@@ -237,13 +238,10 @@ class _CommunitySubscribeToggle extends HookWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var subbed = useState(true);
-    // TODO: use useDelayedLoading
-    var loading = useState(false);
+    var delayed = useDelayedLoading(const Duration(milliseconds: 500));
 
     handleTap() async {
-      // load animation only after 500ms
-      var timerHandle =
-          Timer(Duration(milliseconds: 500), () => loading.value = true);
+      delayed.start();
 
       try {
         await LemmyApi(instanceUrl).v1.followCommunity(
@@ -260,21 +258,21 @@ class _CommunitySubscribeToggle extends HookWidget {
           content: Text('Failed to ${subbed.value ? 'un' : ''}follow: $err'),
         ));
       }
-      timerHandle.cancel();
-      loading.value = false;
+
+      delayed.cancel();
     }
 
     return InkWell(
-      onTap: handleTap,
+      onTap: delayed.pending ? () {} : handleTap,
       child: Container(
-        decoration: loading.value
+        decoration: delayed.loading
             ? null
             : BoxDecoration(
                 color: subbed.value ? theme.accentColor : null,
                 border: Border.all(color: theme.accentColor),
                 borderRadius: BorderRadius.circular(5),
               ),
-        child: loading.value
+        child: delayed.loading
             ? Container(
                 width: 20, height: 20, child: CircularProgressIndicator())
             : Icon(
