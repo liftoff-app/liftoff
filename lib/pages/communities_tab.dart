@@ -270,7 +270,7 @@ class _CommunitySubscribeToggle extends HookWidget {
             : BoxDecoration(
                 color: subbed.value ? theme.accentColor : null,
                 border: Border.all(color: theme.accentColor),
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(7),
               ),
         child: delayed.loading
             ? Container(
