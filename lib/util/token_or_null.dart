@@ -7,12 +7,11 @@ import '../stores/accounts_store.dart';
 /// or null if this instance is not added or doesn't
 /// have any user logged in
 String tokenOrNull(BuildContext context, String instanceUrl) {
-  if (context
-      // ignore: avoid_types_on_closure_parameters
-      .select((AccountsStore store) => store.isAnonymousFor(instanceUrl))) {
+  final store = context.watch<AccountsStore>();
+
+  if (!store.users.containsKey(instanceUrl) ||
+      store.isAnonymousFor(instanceUrl)) {
     return null;
   }
-  return context
-      // ignore: avoid_types_on_closure_parameters
-      .select((AccountsStore store) => store.defaultTokenFor(instanceUrl).raw);
+  return store.defaultTokenFor(instanceUrl).raw;
 }
