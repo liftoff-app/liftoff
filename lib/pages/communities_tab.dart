@@ -7,7 +7,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:provider/provider.dart';
 
 import '../stores/accounts_store.dart';
-import '../util/iterators.dart';
+import '../util/extensions/iterators.dart';
 import '../util/text_color.dart';
 
 class CommunitiesTab extends HookWidget {
