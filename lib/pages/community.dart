@@ -50,9 +50,9 @@ class CommunityPage extends HookWidget {
     final theme = Theme.of(context);
     var fullCommunitySnap = useMemoFuture(() {
       final auth = tokenOrNull(context, instanceUrl);
-      if (communityId != null && instanceUrl != null) {
-        return LemmyApi(_community.instanceUrl).v1.getCommunity(
-              id: _community.id,
+      if (communityId != null) {
+        return LemmyApi(instanceUrl).v1.getCommunity(
+              id: communityId,
               auth: auth,
             );
       } else {
