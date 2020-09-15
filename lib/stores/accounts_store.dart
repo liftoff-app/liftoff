@@ -99,8 +99,13 @@ abstract class _AccountsStore with Store {
     _defaultAccounts[instanceUrl] = username;
   }
 
-  bool isAnonymousFor(String instanceUrl) =>
-      Computed(() => users[instanceUrl].isEmpty).value;
+  bool isAnonymousFor(String instanceUrl) => Computed(() {
+        if (users.containsKey(instanceUrl)) {
+          return users[instanceUrl].isEmpty;
+        } else {
+          return true;
+        }
+      }).value;
 
   @computed
   bool get hasNoAccount => users.values.every((e) => e.isEmpty);
