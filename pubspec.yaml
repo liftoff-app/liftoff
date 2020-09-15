@@ -30,6 +30,7 @@ dependencies:
   cached_network_image: ^2.2.0+1
   timeago: ^2.0.27
   lemmy_api_client: ^0.4.0
+  fuzzy: <1.0.0
 
   mobx: ^1.2.1
   flutter_mobx: ^1.1.0
