@@ -12,7 +12,6 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 import '../hooks/memo_future.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
-import '../util/hooks/memo_future.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
 import '../util/token_or_null.dart';
