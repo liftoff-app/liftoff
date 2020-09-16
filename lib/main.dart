@@ -11,10 +11,10 @@ import 'stores/config_store.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var configStore = ConfigStore();
+  final configStore = ConfigStore();
   await configStore.load();
 
-  var accountsStore = AccountsStore();
+  final accountsStore = AccountsStore();
   await accountsStore.load();
 
   runApp(

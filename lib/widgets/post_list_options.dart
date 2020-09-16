@@ -16,7 +16,7 @@ class PostListOptions extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var sort = useState(defaultSort);
+    final sort = useState(defaultSort);
 
     void selectSortType(BuildContext context) {
       showModalBottomSheet(
@@ -27,7 +27,7 @@ class PostListOptions extends HookWidget {
             title: 'sort by',
             child: Column(
               children: [
-                for (var x in SortType.values)
+                for (final x in SortType.values)
                   RadioListTile<SortType>(
                     value: x,
                     groupValue: sort.value,

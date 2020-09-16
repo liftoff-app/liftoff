@@ -15,7 +15,7 @@ class UserProfileTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
     return Observer(
@@ -40,7 +40,7 @@ class UserProfileTab extends HookWidget {
           );
         }
 
-        var user = accountsStore.defaultUser;
+        final user = accountsStore.defaultUser;
 
         return Scaffold(
           extendBodyBehindAppBar: true,
@@ -69,7 +69,7 @@ class UserProfileTab extends HookWidget {
                   context: context,
                   backgroundColor: Colors.transparent,
                   builder: (_) {
-                    var userTags = <String>[];
+                    final userTags = <String>[];
 
                     accountsStore.users.forEach((instanceUrl, value) {
                       value.forEach((username, _) {
@@ -79,8 +79,8 @@ class UserProfileTab extends HookWidget {
 
                     return Observer(
                       builder: (ctx) {
-                        var user = accountsStore.defaultUser;
-                        var instanceUrl = user.instanceUrl;
+                        final user = accountsStore.defaultUser;
+                        final instanceUrl = user.instanceUrl;
 
                         return BottomModal(
                           title: 'account',
@@ -92,7 +92,7 @@ class UserProfileTab extends HookWidget {
                                   title: Text(tag),
                                   groupValue: '${user.name}@$instanceUrl',
                                   onChanged: (selected) {
-                                    var userTag = selected.split('@');
+                                    final userTag = selected.split('@');
                                     accountsStore.setDefaultAccount(
                                         userTag[1], userTag[0]);
                                     Navigator.of(ctx).pop();

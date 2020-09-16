@@ -50,7 +50,7 @@ class CommunityPage extends HookWidget {
     final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
-    var fullCommunitySnap = useMemoFuture(() {
+    final fullCommunitySnap = useMemoFuture(() {
       final token = accountsStore.defaultTokenFor(instanceUrl);
 
       if (communityId != null) {
@@ -552,7 +552,7 @@ class _FollowButton extends HookWidget {
       }
 
       isPending.value = true;
-      var spinnerTimer =
+      final spinnerTimer =
           Timer(Duration(milliseconds: 500), () => showSpinner.value = true);
 
       final api = LemmyApi(community.instanceUrl).v1;

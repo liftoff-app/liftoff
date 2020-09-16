@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:lemmur/hooks/stores.dart';
 
+import '../hooks/stores.dart';
 import '../util/goto.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +46,7 @@ class SettingsPage extends StatelessWidget {
 class AppearanceConfigPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
     final configStore = useConfigStore();
 
     return Scaffold(
@@ -88,7 +88,7 @@ class AccountsConfigPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
     return Scaffold(
@@ -112,13 +112,13 @@ class AccountsConfigPage extends HookWidget {
       ),
       body: Observer(
         builder: (ctx) {
-          var theme = Theme.of(context);
+          final theme = Theme.of(context);
 
           return ListView(
             children: [
-              for (var entry in accountsStore.users.entries) ...[
+              for (final entry in accountsStore.users.entries) ...[
                 _SectionHeading(entry.key),
-                for (var username in entry.value.keys) ...[
+                for (final username in entry.value.keys) ...[
                   ListTile(
                     trailing:
                         username == accountsStore.defaultUserFor(entry.key).name
@@ -165,11 +165,11 @@ class _AccountsConfigAddInstanceDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var instanceController = useTextEditingController();
+    final instanceController = useTextEditingController();
     useValueListenable(instanceController);
     final accountsStore = useAccountsStore();
 
-    var loading = useState(false);
+    final loading = useState(false);
 
     handleOnAdd() async {
       try {
@@ -220,13 +220,13 @@ class _AccountsConfigAddAccountDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var usernameController = useTextEditingController();
-    var passwordController = useTextEditingController();
+    final usernameController = useTextEditingController();
+    final passwordController = useTextEditingController();
     useValueListenable(usernameController);
     useValueListenable(passwordController);
     final accountsStore = useAccountsStore();
 
-    var loading = useState(false);
+    final loading = useState(false);
 
     handleOnAdd() async {
       try {

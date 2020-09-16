@@ -151,7 +151,7 @@ class Post extends StatelessWidget {
     final urlDomain = () {
       if (post.url == null) return null;
 
-      var url = post.url.split('/')[2];
+      final url = post.url.split('/')[2];
       if (url.startsWith('www.')) return url.substring(4);
       return url;
     }();

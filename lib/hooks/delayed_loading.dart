@@ -23,9 +23,9 @@ class DelayedLoading {
 /// and loading is triggered after [delayDuration].
 /// Everything can be reset with [.cancel()]
 DelayedLoading useDelayedLoading(Duration delayDuration) {
-  var loading = useState(false);
-  var pending = useState(false);
-  var timerHandle = useRef<Timer>(null);
+  final loading = useState(false);
+  final pending = useState(false);
+  final timerHandle = useRef<Timer>(null);
 
   return DelayedLoading(
     loading: loading.value,

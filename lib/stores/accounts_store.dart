@@ -32,7 +32,7 @@ abstract class _AccountsStore with Store {
   }
 
   void load() async {
-    var prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     nestedMapsCast<T>(String key, T f(Map<String, dynamic> json)) =>
         ObservableMap.of(
@@ -59,7 +59,7 @@ abstract class _AccountsStore with Store {
   }
 
   void save() async {
-    var prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('defaultAccount', _defaultAccount);
     await prefs.setString('defaultAccounts', jsonEncode(_defaultAccounts));
@@ -93,7 +93,7 @@ abstract class _AccountsStore with Store {
       return null;
     }
 
-    var userTag = _defaultAccount.split('@');
+    final userTag = _defaultAccount.split('@');
     return users[userTag[1]][userTag[0]];
   }
 
@@ -103,7 +103,7 @@ abstract class _AccountsStore with Store {
       return null;
     }
 
-    var userTag = _defaultAccount.split('@');
+    final userTag = _defaultAccount.split('@');
     return tokens[userTag[1]][userTag[0]];
   }
 
@@ -159,13 +159,13 @@ abstract class _AccountsStore with Store {
       throw Exception('No such instance was added');
     }
 
-    var lemmy = LemmyApi(instanceUrl).v1;
+    final lemmy = LemmyApi(instanceUrl).v1;
 
-    var token = await lemmy.login(
+    final token = await lemmy.login(
       usernameOrEmail: usernameOrEmail,
       password: password,
     );
-    var userData =
+    final userData =
         await lemmy.getSite(auth: token.raw).then((value) => value.myUser);
 
     // first account for this instance
