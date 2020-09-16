@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/instance.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
@@ -51,7 +52,9 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            home: MyHomePage(title: 'Flutter hello world'),
+            home: InstancePage(
+              instanceUrl: 'dev.lemmy.ml',
+            ),
           );
         },
       );

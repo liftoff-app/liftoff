@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/media_view.dart';
+import '../util/goto.dart';
 
 class FullscreenableImage extends StatelessWidget {
   final String url;
@@ -13,9 +15,7 @@ class FullscreenableImage extends StatelessWidget {
   }) : super(key: key);
 
   _onTap(BuildContext c) {
-    Navigator.of(c).push(MaterialPageRoute(
-      builder: (context) => MediaViewPage(url),
-    ));
+    goTo(c, (context) => MediaViewPage(url));
   }
 
   @override

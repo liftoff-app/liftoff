@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -5,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../stores/accounts_store.dart';
 import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/user_profile.dart';
 import 'settings.dart';
@@ -27,8 +29,7 @@ class UserProfileTab extends HookWidget {
                   Text('No account was added.'),
                   FlatButton.icon(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => AccountsConfigPage()));
+                      goTo(context, (_) => AccountsConfigPage());
                     },
                     icon: Icon(Icons.add),
                     label: Text('Add account'),
@@ -113,8 +114,7 @@ class UserProfileTab extends HookWidget {
               IconButton(
                 icon: Icon(Icons.settings),
                 onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => SettingsPage()));
+                  goTo(context, (_) => SettingsPage());
                 },
               )
             ],
