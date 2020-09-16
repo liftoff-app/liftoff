@@ -6,7 +6,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
+import 'package:lemmur/stores/accounts_store.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/memo_future.dart';
@@ -14,7 +16,6 @@ import '../util/api_extensions.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
-import '../util/token_or_null.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
@@ -49,16 +50,17 @@ class CommunityPage extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     var fullCommunitySnap = useMemoFuture(() {
-      final auth = tokenOrNull(context, instanceUrl);
+      final token = context.watch<AccountsStore>().defaultTokenFor(instanceUrl);
+
       if (communityId != null) {
         return LemmyApi(instanceUrl).v1.getCommunity(
               id: communityId,
-              auth: auth,
+              auth: token?.raw,
             );
       } else {
         return LemmyApi(instanceUrl).v1.getCommunity(
               name: communityName,
-              auth: auth,
+              auth: token?.raw,
             );
       }
     });
@@ -531,11 +533,11 @@ class _FollowButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
-    final subscribed = community.subscribed ?? false;
-    final token = tokenOrNull(context, community.instanceUrl);
+    final isSubbed = useState(community.subscribed ?? false);
 
-    final isSubbed = useState(subscribed);
+    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
+    final token =
+        context.watch<AccountsStore>().defaultTokenFor(community.instanceUrl);
 
     // TODO: use hook for handling spinner and pending
     final showSpinner = useState(false);
@@ -555,7 +557,9 @@ class _FollowButton extends HookWidget {
       final api = LemmyApi(community.instanceUrl).v1;
       try {
         await api.followCommunity(
-            communityId: community.id, follow: !isSubbed.value, auth: token);
+            communityId: community.id,
+            follow: !isSubbed.value,
+            auth: token?.raw);
         isSubbed.value = !isSubbed.value;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {

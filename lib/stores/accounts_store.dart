@@ -73,21 +73,39 @@ abstract class _AccountsStore with Store {
 
   @computed
   User get defaultUser {
+    if (_defaultAccount == null) {
+      return null;
+    }
+
     var userTag = _defaultAccount.split('@');
     return users[userTag[1]][userTag[0]];
   }
 
   @computed
   Jwt get defaultToken {
+    if (_defaultAccount == null) {
+      return null;
+    }
+
     var userTag = _defaultAccount.split('@');
     return tokens[userTag[1]][userTag[0]];
   }
 
-  User defaultUserFor(String instanceUrl) =>
-      Computed(() => users[instanceUrl][_defaultAccounts[instanceUrl]]).value;
+  User defaultUserFor(String instanceUrl) => Computed(() {
+        if (isAnonymousFor(instanceUrl)) {
+          return null;
+        }
 
-  Jwt defaultTokenFor(String instanceUrl) =>
-      Computed(() => tokens[instanceUrl][_defaultAccounts[instanceUrl]]).value;
+        return users[instanceUrl][_defaultAccounts[instanceUrl]];
+      }).value;
+
+  Jwt defaultTokenFor(String instanceUrl) => Computed(() {
+        if (isAnonymousFor(instanceUrl)) {
+          return null;
+        }
+
+        return tokens[instanceUrl][_defaultAccounts[instanceUrl]];
+      }).value;
 
   @action
   void setDefaultAccount(String instanceUrl, String username) {
@@ -100,11 +118,11 @@ abstract class _AccountsStore with Store {
   }
 
   bool isAnonymousFor(String instanceUrl) => Computed(() {
-        if (users.containsKey(instanceUrl)) {
-          return users[instanceUrl].isEmpty;
-        } else {
+        if (!users.containsKey(instanceUrl)) {
           return true;
         }
+
+        return users[instanceUrl].isEmpty;
       }).value;
 
   @computed
