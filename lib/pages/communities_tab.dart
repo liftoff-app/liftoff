@@ -28,8 +28,7 @@ class CommunitiesTab extends HookWidget {
     });
     final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
-    // TODO: use useMemoFuture
-    final instancesFut = useMemoized(() {
+    final instancesSnap = useMemoFuture(() {
       final futures = accountsStore.users.keys
           .where((e) => !accountsStore.isAnonymousFor(e))
           .map(
@@ -40,7 +39,7 @@ class CommunitiesTab extends HookWidget {
 
       return Future.wait(futures);
     });
-    final communitiesFut = useMemoized(() {
+    final communitiesSnap = useMemoFuture(() {
       final futures = accountsStore.users.keys
           .where((e) => !accountsStore.isAnonymousFor(e))
           .map(
@@ -57,9 +56,6 @@ class CommunitiesTab extends HookWidget {
 
       return Future.wait(futures);
     });
-
-    final communitiesSnap = useFuture(communitiesFut);
-    final instancesSnap = useFuture(instancesFut);
 
     if (communitiesSnap.hasError || instancesSnap.hasError) {
       return Scaffold(

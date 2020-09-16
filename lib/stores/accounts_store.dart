@@ -14,7 +14,6 @@ abstract class _AccountsStore with Store {
   _AccountsStore() {
     // persistently save settings each time they are changed
     _saveReactionDisposer = reaction(
-      // TODO: does not react to deep changes in users and tokens
       (_) => [
         users.forEach((k, submap) =>
             MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),

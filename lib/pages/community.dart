@@ -538,9 +538,7 @@ class _FollowButton extends HookWidget {
 
     final token = useAccountsStore().defaultTokenFor(community.instanceUrl);
 
-    // TODO: use hook for handling spinner and pending
-    final showSpinner = useState(false);
-    final isPending = useState(false);
+    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
 
     final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
 
@@ -551,13 +549,10 @@ class _FollowButton extends HookWidget {
         return;
       }
 
-      isPending.value = true;
-      final spinnerTimer =
-          Timer(Duration(milliseconds: 500), () => showSpinner.value = true);
+      delayed.start();
 
-      final api = LemmyApi(community.instanceUrl).v1;
       try {
-        await api.followCommunity(
+        await LemmyApi(community.instanceUrl).v1.followCommunity(
             communityId: community.id,
             follow: !isSubbed.value,
             auth: token?.raw);
@@ -575,17 +570,14 @@ class _FollowButton extends HookWidget {
         ));
       }
 
-      // clean up
-      spinnerTimer.cancel();
-      isPending.value = false;
-      showSpinner.value = false;
+      delayed.cancel();
     }
 
     return Center(
       child: SizedBox(
         height: 27,
         width: 160,
-        child: showSpinner.value
+        child: delayed.loading
             ? RaisedButton(
                 onPressed: null,
                 child: SizedBox(
@@ -599,7 +591,7 @@ class _FollowButton extends HookWidget {
               )
             : RaisedButton.icon(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                onPressed: isPending.value ? () {} : subscribe,
+                onPressed: delayed.pending ? () {} : subscribe,
                 icon: isSubbed.value
                     ? Icon(Icons.remove, size: 18, color: colorOnTopOfAccent)
                     : Icon(Icons.add, size: 18, color: colorOnTopOfAccent),
