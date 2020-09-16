@@ -35,7 +35,7 @@ class UserProfile extends HookWidget {
 
     final userViewSnap = useFuture(_userView, preserveState: false);
 
-    Widget bio = () {
+    final bio = () {
       if (userViewSnap.hasData) {
         if (userViewSnap.data.bio != null) {
           return Padding(

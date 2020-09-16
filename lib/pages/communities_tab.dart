@@ -4,10 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fuzzy/fuzzy.dart';
-import 'package:lemmur/hooks/stores.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
+import '../hooks/memo_future.dart';
+import '../hooks/stores.dart';
 import '../util/extensions/iterators.dart';
 import '../util/text_color.dart';
 
@@ -21,11 +22,9 @@ class CommunitiesTab extends HookWidget {
     useValueListenable(filterController);
     final accountsStore = useAccountsStore();
 
-    final amountOfDisplayInstances = useMemoized(() {
-      return accountsStore.users.keys
-          .where((e) => !accountsStore.isAnonymousFor(e))
-          .length;
-    });
+    final amountOfDisplayInstances = useMemoized(() => accountsStore.users.keys
+        .where((e) => !accountsStore.isAnonymousFor(e))
+        .length);
     final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
     final instancesSnap = useMemoFuture(() {

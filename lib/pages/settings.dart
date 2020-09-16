@@ -43,7 +43,7 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class AppearanceConfigPage extends StatelessWidget {
+class AppearanceConfigPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
