@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -13,7 +15,7 @@ import '../util/text_color.dart';
 import 'bottom_modal.dart';
 import 'markdown_text.dart';
 
-class Comment extends StatelessWidget {
+class Comment extends HookWidget {
   final int indent;
   final int postCreatorId;
   final CommentTree commentTree;
@@ -31,57 +33,6 @@ class Comment extends StatelessWidget {
     this.indent = 0,
     @required this.postCreatorId,
   });
-
-  void _openMoreMenu(BuildContext context) {
-    final com = commentTree.comment;
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      context: context,
-      builder: (context) => BottomModal(
-        child: Column(
-          children: [
-            ListTile(
-              leading: Icon(Icons.open_in_browser),
-              title: Text('Open in browser'),
-              onTap: () async => await ul.canLaunch(com.apId)
-                  ? ul.launch(com.apId)
-                  : Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text("can't open in browser"))),
-            ),
-            ListTile(
-              leading: Icon(Icons.share),
-              title: Text('Share url'),
-              onTap: () =>
-                  Share.text('Share comment url', com.apId, 'text/plain'),
-            ),
-            ListTile(
-              leading: Icon(Icons.share),
-              title: Text('Share text'),
-              onTap: () =>
-                  Share.text('Share comment text', com.content, 'text/plain'),
-            ),
-            ListTile(
-              leading: Icon(Icons.info_outline),
-              title: Text('Nerd stuff'),
-              onTap: () => _showCommentInfo(context),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _save(bool save) {
-    print('SAVE COMMENT, $save');
-  }
-
-  void _reply() {
-    print('OPEN REPLY BOX');
-  }
-
-  void _vote(VoteType vote) {
-    print('COMMENT VOTE: ${vote.toString()}');
-  }
 
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
@@ -141,9 +92,84 @@ class Comment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final comment = commentTree.comment;
+    final selectable = useState(false);
+    final showRaw = useState(false);
 
+    final comment = commentTree.comment;
     final saved = comment.saved ?? false;
+
+    void _openMoreMenu(BuildContext context) {
+      pop() {
+        Navigator.of(context).pop();
+      }
+
+      final com = commentTree.comment;
+      showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) => BottomModal(
+          child: Column(
+            children: [
+              ListTile(
+                leading: Icon(Icons.open_in_browser),
+                title: Text('Open in browser'),
+                onTap: () async => await ul.canLaunch(com.apId)
+                    ? ul.launch(com.apId)
+                    : Scaffold.of(context).showSnackBar(
+                        SnackBar(content: Text("can't open in browser"))),
+              ),
+              ListTile(
+                leading: Icon(Icons.share),
+                title: Text('Share url'),
+                onTap: () =>
+                    Share.text('Share comment url', com.apId, 'text/plain'),
+              ),
+              ListTile(
+                leading: Icon(Icons.share),
+                title: Text('Share text'),
+                onTap: () =>
+                    Share.text('Share comment text', com.content, 'text/plain'),
+              ),
+              ListTile(
+                leading: Icon(
+                    selectable.value ? Icons.assignment : Icons.content_cut),
+                title:
+                    Text('Make text ${selectable.value ? 'un' : ''}selectable'),
+                onTap: () {
+                  selectable.value = !selectable.value;
+                  pop();
+                },
+              ),
+              ListTile(
+                leading: Icon(showRaw.value ? Icons.brush : Icons.build),
+                title: Text('Show ${showRaw.value ? 'fancy' : 'raw'} text'),
+                onTap: () {
+                  showRaw.value = !showRaw.value;
+                  pop();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.info_outline),
+                title: Text('Nerd stuff'),
+                onTap: () => _showCommentInfo(context),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    void _save(bool save) {
+      print('SAVE COMMENT, $save');
+    }
+
+    void _reply() {
+      print('OPEN REPLY BOX');
+    }
+
+    void _vote(VoteType vote) {
+      print('COMMENT VOTE: ${vote.toString()}');
+    }
 
     // decide which username to use
     final username = () {
@@ -170,10 +196,56 @@ class Comment extends StatelessWidget {
         ));
       } else {
         return Flexible(
-            child: MarkdownText(commentTree.comment.content,
-                instanceUrl: commentTree.comment.instanceUrl));
+            child: showRaw.value
+                ? selectable.value
+                    ? SelectableText(commentTree.comment.content)
+                    : Text(commentTree.comment.content)
+                : MarkdownText(
+                    commentTree.comment.content,
+                    instanceUrl: commentTree.comment.instanceUrl,
+                    selectable: selectable.value,
+                  ));
       }
     }();
+
+    final actions = Row(children: [
+      if (selectable.value)
+        _CommentAction(
+            icon: Icons.content_copy,
+            tooltip: 'copy',
+            onPressed: () {
+              Clipboard.setData(
+                      ClipboardData(text: commentTree.comment.content))
+                  .then((_) => Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text('comment copied to clipboard'))));
+            }),
+      Spacer(),
+      _CommentAction(
+        icon: Icons.more_horiz,
+        onPressed: () => _openMoreMenu(context),
+        tooltip: 'more',
+      ),
+      _CommentAction(
+        icon: saved ? Icons.bookmark : Icons.bookmark_border,
+        onPressed: () => _save(!saved),
+        tooltip: '${saved ? 'unsave' : 'save'} comment',
+      ),
+      _CommentAction(
+        icon: Icons.reply,
+        onPressed: _reply,
+        tooltip: 'reply',
+      ),
+      _CommentAction(
+        icon: Icons.arrow_upward,
+        onPressed: () => _vote(VoteType.up),
+        tooltip: 'upvote',
+      ),
+      _CommentAction(
+        icon: Icons.arrow_downward,
+        onPressed: () => _vote(VoteType.down),
+        tooltip: 'downvote',
+      ),
+    ]);
 
     return Column(
       children: [
@@ -228,35 +300,10 @@ class Comment extends StatelessWidget {
                   ),
                 )
               ]),
+              SizedBox(height: 10),
               Row(children: [body]),
-              Row(children: [
-                Spacer(),
-                _CommentAction(
-                  icon: Icons.more_horiz,
-                  onPressed: () => _openMoreMenu(context),
-                  tooltip: 'more',
-                ),
-                _CommentAction(
-                  icon: saved ? Icons.bookmark : Icons.bookmark_border,
-                  onPressed: () => _save(!saved),
-                  tooltip: '${saved ? 'unsave' : 'save'} comment',
-                ),
-                _CommentAction(
-                  icon: Icons.reply,
-                  onPressed: _reply,
-                  tooltip: 'reply',
-                ),
-                _CommentAction(
-                  icon: Icons.arrow_upward,
-                  onPressed: () => _vote(VoteType.up),
-                  tooltip: 'upvote',
-                ),
-                _CommentAction(
-                  icon: Icons.arrow_downward,
-                  onPressed: () => _vote(VoteType.down),
-                  tooltip: 'downvote',
-                ),
-              ])
+              SizedBox(height: 5),
+              actions,
             ],
           ),
           padding: EdgeInsets.all(10),
