@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:lemmur/pages/profile_tab.dart';
 import 'package:provider/provider.dart';
 
 import 'hooks/stores.dart';
+import 'pages/profile_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
@@ -73,11 +73,11 @@ class MyHomePage extends HookWidget {
     final theme = Theme.of(context);
 
     useEffect(() {
-      print('about to change');
-      print(theme.scaffoldBackgroundColor);
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: theme.scaffoldBackgroundColor,
-      ));
+      Future.microtask(
+        () => SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          systemNavigationBarColor: theme.scaffoldBackgroundColor,
+        )),
+      );
 
       return null;
     }, [theme.scaffoldBackgroundColor]);
