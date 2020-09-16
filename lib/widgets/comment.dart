@@ -99,9 +99,7 @@ class Comment extends HookWidget {
     final saved = comment.saved ?? false;
 
     void _openMoreMenu(BuildContext context) {
-      pop() {
-        Navigator.of(context).pop();
-      }
+      pop() => Navigator.of(context).pop();
 
       final com = commentTree.comment;
       showModalBottomSheet(
