@@ -6,12 +6,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
-import 'package:lemmur/stores/accounts_store.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/memo_future.dart';
+import '../stores/accounts_store.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
