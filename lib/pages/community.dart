@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
@@ -5,8 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../hooks/memo_future.dart';
+import '../stores/accounts_store.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
@@ -17,37 +22,48 @@ import '../widgets/fullscreenable_image.dart';
 import '../widgets/markdown_text.dart';
 
 class CommunityPage extends HookWidget {
-  final Future<FullCommunityView> _fullCommunityFuture;
   final CommunityView _community;
   final String instanceUrl;
+  final String communityName;
+  final int communityId;
 
-  CommunityPage.fromName(
-      {@required String communityName, @required this.instanceUrl})
-      : assert(communityName != null),
+  CommunityPage.fromName({
+    @required this.communityName,
+    @required this.instanceUrl,
+  })  : assert(communityName != null),
         assert(instanceUrl != null),
-        _fullCommunityFuture =
-            LemmyApi(instanceUrl).v1.getCommunity(name: communityName),
+        communityId = null,
         _community = null;
-  CommunityPage.fromId({@required int communityId, @required this.instanceUrl})
-      : assert(communityId != null),
+  CommunityPage.fromId({
+    @required this.communityId,
+    @required this.instanceUrl,
+  })  : assert(communityId != null),
         assert(instanceUrl != null),
-        _fullCommunityFuture =
-            LemmyApi(instanceUrl).v1.getCommunity(id: communityId),
+        communityName = null,
         _community = null;
   CommunityPage.fromCommunityView(this._community)
       : instanceUrl = _community.instanceUrl,
-        _fullCommunityFuture = LemmyApi(_community.instanceUrl)
-            .v1
-            .getCommunity(name: _community.name);
-
-  void _subscribe() {
-    print('SUBSCRIBE');
-  }
+        communityId = _community.id,
+        communityName = _community.name;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    var fullCommunitySnap = useFuture(_fullCommunityFuture);
+    var fullCommunitySnap = useMemoFuture(() {
+      final token = context.watch<AccountsStore>().defaultTokenFor(instanceUrl);
+
+      if (communityId != null) {
+        return LemmyApi(instanceUrl).v1.getCommunity(
+              id: communityId,
+              auth: token?.raw,
+            );
+      } else {
+        return LemmyApi(instanceUrl).v1.getCommunity(
+              name: communityName,
+              auth: token?.raw,
+            );
+      }
+    });
 
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
 
@@ -169,11 +185,8 @@ class CommunityPage extends HookWidget {
                     icon: Icon(Icons.more_vert), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(
-                background: _CommunityOverview(
-                  community,
-                  instanceUrl: instanceUrl,
-                  subscribe: _subscribe,
-                ),
+                background:
+                    _CommunityOverview(community, instanceUrl: instanceUrl),
               ),
             ),
             SliverPersistentHeader(
@@ -218,20 +231,16 @@ class CommunityPage extends HookWidget {
 class _CommunityOverview extends StatelessWidget {
   final CommunityView community;
   final String instanceUrl;
-  final void Function() subscribe;
 
   _CommunityOverview(
     this.community, {
     @required this.instanceUrl,
-    @required this.subscribe,
   })  : assert(instanceUrl != null),
-        assert(goToInstance != null),
-        assert(subscribe != null);
+        assert(goToInstance != null);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
     final shadow = BoxShadow(color: theme.canvasColor, blurRadius: 5);
 
     final icon = community.icon != null
@@ -272,7 +281,6 @@ class _CommunityOverview extends StatelessWidget {
             ],
           )
         : null;
-    final subscribed = community.subscribed ?? false;
 
     return Stack(children: [
       if (community.banner != null)
@@ -359,32 +367,7 @@ class _CommunityOverview extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // SUBSCRIBE BUTTON
-                  Center(
-                    child: SizedBox(
-                      height: 27,
-                      child: RaisedButton.icon(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                        onPressed: subscribe,
-                        icon: subscribed
-                            ? Icon(Icons.remove,
-                                size: 18, color: colorOnTopOfAccent)
-                            : Icon(Icons.add,
-                                size: 18, color: colorOnTopOfAccent),
-                        color: theme.accentColor,
-                        label: Text(
-                          '${subscribed ? 'un' : ''}subscribe',
-                          style: TextStyle(
-                              color: colorOnTopOfAccent,
-                              fontSize: theme.textTheme.subtitle1.fontSize),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _FollowButton(community),
                 ],
               ),
             ),
@@ -540,4 +523,97 @@ class _Divider extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Divider(),
       );
+}
+
+class _FollowButton extends HookWidget {
+  final CommunityView community;
+
+  _FollowButton(this.community);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isSubbed = useState(community.subscribed ?? false);
+
+    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
+    final token =
+        context.watch<AccountsStore>().defaultTokenFor(community.instanceUrl);
+
+    // TODO: use hook for handling spinner and pending
+    final showSpinner = useState(false);
+    final isPending = useState(false);
+
+    subscribe() async {
+      if (token == null) {
+        Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text("can't sub when you're not logged in")));
+        return;
+      }
+
+      isPending.value = true;
+      var spinnerTimer =
+          Timer(Duration(milliseconds: 500), () => showSpinner.value = true);
+
+      final api = LemmyApi(community.instanceUrl).v1;
+      try {
+        await api.followCommunity(
+            communityId: community.id,
+            follow: !isSubbed.value,
+            auth: token?.raw);
+        isSubbed.value = !isSubbed.value;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.warning),
+              SizedBox(width: 10),
+              Text("couldn't ${isSubbed.value ? 'un' : ''}sub :<"),
+            ],
+          ),
+        ));
+      }
+
+      // clean up
+      spinnerTimer.cancel();
+      isPending.value = false;
+      showSpinner.value = false;
+    }
+
+    return Center(
+      child: SizedBox(
+        height: 27,
+        width: 160,
+        child: showSpinner.value
+            ? RaisedButton(
+                onPressed: null,
+                child: SizedBox(
+                  height: 15,
+                  width: 15,
+                  child: CircularProgressIndicator(),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              )
+            : RaisedButton.icon(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                onPressed: isPending.value ? () {} : subscribe,
+                icon: isSubbed.value
+                    ? Icon(Icons.remove, size: 18, color: colorOnTopOfAccent)
+                    : Icon(Icons.add, size: 18, color: colorOnTopOfAccent),
+                color: theme.accentColor,
+                label: Text(
+                  '${isSubbed.value ? 'un' : ''}subscribe',
+                  style: TextStyle(
+                      color: colorOnTopOfAccent,
+                      fontSize: theme.textTheme.subtitle1.fontSize),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+      ),
+    );
+  }
 }
