@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lemmur/pages/profile_tab.dart';
 import 'package:provider/provider.dart';
 
-import 'pages/instance.dart';
+import 'hooks/stores.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
@@ -32,32 +34,34 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookWidget {
   @override
-  Widget build(BuildContext context) => Observer(
-        builder: (ctx) {
-          var maybeAmoledColor =
-              ctx.watch<ConfigStore>().amoledDarkMode ? Colors.black : null;
+  Widget build(BuildContext context) {
+    final configStore = useConfigStore();
 
-          return MaterialApp(
-            title: 'Flutter Demo',
-            themeMode: ctx.watch<ConfigStore>().theme,
-            darkTheme: ThemeData.dark().copyWith(
-              scaffoldBackgroundColor: maybeAmoledColor,
-              backgroundColor: maybeAmoledColor,
-              canvasColor: maybeAmoledColor,
-              cardColor: maybeAmoledColor,
-              splashColor: maybeAmoledColor,
-            ),
-            theme: ThemeData(
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            ),
-            home: InstancePage(
-              instanceUrl: 'dev.lemmy.ml',
-            ),
-          );
-        },
-      );
+    return Observer(
+      builder: (ctx) {
+        final maybeAmoledColor =
+            configStore.amoledDarkMode ? Colors.black : null;
+
+        return MaterialApp(
+          title: 'Flutter Demo',
+          themeMode: configStore.theme,
+          darkTheme: ThemeData.dark().copyWith(
+            scaffoldBackgroundColor: maybeAmoledColor,
+            backgroundColor: maybeAmoledColor,
+            canvasColor: maybeAmoledColor,
+            cardColor: maybeAmoledColor,
+            splashColor: maybeAmoledColor,
+          ),
+          theme: ThemeData(
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: UserProfileTab(),
+        );
+      },
+    );
+  }
 }
 
 class MyHomePage extends StatefulWidget {

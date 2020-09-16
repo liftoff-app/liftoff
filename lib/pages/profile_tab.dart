@@ -2,9 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
+import 'package:lemmur/hooks/stores.dart';
 
-import '../stores/accounts_store.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
@@ -17,10 +16,11 @@ class UserProfileTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    final accountsStore = useAccountsStore();
 
     return Observer(
       builder: (ctx) {
-        if (ctx.watch<AccountsStore>().hasNoAccount) {
+        if (accountsStore.hasNoAccount) {
           return Scaffold(
             body: Center(
               child: Column(
@@ -40,7 +40,7 @@ class UserProfileTab extends HookWidget {
           );
         }
 
-        var user = ctx.watch<AccountsStore>().defaultUser;
+        var user = accountsStore.defaultUser;
 
         return Scaffold(
           extendBodyBehindAppBar: true,
@@ -71,10 +71,7 @@ class UserProfileTab extends HookWidget {
                   builder: (_) {
                     var userTags = <String>[];
 
-                    ctx
-                        .read<AccountsStore>()
-                        .users
-                        .forEach((instanceUrl, value) {
+                    accountsStore.users.forEach((instanceUrl, value) {
                       value.forEach((username, _) {
                         userTags.add('$username@$instanceUrl');
                       });
@@ -82,7 +79,7 @@ class UserProfileTab extends HookWidget {
 
                     return Observer(
                       builder: (ctx) {
-                        var user = ctx.watch<AccountsStore>().defaultUser;
+                        var user = accountsStore.defaultUser;
                         var instanceUrl = user.instanceUrl;
 
                         return BottomModal(
@@ -96,7 +93,7 @@ class UserProfileTab extends HookWidget {
                                   groupValue: '${user.name}@$instanceUrl',
                                   onChanged: (selected) {
                                     var userTag = selected.split('@');
-                                    ctx.read<AccountsStore>().setDefaultAccount(
+                                    accountsStore.setDefaultAccount(
                                         userTag[1], userTag[0]);
                                     Navigator.of(ctx).pop();
                                   },

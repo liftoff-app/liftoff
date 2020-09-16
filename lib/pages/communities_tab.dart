@@ -4,11 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fuzzy/fuzzy.dart';
+import 'package:lemmur/hooks/stores.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
-import 'package:provider/provider.dart';
 
 import '../hooks/delayed_loading.dart';
-import '../stores/accounts_store.dart';
 import '../util/extensions/iterators.dart';
 import '../util/text_color.dart';
 
@@ -20,9 +19,9 @@ class CommunitiesTab extends HookWidget {
     var theme = Theme.of(context);
     var filterController = useTextEditingController();
     useValueListenable(filterController);
-    var amountOfDisplayInstances = useMemoized(() {
-      var accountsStore = context.watch<AccountsStore>();
+    final accountsStore = useAccountsStore();
 
+    var amountOfDisplayInstances = useMemoized(() {
       return accountsStore.users.keys
           .where((e) => !accountsStore.isAnonymousFor(e))
           .length;
@@ -31,8 +30,6 @@ class CommunitiesTab extends HookWidget {
 
     // TODO: use useMemoFuture
     var instancesFut = useMemoized(() {
-      var accountsStore = context.watch<AccountsStore>();
-
       var futures = accountsStore.users.keys
           .where((e) => !accountsStore.isAnonymousFor(e))
           .map(
@@ -44,8 +41,6 @@ class CommunitiesTab extends HookWidget {
       return Future.wait(futures);
     });
     var communitiesFut = useMemoized(() {
-      var accountsStore = context.watch<AccountsStore>();
-
       var futures = accountsStore.users.keys
           .where((e) => !accountsStore.isAnonymousFor(e))
           .map(
@@ -239,6 +234,7 @@ class _CommunitySubscribeToggle extends HookWidget {
     var theme = Theme.of(context);
     var subbed = useState(true);
     var delayed = useDelayedLoading(const Duration(milliseconds: 500));
+    final accountsStore = useAccountsStore();
 
     handleTap() async {
       delayed.start();
@@ -247,10 +243,7 @@ class _CommunitySubscribeToggle extends HookWidget {
         await LemmyApi(instanceUrl).v1.followCommunity(
               communityId: communityId,
               follow: !subbed.value,
-              auth: context
-                  .read<AccountsStore>()
-                  .defaultTokenFor(instanceUrl)
-                  .raw,
+              auth: accountsStore.defaultTokenFor(instanceUrl).raw,
             );
         subbed.value = !subbed.value;
       } on Exception catch (err) {

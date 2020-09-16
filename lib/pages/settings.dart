@@ -2,10 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
+import 'package:lemmur/hooks/stores.dart';
 
-import '../stores/accounts_store.dart';
-import '../stores/config_store.dart';
 import '../util/goto.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -49,6 +47,7 @@ class AppearanceConfigPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    final configStore = useConfigStore();
 
     return Scaffold(
       appBar: AppBar(
@@ -66,16 +65,16 @@ class AppearanceConfigPage extends StatelessWidget {
               RadioListTile<ThemeMode>(
                 value: theme,
                 title: Text(theme.toString().split('.')[1]),
-                groupValue: ctx.watch<ConfigStore>().theme,
+                groupValue: configStore.theme,
                 onChanged: (selected) {
-                  ctx.read<ConfigStore>().theme = selected;
+                  configStore.theme = selected;
                 },
               ),
             SwitchListTile(
                 title: Text('AMOLED dark mode'),
-                value: ctx.watch<ConfigStore>().amoledDarkMode,
+                value: configStore.amoledDarkMode,
                 onChanged: (checked) {
-                  ctx.read<ConfigStore>().amoledDarkMode = checked;
+                  configStore.amoledDarkMode = checked;
                 })
           ],
         ),
@@ -90,6 +89,7 @@ class AccountsConfigPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    final accountsStore = useAccountsStore();
 
     return Scaffold(
       key: _scaffoldKey,
@@ -112,7 +112,6 @@ class AccountsConfigPage extends HookWidget {
       ),
       body: Observer(
         builder: (ctx) {
-          var accountsStore = ctx.watch<AccountsStore>();
           var theme = Theme.of(context);
 
           return ListView(
@@ -168,15 +167,14 @@ class _AccountsConfigAddInstanceDialog extends HookWidget {
   Widget build(BuildContext context) {
     var instanceController = useTextEditingController();
     useValueListenable(instanceController);
+    final accountsStore = useAccountsStore();
 
     var loading = useState(false);
 
     handleOnAdd() async {
       try {
         loading.value = true;
-        await context
-            .read<AccountsStore>()
-            .addInstance(instanceController.text);
+        await accountsStore.addInstance(instanceController.text);
         scaffoldKey.currentState.hideCurrentSnackBar();
       } on Exception catch (err) {
         scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -226,17 +224,18 @@ class _AccountsConfigAddAccountDialog extends HookWidget {
     var passwordController = useTextEditingController();
     useValueListenable(usernameController);
     useValueListenable(passwordController);
+    final accountsStore = useAccountsStore();
 
     var loading = useState(false);
 
     handleOnAdd() async {
       try {
         loading.value = true;
-        await context.read<AccountsStore>().addAccount(
-              instanceUrl,
-              usernameController.text,
-              passwordController.text,
-            );
+        await accountsStore.addAccount(
+          instanceUrl,
+          usernameController.text,
+          passwordController.text,
+        );
       } on Exception catch (err) {
         scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(err.toString()),

@@ -6,12 +6,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
+import 'package:lemmur/hooks/stores.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/memo_future.dart';
-import '../stores/accounts_store.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
@@ -49,8 +48,10 @@ class CommunityPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final accountsStore = useAccountsStore();
+
     var fullCommunitySnap = useMemoFuture(() {
-      final token = context.watch<AccountsStore>().defaultTokenFor(instanceUrl);
+      final token = accountsStore.defaultTokenFor(instanceUrl);
 
       if (communityId != null) {
         return LemmyApi(instanceUrl).v1.getCommunity(
@@ -535,13 +536,13 @@ class _FollowButton extends HookWidget {
     final theme = Theme.of(context);
     final isSubbed = useState(community.subscribed ?? false);
 
-    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
-    final token =
-        context.watch<AccountsStore>().defaultTokenFor(community.instanceUrl);
+    final token = useAccountsStore().defaultTokenFor(community.instanceUrl);
 
     // TODO: use hook for handling spinner and pending
     final showSpinner = useState(false);
     final isPending = useState(false);
+
+    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
 
     subscribe() async {
       if (token == null) {
