@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lemmur/pages/profile_tab.dart';
@@ -45,7 +48,7 @@ class MyApp extends HookWidget {
             configStore.amoledDarkMode ? Colors.black : null;
 
         return MaterialApp(
-          title: 'Flutter Demo',
+          title: 'Lemmur',
           themeMode: configStore.theme,
           darkTheme: ThemeData.dark().copyWith(
             scaffoldBackgroundColor: maybeAmoledColor,
@@ -57,52 +60,28 @@ class MyApp extends HookWidget {
           theme: ThemeData(
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          home: UserProfileTab(),
+          home: MyHomePage(),
         );
       },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
+class MyHomePage extends HookWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+    useEffect(() {
+      print('about to change');
+      print(theme.scaffoldBackgroundColor);
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: theme.scaffoldBackgroundColor,
+      ));
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+      return null;
+    }, [theme.scaffoldBackgroundColor]);
+
+    return UserProfileTab();
   }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('You have pushed the button this many times:'),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ),
-      );
 }
