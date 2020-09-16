@@ -9,11 +9,14 @@ import 'fullscreenable_image.dart';
 class MarkdownText extends StatelessWidget {
   final String instanceUrl;
   final String text;
-  MarkdownText(this.text, {@required this.instanceUrl})
+  final bool selectable;
+
+  MarkdownText(this.text, {@required this.instanceUrl, this.selectable = false})
       : assert(instanceUrl != null);
 
   @override
   Widget build(BuildContext context) => MarkdownBody(
+        selectable: selectable,
         data: text,
         extensionSet: md.ExtensionSet.gitHubWeb,
         onTapLink: (href) {
