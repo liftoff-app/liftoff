@@ -55,24 +55,16 @@ class FullPostPage extends HookWidget {
 
     final fullPost = fullPostSnap.data;
 
-    final savedIcon = (post.saved == null || !post.saved)
-        ? Icons.bookmark_border
-        : Icons.bookmark;
-
     // FUNCTIONS
 
     sharePost() => Share.text('Share post', post.apId, 'text/plain');
-
-    savePost() {
-      print('SAVE POST');
-    }
 
     return Scaffold(
         appBar: AppBar(
           leading: BackButton(),
           actions: [
             IconButton(icon: Icon(Icons.share), onPressed: sharePost),
-            IconButton(icon: Icon(savedIcon), onPressed: savePost),
+            SavePostButton(post),
             IconButton(
                 icon: Icon(Icons.more_vert),
                 onPressed: () => Post.showMoreMenu(context, post)),

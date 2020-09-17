@@ -18,6 +18,7 @@ import '../util/goto.dart';
 import 'bottom_modal.dart';
 import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
+import 'save_post_button.dart';
 
 enum MediaType {
   image,
@@ -396,18 +397,8 @@ class Post extends HookWidget {
                     icon: Icon(Icons.share),
                     onPressed: () => Share.text('Share post url', post.apId,
                         'text/plain')), // TODO: find a way to mark it as url
-              if (!fullPost)
-                IconButton(
-                    icon: post.saved == true
-                        ? Icon(Icons.bookmark)
-                        : Icon(Icons.bookmark_border),
-                    onPressed: _savePost),
+              if (!fullPost) SavePostButton(post),
               _Voting(post),
-              // IconButton(
-              //     icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
-              // Text(NumberFormat.compact().format(post.score)),
-              // IconButton(
-              //     icon: Icon(Icons.arrow_downward), onPressed: _downvotePost),
             ],
           ),
         );
