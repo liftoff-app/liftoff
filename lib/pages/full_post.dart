@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/memo_future.dart';
+import '../hooks/stores.dart';
 import '../util/api_extensions.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
