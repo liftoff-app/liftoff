@@ -11,7 +11,6 @@ import '../widgets/post.dart';
 import '../widgets/save_post_button.dart';
 
 class FullPostPage extends HookWidget {
-  // final Future<FullPostView> fullPost;
   final int id;
   final String instanceUrl;
   final PostView post;
