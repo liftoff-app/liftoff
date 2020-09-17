@@ -25,8 +25,10 @@ class FullPostPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fullPostSnap =
-        useMemoFuture(() => LemmyApi(instanceUrl).v1.getPost(id: id));
+    final accStore = useAccountsStore();
+    final fullPostSnap = useMemoFuture(() => LemmyApi(instanceUrl)
+        .v1
+        .getPost(id: id, auth: accStore.defaultTokenFor(instanceUrl)?.raw));
 
     // FALLBACK VIEW
 
