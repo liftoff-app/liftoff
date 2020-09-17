@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../hooks/ref.dart';
+
 class InfiniteScroll<T> extends HookWidget {
   final int batchSize;
   final Widget loadingWidget;
@@ -19,8 +21,9 @@ class InfiniteScroll<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final page = useState(1);
-    final hasMore = useState(true);
     final data = useState<List<T>>([]);
+    final hasMore = useRef(true);
+    final isFetching = useRef(false);
 
     return ListView.builder(
       // +1 for the loading widget
@@ -29,19 +32,23 @@ class InfiniteScroll<T> extends HookWidget {
         // reached the bottom, fetch more
         if (i == data.value.length) {
           // if there are no more, skip
-          if (!hasMore.value) {
+          if (!hasMore.current) {
             return Container();
           }
 
-          fetchMore(page.value, batchSize).then((value) {
-            // if got less than the batchSize, mark the list as done
-            if (value.length < batchSize) {
-              hasMore.value = false;
-            }
-            // append new data and increment page count
-            data.value.addAll(value);
-            page.value++;
-          });
+          // if it's already fetching more, skip
+          if (!isFetching.current) {
+            isFetching.current = true;
+            fetchMore(page.value, batchSize).then((value) {
+              // if got less than the batchSize, mark the list as done
+              if (value.length < batchSize) {
+                hasMore.current = false;
+              }
+              // append new data and increment page count
+              data.value.addAll(value);
+              page.value++;
+            }).whenComplete(() => isFetching.current = false);
+          }
 
           return loadingWidget;
         }
