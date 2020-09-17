@@ -3,6 +3,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -39,7 +40,7 @@ MediaType whatType(String url) {
   return MediaType.other;
 }
 
-class Post extends StatelessWidget {
+class Post extends HookWidget {
   final PostView post;
   final String instanceUrl;
   final bool fullPost;
@@ -156,7 +157,6 @@ class Post extends StatelessWidget {
       return url;
     }();
 
-    // TODO: add NSFW, locked, removed, deleted, stickied
     /// assemble info section
     Widget info() => Column(children: [
           Padding(
