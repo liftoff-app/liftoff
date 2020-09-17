@@ -55,14 +55,6 @@ class Post extends HookWidget {
     print('SAVE POST');
   }
 
-  void _upvotePost() {
-    print('UPVOTE POST');
-  }
-
-  void _downvotePost() {
-    print('DOWNVOTE POST');
-  }
-
   static void showMoreMenu(BuildContext context, PostView post) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
