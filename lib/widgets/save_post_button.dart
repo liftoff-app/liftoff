@@ -21,6 +21,7 @@ class SavePostButton extends HookWidget {
     savePost() async {
       final api = LemmyApi(post.instanceUrl).v1;
       final token = accStore.defaultTokenFor(post.instanceUrl);
+
       if (token == null) {
         Scaffold.of(context).showSnackBar(
             SnackBar(content: Text("can't save if you ain't logged in")));
@@ -35,13 +36,23 @@ class SavePostButton extends HookWidget {
       } catch (e) {
         Scaffold.of(context)
             .showSnackBar(SnackBar(content: Text('saving failed :(')));
-        return;
       }
       loading.cancel();
     }
 
-    if (loading.loading) return CircularProgressIndicator();
+    if (loading.loading) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: SizedBox(
+            width: 30,
+            height: 30,
+            child: CircularProgressIndicator(
+              backgroundColor: Theme.of(context).iconTheme.color,
+            )),
+      );
+    }
 
-    return IconButton(icon: Icon(savedIcon), onPressed: savePost);
+    return IconButton(
+        icon: Icon(savedIcon), onPressed: loading.pending ? () {} : savePost);
   }
 }
