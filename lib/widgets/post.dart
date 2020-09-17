@@ -9,6 +9,8 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../hooks/delayed_loading.dart';
+import '../hooks/stores.dart';
 import '../pages/full_post.dart';
 import '../url_launcher.dart';
 import '../util/api_extensions.dart';
@@ -408,11 +410,12 @@ class Post extends HookWidget {
                         ? Icon(Icons.bookmark)
                         : Icon(Icons.bookmark_border),
                     onPressed: _savePost),
-              IconButton(
-                  icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
-              Text(NumberFormat.compact().format(post.score)),
-              IconButton(
-                  icon: Icon(Icons.arrow_downward), onPressed: _downvotePost),
+              _Voting(post),
+              // IconButton(
+              //     icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
+              // Text(NumberFormat.compact().format(post.score)),
+              // IconButton(
+              //     icon: Icon(Icons.arrow_downward), onPressed: _downvotePost),
             ],
           ),
         );
@@ -446,6 +449,68 @@ class Post extends HookWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Voting extends HookWidget {
+  final PostView post;
+
+  _Voting(this.post);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final myVote = useState(post.myVote ?? 0);
+    final store = useAccountsStore();
+    final loading = useDelayedLoading(Duration(milliseconds: 500));
+
+    vote(VoteType vote) async {
+      final api = LemmyApi(post.instanceUrl).v1;
+      final token = store.defaultTokenFor(post.instanceUrl);
+
+      if (token == null) {
+        Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text("can't vote if you ain't logged in")));
+        return;
+      }
+
+      loading.start();
+      try {
+        final res = await api.createPostLike(
+            postId: post.id, score: vote, auth: token.raw);
+        myVote.value = res.myVote;
+      } catch (e) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('voting failed :(')));
+        return;
+      }
+      loading.cancel();
+    }
+
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.arrow_upward,
+            color: myVote.value == 1 ? theme.accentColor : null,
+          ),
+          onPressed: () =>
+              vote(myVote.value == 1 ? VoteType.none : VoteType.up),
+        ),
+        if (loading.loading)
+          SizedBox(child: CircularProgressIndicator(), width: 20, height: 20)
+        else
+          Text(NumberFormat.compact().format(post.score + myVote.value)),
+        IconButton(
+          icon: Icon(
+            Icons.arrow_downward,
+            color: myVote.value == -1 ? Colors.red : null,
+          ),
+          onPressed: () =>
+              vote(myVote.value == -1 ? VoteType.none : VoteType.down),
+        ),
+      ],
     );
   }
 }
