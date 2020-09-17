@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
 
-import '../stores/accounts_store.dart';
+import '../hooks/stores.dart';
 import '../util/api_extensions.dart';
+import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/user_profile.dart';
 import 'settings.dart';
@@ -14,11 +15,12 @@ class UserProfileTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
+    final accountsStore = useAccountsStore();
 
     return Observer(
       builder: (ctx) {
-        if (ctx.watch<AccountsStore>().hasNoAccount) {
+        if (accountsStore.hasNoAccount) {
           return Scaffold(
             body: Center(
               child: Column(
@@ -27,8 +29,7 @@ class UserProfileTab extends HookWidget {
                   Text('No account was added.'),
                   FlatButton.icon(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => AccountsConfigPage()));
+                      goTo(context, (_) => AccountsConfigPage());
                     },
                     icon: Icon(Icons.add),
                     label: Text('Add account'),
@@ -39,7 +40,7 @@ class UserProfileTab extends HookWidget {
           );
         }
 
-        var user = ctx.watch<AccountsStore>().defaultUser;
+        final user = accountsStore.defaultUser;
 
         return Scaffold(
           extendBodyBehindAppBar: true,
@@ -68,12 +69,9 @@ class UserProfileTab extends HookWidget {
                   context: context,
                   backgroundColor: Colors.transparent,
                   builder: (_) {
-                    var userTags = <String>[];
+                    final userTags = <String>[];
 
-                    ctx
-                        .read<AccountsStore>()
-                        .users
-                        .forEach((instanceUrl, value) {
+                    accountsStore.users.forEach((instanceUrl, value) {
                       value.forEach((username, _) {
                         userTags.add('$username@$instanceUrl');
                       });
@@ -81,8 +79,8 @@ class UserProfileTab extends HookWidget {
 
                     return Observer(
                       builder: (ctx) {
-                        var user = ctx.watch<AccountsStore>().defaultUser;
-                        var instanceUrl = user.instanceUrl;
+                        final user = accountsStore.defaultUser;
+                        final instanceUrl = user.instanceUrl;
 
                         return BottomModal(
                           title: 'account',
@@ -94,8 +92,8 @@ class UserProfileTab extends HookWidget {
                                   title: Text(tag),
                                   groupValue: '${user.name}@$instanceUrl',
                                   onChanged: (selected) {
-                                    var userTag = selected.split('@');
-                                    ctx.read<AccountsStore>().setDefaultAccount(
+                                    final userTag = selected.split('@');
+                                    accountsStore.setDefaultAccount(
                                         userTag[1], userTag[0]);
                                     Navigator.of(ctx).pop();
                                   },
@@ -113,8 +111,7 @@ class UserProfileTab extends HookWidget {
               IconButton(
                 icon: Icon(Icons.settings),
                 onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => SettingsPage()));
+                  goTo(context, (_) => SettingsPage());
                 },
               )
             ],

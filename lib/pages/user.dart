@@ -30,9 +30,9 @@ class UserPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var userViewSnap = useFuture(_userView);
+    final userViewSnap = useFuture(_userView);
 
-    var body = () {
+    final body = () {
       if (userViewSnap.hasData) {
         return UserProfile.fromUserView(userViewSnap.data);
       } else if (userViewSnap.hasError) {

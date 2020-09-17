@@ -11,7 +11,7 @@ class Badge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       height: 25,

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
@@ -7,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../hooks/delayed_loading.dart';
 import '../hooks/memo_future.dart';
-import '../stores/accounts_store.dart';
+import '../hooks/stores.dart';
 import '../util/api_extensions.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
@@ -49,8 +47,10 @@ class CommunityPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    var fullCommunitySnap = useMemoFuture(() {
-      final token = context.watch<AccountsStore>().defaultTokenFor(instanceUrl);
+    final accountsStore = useAccountsStore();
+
+    final fullCommunitySnap = useMemoFuture(() {
+      final token = accountsStore.defaultTokenFor(instanceUrl);
 
       if (communityId != null) {
         return LemmyApi(instanceUrl).v1.getCommunity(
@@ -535,13 +535,11 @@ class _FollowButton extends HookWidget {
     final theme = Theme.of(context);
     final isSubbed = useState(community.subscribed ?? false);
 
-    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
-    final token =
-        context.watch<AccountsStore>().defaultTokenFor(community.instanceUrl);
+    final token = useAccountsStore().defaultTokenFor(community.instanceUrl);
 
-    // TODO: use hook for handling spinner and pending
-    final showSpinner = useState(false);
-    final isPending = useState(false);
+    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+
+    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
 
     subscribe() async {
       if (token == null) {
@@ -550,13 +548,10 @@ class _FollowButton extends HookWidget {
         return;
       }
 
-      isPending.value = true;
-      var spinnerTimer =
-          Timer(Duration(milliseconds: 500), () => showSpinner.value = true);
+      delayed.start();
 
-      final api = LemmyApi(community.instanceUrl).v1;
       try {
-        await api.followCommunity(
+        await LemmyApi(community.instanceUrl).v1.followCommunity(
             communityId: community.id,
             follow: !isSubbed.value,
             auth: token?.raw);
@@ -574,17 +569,14 @@ class _FollowButton extends HookWidget {
         ));
       }
 
-      // clean up
-      spinnerTimer.cancel();
-      isPending.value = false;
-      showSpinner.value = false;
+      delayed.cancel();
     }
 
     return Center(
       child: SizedBox(
         height: 27,
         width: 160,
-        child: showSpinner.value
+        child: delayed.loading
             ? RaisedButton(
                 onPressed: null,
                 child: SizedBox(
@@ -598,7 +590,7 @@ class _FollowButton extends HookWidget {
               )
             : RaisedButton.icon(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                onPressed: isPending.value ? () {} : subscribe,
+                onPressed: delayed.pending ? () {} : subscribe,
                 icon: isSubbed.value
                     ? Icon(Icons.remove, size: 18, color: colorOnTopOfAccent)
                     : Icon(Icons.add, size: 18, color: colorOnTopOfAccent),

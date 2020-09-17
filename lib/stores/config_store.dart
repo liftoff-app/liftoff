@@ -22,14 +22,14 @@ abstract class _ConfigStore with Store {
   }
 
   void load() async {
-    var prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     // load saved settings or create defaults
     theme = _themeModeFromString(prefs.getString('theme') ?? 'system');
     amoledDarkMode = prefs.getBool('amoledDarkMode') ?? false;
   }
 
   void save() async {
-    var prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('theme', describeEnum(theme));
     await prefs.setBool('amoledDarkMode', amoledDarkMode);

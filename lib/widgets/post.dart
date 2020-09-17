@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -150,7 +151,7 @@ class Post extends StatelessWidget {
     final urlDomain = () {
       if (post.url == null) return null;
 
-      var url = post.url.split('/')[2];
+      final url = post.url.split('/')[2];
       if (url.startsWith('www.')) return url.substring(4);
       return url;
     }();
@@ -425,9 +426,10 @@ class Post extends StatelessWidget {
       child: InkWell(
         onTap: fullPost
             ? null
-            : () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => FullPostPage.fromPostView(
-                    post))), //, instanceUrl, post.id),
+            : () => goTo(
+                context,
+                (context) =>
+                    FullPostPage.fromPostView(post)), //, instanceUrl, post.id),
         child: Column(
           children: [
             info(),

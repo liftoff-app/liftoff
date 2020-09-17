@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
@@ -272,10 +273,11 @@ class _AboutTab extends HookWidget {
   }
 
   void goToBannedUsers(BuildContext c) {
-    Navigator.of(c).push(MaterialPageRoute(
-      builder: (_) => UsersListPage(
+    goTo(
+      c,
+      (_) => UsersListPage(
           users: site.banned.reversed.toList(), title: 'Banned users'),
-    ));
+    );
   }
 
   @override
@@ -284,11 +286,12 @@ class _AboutTab extends HookWidget {
     final commSnap = useFuture(communitiesFuture);
 
     void goToCommunities() {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => CommunitiesListPage(
+      goTo(
+        context,
+        (_) => CommunitiesListPage(
             communities: commSnap.data,
             title: 'Communities of ${site.site.name}'),
-      ));
+      );
     }
 
     return SingleChildScrollView(

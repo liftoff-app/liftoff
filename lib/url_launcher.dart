@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
@@ -7,6 +8,7 @@ import 'pages/full_post.dart';
 import 'pages/instance.dart';
 import 'pages/user.dart';
 import 'stores/accounts_store.dart';
+import 'util/goto.dart';
 
 Future<void> linkLauncher({
   @required BuildContext context,
@@ -14,7 +16,7 @@ Future<void> linkLauncher({
   @required String instanceUrl,
 }) async {
   push(Widget Function() builder) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (c) => builder()));
+    goTo(context, (c) => builder());
   }
 
   final instances = context.read<AccountsStore>().users.keys.toList();

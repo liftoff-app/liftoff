@@ -21,7 +21,7 @@ class CommentTree {
 
   static List<CommentTree> fromList(List<CommentView> comments) {
     CommentTree gatherChildren(CommentTree parent) {
-      for (var el in comments) {
+      for (final el in comments) {
         if (el.parentId == parent.comment.id) {
           parent.children.add(gatherChildren(CommentTree(el)));
         }
@@ -29,7 +29,7 @@ class CommentTree {
       return parent;
     }
 
-    var parents = <CommentTree>[];
+    final parents = <CommentTree>[];
 
     // first pass to get all the parents
     for (var i = 0; i < comments.length; i++) {
@@ -38,7 +38,7 @@ class CommentTree {
       }
     }
 
-    var result = parents.map(gatherChildren).toList();
+    final result = parents.map(gatherChildren).toList();
     return result;
   }
 
@@ -63,7 +63,7 @@ class CommentTree {
 
   void _sort(int compare(CommentTree a, CommentTree b)) {
     children.sort(compare);
-    for (var el in children) {
+    for (final el in children) {
       el._sort(compare);
     }
   }

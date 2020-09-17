@@ -1,17 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
+import 'hooks/stores.dart';
+import 'pages/profile_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var configStore = ConfigStore();
+  final configStore = ConfigStore();
   await configStore.load();
 
-  var accountsStore = AccountsStore();
+  final accountsStore = AccountsStore();
   await accountsStore.load();
 
   runApp(
@@ -31,71 +37,51 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookWidget {
   @override
-  Widget build(BuildContext context) => Observer(
-        builder: (ctx) {
-          var maybeAmoledColor =
-              ctx.watch<ConfigStore>().amoledDarkMode ? Colors.black : null;
+  Widget build(BuildContext context) {
+    final configStore = useConfigStore();
 
-          return MaterialApp(
-            title: 'Flutter Demo',
-            themeMode: ctx.watch<ConfigStore>().theme,
-            darkTheme: ThemeData.dark().copyWith(
-              scaffoldBackgroundColor: maybeAmoledColor,
-              backgroundColor: maybeAmoledColor,
-              canvasColor: maybeAmoledColor,
-              cardColor: maybeAmoledColor,
-              splashColor: maybeAmoledColor,
-            ),
-            theme: ThemeData(
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            ),
-            home: MyHomePage(title: 'Flutter hello world'),
-          );
-        },
-      );
-}
+    return Observer(
+      builder: (ctx) {
+        final maybeAmoledColor =
+            configStore.amoledDarkMode ? Colors.black : null;
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('You have pushed the button this many times:'),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ],
+        return MaterialApp(
+          title: 'Lemmur',
+          themeMode: configStore.theme,
+          darkTheme: ThemeData.dark().copyWith(
+            scaffoldBackgroundColor: maybeAmoledColor,
+            backgroundColor: maybeAmoledColor,
+            canvasColor: maybeAmoledColor,
+            cardColor: maybeAmoledColor,
+            splashColor: maybeAmoledColor,
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ),
+          theme: ThemeData(
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: MyHomePage(),
+        );
+      },
+    );
+  }
+}
+
+class MyHomePage extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    useEffect(() {
+      Future.microtask(
+        () => SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          systemNavigationBarColor: theme.scaffoldBackgroundColor,
+        )),
       );
+
+      return null;
+    }, [theme.scaffoldBackgroundColor]);
+
+    return UserProfileTab();
+  }
 }

@@ -34,9 +34,9 @@ class CommentSection extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var sorting = useState(sortType);
-    var rawComms = useState(rawComments);
-    var comms = useState(comments);
+    final sorting = useState(sortType);
+    final rawComms = useState(rawComments);
+    final comms = useState(comments);
 
     void sortComments(CommentSortType sort) {
       if (sort != sorting.value && sort != CommentSortType.chat) {
@@ -106,7 +106,8 @@ class CommentSection extends HookWidget {
             postCreatorId: postCreatorId,
           )
       else
-        for (var com in comms.value) Comment(com, postCreatorId: postCreatorId),
+        for (final com in comms.value)
+          Comment(com, postCreatorId: postCreatorId),
     ]);
   }
 }

@@ -314,7 +314,7 @@ class Comment extends HookWidget {
                       : BorderSide.none,
                   top: BorderSide(width: 0.2))),
         ),
-        for (var c in commentTree.children)
+        for (final c in commentTree.children)
           Comment(
             c,
             indent: indent + 1,

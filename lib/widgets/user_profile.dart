@@ -29,13 +29,13 @@ class UserProfile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
     final colorOnTopOfAccentColor =
         textColorBasedOnBackground(theme.accentColor);
 
-    var userViewSnap = useFuture(_userView, preserveState: false);
+    final userViewSnap = useFuture(_userView, preserveState: false);
 
-    Widget bio = () {
+    final bio = () {
       if (userViewSnap.hasData) {
         if (userViewSnap.data.bio != null) {
           return Padding(

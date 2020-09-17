@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fuzzy/fuzzy.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
-import 'package:provider/provider.dart';
 
 import '../hooks/delayed_loading.dart';
-import '../stores/accounts_store.dart';
+import '../hooks/memo_future.dart';
+import '../hooks/stores.dart';
 import '../util/extensions/iterators.dart';
 import '../util/text_color.dart';
 
@@ -17,23 +17,18 @@ class CommunitiesTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var filterController = useTextEditingController();
+    final theme = Theme.of(context);
+    final filterController = useTextEditingController();
     useValueListenable(filterController);
-    var amountOfDisplayInstances = useMemoized(() {
-      var accountsStore = context.watch<AccountsStore>();
+    final accountsStore = useAccountsStore();
 
-      return accountsStore.users.keys
-          .where((e) => !accountsStore.isAnonymousFor(e))
-          .length;
-    });
-    var isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
+    final amountOfDisplayInstances = useMemoized(() => accountsStore.users.keys
+        .where((e) => !accountsStore.isAnonymousFor(e))
+        .length);
+    final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
-    // TODO: use useMemoFuture
-    var instancesFut = useMemoized(() {
-      var accountsStore = context.watch<AccountsStore>();
-
-      var futures = accountsStore.users.keys
+    final instancesSnap = useMemoFuture(() {
+      final futures = accountsStore.users.keys
           .where((e) => !accountsStore.isAnonymousFor(e))
           .map(
             (instanceUrl) =>
@@ -43,10 +38,8 @@ class CommunitiesTab extends HookWidget {
 
       return Future.wait(futures);
     });
-    var communitiesFut = useMemoized(() {
-      var accountsStore = context.watch<AccountsStore>();
-
-      var futures = accountsStore.users.keys
+    final communitiesSnap = useMemoFuture(() {
+      final futures = accountsStore.users.keys
           .where((e) => !accountsStore.isAnonymousFor(e))
           .map(
             (instanceUrl) => LemmyApi(instanceUrl)
@@ -62,9 +55,6 @@ class CommunitiesTab extends HookWidget {
 
       return Future.wait(futures);
     });
-
-    var communitiesSnap = useFuture(communitiesFut);
-    var instancesSnap = useFuture(instancesFut);
 
     if (communitiesSnap.hasError || instancesSnap.hasError) {
       return Scaffold(
@@ -93,12 +83,12 @@ class CommunitiesTab extends HookWidget {
       );
     }
 
-    var instances = instancesSnap.data;
-    var communities = communitiesSnap.data
+    final instances = instancesSnap.data;
+    final communities = communitiesSnap.data
       ..forEach(
           (e) => e.sort((a, b) => a.communityName.compareTo(b.communityName)));
 
-    var filterIcon = () {
+    final filterIcon = () {
       if (filterController.text.isEmpty) {
         return Icon(Icons.filter_list);
       }
@@ -113,7 +103,7 @@ class CommunitiesTab extends HookWidget {
     }();
 
     filterCommunities(List<CommunityFollowerView> comm) {
-      var matches = Fuzzy(
+      final matches = Fuzzy(
         comm.map((e) => e.communityName).toList(),
         options: FuzzyOptions(threshold: 0.5),
       ).search(filterController.text).map((e) => e.item);
@@ -146,7 +136,7 @@ class CommunitiesTab extends HookWidget {
       ),
       body: ListView(
         children: [
-          for (var i in Iterable.generate(amountOfDisplayInstances))
+          for (final i in Iterable.generate(amountOfDisplayInstances))
             Column(
               children: [
                 ListTile(
@@ -178,7 +168,7 @@ class CommunitiesTab extends HookWidget {
                   ),
                 ),
                 if (!isCollapsed.value[i])
-                  for (var comm in filterCommunities(communities[i]))
+                  for (final comm in filterCommunities(communities[i]))
                     Padding(
                       padding: const EdgeInsets.only(left: 17),
                       child: ListTile(
@@ -236,9 +226,10 @@ class _CommunitySubscribeToggle extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var subbed = useState(true);
-    var delayed = useDelayedLoading(const Duration(milliseconds: 500));
+    final theme = Theme.of(context);
+    final subbed = useState(true);
+    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+    final accountsStore = useAccountsStore();
 
     handleTap() async {
       delayed.start();
@@ -247,10 +238,7 @@ class _CommunitySubscribeToggle extends HookWidget {
         await LemmyApi(instanceUrl).v1.followCommunity(
               communityId: communityId,
               follow: !subbed.value,
-              auth: context
-                  .read<AccountsStore>()
-                  .defaultTokenFor(instanceUrl)
-                  .raw,
+              auth: accountsStore.defaultTokenFor(instanceUrl).raw,
             );
         subbed.value = !subbed.value;
       } on Exception catch (err) {

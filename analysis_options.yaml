@@ -5,6 +5,7 @@ linter:
     public_member_api_docs: false
     prefer_expression_function_bodies: true
     prefer_single_quotes: true
+    prefer_final_locals: true
 analyzer:
   exclude:
-    - '**/*.g.dart'
+    - "**/*.g.dart"
