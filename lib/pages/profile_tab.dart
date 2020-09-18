@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../hooks/stores.dart';
-import '../util/api_extensions.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/user_profile.dart';

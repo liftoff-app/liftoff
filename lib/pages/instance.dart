@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
-import '../util/api_extensions.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';

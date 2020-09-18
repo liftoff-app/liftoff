@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
-import '../util/api_extensions.dart';
+import '../util/extensions/api.dart';
 import '../widgets/markdown_text.dart';
 
 class UsersListPage extends StatelessWidget {
