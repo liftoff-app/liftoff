@@ -9,7 +9,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../comment_tree.dart';
-import '../util/api_extensions.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
 import 'bottom_modal.dart';

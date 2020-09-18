@@ -4,7 +4,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
-import '../util/api_extensions.dart';
+import '../util/extensions/api.dart';
 
 // TODO: sync this button between post and fullpost. the same with voting
 

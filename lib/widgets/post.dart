@@ -13,7 +13,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../pages/full_post.dart';
 import '../url_launcher.dart';
-import '../util/api_extensions.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import 'bottom_modal.dart';
 import 'fullscreenable_image.dart';

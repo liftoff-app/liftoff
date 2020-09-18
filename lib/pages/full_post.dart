@@ -5,7 +5,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
-import '../util/api_extensions.dart';
+import '../util/extensions/api.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
 import '../widgets/save_post_button.dart';
