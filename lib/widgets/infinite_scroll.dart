@@ -3,11 +3,27 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/ref.dart';
 
+class InfiniteScrollController {
+  Function() clear;
+
+  InfiniteScrollController() {
+    usedBeforeCreation() => throw Exception(
+        'Tried to use $runtimeType before it being initialized');
+
+    clear = usedBeforeCreation;
+  }
+
+  void dispose() {
+    clear = null;
+  }
+}
+
 class InfiniteScroll<T> extends HookWidget {
   final int batchSize;
   final Widget loadingWidget;
   final Widget Function(T data) builder;
   final Future<List<T>> Function(int page, int batchSize) fetchMore;
+  final InfiniteScrollController controller;
 
   InfiniteScroll({
     this.batchSize = 10,
@@ -15,15 +31,27 @@ class InfiniteScroll<T> extends HookWidget {
         const ListTile(title: Center(child: CircularProgressIndicator())),
     this.builder,
     this.fetchMore,
+    this.controller,
   })  : assert(builder != null),
-        assert(fetchMore != null);
+        assert(fetchMore != null),
+        assert(batchSize > 0);
 
   @override
   Widget build(BuildContext context) {
-    final page = useState(1);
     final data = useState<List<T>>([]);
     final hasMore = useRef(true);
     final isFetching = useRef(false);
+
+    useEffect(() {
+      if (controller != null) {
+        controller.clear = () => data.value = [];
+        return controller.dispose;
+      }
+
+      return null;
+    }, []);
+
+    final page = data.value.length ~/ batchSize + 1;
 
     return ListView.builder(
       // +1 for the loading widget
@@ -39,14 +67,13 @@ class InfiniteScroll<T> extends HookWidget {
           // if it's already fetching more, skip
           if (!isFetching.current) {
             isFetching.current = true;
-            fetchMore(page.value, batchSize).then((value) {
+            fetchMore(page, batchSize).then((newData) {
               // if got less than the batchSize, mark the list as done
-              if (value.length < batchSize) {
+              if (newData.length < batchSize) {
                 hasMore.current = false;
               }
               // append new data and increment page count
-              data.value.addAll(value);
-              page.value++;
+              data.value = [...data.value, ...newData];
             }).whenComplete(() => isFetching.current = false);
           }
 
