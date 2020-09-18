@@ -10,7 +10,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
-import '../hooks/stores.dart';
+import '../hooks/logged_in_action.dart';
 import '../pages/full_post.dart';
 import '../url_launcher.dart';
 import '../util/api_extensions.dart';
@@ -441,18 +441,11 @@ class _Voting extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final myVote = useState(post.myVote ?? 0);
-    final store = useAccountsStore();
     final loading = useDelayedLoading(Duration(milliseconds: 500));
+    final loggedInAction = useLoggedInAction(post.instanceUrl);
 
-    vote(VoteType vote) async {
+    vote(VoteType vote, Jwt token) async {
       final api = LemmyApi(post.instanceUrl).v1;
-      final token = store.defaultTokenFor(post.instanceUrl);
-
-      if (token == null) {
-        Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text("can't vote if you ain't logged in")));
-        return;
-      }
 
       loading.start();
       try {
@@ -471,25 +464,27 @@ class _Voting extends HookWidget {
     return Row(
       children: [
         IconButton(
-          icon: Icon(
-            Icons.arrow_upward,
-            color: myVote.value == 1 ? theme.accentColor : null,
-          ),
-          onPressed: () =>
-              vote(myVote.value == 1 ? VoteType.none : VoteType.up),
-        ),
+            icon: Icon(
+              Icons.arrow_upward,
+              color: myVote.value == 1 ? theme.accentColor : null,
+            ),
+            onPressed: loggedInAction(
+              (token) =>
+                  vote(myVote.value == 1 ? VoteType.none : VoteType.up, token),
+            )),
         if (loading.loading)
           SizedBox(child: CircularProgressIndicator(), width: 20, height: 20)
         else
           Text(NumberFormat.compact().format(post.score + myVote.value)),
         IconButton(
-          icon: Icon(
-            Icons.arrow_downward,
-            color: myVote.value == -1 ? Colors.red : null,
-          ),
-          onPressed: () =>
-              vote(myVote.value == -1 ? VoteType.none : VoteType.down),
-        ),
+            icon: Icon(
+              Icons.arrow_downward,
+              color: myVote.value == -1 ? Colors.red : null,
+            ),
+            onPressed: loggedInAction(
+              (token) => vote(
+                  myVote.value == -1 ? VoteType.none : VoteType.down, token),
+            )),
       ],
     );
   }
