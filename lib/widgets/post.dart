@@ -52,10 +52,6 @@ class Post extends HookWidget {
 
   // == ACTIONS ==
 
-  void _savePost() {
-    print('SAVE POST');
-  }
-
   static void showMoreMenu(BuildContext context, PostView post) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
