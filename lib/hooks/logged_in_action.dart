@@ -6,14 +6,16 @@ import '../pages/settings.dart';
 import '../util/goto.dart';
 import 'stores.dart';
 
-Function(Function(Jwt token) action) useLoggedInAction(
-  String instanceUrl, [
+Function(
+  Function(Jwt token) action, [
   String message,
-]) {
+]) useLoggedInAction(
+  String instanceUrl,
+) {
   final context = useContext();
   final store = useAccountsStore();
 
-  return (Function(Jwt token) action) {
+  return (Function(Jwt token) action, [message]) {
     if (store.isAnonymousFor(instanceUrl)) {
       return () {
         Scaffold.of(context).showSnackBar(SnackBar(
