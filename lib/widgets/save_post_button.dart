@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmur/hooks/logged_in_action.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
-import '../hooks/stores.dart';
 import '../util/api_extensions.dart';
+
+// TODO: sync this button between post and fullpost. the same with voting
 
 class SavePostButton extends HookWidget {
   final PostView post;
@@ -16,17 +18,10 @@ class SavePostButton extends HookWidget {
     final isSaved = useState(post.saved ?? false);
     final savedIcon = isSaved.value ? Icons.bookmark : Icons.bookmark_border;
     final loading = useDelayedLoading(Duration(milliseconds: 500));
-    final accStore = useAccountsStore();
+    final loggedInAction = useLoggedInAction(post.instanceUrl);
 
-    savePost() async {
+    savePost(Jwt token) async {
       final api = LemmyApi(post.instanceUrl).v1;
-      final token = accStore.defaultTokenFor(post.instanceUrl);
-
-      if (token == null) {
-        Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text("can't save if you ain't logged in")));
-        return;
-      }
 
       loading.start();
       try {
@@ -42,7 +37,7 @@ class SavePostButton extends HookWidget {
 
     if (loading.loading) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
         child: SizedBox(
             width: 30,
             height: 30,
@@ -55,7 +50,7 @@ class SavePostButton extends HookWidget {
     return IconButton(
       tooltip: 'Save post',
       icon: Icon(savedIcon),
-      onPressed: loading.pending ? () {} : savePost,
+      onPressed: loggedInAction(loading.pending ? (_) {} : savePost),
     );
   }
 }
