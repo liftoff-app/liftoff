@@ -5,6 +5,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../hooks/stores.dart';
 import '../util/goto.dart';
+import 'add_account.dart';
+import 'add_instance.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
@@ -102,11 +104,8 @@ class AccountsConfigPage extends HookWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (_) =>
-                _AccountsConfigAddInstanceDialog(scaffoldKey: _scaffoldKey),
-          );
+          showCupertinoModalPopup(
+              context: context, builder: (_) => AddInstancePage());
         },
         child: Icon(Icons.add),
       ),
@@ -139,13 +138,9 @@ class AccountsConfigPage extends HookWidget {
                   leading: Icon(Icons.add),
                   title: Text('Add account'),
                   onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => _AccountsConfigAddAccountDialog(
-                        scaffoldKey: _scaffoldKey,
-                        instanceUrl: entry.key,
-                      ),
-                    );
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (_) => AddAccountPage(instanceUrl: entry.key));
                   },
                 ),
               ]
@@ -153,135 +148,6 @@ class AccountsConfigPage extends HookWidget {
           );
         },
       ),
-    );
-  }
-}
-
-class _AccountsConfigAddInstanceDialog extends HookWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
-
-  const _AccountsConfigAddInstanceDialog({@required this.scaffoldKey})
-      : assert(scaffoldKey != null);
-
-  @override
-  Widget build(BuildContext context) {
-    final instanceController = useTextEditingController();
-    useValueListenable(instanceController);
-    final accountsStore = useAccountsStore();
-
-    final loading = useState(false);
-
-    handleOnAdd() async {
-      try {
-        loading.value = true;
-        await accountsStore.addInstance(instanceController.text);
-        scaffoldKey.currentState.hideCurrentSnackBar();
-      } on Exception catch (err) {
-        scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(err.toString()),
-        ));
-      }
-      loading.value = false;
-      Navigator.of(context).pop();
-    }
-
-    return AlertDialog(
-      title: Text('Add instance'),
-      content: TextField(
-        autofocus: true,
-        controller: instanceController,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Instance url',
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('Cancel'),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        FlatButton(
-          child: !loading.value ? Text('Add') : CircularProgressIndicator(),
-          onPressed: instanceController.text.isEmpty ? null : handleOnAdd,
-        ),
-      ],
-    );
-  }
-}
-
-class _AccountsConfigAddAccountDialog extends HookWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
-  final String instanceUrl;
-
-  const _AccountsConfigAddAccountDialog(
-      {@required this.scaffoldKey, @required this.instanceUrl})
-      : assert(scaffoldKey != null),
-        assert(instanceUrl != null);
-
-  @override
-  Widget build(BuildContext context) {
-    final usernameController = useTextEditingController();
-    final passwordController = useTextEditingController();
-    useValueListenable(usernameController);
-    useValueListenable(passwordController);
-    final accountsStore = useAccountsStore();
-
-    final loading = useState(false);
-
-    handleOnAdd() async {
-      try {
-        loading.value = true;
-        await accountsStore.addAccount(
-          instanceUrl,
-          usernameController.text,
-          passwordController.text,
-        );
-      } on Exception catch (err) {
-        scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(err.toString()),
-        ));
-      }
-      loading.value = false;
-      Navigator.of(context).pop();
-    }
-
-    return AlertDialog(
-      title: Text('Add account'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            autofocus: true,
-            controller: usernameController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Username or email',
-            ),
-          ),
-          const SizedBox(height: 5),
-          TextField(
-            controller: passwordController,
-            obscureText: true,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Password',
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('Cancel'),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        FlatButton(
-          child: !loading.value ? Text('Add') : CircularProgressIndicator(),
-          onPressed:
-              usernameController.text.isEmpty || passwordController.text.isEmpty
-                  ? null
-                  : handleOnAdd,
-        ),
-      ],
     );
   }
 }
