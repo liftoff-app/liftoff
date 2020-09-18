@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmur/hooks/logged_in_action.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
+import '../hooks/logged_in_action.dart';
 import '../util/api_extensions.dart';
 
 // TODO: sync this button between post and fullpost. the same with voting
