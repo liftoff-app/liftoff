@@ -72,7 +72,7 @@ class InfiniteScroll<T> extends HookWidget {
               if (newData.length < batchSize) {
                 hasMore.current = false;
               }
-              // append new data and increment page count
+              // append new data
               data.value = [...data.value, ...newData];
             }).whenComplete(() => isFetching.current = false);
           }
