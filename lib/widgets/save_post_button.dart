@@ -53,6 +53,9 @@ class SavePostButton extends HookWidget {
     }
 
     return IconButton(
-        icon: Icon(savedIcon), onPressed: loading.pending ? () {} : savePost);
+      tooltip: 'Save post',
+      icon: Icon(savedIcon),
+      onPressed: loading.pending ? () {} : savePost,
+    );
   }
 }
