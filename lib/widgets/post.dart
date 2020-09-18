@@ -440,7 +440,7 @@ class _Voting extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final myVote = useState(post.myVote ?? 0);
+    final myVote = useState(post.myVote ?? VoteType.none);
     final loading = useDelayedLoading(Duration(milliseconds: 500));
     final loggedInAction = useLoggedInAction(post.instanceUrl);
 
@@ -466,24 +466,28 @@ class _Voting extends HookWidget {
         IconButton(
             icon: Icon(
               Icons.arrow_upward,
-              color: myVote.value == 1 ? theme.accentColor : null,
+              color: myVote.value == VoteType.up ? theme.accentColor : null,
             ),
             onPressed: loggedInAction(
-              (token) =>
-                  vote(myVote.value == 1 ? VoteType.none : VoteType.up, token),
+              (token) => vote(
+                myVote.value == VoteType.up ? VoteType.none : VoteType.up,
+                token,
+              ),
             )),
         if (loading.loading)
           SizedBox(child: CircularProgressIndicator(), width: 20, height: 20)
         else
-          Text(NumberFormat.compact().format(post.score + myVote.value)),
+          Text(NumberFormat.compact().format(post.score + myVote.value.value)),
         IconButton(
             icon: Icon(
               Icons.arrow_downward,
-              color: myVote.value == -1 ? Colors.red : null,
+              color: myVote.value == VoteType.down ? Colors.red : null,
             ),
             onPressed: loggedInAction(
               (token) => vote(
-                  myVote.value == -1 ? VoteType.none : VoteType.down, token),
+                myVote.value == VoteType.down ? VoteType.none : VoteType.down,
+                token,
+              ),
             )),
       ],
     );
