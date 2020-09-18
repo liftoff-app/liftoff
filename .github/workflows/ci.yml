@@ -29,6 +29,9 @@ jobs:
       - name: Run lints
         run: flutter analyze
 
+      - name: Run dartfmt
+        run: dartfmt --dry-run --set-exit-if-changed .
+
       - name: Run tests
         run: flutter test
 
