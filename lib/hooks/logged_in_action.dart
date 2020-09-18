@@ -17,7 +17,7 @@ Function(Function(Jwt token) action) useLoggedInAction(
     if (store.isAnonymousFor(instanceUrl)) {
       return () {
         Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(message ?? 'you gotta be logged in to do that'),
+          content: Text(message ?? 'you ough be logged in to do that'),
           action: SnackBarAction(
               label: 'log in',
               onPressed: () => goTo(context, (_) => AccountsConfigPage())),
