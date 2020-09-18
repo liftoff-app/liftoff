@@ -3,11 +3,14 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../hooks/delayed_loading.dart';
+import '../hooks/logged_in_action.dart';
 import '../pages/full_post.dart';
 import '../url_launcher.dart';
 import '../util/api_extensions.dart';
@@ -15,6 +18,7 @@ import '../util/goto.dart';
 import 'bottom_modal.dart';
 import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
+import 'save_post_button.dart';
 
 enum MediaType {
   image,
@@ -39,7 +43,7 @@ MediaType whatType(String url) {
   return MediaType.other;
 }
 
-class Post extends StatelessWidget {
+class Post extends HookWidget {
   final PostView post;
   final String instanceUrl;
   final bool fullPost;
@@ -47,18 +51,6 @@ class Post extends StatelessWidget {
   Post(this.post, {this.fullPost = false}) : instanceUrl = post.instanceUrl;
 
   // == ACTIONS ==
-
-  void _savePost() {
-    print('SAVE POST');
-  }
-
-  void _upvotePost() {
-    print('UPVOTE POST');
-  }
-
-  void _downvotePost() {
-    print('DOWNVOTE POST');
-  }
 
   static void showMoreMenu(BuildContext context, PostView post) {
     showModalBottomSheet(
@@ -156,7 +148,6 @@ class Post extends StatelessWidget {
       return url;
     }();
 
-    // TODO: add NSFW, locked, removed, deleted, stickied
     /// assemble info section
     Widget info() => Column(children: [
           Padding(
@@ -402,17 +393,8 @@ class Post extends StatelessWidget {
                     icon: Icon(Icons.share),
                     onPressed: () => Share.text('Share post url', post.apId,
                         'text/plain')), // TODO: find a way to mark it as url
-              if (!fullPost)
-                IconButton(
-                    icon: post.saved == true
-                        ? Icon(Icons.bookmark)
-                        : Icon(Icons.bookmark_border),
-                    onPressed: _savePost),
-              IconButton(
-                  icon: Icon(Icons.arrow_upward), onPressed: _upvotePost),
-              Text(NumberFormat.compact().format(post.score)),
-              IconButton(
-                  icon: Icon(Icons.arrow_downward), onPressed: _downvotePost),
+              if (!fullPost) SavePostButton(post),
+              _Voting(post),
             ],
           ),
         );
@@ -446,6 +428,68 @@ class Post extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Voting extends HookWidget {
+  final PostView post;
+
+  _Voting(this.post);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final myVote = useState(post.myVote ?? VoteType.none);
+    final loading = useDelayedLoading(Duration(milliseconds: 500));
+    final loggedInAction = useLoggedInAction(post.instanceUrl);
+
+    vote(VoteType vote, Jwt token) async {
+      final api = LemmyApi(post.instanceUrl).v1;
+
+      loading.start();
+      try {
+        final res = await api.createPostLike(
+            postId: post.id, score: vote, auth: token.raw);
+        myVote.value = res.myVote;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('voting failed :(')));
+        return;
+      }
+      loading.cancel();
+    }
+
+    return Row(
+      children: [
+        IconButton(
+            icon: Icon(
+              Icons.arrow_upward,
+              color: myVote.value == VoteType.up ? theme.accentColor : null,
+            ),
+            onPressed: loggedInAction(
+              (token) => vote(
+                myVote.value == VoteType.up ? VoteType.none : VoteType.up,
+                token,
+              ),
+            )),
+        if (loading.loading)
+          SizedBox(child: CircularProgressIndicator(), width: 20, height: 20)
+        else
+          Text(NumberFormat.compact().format(post.score + myVote.value.value)),
+        IconButton(
+            icon: Icon(
+              Icons.arrow_downward,
+              color: myVote.value == VoteType.down ? Colors.red : null,
+            ),
+            onPressed: loggedInAction(
+              (token) => vote(
+                myVote.value == VoteType.down ? VoteType.none : VoteType.down,
+                token,
+              ),
+            )),
+      ],
     );
   }
 }

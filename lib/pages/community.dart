@@ -8,6 +8,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
+import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/api_extensions.dart';
@@ -533,28 +534,20 @@ class _FollowButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     final isSubbed = useState(community.subscribed ?? false);
-
-    final token = useAccountsStore().defaultTokenFor(community.instanceUrl);
-
     final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+    final loggedInAction = useLoggedInAction(community.instanceUrl);
 
     final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
 
-    subscribe() async {
-      if (token == null) {
-        Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text("can't sub when you're not logged in")));
-        return;
-      }
-
+    subscribe(Jwt token) async {
       delayed.start();
-
       try {
         await LemmyApi(community.instanceUrl).v1.followCommunity(
             communityId: community.id,
             follow: !isSubbed.value,
-            auth: token?.raw);
+            auth: token.raw);
         isSubbed.value = !isSubbed.value;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
@@ -590,7 +583,7 @@ class _FollowButton extends HookWidget {
               )
             : RaisedButton.icon(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                onPressed: delayed.pending ? () {} : subscribe,
+                onPressed: loggedInAction(delayed.pending ? (_) {} : subscribe),
                 icon: isSubbed.value
                     ? Icon(Icons.remove, size: 18, color: colorOnTopOfAccent)
                     : Icon(Icons.add, size: 18, color: colorOnTopOfAccent),
