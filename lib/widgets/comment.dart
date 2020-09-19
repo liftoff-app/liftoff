@@ -9,6 +9,8 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../comment_tree.dart';
+import '../hooks/delayed_loading.dart';
+import '../hooks/logged_in_action.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
@@ -96,7 +98,6 @@ class Comment extends HookWidget {
     final showRaw = useState(false);
 
     final comment = commentTree.comment;
-    final saved = comment.saved ?? false;
 
     void _openMoreMenu(BuildContext context) {
       pop() => Navigator.of(context).pop();
@@ -155,10 +156,6 @@ class Comment extends HookWidget {
           ),
         ),
       );
-    }
-
-    void _save(bool save) {
-      print('SAVE COMMENT, $save');
     }
 
     void _reply() {
@@ -223,11 +220,7 @@ class Comment extends HookWidget {
         onPressed: () => _openMoreMenu(context),
         tooltip: 'more',
       ),
-      _CommentAction(
-        icon: saved ? Icons.bookmark : Icons.bookmark_border,
-        onPressed: () => _save(!saved),
-        tooltip: '${saved ? 'unsave' : 'save'} comment',
-      ),
+      _SaveComment(commentTree.comment),
       _CommentAction(
         icon: Icons.reply,
         onPressed: _reply,
@@ -325,6 +318,42 @@ class Comment extends HookWidget {
   }
 }
 
+class _SaveComment extends HookWidget {
+  final CommentView comment;
+
+  _SaveComment(this.comment);
+
+  @override
+  Widget build(BuildContext context) {
+    final loggedInAction = useLoggedInAction(comment.instanceUrl);
+    final isSaved = useState(comment.saved ?? false);
+    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+
+    handleSave(Jwt token) async {
+      final api = LemmyApi(comment.instanceUrl).v1;
+
+      delayed.start();
+      try {
+        final res = await api.saveComment(
+            commentId: comment.id, save: !isSaved.value, auth: token.raw);
+        isSaved.value = res.saved;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('saving failed :(')));
+      }
+      delayed.cancel();
+    }
+
+    return _CommentAction(
+      loading: delayed.loading,
+      icon: isSaved.value ? Icons.bookmark : Icons.bookmark_border,
+      onPressed: loggedInAction(delayed.pending ? (_) {} : handleSave),
+      tooltip: '${isSaved.value ? 'unsave' : 'save'} comment',
+    );
+  }
+}
+
 class _CommentTag extends StatelessWidget {
   final String text;
   final Color bgColor;
@@ -354,9 +383,11 @@ class _CommentAction extends StatelessWidget {
   final IconData icon;
   final void Function() onPressed;
   final String tooltip;
+  final bool loading;
 
   const _CommentAction({
     Key key,
+    this.loading = false,
     @required this.icon,
     @required this.onPressed,
     @required this.tooltip,
@@ -365,10 +396,12 @@ class _CommentAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
         constraints: BoxConstraints.tight(Size(32, 26)),
-        icon: Icon(
-          icon,
-          color: Theme.of(context).iconTheme.color.withAlpha(190),
-        ),
+        icon: loading
+            ? CircularProgressIndicator()
+            : Icon(
+                icon,
+                color: Theme.of(context).iconTheme.color.withAlpha(190),
+              ),
         splashRadius: 25,
         onPressed: onPressed,
         iconSize: 22,
