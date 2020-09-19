@@ -96,6 +96,7 @@ class Comment extends HookWidget {
   Widget build(BuildContext context) {
     final selectable = useState(false);
     final showRaw = useState(false);
+    final collapsed = useState(false);
 
     final comment = commentTree.comment;
 
@@ -185,11 +186,25 @@ class Comment extends HookWidget {
         ));
       } else if (comment.removed) {
         return Flexible(
+          child: Text(
+            'comment deleted by moderator',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        );
+      } else if (collapsed.value) {
+        return Flexible(
+          child: Opacity(
+            opacity: 0.3,
             child: Text(
-          'comment deleted by moderator',
-          style: TextStyle(fontStyle: FontStyle.italic),
-        ));
+              commentTree.comment.content,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        );
       } else {
+        // TODO: bug, the text is selectable even when disabled after following these steps:
+        // make selectable > show raw > show fancy > make unselectable
         return Flexible(
             child: showRaw.value
                 ? selectable.value
@@ -203,117 +218,123 @@ class Comment extends HookWidget {
       }
     }();
 
-    final actions = Row(children: [
-      if (selectable.value && !comment.deleted && !comment.removed)
-        _CommentAction(
-            icon: Icons.content_copy,
-            tooltip: 'copy',
-            onPressed: () {
-              Clipboard.setData(
-                      ClipboardData(text: commentTree.comment.content))
-                  .then((_) => Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('comment copied to clipboard'))));
-            }),
-      Spacer(),
-      _CommentAction(
-        icon: Icons.more_horiz,
-        onPressed: () => _openMoreMenu(context),
-        tooltip: 'more',
-      ),
-      _SaveComment(commentTree.comment),
-      _CommentAction(
-        icon: Icons.reply,
-        onPressed: _reply,
-        tooltip: 'reply',
-      ),
-      _CommentAction(
-        icon: Icons.arrow_upward,
-        onPressed: () => _vote(VoteType.up),
-        tooltip: 'upvote',
-      ),
-      _CommentAction(
-        icon: Icons.arrow_downward,
-        onPressed: () => _vote(VoteType.down),
-        tooltip: 'downvote',
-      ),
-    ]);
+    final actions = collapsed.value
+        ? Container()
+        : Row(children: [
+            if (selectable.value && !comment.deleted && !comment.removed)
+              _CommentAction(
+                  icon: Icons.content_copy,
+                  tooltip: 'copy',
+                  onPressed: () {
+                    Clipboard.setData(
+                            ClipboardData(text: commentTree.comment.content))
+                        .then((_) => Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('comment copied to clipboard'))));
+                  }),
+            Spacer(),
+            _CommentAction(
+              icon: Icons.more_horiz,
+              onPressed: () => _openMoreMenu(context),
+              tooltip: 'more',
+            ),
+            _SaveComment(commentTree.comment),
+            _CommentAction(
+              icon: Icons.reply,
+              onPressed: _reply,
+              tooltip: 'reply',
+            ),
+            _CommentAction(
+              icon: Icons.arrow_upward,
+              onPressed: () => _vote(VoteType.up),
+              tooltip: 'upvote',
+            ),
+            _CommentAction(
+              icon: Icons.arrow_downward,
+              onPressed: () => _vote(VoteType.down),
+              tooltip: 'downvote',
+            ),
+          ]);
 
-    return Column(
-      children: [
-        Container(
-          child: Column(
-            children: [
-              Row(children: [
-                if (comment.creatorAvatar != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: InkWell(
-                      onTap: () => goToUser.byId(
-                          context, comment.instanceUrl, comment.creatorId),
-                      child: CachedNetworkImage(
-                        imageUrl: comment.creatorAvatar,
-                        height: 20,
-                        width: 20,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: imageProvider,
+    return GestureDetector(
+      onLongPress: () => collapsed.value = !collapsed.value,
+      child: Column(
+        children: [
+          Container(
+            child: Column(
+              children: [
+                Row(children: [
+                  if (comment.creatorAvatar != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: InkWell(
+                        onTap: () => goToUser.byId(
+                            context, comment.instanceUrl, comment.creatorId),
+                        child: CachedNetworkImage(
+                          imageUrl: comment.creatorAvatar,
+                          height: 20,
+                          width: 20,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageProvider,
+                              ),
                             ),
                           ),
+                          errorWidget: (_, __, ___) => Container(),
                         ),
-                        errorWidget: (_, __, ___) => Container(),
                       ),
                     ),
+                  InkWell(
+                    child: Text(username,
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                        )),
+                    onTap: () => goToUser.byId(
+                        context, comment.instanceUrl, comment.creatorId),
                   ),
-                InkWell(
-                  child: Text(username,
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      )),
-                  onTap: () => goToUser.byId(
-                      context, comment.instanceUrl, comment.creatorId),
-                ),
-                if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
-                if (comment.banned) _CommentTag('BANNED', Colors.red),
-                if (comment.bannedFromCommunity)
-                  _CommentTag('BANNED FROM COMMUNITY', Colors.red),
-                Spacer(),
-                InkWell(
-                  onTap: () => _showCommentInfo(context),
-                  child: Row(
-                    children: [
-                      Text(comment.score.toString()),
-                      Text(' · '),
-                      Text(timeago.format(comment.published)),
-                    ],
-                  ),
-                )
-              ]),
-              SizedBox(height: 10),
-              Row(children: [body]),
-              SizedBox(height: 5),
-              actions,
-            ],
+                  if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
+                  if (comment.banned) _CommentTag('BANNED', Colors.red),
+                  if (comment.bannedFromCommunity)
+                    _CommentTag('BANNED FROM COMMUNITY', Colors.red),
+                  Spacer(),
+                  InkWell(
+                    onTap: () => _showCommentInfo(context),
+                    child: Row(
+                      children: [
+                        Text(comment.score.toString()),
+                        Text(' · '),
+                        Text(timeago.format(comment.published)),
+                      ],
+                    ),
+                  )
+                ]),
+                SizedBox(height: 10),
+                Row(children: [body]),
+                SizedBox(height: 5),
+                actions,
+              ],
+            ),
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.only(left: indent > 1 ? (indent - 1) * 5.0 : 0),
+            decoration: BoxDecoration(
+                border: Border(
+                    left: indent > 0
+                        ? BorderSide(
+                            color: colors[indent % colors.length], width: 5)
+                        : BorderSide.none,
+                    top: BorderSide(width: 0.2))),
           ),
-          padding: EdgeInsets.all(10),
-          margin: EdgeInsets.only(left: indent > 1 ? (indent - 1) * 5.0 : 0),
-          decoration: BoxDecoration(
-              border: Border(
-                  left: indent > 0
-                      ? BorderSide(
-                          color: colors[indent % colors.length], width: 5)
-                      : BorderSide.none,
-                  top: BorderSide(width: 0.2))),
-        ),
-        for (final c in commentTree.children)
-          Comment(
-            c,
-            indent: indent + 1,
-            postCreatorId: postCreatorId,
-          ),
-      ],
+          if (!collapsed.value)
+            for (final c in commentTree.children)
+              Comment(
+                c,
+                indent: indent + 1,
+                postCreatorId: postCreatorId,
+              ),
+        ],
+      ),
     );
   }
 }
