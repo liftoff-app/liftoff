@@ -338,10 +338,13 @@ class Comment extends HookWidget {
                     onTap: () => _showCommentInfo(context),
                     child: Row(
                       children: [
-                        delayedVoting.loading
-                            ? CircularProgressIndicator()
-                            : Text(compactNumber(
-                                comment.score + myVote.value.value)),
+                        if (delayedVoting.loading)
+                          SizedBox.fromSize(
+                              size: Size.square(16),
+                              child: CircularProgressIndicator())
+                        else
+                          Text(compactNumber(
+                              comment.score + myVote.value.value)),
                         Text(' · '),
                         Text(timeago.format(comment.published)),
                       ],
@@ -458,7 +461,8 @@ class _CommentAction extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
         constraints: BoxConstraints.tight(Size(32, 26)),
         icon: loading
-            ? CircularProgressIndicator()
+            ? SizedBox.fromSize(
+                size: Size.square(22), child: CircularProgressIndicator())
             : Icon(
                 icon,
                 color: iconColor ??
