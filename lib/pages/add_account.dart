@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
 import '../widgets/bottom_modal.dart';
+import '../widgets/fullscreenable_image.dart';
 import 'add_instance.dart';
 
 class AddAccountPage extends HookWidget {
@@ -25,6 +28,11 @@ class AddAccountPage extends HookWidget {
 
     final loading = useState(false);
     final selectedInstance = useState(instanceUrl);
+    final icon = useState<String>(null);
+    useMemoized(() async {
+      final site = await LemmyApi(selectedInstance.value).v1.getSite();
+      icon.value = site.site.icon;
+    });
 
     selectInstance() async {
       final val = await showModalBottomSheet<String>(
@@ -62,6 +70,8 @@ class AddAccountPage extends HookWidget {
       );
       if (val != null) {
         selectedInstance.value = val;
+        final site = await LemmyApi(val).v1.getSite();
+        icon.value = site.site.icon;
       }
     }
 
@@ -118,7 +128,19 @@ class AddAccountPage extends HookWidget {
         padding: const EdgeInsets.all(15),
         child: ListView(
           children: [
-            SizedBox(height: 150),
+            if (icon.value == null)
+              SizedBox(height: 150)
+            else
+              SizedBox(
+                height: 150,
+                child: FullscreenableImage(
+                  url: icon.value,
+                  child: CachedNetworkImage(
+                    imageUrl: icon.value,
+                    errorWidget: (_, __, ___) => Container(),
+                  ),
+                ),
+              ),
             FlatButton(
               onPressed: selectInstance,
               child: Row(
