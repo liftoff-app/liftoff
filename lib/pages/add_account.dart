@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmur/hooks/stores.dart';
-import 'package:lemmur/pages/add_instance.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../hooks/stores.dart';
 import '../widgets/bottom_modal.dart';
+import 'add_instance.dart';
 
 class AddAccountPage extends HookWidget {
   final String instanceUrl;
@@ -87,9 +88,31 @@ class AddAccountPage extends HookWidget {
         actionsIconTheme: theme.iconTheme,
         iconTheme: theme.iconTheme,
         textTheme: theme.textTheme,
+        brightness: theme.brightness,
+        centerTitle: true,
         title: Text('Add account'),
         backgroundColor: theme.canvasColor,
         shadowColor: Colors.transparent,
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0,
+        child: SafeArea(
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text('Cancel'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -113,52 +136,65 @@ class AddAccountPage extends HookWidget {
               autofocus: true,
               controller: usernameController,
               decoration: InputDecoration(
+                isDense: true,
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(13),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 labelText: 'Username or email',
               ),
-              // shape: RoundedRectangleBorder(
-              //   borderRadius: BorderRadius.circular(10),
-              // ),
             ),
             const SizedBox(height: 5),
             TextField(
               controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
+                isDense: true,
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(13),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 labelText: 'Password',
               ),
             ),
-            Row(
-              // mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text('Cancel'),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                Spacer(),
-                RaisedButton(
-                  color: theme.accentColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: !loading.value
-                      ? Text('Add')
-                      : CircularProgressIndicator(),
-                  onPressed: usernameController.text.isEmpty ||
-                          passwordController.text.isEmpty
-                      ? null
-                      : handleOnAdd,
-                ),
-              ],
-            )
+            RaisedButton(
+              color: theme.accentColor,
+              padding: EdgeInsets.all(0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: !loading.value
+                  ? Text('Sign in')
+                  : CircularProgressIndicator(),
+              onPressed: usernameController.text.isEmpty ||
+                      passwordController.text.isEmpty
+                  ? null
+                  : handleOnAdd,
+            ),
+            FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text('Register'),
+              onPressed: () {
+                ul.launch('https://$instanceUrl/login');
+              },
+            ),
+            // Row(
+            //   // mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     FlatButton(
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //       ),
+            //       child: Text('Cancel'),
+            //       onPressed: () => Navigator.of(context).pop(),
+            //     ),
+            //     Spacer(),
+            //   ],
+            // )
           ],
         ),
       ),

@@ -31,47 +31,81 @@ class AddInstancePage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
+        brightness: theme.brightness,
         shadowColor: Colors.transparent,
         iconTheme: theme.iconTheme,
+        centerTitle: true,
         leading: CloseButton(),
         actionsIconTheme: theme.iconTheme,
         textTheme: theme.textTheme,
         title: Text('Add instance'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: ListView(
-          children: [
-            if (false)
-              CachedNetworkImage(height: 150, width: 150)
-            else
-              SizedBox(height: 150),
-            TextField(
-              autofocus: true,
-              controller: instanceController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'instance url',
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                FlatButton(
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0,
+        child: SafeArea(
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Text('Cancel'),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
-                Spacer(),
-                RaisedButton(
-                  child: !loading.value
-                      ? Text('Add')
-                      : CircularProgressIndicator(),
-                  onPressed:
-                      instanceController.text.isEmpty ? null : handleOnAdd,
-                ),
-              ],
-            )
-          ],
+              ),
+            ],
+          ),
         ),
+      ),
+      body: ListView(
+        children: [
+          if (false)
+            CachedNetworkImage(height: 150, width: 150)
+          else
+            SizedBox(height: 150),
+          SizedBox(
+            height: 40,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                autofocus: true,
+                controller: instanceController,
+                decoration: InputDecoration(
+                  isDense: true,
+                  // contentPadding:
+                  //     EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  labelText: 'instance url',
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: SizedBox(
+              height: 40,
+              child: RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:
+                    !loading.value ? Text('Add') : CircularProgressIndicator(),
+                onPressed: instanceController.text.isEmpty ? null : handleOnAdd,
+              ),
+            ),
+          ),
+          // Row(
+          //   children: <Widget>[
+          //     Spacer(),
+          //   ],
+          // )
+        ],
       ),
     );
   }

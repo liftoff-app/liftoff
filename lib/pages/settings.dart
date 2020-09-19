@@ -15,6 +15,7 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        brightness: theme.brightness,
         backgroundColor: theme.scaffoldBackgroundColor,
         shadowColor: Colors.transparent,
         iconTheme: theme.iconTheme,
@@ -53,6 +54,7 @@ class AppearanceConfigPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
+        brightness: theme.brightness,
         backgroundColor: theme.scaffoldBackgroundColor,
         shadowColor: Colors.transparent,
         iconTheme: theme.iconTheme,
@@ -120,6 +122,7 @@ class AccountsConfigPage extends HookWidget {
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
+        brightness: theme.brightness,
         shadowColor: Colors.transparent,
         iconTheme: theme.iconTheme,
         title: Text('Accounts', style: theme.textTheme.headline6),
