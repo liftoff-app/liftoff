@@ -75,8 +75,6 @@ class AddInstancePage extends HookWidget {
                 controller: instanceController,
                 decoration: InputDecoration(
                   isDense: true,
-                  // contentPadding:
-                  //     EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -100,11 +98,6 @@ class AddInstancePage extends HookWidget {
               ),
             ),
           ),
-          // Row(
-          //   children: <Widget>[
-          //     Spacer(),
-          //   ],
-          // )
         ],
       ),
     );
