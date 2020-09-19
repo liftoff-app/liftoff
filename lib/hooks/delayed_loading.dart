@@ -22,7 +22,8 @@ class DelayedLoading {
 /// When loading is [.start()]ed, it goes into a pending state
 /// and loading is triggered after [delayDuration].
 /// Everything can be reset with [.cancel()]
-DelayedLoading useDelayedLoading(Duration delayDuration) {
+DelayedLoading useDelayedLoading(
+    [Duration delayDuration = const Duration(milliseconds: 500)]) {
   final loading = useState(false);
   final pending = useState(false);
   final timerHandle = useRef<Timer>(null);
