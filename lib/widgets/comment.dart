@@ -329,6 +329,11 @@ class Comment extends HookWidget {
                   if (comment.bannedFromCommunity)
                     _CommentTag('BANNED FROM COMMUNITY', Colors.red),
                   Spacer(),
+                  if (collapsed.value && commentTree.children.length > 0) ...[
+                    _CommentTag('+${commentTree.children.length}',
+                        Theme.of(context).accentColor),
+                    SizedBox(width: 7),
+                  ],
                   InkWell(
                     onTap: () => _showCommentInfo(context),
                     child: Row(
