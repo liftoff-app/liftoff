@@ -88,8 +88,13 @@ class AddInstancePage extends HookWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child:
-                    !loading.value ? Text('Add') : CircularProgressIndicator(),
+                child: !loading.value
+                    ? Text('Add')
+                    : SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(),
+                      ),
                 onPressed: instanceController.text.isEmpty ? null : handleOnAdd,
               ),
             ),
