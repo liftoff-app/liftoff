@@ -7,6 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'hooks/stores.dart';
+import 'pages/communities_tab.dart';
 import 'pages/profile_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
@@ -68,9 +69,22 @@ class MyApp extends HookWidget {
 }
 
 class MyHomePage extends HookWidget {
+  final List<Widget> pages = [
+    Center(child: Text('home')), // TODO: home tab
+    CommunitiesTab(),
+    Center(child: Text('search')), // TODO: search tab
+    UserProfileTab(),
+  ];
+
+  // TODO: does this even work? the state seems to be popped
+  // for example: go to user tab, wait for it to load,
+  // go to a different tab, go back, the data is loading again
+  final PageStorageBucket pageStorageBucket = PageStorageBucket();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final currentTab = useState(0);
 
     useEffect(() {
       Future.microtask(
@@ -82,6 +96,45 @@ class MyHomePage extends HookWidget {
       return null;
     }, [theme.scaffoldBackgroundColor]);
 
-    return UserProfileTab();
+    var tabCounter = 0;
+
+    tabButton(IconData icon) {
+      final tabNum = tabCounter++;
+
+      return IconButton(
+        icon: Icon(icon),
+        color: tabNum == currentTab.value ? theme.accentColor : null,
+        onPressed: () => currentTab.value = tabNum,
+      );
+    }
+
+    return Scaffold(
+      body: PageStorage(
+        bucket: pageStorageBucket,
+        child: pages[currentTab.value],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {}, // TODO: create post
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              tabButton(Icons.home),
+              tabButton(Icons.list),
+              Container(),
+              Container(),
+              tabButton(Icons.search),
+              tabButton(Icons.person),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
