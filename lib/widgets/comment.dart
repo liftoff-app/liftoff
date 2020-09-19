@@ -222,8 +222,9 @@ class Comment extends HookWidget {
           ),
         );
       } else {
-        // TODO: bug, the text is selectable even when disabled after following these steps:
-        // make selectable > show raw > show fancy > make unselectable
+        // TODO: bug, the text is selectable even when disabled after following
+        //       these steps:
+        //       make selectable > show raw > show fancy > make unselectable
         return Flexible(
             child: showRaw.value
                 ? selectable.value
