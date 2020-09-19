@@ -207,7 +207,7 @@ class Comment extends HookWidget {
     }();
 
     final actions = Row(children: [
-      if (selectable.value)
+      if (selectable.value && !comment.deleted && !comment.removed)
         _CommentAction(
             icon: Icons.content_copy,
             tooltip: 'copy',
