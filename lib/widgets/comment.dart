@@ -13,6 +13,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'bottom_modal.dart';
 import 'markdown_text.dart';
@@ -94,9 +95,13 @@ class Comment extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final selectable = useState(false);
     final showRaw = useState(false);
     final collapsed = useState(false);
+    final myVote = useState(commentTree.comment.myVote ?? VoteType.none);
+    final delayedVoting = useDelayedLoading();
+    final loggedInAction = useLoggedInAction(commentTree.comment.instanceUrl);
 
     final comment = commentTree.comment;
 
@@ -163,8 +168,21 @@ class Comment extends HookWidget {
       print('OPEN REPLY BOX');
     }
 
-    void _vote(VoteType vote) {
-      print('COMMENT VOTE: ${vote.toString()}');
+    vote(VoteType vote, Jwt token) async {
+      final api = LemmyApi(token.payload.iss).v1;
+
+      delayedVoting.start();
+      try {
+        final res = await api.createCommentLike(
+            commentId: comment.id, score: vote, auth: token.raw);
+        myVote.value = res.myVote;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('voting failed :(')));
+        return;
+      }
+      delayedVoting.cancel();
     }
 
     // decide which username to use
@@ -180,10 +198,11 @@ class Comment extends HookWidget {
     final body = () {
       if (comment.deleted) {
         return Flexible(
-            child: Text(
-          'comment deleted by creator',
-          style: TextStyle(fontStyle: FontStyle.italic),
-        ));
+          child: Text(
+            'comment deleted by creator',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        );
       } else if (comment.removed) {
         return Flexible(
           child: Text(
@@ -245,12 +264,22 @@ class Comment extends HookWidget {
             ),
             _CommentAction(
               icon: Icons.arrow_upward,
-              onPressed: () => _vote(VoteType.up),
+              iconColor: myVote.value == VoteType.up ? theme.accentColor : null,
+              onPressed: loggedInAction((token) => vote(
+                    myVote.value == VoteType.up ? VoteType.none : VoteType.up,
+                    token,
+                  )),
               tooltip: 'upvote',
             ),
             _CommentAction(
               icon: Icons.arrow_downward,
-              onPressed: () => _vote(VoteType.down),
+              iconColor: myVote.value == VoteType.down ? Colors.red : null,
+              onPressed: loggedInAction(
+                (token) => vote(
+                  myVote.value == VoteType.down ? VoteType.none : VoteType.down,
+                  token,
+                ),
+              ),
               tooltip: 'downvote',
             ),
           ]);
@@ -303,7 +332,10 @@ class Comment extends HookWidget {
                     onTap: () => _showCommentInfo(context),
                     child: Row(
                       children: [
-                        Text(comment.score.toString()),
+                        delayedVoting.loading
+                            ? CircularProgressIndicator()
+                            : Text(compactNumber(
+                                comment.score + myVote.value.value)),
                         Text(' · '),
                         Text(timeago.format(comment.published)),
                       ],
@@ -405,10 +437,12 @@ class _CommentAction extends StatelessWidget {
   final void Function() onPressed;
   final String tooltip;
   final bool loading;
+  final Color iconColor;
 
   const _CommentAction({
     Key key,
     this.loading = false,
+    this.iconColor,
     @required this.icon,
     @required this.onPressed,
     @required this.tooltip,
@@ -421,7 +455,8 @@ class _CommentAction extends StatelessWidget {
             ? CircularProgressIndicator()
             : Icon(
                 icon,
-                color: Theme.of(context).iconTheme.color.withAlpha(190),
+                color: iconColor ??
+                    Theme.of(context).iconTheme.color.withAlpha(190),
               ),
         splashRadius: 25,
         onPressed: onPressed,
