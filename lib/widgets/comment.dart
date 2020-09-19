@@ -9,8 +9,11 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../comment_tree.dart';
+import '../hooks/delayed_loading.dart';
+import '../hooks/logged_in_action.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'bottom_modal.dart';
 import 'markdown_text.dart';
@@ -92,11 +95,15 @@ class Comment extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final selectable = useState(false);
     final showRaw = useState(false);
+    final collapsed = useState(false);
+    final myVote = useState(commentTree.comment.myVote ?? VoteType.none);
+    final delayedVoting = useDelayedLoading();
+    final loggedInAction = useLoggedInAction(commentTree.comment.instanceUrl);
 
     final comment = commentTree.comment;
-    final saved = comment.saved ?? false;
 
     void _openMoreMenu(BuildContext context) {
       pop() => Navigator.of(context).pop();
@@ -157,16 +164,25 @@ class Comment extends HookWidget {
       );
     }
 
-    void _save(bool save) {
-      print('SAVE COMMENT, $save');
-    }
-
     void _reply() {
       print('OPEN REPLY BOX');
     }
 
-    void _vote(VoteType vote) {
-      print('COMMENT VOTE: ${vote.toString()}');
+    vote(VoteType vote, Jwt token) async {
+      final api = LemmyApi(token.payload.iss).v1;
+
+      delayedVoting.start();
+      try {
+        final res = await api.createCommentLike(
+            commentId: comment.id, score: vote, auth: token.raw);
+        myVote.value = res.myVote;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('voting failed :(')));
+        return;
+      }
+      delayedVoting.cancel();
     }
 
     // decide which username to use
@@ -182,17 +198,33 @@ class Comment extends HookWidget {
     final body = () {
       if (comment.deleted) {
         return Flexible(
-            child: Text(
-          'comment deleted by creator',
-          style: TextStyle(fontStyle: FontStyle.italic),
-        ));
+          child: Text(
+            'comment deleted by creator',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        );
       } else if (comment.removed) {
         return Flexible(
+          child: Text(
+            'comment deleted by moderator',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        );
+      } else if (collapsed.value) {
+        return Flexible(
+          child: Opacity(
+            opacity: 0.3,
             child: Text(
-          'comment deleted by moderator',
-          style: TextStyle(fontStyle: FontStyle.italic),
-        ));
+              commentTree.comment.content,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        );
       } else {
+        // TODO: bug, the text is selectable even when disabled after following
+        //       these steps:
+        //       make selectable > show raw > show fancy > make unselectable
         return Flexible(
             child: showRaw.value
                 ? selectable.value
@@ -206,121 +238,180 @@ class Comment extends HookWidget {
       }
     }();
 
-    final actions = Row(children: [
-      if (selectable.value)
-        _CommentAction(
-            icon: Icons.content_copy,
-            tooltip: 'copy',
-            onPressed: () {
-              Clipboard.setData(
-                      ClipboardData(text: commentTree.comment.content))
-                  .then((_) => Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('comment copied to clipboard'))));
-            }),
-      Spacer(),
-      _CommentAction(
-        icon: Icons.more_horiz,
-        onPressed: () => _openMoreMenu(context),
-        tooltip: 'more',
-      ),
-      _CommentAction(
-        icon: saved ? Icons.bookmark : Icons.bookmark_border,
-        onPressed: () => _save(!saved),
-        tooltip: '${saved ? 'unsave' : 'save'} comment',
-      ),
-      _CommentAction(
-        icon: Icons.reply,
-        onPressed: _reply,
-        tooltip: 'reply',
-      ),
-      _CommentAction(
-        icon: Icons.arrow_upward,
-        onPressed: () => _vote(VoteType.up),
-        tooltip: 'upvote',
-      ),
-      _CommentAction(
-        icon: Icons.arrow_downward,
-        onPressed: () => _vote(VoteType.down),
-        tooltip: 'downvote',
-      ),
-    ]);
+    final actions = collapsed.value
+        ? Container()
+        : Row(children: [
+            if (selectable.value && !comment.deleted && !comment.removed)
+              _CommentAction(
+                  icon: Icons.content_copy,
+                  tooltip: 'copy',
+                  onPressed: () {
+                    Clipboard.setData(
+                            ClipboardData(text: commentTree.comment.content))
+                        .then((_) => Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('comment copied to clipboard'))));
+                  }),
+            Spacer(),
+            _CommentAction(
+              icon: Icons.more_horiz,
+              onPressed: () => _openMoreMenu(context),
+              tooltip: 'more',
+            ),
+            _SaveComment(commentTree.comment),
+            _CommentAction(
+              icon: Icons.reply,
+              onPressed: _reply,
+              tooltip: 'reply',
+            ),
+            _CommentAction(
+              icon: Icons.arrow_upward,
+              iconColor: myVote.value == VoteType.up ? theme.accentColor : null,
+              onPressed: loggedInAction((token) => vote(
+                    myVote.value == VoteType.up ? VoteType.none : VoteType.up,
+                    token,
+                  )),
+              tooltip: 'upvote',
+            ),
+            _CommentAction(
+              icon: Icons.arrow_downward,
+              iconColor: myVote.value == VoteType.down ? Colors.red : null,
+              onPressed: loggedInAction(
+                (token) => vote(
+                  myVote.value == VoteType.down ? VoteType.none : VoteType.down,
+                  token,
+                ),
+              ),
+              tooltip: 'downvote',
+            ),
+          ]);
 
-    return Column(
-      children: [
-        Container(
-          child: Column(
-            children: [
-              Row(children: [
-                if (comment.creatorAvatar != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: InkWell(
-                      onTap: () => goToUser.byId(
-                          context, comment.instanceUrl, comment.creatorId),
-                      child: CachedNetworkImage(
-                        imageUrl: comment.creatorAvatar,
-                        height: 20,
-                        width: 20,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: imageProvider,
+    return GestureDetector(
+      onLongPress: () => collapsed.value = !collapsed.value,
+      child: Column(
+        children: [
+          Container(
+            child: Column(
+              children: [
+                Row(children: [
+                  if (comment.creatorAvatar != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: InkWell(
+                        onTap: () => goToUser.byId(
+                            context, comment.instanceUrl, comment.creatorId),
+                        child: CachedNetworkImage(
+                          imageUrl: comment.creatorAvatar,
+                          height: 20,
+                          width: 20,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageProvider,
+                              ),
                             ),
                           ),
+                          errorWidget: (_, __, ___) => Container(),
                         ),
-                        errorWidget: (_, __, ___) => Container(),
                       ),
                     ),
+                  InkWell(
+                    child: Text(username,
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                        )),
+                    onTap: () => goToUser.byId(
+                        context, comment.instanceUrl, comment.creatorId),
                   ),
-                InkWell(
-                  child: Text(username,
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      )),
-                  onTap: () => goToUser.byId(
-                      context, comment.instanceUrl, comment.creatorId),
-                ),
-                if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
-                if (comment.banned) _CommentTag('BANNED', Colors.red),
-                if (comment.bannedFromCommunity)
-                  _CommentTag('BANNED FROM COMMUNITY', Colors.red),
-                Spacer(),
-                InkWell(
-                  onTap: () => _showCommentInfo(context),
-                  child: Row(
-                    children: [
-                      Text(comment.score.toString()),
-                      Text(' · '),
-                      Text(timeago.format(comment.published)),
-                    ],
-                  ),
-                )
-              ]),
-              SizedBox(height: 10),
-              Row(children: [body]),
-              SizedBox(height: 5),
-              actions,
-            ],
+                  if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
+                  if (comment.banned) _CommentTag('BANNED', Colors.red),
+                  if (comment.bannedFromCommunity)
+                    _CommentTag('BANNED FROM COMMUNITY', Colors.red),
+                  Spacer(),
+                  if (collapsed.value && commentTree.children.length > 0) ...[
+                    _CommentTag('+${commentTree.children.length}',
+                        Theme.of(context).accentColor),
+                    SizedBox(width: 7),
+                  ],
+                  InkWell(
+                    onTap: () => _showCommentInfo(context),
+                    child: Row(
+                      children: [
+                        if (delayedVoting.loading)
+                          SizedBox.fromSize(
+                              size: Size.square(16),
+                              child: CircularProgressIndicator())
+                        else
+                          Text(compactNumber(
+                              comment.score + myVote.value.value)),
+                        Text(' · '),
+                        Text(timeago.format(comment.published)),
+                      ],
+                    ),
+                  )
+                ]),
+                SizedBox(height: 10),
+                Row(children: [body]),
+                SizedBox(height: 5),
+                actions,
+              ],
+            ),
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.only(left: indent > 1 ? (indent - 1) * 5.0 : 0),
+            decoration: BoxDecoration(
+                border: Border(
+                    left: indent > 0
+                        ? BorderSide(
+                            color: colors[indent % colors.length], width: 5)
+                        : BorderSide.none,
+                    top: BorderSide(width: 0.2))),
           ),
-          padding: EdgeInsets.all(10),
-          margin: EdgeInsets.only(left: indent > 1 ? (indent - 1) * 5.0 : 0),
-          decoration: BoxDecoration(
-              border: Border(
-                  left: indent > 0
-                      ? BorderSide(
-                          color: colors[indent % colors.length], width: 5)
-                      : BorderSide.none,
-                  top: BorderSide(width: 0.2))),
-        ),
-        for (final c in commentTree.children)
-          Comment(
-            c,
-            indent: indent + 1,
-            postCreatorId: postCreatorId,
-          ),
-      ],
+          if (!collapsed.value)
+            for (final c in commentTree.children)
+              Comment(
+                c,
+                indent: indent + 1,
+                postCreatorId: postCreatorId,
+              ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SaveComment extends HookWidget {
+  final CommentView comment;
+
+  _SaveComment(this.comment);
+
+  @override
+  Widget build(BuildContext context) {
+    final loggedInAction = useLoggedInAction(comment.instanceUrl);
+    final isSaved = useState(comment.saved ?? false);
+    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+
+    handleSave(Jwt token) async {
+      final api = LemmyApi(comment.instanceUrl).v1;
+
+      delayed.start();
+      try {
+        final res = await api.saveComment(
+            commentId: comment.id, save: !isSaved.value, auth: token.raw);
+        isSaved.value = res.saved;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('saving failed :(')));
+      }
+      delayed.cancel();
+    }
+
+    return _CommentAction(
+      loading: delayed.loading,
+      icon: isSaved.value ? Icons.bookmark : Icons.bookmark_border,
+      onPressed: loggedInAction(delayed.pending ? (_) {} : handleSave),
+      tooltip: '${isSaved.value ? 'unsave' : 'save'} comment',
     );
   }
 }
@@ -354,9 +445,13 @@ class _CommentAction extends StatelessWidget {
   final IconData icon;
   final void Function() onPressed;
   final String tooltip;
+  final bool loading;
+  final Color iconColor;
 
   const _CommentAction({
     Key key,
+    this.loading = false,
+    this.iconColor,
     @required this.icon,
     @required this.onPressed,
     @required this.tooltip,
@@ -365,10 +460,14 @@ class _CommentAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
         constraints: BoxConstraints.tight(Size(32, 26)),
-        icon: Icon(
-          icon,
-          color: Theme.of(context).iconTheme.color.withAlpha(190),
-        ),
+        icon: loading
+            ? SizedBox.fromSize(
+                size: Size.square(22), child: CircularProgressIndicator())
+            : Icon(
+                icon,
+                color: iconColor ??
+                    Theme.of(context).iconTheme.color.withAlpha(190),
+              ),
         splashRadius: 25,
         onPressed: onPressed,
         iconSize: 22,
