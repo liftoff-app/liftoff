@@ -93,6 +93,29 @@ class AccountsConfigPage extends HookWidget {
     final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
+    deleteInstanceDialog(String instanceUrl) async {
+      if (await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Delete instance?'),
+              content: Text('Are you sure you want to remove $instanceUrl?'),
+              actions: [
+                FlatButton(
+                  child: Text('yes'),
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+                FlatButton(
+                  child: Text('no'),
+                  onPressed: () => Navigator.of(context).pop(false),
+                )
+              ],
+            ),
+          ) ??
+          false) {
+        print('delete $instanceUrl');
+      }
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -116,7 +139,13 @@ class AccountsConfigPage extends HookWidget {
           return ListView(
             children: [
               for (final entry in accountsStore.users.entries) ...[
-                _SectionHeading(entry.key),
+                SizedBox(height: 40),
+                ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.only(left: 0, top: 0),
+                  onLongPress: () => deleteInstanceDialog(entry.key),
+                  title: _SectionHeading(entry.key),
+                ),
                 for (final username in entry.value.keys) ...[
                   ListTile(
                     trailing:
@@ -163,7 +192,7 @@ class _SectionHeading extends StatelessWidget {
     return Padding(
       child: Text(text.toUpperCase(),
           style: theme.textTheme.subtitle2.copyWith(color: theme.accentColor)),
-      padding: EdgeInsets.only(left: 20, top: 40),
+      padding: EdgeInsets.only(left: 20, top: 0),
     );
   }
 }
