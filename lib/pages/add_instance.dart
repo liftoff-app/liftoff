@@ -15,39 +15,27 @@ class AddInstancePage extends HookWidget {
     final instanceController = useTextEditingController();
     useValueListenable(instanceController);
     final accountsStore = useAccountsStore();
-    final delayedLoading = useDelayedLoading(Duration(milliseconds: 1000));
+    final delayedLoading = useDelayedLoading(Duration(milliseconds: 500));
 
     final isSite = useState<bool>(null);
-    final input = useState('');
     final loading = useState(false);
     final icon = useState<String>(null);
-    final debounce = useDebounce((cancel) async {
-      if (instanceController.text.isNotEmpty) {
-        try {
-          icon.value =
-              (await LemmyApi(instanceController.text).v1.getSite()).site.icon;
-          isSite.value = true;
-        } catch (e) {
-          isSite.value = false;
-        }
-        cancel();
+    final debounce = useDebounce(() async {
+      if (instanceController.text.isEmpty) {
+        isSite.value = null;
+        return;
+      }
+
+      try {
+        icon.value =
+            (await LemmyApi(instanceController.text).v1.getSite()).site.icon;
+        isSite.value = true;
+      } catch (e) {
+        isSite.value = false;
       }
     });
 
-    onType() {
-      if (input.value != instanceController.text) {
-        isSite.value = null;
-        input.value = instanceController.text;
-        if (instanceController.text.isEmpty) {
-          debounce.reset();
-          debounce.cancel();
-        } else {
-          debounce.reset();
-        }
-      }
-    }
-
-    instanceController.addListener(onType);
+    instanceController.addListener(debounce);
 
     handleOnAdd() async {
       delayedLoading.start();
