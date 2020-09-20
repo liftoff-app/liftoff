@@ -1,7 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmy_api_client/lemmy_api_client.dart';
 
+import '../hooks/debounce.dart';
+import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
+import '../widgets/fullscreenable_image.dart';
 
 class AddInstancePage extends HookWidget {
   @override
@@ -10,10 +15,42 @@ class AddInstancePage extends HookWidget {
     final instanceController = useTextEditingController();
     useValueListenable(instanceController);
     final accountsStore = useAccountsStore();
+    final delayedLoading = useDelayedLoading(Duration(milliseconds: 1000));
 
+    final isSite = useState<bool>(null);
+    final input = useState('');
     final loading = useState(false);
+    final icon = useState<String>(null);
+    final debounce = useDebounce((cancel) async {
+      if (instanceController.text.isNotEmpty) {
+        try {
+          icon.value =
+              (await LemmyApi(instanceController.text).v1.getSite()).site.icon;
+          isSite.value = true;
+        } catch (e) {
+          isSite.value = false;
+        }
+        cancel();
+      }
+    });
+
+    onType() {
+      if (input.value != instanceController.text) {
+        isSite.value = null;
+        input.value = instanceController.text;
+        if (instanceController.text.isEmpty) {
+          debounce.reset();
+          debounce.cancel();
+        } else {
+          debounce.reset();
+        }
+      }
+    }
+
+    instanceController.addListener(onType);
 
     handleOnAdd() async {
+      delayedLoading.start();
       try {
         loading.value = true;
         await accountsStore.addInstance(instanceController.text);
@@ -22,7 +59,12 @@ class AddInstancePage extends HookWidget {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
+      } catch (err) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('UNKNOWN ERROR ${err.toString()}'),
+        ));
       }
+      delayedLoading.cancel();
       loading.value = false;
       Navigator.of(context).pop();
     }
@@ -61,7 +103,27 @@ class AddInstancePage extends HookWidget {
       ),
       body: ListView(
         children: [
-          SizedBox(height: 150),
+          if (isSite.value == true)
+            SizedBox(
+                height: 150,
+                child: FullscreenableImage(
+                  child: CachedNetworkImage(imageUrl: icon.value),
+                  url: icon.value,
+                ))
+          else if (isSite.value == false)
+            SizedBox(
+              height: 150,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.close, color: Colors.red),
+                  Text('instance not found')
+                ],
+              ),
+            )
+          else
+            SizedBox(height: 150),
+          SizedBox(height: 15),
           SizedBox(
             height: 40,
             child: Padding(
@@ -69,6 +131,7 @@ class AddInstancePage extends HookWidget {
               child: TextField(
                 autofocus: true,
                 controller: instanceController,
+                autocorrect: false,
                 decoration: InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(
@@ -88,14 +151,18 @@ class AddInstancePage extends HookWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: !loading.value
+                color: theme.accentColor,
+                child: !debounce.loading
                     ? Text('Add')
                     : SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(theme.canvasColor),
+                        ),
                       ),
-                onPressed: instanceController.text.isEmpty ? null : handleOnAdd,
+                onPressed: isSite.value == true ? handleOnAdd : null,
               ),
             ),
           ),
