@@ -76,11 +76,6 @@ class MyHomePage extends HookWidget {
     UserProfileTab(),
   ];
 
-  // TODO: does this even work? the state seems to be popped
-  // for example: go to user tab, wait for it to load,
-  // go to a different tab, go back, the data is loading again
-  final PageStorageBucket pageStorageBucket = PageStorageBucket();
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -109,9 +104,10 @@ class MyHomePage extends HookWidget {
     }
 
     return Scaffold(
-      body: PageStorage(
-        bucket: pageStorageBucket,
-        child: pages[currentTab.value],
+      extendBody: true,
+      body: IndexedStack(
+        index: currentTab.value,
+        children: pages,
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
