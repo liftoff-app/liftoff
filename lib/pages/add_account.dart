@@ -202,7 +202,7 @@ class AddAccountPage extends HookWidget {
               onPressed: usernameController.text.isEmpty ||
                       passwordController.text.isEmpty
                   ? null
-                  : handleOnAdd,
+                  : loading.pending ? () {} : handleOnAdd,
             ),
             FlatButton(
               shape: RoundedRectangleBorder(
