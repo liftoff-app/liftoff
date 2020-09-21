@@ -7,6 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'hooks/stores.dart';
+import 'pages/communities_tab.dart';
 import 'pages/profile_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
@@ -68,9 +69,17 @@ class MyApp extends HookWidget {
 }
 
 class MyHomePage extends HookWidget {
+  final List<Widget> pages = [
+    Center(child: Text('home')), // TODO: home tab
+    CommunitiesTab(),
+    Center(child: Text('search')), // TODO: search tab
+    UserProfileTab(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final currentTab = useState(0);
 
     useEffect(() {
       Future.microtask(
@@ -82,6 +91,47 @@ class MyHomePage extends HookWidget {
       return null;
     }, [theme.scaffoldBackgroundColor]);
 
-    return UserProfileTab();
+    var tabCounter = 0;
+
+    tabButton(IconData icon) {
+      final tabNum = tabCounter++;
+
+      return IconButton(
+        icon: Icon(icon),
+        color: tabNum == currentTab.value ? theme.accentColor : null,
+        onPressed: () => currentTab.value = tabNum,
+      );
+    }
+
+    return Scaffold(
+      extendBody: true,
+      body: IndexedStack(
+        index: currentTab.value,
+        children: pages,
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {}, // TODO: create post
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 7,
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              tabButton(Icons.home),
+              tabButton(Icons.list),
+              Container(),
+              Container(),
+              tabButton(Icons.search),
+              tabButton(Icons.person),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
