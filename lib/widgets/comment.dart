@@ -170,9 +170,9 @@ class Comment extends HookWidget {
     }
 
     reply() async {
-      final newComment = await showDialog<CommentView>(
+      final newComment = await showCupertinoModalPopup<CommentView>(
         context: context,
-        child: WriteComment.toComment(comment),
+        builder: (_) => WriteComment.toComment(comment),
       );
       if (newComment != null) {
         newReplies.value = [...newReplies.value, CommentTree(newComment)];

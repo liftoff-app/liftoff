@@ -62,9 +62,9 @@ class FullPostPage extends HookWidget {
     sharePost() => Share.text('Share post', post.apId, 'text/plain');
 
     comment() async {
-      final newComment = await showDialog<CommentView>(
+      final newComment = await showCupertinoModalPopup<CommentView>(
         context: context,
-        child: WriteComment.toPost(post),
+        builder: (_) => WriteComment.toPost(post),
       );
       if (newComment != null) {
         newComments.value = [...newComments.value, newComment];
