@@ -190,7 +190,14 @@ class AddAccountPage extends HookWidget {
               ),
               child: !loading.value
                   ? Text('Sign in')
-                  : CircularProgressIndicator(),
+                  : SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(theme.canvasColor),
+                      ),
+                    ),
               onPressed: usernameController.text.isEmpty ||
                       passwordController.text.isEmpty
                   ? null
