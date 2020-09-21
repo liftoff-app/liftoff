@@ -212,19 +212,6 @@ class AddAccountPage extends HookWidget {
                 ul.launch('https://$instanceUrl/login');
               },
             ),
-            // Row(
-            //   // mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     FlatButton(
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(10),
-            //       ),
-            //       child: Text('Cancel'),
-            //       onPressed: () => Navigator.of(context).pop(),
-            //     ),
-            //     Spacer(),
-            //   ],
-            // )
           ],
         ),
       ),
