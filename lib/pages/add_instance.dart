@@ -47,7 +47,8 @@ class AddInstancePage extends HookWidget {
       delayedLoading.start();
       try {
         loading.value = true;
-        await accountsStore.addInstance(instanceController.text);
+        await accountsStore.addInstance(instanceController.text,
+            assumeValid: true);
         Navigator.of(context).pop(instanceController.text);
       } on Exception catch (err) {
         scaffoldKey.currentState.showSnackBar(SnackBar(
