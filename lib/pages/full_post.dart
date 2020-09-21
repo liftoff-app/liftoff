@@ -1,8 +1,10 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
+import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
@@ -30,6 +32,7 @@ class FullPostPage extends HookWidget {
     final fullPostSnap = useMemoFuture(() => LemmyApi(instanceUrl)
         .v1
         .getPost(id: id, auth: accStore.defaultTokenFor(instanceUrl)?.raw));
+    final loggedInAction = useLoggedInAction(instanceUrl);
     final newComments = useState(const <CommentView>[]);
 
     // FALLBACK VIEW
@@ -83,7 +86,8 @@ class FullPostPage extends HookWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-            onPressed: comment, child: Icon(Icons.comment)),
+            onPressed: loggedInAction((_) => comment()),
+            child: Icon(Icons.comment)),
         body: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
