@@ -183,16 +183,21 @@ abstract class _AccountsStore with Store {
   /// adds a new instance with no accounts associated with it.
   /// Additionally makes a test GET /site request to check if the instance exists
   @action
-  Future<void> addInstance(String instanceUrl) async {
+  Future<void> addInstance(
+    String instanceUrl, {
+    bool assumeValid = false,
+  }) async {
     if (users.containsKey(instanceUrl)) {
       throw Exception('This instance has already been added');
     }
 
-    try {
-      await LemmyApi(instanceUrl).v1.getSite();
-      // ignore: avoid_catches_without_on_clauses
-    } catch (_) {
-      throw Exception('This instance seems to not exist');
+    if (!assumeValid) {
+      try {
+        await LemmyApi(instanceUrl).v1.getSite();
+        // ignore: avoid_catches_without_on_clauses
+      } catch (_) {
+        throw Exception('This instance seems to not exist');
+      }
     }
 
     users[instanceUrl] = ObservableMap();
