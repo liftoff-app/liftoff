@@ -116,6 +116,7 @@ class MyHomePage extends HookWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
+        notchMargin: 7,
         child: Container(
           height: 60,
           child: Row(
