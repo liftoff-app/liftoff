@@ -204,5 +204,13 @@ abstract class _AccountsStore with Store {
     tokens[instanceUrl] = ObservableMap();
   }
 
-  // TODO: add a way of removing accounts/instances
+  void removeInstance(String instanceUrl) {
+    users.remove(instanceUrl);
+    tokens.remove(instanceUrl);
+  }
+
+  void removeAccount(String instanceUrl, String username) {
+    users[instanceUrl].remove(username);
+    tokens[instanceUrl].remove(username);
+  }
 }
