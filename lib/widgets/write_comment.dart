@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
+import '../hooks/delayed_loading.dart';
+import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import 'markdown_text.dart';
 
@@ -12,6 +14,7 @@ class WriteComment extends HookWidget {
   final CommentView comment;
 
   final String instanceUrl;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   WriteComment.toPost(this.post)
       : instanceUrl = post.instanceUrl,
@@ -24,6 +27,8 @@ class WriteComment extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useTextEditingController();
     final showFancy = useState(false);
+    final delayed = useDelayedLoading();
+    final accStore = useAccountsStore();
 
     final preview = () {
       final body = MarkdownText(
@@ -47,9 +52,30 @@ class WriteComment extends HookWidget {
       return body;
     }();
 
-    handleSubmit() async {}
+    handleSubmit() async {
+      final api = LemmyApi(instanceUrl).v1;
+
+      final token = accStore.defaultTokenFor(instanceUrl);
+
+      delayed.start();
+      try {
+        final res = await api.createComment(
+            content: controller.text,
+            postId: post?.id ?? comment.postId,
+            parentId: comment?.parentId,
+            auth: token.raw);
+        Navigator.of(context).pop(res);
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        print(e);
+        scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text('Failed to post comment')));
+      }
+      delayed.cancel();
+    }
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.close),
@@ -66,7 +92,7 @@ class WriteComment extends HookWidget {
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * .5),
+                maxHeight: MediaQuery.of(context).size.height * .35),
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(8),
               child: preview,
@@ -95,15 +121,17 @@ class WriteComment extends HookWidget {
               ],
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FlatButton(
-            onPressed: handleSubmit,
-            child: Text('post'),
-          )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FlatButton(
+                onPressed: delayed.pending ? () {} : handleSubmit,
+                child: delayed.loading
+                    ? CircularProgressIndicator()
+                    : Text('post'),
+              )
+            ],
+          ),
         ],
       ),
     );
