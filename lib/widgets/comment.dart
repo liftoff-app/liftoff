@@ -17,6 +17,7 @@ import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'bottom_modal.dart';
 import 'markdown_text.dart';
+import 'write_comment.dart';
 
 class Comment extends HookWidget {
   final int indent;
@@ -105,6 +106,7 @@ class Comment extends HookWidget {
     final myVote = useState(commentTree.comment.myVote ?? VoteType.none);
     final delayedVoting = useDelayedLoading();
     final loggedInAction = useLoggedInAction(commentTree.comment.instanceUrl);
+    final newReplies = useState(const <CommentTree>[]);
 
     final comment = commentTree.comment;
 
@@ -167,8 +169,14 @@ class Comment extends HookWidget {
       );
     }
 
-    void _reply() {
-      print('OPEN REPLY BOX');
+    reply() async {
+      final newComment = await showDialog<CommentView>(
+        context: context,
+        child: WriteComment.toComment(comment),
+      );
+      if (newComment != null) {
+        newReplies.value = [...newReplies.value, CommentTree(newComment)];
+      }
     }
 
     vote(VoteType vote, Jwt token) async {
@@ -263,7 +271,7 @@ class Comment extends HookWidget {
             _SaveComment(commentTree.comment),
             _CommentAction(
               icon: Icons.reply,
-              onPressed: _reply,
+              onPressed: reply,
               tooltip: 'reply',
             ),
             _CommentAction(
@@ -371,7 +379,7 @@ class Comment extends HookWidget {
                     top: BorderSide(width: 0.2))),
           ),
           if (!collapsed.value)
-            for (final c in commentTree.children)
+            for (final c in newReplies.value.followedBy(commentTree.children))
               Comment(
                 c,
                 indent: indent + 1,
