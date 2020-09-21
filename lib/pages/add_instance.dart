@@ -53,10 +53,6 @@ class AddInstancePage extends HookWidget {
         scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
-      } catch (err) {
-        scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text('UNKNOWN ERROR ${err.toString()}'),
-        ));
       }
       delayedLoading.cancel();
       loading.value = false;
