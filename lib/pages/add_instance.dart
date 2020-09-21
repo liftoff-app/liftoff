@@ -9,6 +9,10 @@ import '../hooks/stores.dart';
 import '../widgets/fullscreenable_image.dart';
 
 class AddInstancePage extends HookWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
+  AddInstancePage();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -44,20 +48,20 @@ class AddInstancePage extends HookWidget {
         await accountsStore.addInstance(instanceController.text);
         Navigator.of(context).pop(instanceController.text);
       } on Exception catch (err) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
       } catch (err) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text('UNKNOWN ERROR ${err.toString()}'),
         ));
       }
       delayedLoading.cancel();
       loading.value = false;
-      Navigator.of(context).pop();
     }
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         brightness: theme.brightness,

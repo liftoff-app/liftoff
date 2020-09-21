@@ -12,9 +12,9 @@ import 'add_instance.dart';
 
 class AddAccountPage extends HookWidget {
   final String instanceUrl;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  const AddAccountPage({@required this.instanceUrl})
-      : assert(instanceUrl != null);
+  AddAccountPage({@required this.instanceUrl}) : assert(instanceUrl != null);
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class AddAccountPage extends HookWidget {
           passwordController.text,
         );
       } on Exception catch (err) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
       }
@@ -93,6 +93,7 @@ class AddAccountPage extends HookWidget {
     }
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         leading: CloseButton(),
         actionsIconTheme: theme.iconTheme,
