@@ -101,7 +101,10 @@ class AddInstancePage extends HookWidget {
             SizedBox(
                 height: 150,
                 child: FullscreenableImage(
-                  child: CachedNetworkImage(imageUrl: icon.value),
+                  child: CachedNetworkImage(
+                    imageUrl: icon.value,
+                    errorWidget: (_, __, ___) => Container(),
+                  ),
                   url: icon.value,
                 ))
           else if (isSite.value == false)
