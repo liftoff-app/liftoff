@@ -35,12 +35,10 @@ class CommentSection extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final sorting = useState(sortType);
-    final rawComms = useState(rawComments);
-    final comms = useState(comments);
 
     void sortComments(CommentSortType sort) {
       if (sort != sorting.value && sort != CommentSortType.chat) {
-        CommentTree.sortList(sort, comms.value);
+        CommentTree.sortList(sort, comments);
       }
 
       sorting.value = sort;
@@ -100,14 +98,13 @@ class CommentSection extends HookWidget {
           ),
         )
       else if (sorting.value == CommentSortType.chat)
-        for (final com in rawComms.value)
+        for (final com in rawComments)
           Comment(
             CommentTree(com),
             postCreatorId: postCreatorId,
           )
       else
-        for (final com in comms.value)
-          Comment(com, postCreatorId: postCreatorId),
+        for (final com in comments) Comment(com, postCreatorId: postCreatorId),
     ]);
   }
 }
