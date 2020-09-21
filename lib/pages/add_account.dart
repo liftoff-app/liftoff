@@ -156,6 +156,7 @@ class AddAccountPage extends HookWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            // TODO: add support for password managers
             TextField(
               autofocus: true,
               controller: usernameController,
