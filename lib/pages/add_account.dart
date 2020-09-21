@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
@@ -26,7 +27,7 @@ class AddAccountPage extends HookWidget {
     useValueListenable(passwordController);
     final accountsStore = useAccountsStore();
 
-    final loading = useState(false);
+    final loading = useDelayedLoading(Duration(milliseconds: 500));
     final selectedInstance = useState(instanceUrl);
     final icon = useState<String>(null);
     useMemoized(() async {
@@ -77,19 +78,19 @@ class AddAccountPage extends HookWidget {
 
     handleOnAdd() async {
       try {
-        loading.value = true;
+        loading.start();
         await accountsStore.addAccount(
-          instanceUrl,
+          selectedInstance.value,
           usernameController.text,
           passwordController.text,
         );
+        Navigator.of(context).pop();
       } on Exception catch (err) {
         scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
       }
-      loading.value = false;
-      Navigator.of(context).pop();
+      loading.cancel();
     }
 
     return Scaffold(
@@ -188,7 +189,7 @@ class AddAccountPage extends HookWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: !loading.value
+              child: !loading.loading
                   ? Text('Sign in')
                   : SizedBox(
                       width: 20,
