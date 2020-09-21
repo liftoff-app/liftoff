@@ -435,7 +435,10 @@ class Post extends HookWidget {
 class _Voting extends HookWidget {
   final PostView post;
 
-  _Voting(this.post);
+  final bool wasVoted;
+
+  _Voting(this.post)
+      : wasVoted = (post.myVote ?? VoteType.none) != VoteType.none;
 
   @override
   Widget build(BuildContext context) {
@@ -477,7 +480,8 @@ class _Voting extends HookWidget {
         if (loading.loading)
           SizedBox(child: CircularProgressIndicator(), width: 20, height: 20)
         else
-          Text(NumberFormat.compact().format(post.score + myVote.value.value)),
+          Text(NumberFormat.compact()
+              .format(post.score + (wasVoted ? 0 : myVote.value.value))),
         IconButton(
             icon: Icon(
               Icons.arrow_downward,

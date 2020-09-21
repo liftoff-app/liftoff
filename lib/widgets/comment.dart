@@ -23,6 +23,8 @@ class Comment extends HookWidget {
   final int postCreatorId;
   final CommentTree commentTree;
 
+  final bool wasVoted;
+
   static const colors = [
     Colors.pink,
     Colors.green,
@@ -35,7 +37,8 @@ class Comment extends HookWidget {
     this.commentTree, {
     this.indent = 0,
     @required this.postCreatorId,
-  });
+  }) : wasVoted =
+            (commentTree.comment.myVote ?? VoteType.none) != VoteType.none;
 
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
@@ -343,8 +346,8 @@ class Comment extends HookWidget {
                               size: Size.square(16),
                               child: CircularProgressIndicator())
                         else
-                          Text(compactNumber(
-                              comment.score + myVote.value.value)),
+                          Text(compactNumber(comment.score +
+                              (wasVoted ? 0 : myVote.value.value))),
                         Text(' · '),
                         Text(timeago.format(comment.published)),
                       ],
