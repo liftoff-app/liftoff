@@ -9,6 +9,7 @@ import '../util/extensions/api.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
 import '../widgets/save_post_button.dart';
+import '../widgets/write_comment.dart';
 
 class FullPostPage extends HookWidget {
   final int id;
@@ -29,6 +30,7 @@ class FullPostPage extends HookWidget {
     final fullPostSnap = useMemoFuture(() => LemmyApi(instanceUrl)
         .v1
         .getPost(id: id, auth: accStore.defaultTokenFor(instanceUrl)?.raw));
+    final newComments = useState(const <CommentView>[]);
 
     // FALLBACK VIEW
 
@@ -59,6 +61,16 @@ class FullPostPage extends HookWidget {
 
     sharePost() => Share.text('Share post', post.apId, 'text/plain');
 
+    comment() async {
+      final newComment = await showDialog<CommentView>(
+        context: context,
+        child: WriteComment.toPost(post),
+      );
+      if (newComment != null) {
+        newComments.value = [...newComments.value, newComment];
+      }
+    }
+
     return Scaffold(
         appBar: AppBar(
           leading: BackButton(),
@@ -70,12 +82,15 @@ class FullPostPage extends HookWidget {
                 onPressed: () => Post.showMoreMenu(context, post)),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: comment, child: Icon(Icons.comment)),
         body: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
             Post(post, fullPost: true),
             if (fullPostSnap.hasData)
-              CommentSection(fullPost.comments,
+              CommentSection(
+                  newComments.value.followedBy(fullPost.comments).toList(),
                   postCreatorId: fullPost.post.creatorId)
             else if (fullPostSnap.hasError)
               Padding(
