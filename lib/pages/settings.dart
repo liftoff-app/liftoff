@@ -96,11 +96,11 @@ class AccountsConfigPage extends HookWidget {
     final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
-    deleteInstanceDialog(String instanceUrl) async {
+    removeInstanceDialog(String instanceUrl) async {
       if (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Delete instance?'),
+              title: Text('Remove instance?'),
               content: Text('Are you sure you want to remove $instanceUrl?'),
               actions: [
                 FlatButton(
@@ -175,7 +175,7 @@ class AccountsConfigPage extends HookWidget {
                   secondaryActions: [
                     IconSlideAction(
                       closeOnTap: true,
-                      onTap: () => deleteInstanceDialog(entry.key),
+                      onTap: () => removeInstanceDialog(entry.key),
                       icon: Icons.delete_sweep,
                       color: Colors.red,
                     ),
