@@ -143,6 +143,9 @@ abstract class _AccountsStore with Store {
   @computed
   bool get hasNoAccount => users.values.every((e) => e.isEmpty);
 
+  @computed
+  Iterable<String> get instances => users.keys;
+
   /// adds a new account
   /// if it's the first account ever the account is
   /// set as default for the app

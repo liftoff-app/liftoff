@@ -23,6 +23,20 @@ mixin _$AccountsStore on _AccountsStore, Store {
       (_$defaultTokenComputed ??= Computed<Jwt>(() => super.defaultToken,
               name: '_AccountsStore.defaultToken'))
           .value;
+  Computed<bool> _$hasNoAccountComputed;
+
+  @override
+  bool get hasNoAccount =>
+      (_$hasNoAccountComputed ??= Computed<bool>(() => super.hasNoAccount,
+              name: '_AccountsStore.hasNoAccount'))
+          .value;
+  Computed<Iterable<String>> _$instancesComputed;
+
+  @override
+  Iterable<String> get instances =>
+      (_$instancesComputed ??= Computed<Iterable<String>>(() => super.instances,
+              name: '_AccountsStore.instances'))
+          .value;
 
   final _$usersAtom = Atom(name: '_AccountsStore.users');
 
@@ -131,7 +145,9 @@ mixin _$AccountsStore on _AccountsStore, Store {
 users: ${users},
 tokens: ${tokens},
 defaultUser: ${defaultUser},
-defaultToken: ${defaultToken}
+defaultToken: ${defaultToken},
+hasNoAccount: ${hasNoAccount},
+instances: ${instances}
     ''';
   }
 }
