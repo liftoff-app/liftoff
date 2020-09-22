@@ -9,9 +9,7 @@ class Debounce {
   final bool loading;
   final void Function() bounce;
 
-  call() {
-    bounce();
-  }
+  void call() => bounce();
 
   const Debounce({
     @required this.loading,
@@ -23,7 +21,7 @@ class Debounce {
 /// and loading is triggered after [delayDuration].
 /// Everything can be reset with [.cancel()]
 Debounce useDebounce(
-  Future<Null> Function() onDebounce, [
+  Future<Null> Function() callback, [
   Duration delayDuration = const Duration(milliseconds: 500),
 ]) {
   final loading = useState(false);
@@ -37,7 +35,7 @@ Debounce useDebounce(
   start() {
     timerHandle.current = Timer(delayDuration, () async {
       loading.value = true;
-      await onDebounce();
+      await callback();
       cancel();
     });
   }
