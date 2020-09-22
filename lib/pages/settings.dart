@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../hooks/stores.dart';
 import '../util/goto.dart';
@@ -155,12 +156,28 @@ class AccountsConfigPage extends HookWidget {
         title: Text('Accounts', style: theme.textTheme.headline6),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showCupertinoModalPopup(
-              context: context, builder: (_) => AddInstancePage());
-        },
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x
+        closeManually: false,
+        curve: Curves.bounceIn,
+        tooltip: 'Add account or instance',
         child: Icon(Icons.add),
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.person_add),
+            label: 'Add account',
+            onTap: () => showCupertinoModalPopup(
+                context: context,
+                builder: (_) =>
+                    AddAccountPage(instanceUrl: accountsStore.users.keys.last)),
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.dns),
+            label: 'Add instance',
+            onTap: () => showCupertinoModalPopup(
+                context: context, builder: (_) => AddInstancePage()),
+          ),
+        ],
       ),
       body: Observer(
         builder: (ctx) {
@@ -223,15 +240,17 @@ class AccountsConfigPage extends HookWidget {
                     ),
                   ),
                 ],
-                ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text('Add account'),
-                  onTap: () {
-                    showCupertinoModalPopup(
-                        context: context,
-                        builder: (_) => AddAccountPage(instanceUrl: entry.key));
-                  },
-                ),
+                if (entry.value.keys.isEmpty)
+                  ListTile(
+                    leading: Icon(Icons.add),
+                    title: Text('Add account'),
+                    onTap: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (_) =>
+                              AddAccountPage(instanceUrl: entry.key));
+                    },
+                  ),
               ]
             ],
           );
