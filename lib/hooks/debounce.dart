@@ -7,13 +7,13 @@ import 'ref.dart';
 
 class Debounce {
   final bool loading;
-  final void Function() bounce;
+  final void Function() callback;
 
-  void call() => bounce();
+  void call() => callback();
 
   const Debounce({
     @required this.loading,
-    @required this.bounce,
+    @required this.callback,
   });
 }
 
@@ -42,7 +42,7 @@ Debounce useDebounce(
 
   return Debounce(
       loading: loading.value,
-      bounce: () {
+      callback: () {
         cancel();
         start();
       });
