@@ -134,6 +134,28 @@ mixin _$AccountsStore on _AccountsStore, Store {
   }
 
   @override
+  void removeInstance(String instanceUrl) {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore.removeInstance');
+    try {
+      return super.removeInstance(instanceUrl);
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeAccount(String instanceUrl, String username) {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore.removeAccount');
+    try {
+      return super.removeAccount(instanceUrl, username);
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 users: ${users},
