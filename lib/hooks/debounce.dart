@@ -17,9 +17,8 @@ class Debounce {
   });
 }
 
-/// When loading is [.start()]ed, it goes into a pending state
-/// and loading is triggered after [delayDuration].
-/// Everything can be reset with [.cancel()]
+/// will run `callback()` after debounce hook hasn't been called for the
+/// specified `delayDuration`
 Debounce useDebounce(
   Future<Null> Function() callback, [
   Duration delayDuration = const Duration(milliseconds: 500),
