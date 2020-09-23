@@ -30,10 +30,13 @@ class AddAccountPage extends HookWidget {
     final loading = useDelayedLoading(Duration(milliseconds: 500));
     final selectedInstance = useState(instanceUrl);
     final icon = useState<String>(null);
-    useMemoized(() async {
-      final site = await LemmyApi(selectedInstance.value).v1.getSite();
-      icon.value = site.site.icon;
-    });
+    useEffect(() {
+      LemmyApi(selectedInstance.value)
+          .v1
+          .getSite()
+          .then((site) => icon.value = site.site.icon);
+      return null;
+    }, [selectedInstance.value]);
 
     selectInstance() async {
       final val = await showModalBottomSheet<String>(
@@ -71,8 +74,6 @@ class AddAccountPage extends HookWidget {
       );
       if (val != null) {
         selectedInstance.value = val;
-        final site = await LemmyApi(val).v1.getSite();
-        icon.value = site.site.icon;
       }
     }
 
