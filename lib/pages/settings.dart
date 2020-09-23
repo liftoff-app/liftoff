@@ -120,7 +120,7 @@ class AccountsConfigPage extends HookWidget {
       }
     }
 
-    Future<bool> removeUserDialog(String instanceUrl, String username) async {
+    Future<void> removeUserDialog(String instanceUrl, String username) async {
       if (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
@@ -141,9 +141,7 @@ class AccountsConfigPage extends HookWidget {
           ) ??
           false) {
         accountsStore.removeAccount(instanceUrl, username);
-        return true;
       }
-      return false;
     }
 
     return Scaffold(
