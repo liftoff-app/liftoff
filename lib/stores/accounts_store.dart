@@ -28,90 +28,59 @@ abstract class _AccountsStore with Store {
 
     // check if there's a default profile and if not, select one
     _pickDefaultsDisposer = reaction(
-        (_) => [
-              users.forEach((k, submap) =>
-                  MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
-              tokens.forEach((k, submap) =>
-                  MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
-            ], (_) {
-      if (users.isEmpty) {
-        // if empty clear def users
-        _defaultAccount = null;
-        _defaultAccounts = ObservableMap();
-        return;
+      (_) => [
+        users.forEach((k, submap) =>
+            MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
+        tokens.forEach((k, submap) =>
+            MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
+      ],
+      (_) => _assignDefaultAccounts(),
+    );
+  }
+
+  @action
+  void _assignDefaultAccounts() {
+    // remove dangling defaults
+    _defaultAccounts.entries.map((dft) {
+      final instance = dft.key;
+      final username = dft.value;
+      // if instance or username doesn't exist, remove
+      if (!users.containsKey(instance) ||
+          !users[instance].containsKey(username)) {
+        return instance;
       }
-
-      // == SET LOCAL DEFAULTS ==
-
-      // go through instances
-      for (final instanceUrl in users.keys) {
-        // if this instance is already in defaults
-        if (_defaultAccounts.keys.contains(instanceUrl)) {
-          // if this account wasn't removed, skip
-          if (users[instanceUrl].keys.contains(_defaultAccounts[instanceUrl])) {
-            continue;
-          }
-          // if every account was removed,
-          if (users[instanceUrl].isEmpty) {
-            _defaultAccounts.remove(instanceUrl);
-            continue;
-          }
-          _defaultAccounts[instanceUrl] = users[instanceUrl].entries.first.key;
-        } else {
-          // select first account in this instance, if any
-          if (users[instanceUrl].isEmpty) {
-            continue;
-          }
-
-          _defaultAccounts[instanceUrl] = users[instanceUrl].entries.first.key;
-        }
-      }
-
-      // clean up
-      for (final instance in _defaultAccounts.keys) {
-        if (!users.keys.contains(instance)) {
-          _defaultAccounts.remove(instance);
-        }
-      }
-
-      // == SET GLOBAL DEFAULT ==
-
-      if (_defaultAccount == null) {
-        // select first account of first instance
-        for (final instance in users.keys) {
-          if (users[instance].isNotEmpty) {
-            _defaultAccount = '$instance@${users[instance].keys.first}';
-          }
-        }
-        return;
-      }
+    }).forEach(_defaultAccounts.remove);
+    if (_defaultAccount != null) {
       final instance = _defaultAccount.split('@')[1];
       final username = _defaultAccount.split('@')[0];
-
-      final containsDefaultInstance = users.keys.contains(instance);
-
-      // if default instance is even added
-      if (containsDefaultInstance && users[instance].isNotEmpty) {
-        if (users[instance].containsKey(username)) return;
-        // select new profile
-        final newDefault = users[instance].entries.first;
-        _defaultAccount = '${newDefault.value.name}@${newDefault.key}';
-        return;
-      } else {
-        // if default instance is not even added
-        // select first account of first instance
-
-        for (final user in users.entries) {
-          if (user.value.entries.isEmpty) continue;
-
-          final newDefault = user.value.entries.first;
-          _defaultAccount = '${newDefault.value.name}@${newDefault.key}';
-          return;
-        }
+      // if instance or username doesn't exist, remove
+      if (!users.containsKey(instance) ||
+          !users[instance].containsKey(username)) {
         _defaultAccount = null;
-        return;
       }
-    });
+    }
+
+    // set local defaults
+    for (final instanceUrl in users.keys) {
+      // if this instance is not in defaults
+      if (!_defaultAccounts.containsKey(instanceUrl)) {
+        // select first account in this instance, if any
+        if (!isAnonymousFor(instanceUrl)) {
+          setDefaultAccountFor(instanceUrl, users[instanceUrl].keys.first);
+        }
+      }
+    }
+
+    // set global default
+    if (_defaultAccount == null) {
+      // select first account of first instance
+      for (final instanceUrl in users.keys) {
+        // select first account in this instance, if any
+        if (!isAnonymousFor(instanceUrl)) {
+          setDefaultAccount(instanceUrl, users[instanceUrl].keys.first);
+        }
+      }
+    }
   }
 
   void dispose() {

@@ -112,6 +112,17 @@ mixin _$AccountsStore on _AccountsStore, Store {
       ActionController(name: '_AccountsStore');
 
   @override
+  void _assignDefaultAccounts() {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore._assignDefaultAccounts');
+    try {
+      return super._assignDefaultAccounts();
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setDefaultAccount(String instanceUrl, String username) {
     final _$actionInfo = _$_AccountsStoreActionController.startAction(
         name: '_AccountsStore.setDefaultAccount');
