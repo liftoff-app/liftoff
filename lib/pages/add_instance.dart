@@ -36,6 +36,7 @@ class AddInstancePage extends HookWidget {
         icon.value =
             (await LemmyApi(instanceController.text).v1.getSite()).site.icon;
         isSite.value = true;
+        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         isSite.value = false;
       }
