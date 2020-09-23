@@ -105,13 +105,13 @@ class AccountsConfigPage extends HookWidget {
               content: Text('Are you sure you want to remove $instanceUrl?'),
               actions: [
                 FlatButton(
+                  child: Text('no'),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                FlatButton(
                   child: Text('yes'),
                   onPressed: () => Navigator.of(context).pop(true),
                 ),
-                FlatButton(
-                  child: Text('no'),
-                  onPressed: () => Navigator.of(context).pop(false),
-                )
               ],
             ),
           ) ??
@@ -129,13 +129,13 @@ class AccountsConfigPage extends HookWidget {
                   'Are you sure you want to remove $username@$instanceUrl?'),
               actions: [
                 FlatButton(
+                  child: Text('no'),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                FlatButton(
                   child: Text('yes'),
                   onPressed: () => Navigator.of(context).pop(true),
                 ),
-                FlatButton(
-                  child: Text('no'),
-                  onPressed: () => Navigator.of(context).pop(false),
-                )
               ],
             ),
           ) ??
