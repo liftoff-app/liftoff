@@ -21,7 +21,7 @@ Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communic
 - `hooks/`: reusable state hooks
 - `pages/`: fullscreen pages that you navigate to
 - `stores/`: MobX global stores
-- `util/`: utils
+- `util/`: utilities
 - `widgets/`: reusable widgets; building blocks for pages
 - `main.dart`: entrypoint of the app. Sets up the stores, initializes the themes, renders the first page
 
