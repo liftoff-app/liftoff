@@ -42,7 +42,11 @@ class AddInstancePage extends HookWidget {
       }
     });
 
-    instanceController.addListener(debounce);
+    useEffect(() {
+      instanceController.addListener(debounce);
+
+      return () => instanceController.removeListener(debounce);
+    }, []);
 
     handleOnAdd() async {
       delayedLoading.start();
