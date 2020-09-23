@@ -185,6 +185,25 @@ class AccountsConfigPage extends HookWidget {
 
           return ListView(
             children: [
+              if (accountsStore.users.isEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 100),
+                      child: FlatButton.icon(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          onPressed: () => showCupertinoModalPopup(
+                                context: context,
+                                builder: (_) => AddInstancePage(),
+                              ),
+                          icon: Icon(Icons.add),
+                          label: Text('Add instance')),
+                    ),
+                  ],
+                ),
               for (final entry in accountsStore.users.entries) ...[
                 SizedBox(height: 40),
                 Slidable(
