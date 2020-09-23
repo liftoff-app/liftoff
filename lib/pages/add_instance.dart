@@ -24,7 +24,7 @@ class AddInstancePage extends HookWidget {
     final isSite = useState<bool>(null);
     final loading = useState(false);
     final icon = useState<String>(null);
-    final prevInput = usePrevious<String>(instanceController.text);
+    final prevInput = usePrevious(instanceController.text);
     final debounce = useDebounce(() async {
       if (prevInput == instanceController.text) return;
       if (instanceController.text.isEmpty) {
