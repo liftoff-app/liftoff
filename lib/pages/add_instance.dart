@@ -73,26 +73,6 @@ class AddInstancePage extends HookWidget {
         textTheme: theme.textTheme,
         title: Text('Add instance'),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        child: SafeArea(
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text('Cancel'),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       body: ListView(
         children: [
           if (isSite.value == true)

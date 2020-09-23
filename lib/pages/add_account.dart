@@ -107,26 +107,6 @@ class AddAccountPage extends HookWidget {
         backgroundColor: theme.canvasColor,
         shadowColor: Colors.transparent,
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        child: SafeArea(
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text('Cancel'),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: ListView(
