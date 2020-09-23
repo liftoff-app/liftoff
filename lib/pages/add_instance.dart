@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/debounce.dart';
-import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
 import '../widgets/fullscreenable_image.dart';
 
@@ -19,10 +18,8 @@ class AddInstancePage extends HookWidget {
     final instanceController = useTextEditingController();
     useValueListenable(instanceController);
     final accountsStore = useAccountsStore();
-    final delayedLoading = useDelayedLoading(Duration(milliseconds: 500));
 
     final isSite = useState<bool>(null);
-    final loading = useState(false);
     final icon = useState<String>(null);
     final prevInput = usePrevious(instanceController.text);
     final debounce = useDebounce(() async {
@@ -49,9 +46,7 @@ class AddInstancePage extends HookWidget {
     }, []);
 
     handleOnAdd() async {
-      delayedLoading.start();
       try {
-        loading.value = true;
         await accountsStore.addInstance(instanceController.text,
             assumeValid: true);
         Navigator.of(context).pop(instanceController.text);
@@ -60,8 +55,6 @@ class AddInstancePage extends HookWidget {
           content: Text(err.toString()),
         ));
       }
-      delayedLoading.cancel();
-      loading.value = false;
     }
 
     return Scaffold(
