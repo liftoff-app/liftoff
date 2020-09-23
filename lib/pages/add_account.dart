@@ -192,7 +192,7 @@ class AddAccountPage extends HookWidget {
               ),
               child: Text('Register'),
               onPressed: () {
-                ul.launch('https://$instanceUrl/login');
+                ul.launch('https://${selectedInstance.value}/login');
               },
             ),
           ],
