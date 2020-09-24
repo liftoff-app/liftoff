@@ -7,6 +7,7 @@ import '../hooks/debounce.dart';
 import '../hooks/stores.dart';
 import '../widgets/fullscreenable_image.dart';
 
+/// A page that let's user add a new instance. Pops a url of the added instance
 class AddInstancePage extends HookWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -47,13 +48,11 @@ class AddInstancePage extends HookWidget {
         instanceController.removeListener(debounce);
       };
     }, []);
-
+    final inst = _fixInstanceUrl(instanceController.text);
     handleOnAdd() async {
       try {
-        await accountsStore.addInstance(
-            _fixInstanceUrl(instanceController.text),
-            assumeValid: true);
-        Navigator.of(context).pop(instanceController.text);
+        await accountsStore.addInstance(inst, assumeValid: true);
+        Navigator.of(context).pop(inst);
       } on Exception catch (err) {
         scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(err.toString()),
