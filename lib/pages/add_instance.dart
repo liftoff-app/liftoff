@@ -44,7 +44,6 @@ class AddInstancePage extends HookWidget {
       instanceController.addListener(debounce);
 
       return () {
-        debounce.dispose();
         instanceController.removeListener(debounce);
       };
     }, []);

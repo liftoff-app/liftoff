@@ -8,7 +8,6 @@ import 'ref.dart';
 class Debounce {
   final bool loading;
   final void Function() callback;
-  final void Function() dispose;
 
   void call() => callback();
 
@@ -17,7 +16,6 @@ class Debounce {
   const Debounce({
     @required this.loading,
     @required this.callback,
-    @required this.dispose,
   });
 }
 
@@ -35,6 +33,8 @@ Debounce useDebounce(
     loading.value = false;
   }
 
+  useEffect(() => () => timerHandle.current?.cancel(), []);
+
   start() {
     timerHandle.current = Timer(delayDuration, () async {
       loading.value = true;
@@ -49,6 +49,5 @@ Debounce useDebounce(
       cancel();
       start();
     },
-    dispose: cancel,
   );
 }
