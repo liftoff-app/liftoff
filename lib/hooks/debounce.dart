@@ -25,7 +25,7 @@ class Debounce {
 /// specified `delayDuration`
 Debounce useDebounce(
   Future<Null> Function() callback, [
-  Duration delayDuration = const Duration(milliseconds: 500),
+  Duration delayDuration = const Duration(seconds: 1),
 ]) {
   final loading = useState(false);
   final timerHandle = useRef<Timer>(null);
