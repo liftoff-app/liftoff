@@ -10,6 +10,7 @@ class AccountsStore extends _AccountsStore with _$AccountsStore {}
 
 abstract class _AccountsStore with Store {
   ReactionDisposer _saveReactionDisposer;
+  ReactionDisposer _pickDefaultsDisposer;
 
   _AccountsStore() {
     // persistently save settings each time they are changed
@@ -24,10 +25,67 @@ abstract class _AccountsStore with Store {
       ],
       (_) => save(),
     );
+
+    // check if there's a default profile and if not, select one
+    _pickDefaultsDisposer = reaction(
+      (_) => [
+        users.forEach((k, submap) =>
+            MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
+        tokens.forEach((k, submap) =>
+            MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
+      ],
+      (_) => _assignDefaultAccounts(),
+    );
+  }
+
+  @action
+  void _assignDefaultAccounts() {
+    // remove dangling defaults
+    _defaultAccounts.entries.map((dft) {
+      final instance = dft.key;
+      final username = dft.value;
+      // if instance or username doesn't exist, remove
+      if (!users.containsKey(instance) ||
+          !users[instance].containsKey(username)) {
+        return instance;
+      }
+    }).forEach(_defaultAccounts.remove);
+    if (_defaultAccount != null) {
+      final instance = _defaultAccount.split('@')[1];
+      final username = _defaultAccount.split('@')[0];
+      // if instance or username doesn't exist, remove
+      if (!users.containsKey(instance) ||
+          !users[instance].containsKey(username)) {
+        _defaultAccount = null;
+      }
+    }
+
+    // set local defaults
+    for (final instanceUrl in users.keys) {
+      // if this instance is not in defaults
+      if (!_defaultAccounts.containsKey(instanceUrl)) {
+        // select first account in this instance, if any
+        if (!isAnonymousFor(instanceUrl)) {
+          setDefaultAccountFor(instanceUrl, users[instanceUrl].keys.first);
+        }
+      }
+    }
+
+    // set global default
+    if (_defaultAccount == null) {
+      // select first account of first instance
+      for (final instanceUrl in users.keys) {
+        // select first account in this instance, if any
+        if (!isAnonymousFor(instanceUrl)) {
+          setDefaultAccount(instanceUrl, users[instanceUrl].keys.first);
+        }
+      }
+    }
   }
 
   void dispose() {
     _saveReactionDisposer();
+    _pickDefaultsDisposer();
   }
 
   void load() async {
@@ -122,11 +180,13 @@ abstract class _AccountsStore with Store {
         return tokens[instanceUrl][_defaultAccounts[instanceUrl]];
       }).value;
 
+  /// sets globally default account
   @action
   void setDefaultAccount(String instanceUrl, String username) {
     _defaultAccount = '$username@$instanceUrl';
   }
 
+  /// sets default account for given instance
   @action
   void setDefaultAccountFor(String instanceUrl, String username) {
     _defaultAccounts[instanceUrl] = username;
@@ -167,15 +227,6 @@ abstract class _AccountsStore with Store {
     final userData =
         await lemmy.getSite(auth: token.raw).then((value) => value.myUser);
 
-    // first account for this instance
-    if (users[instanceUrl].isEmpty) {
-      // first account ever
-      if (hasNoAccount) {
-        setDefaultAccount(instanceUrl, userData.name);
-      }
-
-      setDefaultAccountFor(instanceUrl, userData.name);
-    }
     users[instanceUrl][userData.name] = userData;
     tokens[instanceUrl][userData.name] = token;
   }
@@ -183,21 +234,36 @@ abstract class _AccountsStore with Store {
   /// adds a new instance with no accounts associated with it.
   /// Additionally makes a test GET /site request to check if the instance exists
   @action
-  Future<void> addInstance(String instanceUrl) async {
+  Future<void> addInstance(
+    String instanceUrl, {
+    bool assumeValid = false,
+  }) async {
     if (users.containsKey(instanceUrl)) {
       throw Exception('This instance has already been added');
     }
 
-    try {
-      await LemmyApi(instanceUrl).v1.getSite();
-      // ignore: avoid_catches_without_on_clauses
-    } catch (_) {
-      throw Exception('This instance seems to not exist');
+    if (!assumeValid) {
+      try {
+        await LemmyApi(instanceUrl).v1.getSite();
+        // ignore: avoid_catches_without_on_clauses
+      } catch (_) {
+        throw Exception('This instance seems to not exist');
+      }
     }
 
     users[instanceUrl] = ObservableMap();
     tokens[instanceUrl] = ObservableMap();
   }
 
-  // TODO: add a way of removing accounts/instances
+  @action
+  void removeInstance(String instanceUrl) {
+    users.remove(instanceUrl);
+    tokens.remove(instanceUrl);
+  }
+
+  @action
+  void removeAccount(String instanceUrl, String username) {
+    users[instanceUrl].remove(username);
+    tokens[instanceUrl].remove(username);
+  }
 }

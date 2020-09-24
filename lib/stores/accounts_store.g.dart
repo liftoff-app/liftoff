@@ -23,6 +23,13 @@ mixin _$AccountsStore on _AccountsStore, Store {
       (_$defaultTokenComputed ??= Computed<Jwt>(() => super.defaultToken,
               name: '_AccountsStore.defaultToken'))
           .value;
+  Computed<bool> _$hasNoAccountComputed;
+
+  @override
+  bool get hasNoAccount =>
+      (_$hasNoAccountComputed ??= Computed<bool>(() => super.hasNoAccount,
+              name: '_AccountsStore.hasNoAccount'))
+          .value;
 
   final _$usersAtom = Atom(name: '_AccountsStore.users');
 
@@ -96,12 +103,24 @@ mixin _$AccountsStore on _AccountsStore, Store {
   final _$addInstanceAsyncAction = AsyncAction('_AccountsStore.addInstance');
 
   @override
-  Future<void> addInstance(String instanceUrl) {
-    return _$addInstanceAsyncAction.run(() => super.addInstance(instanceUrl));
+  Future<void> addInstance(String instanceUrl, {bool assumeValid = false}) {
+    return _$addInstanceAsyncAction
+        .run(() => super.addInstance(instanceUrl, assumeValid: assumeValid));
   }
 
   final _$_AccountsStoreActionController =
       ActionController(name: '_AccountsStore');
+
+  @override
+  void _assignDefaultAccounts() {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore._assignDefaultAccounts');
+    try {
+      return super._assignDefaultAccounts();
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setDefaultAccount(String instanceUrl, String username) {
@@ -126,12 +145,35 @@ mixin _$AccountsStore on _AccountsStore, Store {
   }
 
   @override
+  void removeInstance(String instanceUrl) {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore.removeInstance');
+    try {
+      return super.removeInstance(instanceUrl);
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeAccount(String instanceUrl, String username) {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore.removeAccount');
+    try {
+      return super.removeAccount(instanceUrl, username);
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 users: ${users},
 tokens: ${tokens},
 defaultUser: ${defaultUser},
-defaultToken: ${defaultToken}
+defaultToken: ${defaultToken},
+hasNoAccount: ${hasNoAccount}
     ''';
   }
 }
