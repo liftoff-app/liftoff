@@ -24,14 +24,14 @@ class AddInstancePage extends HookWidget {
     final prevInput = usePrevious(instanceController.text);
     final debounce = useDebounce(() async {
       if (prevInput == instanceController.text) return;
-      if (instanceController.text.isEmpty) {
+
+      final inst = _fixInstanceUrl(instanceController.text);
+      if (inst.isEmpty) {
         isSite.value = null;
         return;
       }
-
       try {
-        icon.value =
-            (await LemmyApi(instanceController.text).v1.getSite()).site.icon;
+        icon.value = (await LemmyApi(inst).v1.getSite()).site.icon;
         isSite.value = true;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
@@ -50,7 +50,8 @@ class AddInstancePage extends HookWidget {
 
     handleOnAdd() async {
       try {
-        await accountsStore.addInstance(instanceController.text,
+        await accountsStore.addInstance(
+            _fixInstanceUrl(instanceController.text),
             assumeValid: true);
         Navigator.of(context).pop(instanceController.text);
       } on Exception catch (err) {
@@ -145,4 +146,18 @@ class AddInstancePage extends HookWidget {
       ),
     );
   }
+}
+
+String _fixInstanceUrl(String inst) {
+  if (inst.startsWith('https://')) {
+    inst = inst.substring(8);
+  }
+
+  if (inst.startsWith('http://')) {
+    inst = inst.substring(7);
+  }
+
+  if (inst.endsWith('/')) inst = inst.substring(0, inst.length - 1);
+
+  return inst;
 }
