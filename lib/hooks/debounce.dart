@@ -8,12 +8,16 @@ import 'ref.dart';
 class Debounce {
   final bool loading;
   final void Function() callback;
+  final void Function() dispose;
 
   void call() => callback();
+
+  // void dispose() {}
 
   const Debounce({
     @required this.loading,
     @required this.callback,
+    @required this.dispose,
   });
 }
 
@@ -40,9 +44,11 @@ Debounce useDebounce(
   }
 
   return Debounce(
-      loading: loading.value,
-      callback: () {
-        cancel();
-        start();
-      });
+    loading: loading.value,
+    callback: () {
+      cancel();
+      start();
+    },
+    dispose: cancel,
+  );
 }
