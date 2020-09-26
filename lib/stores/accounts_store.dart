@@ -133,7 +133,7 @@ abstract class _AccountsStore with Store {
   }
 
   bool isAnonymousFor(String instanceUrl) => Computed(() {
-        if (!users.containsKey(instanceUrl)) {
+        if (!instances.contains(instanceUrl)) {
           return true;
         }
 
@@ -141,10 +141,14 @@ abstract class _AccountsStore with Store {
       }).value;
 
   @computed
-  bool get hasNoAccount => users.values.every((e) => e.isEmpty);
+  bool get hasNoAccount => loggedInInstances.isEmpty;
 
   @computed
   Iterable<String> get instances => users.keys;
+
+  @computed
+  Iterable<String> get loggedInInstances =>
+      instances.where((e) => !isAnonymousFor(e));
 
   /// adds a new account
   /// if it's the first account ever the account is

@@ -49,12 +49,14 @@ class CreatePost extends HookWidget {
     final titleController = useTextEditingController();
     final bodyController = useTextEditingController();
     final accStore = useAccountsStore();
-    final selectedInstance = useState(instanceUrl ?? accStore.instances.first);
+    final selectedInstance =
+        useState(instanceUrl ?? accStore.loggedInInstances.first);
     final selectedCommunity = useState(communityName);
     final showFancy = useState(false);
     final nsfw = useState(false);
     final delayed = useDelayedLoading();
 
+    // TODO: use drop down from AddAccountPage
     final instanceDropdown = InputDecorator(
       decoration: const InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
@@ -63,7 +65,7 @@ class CreatePost extends HookWidget {
         child: DropdownButton<String>(
           value: selectedInstance.value,
           onChanged: (val) => selectedInstance.value = val,
-          items: accStore.instances
+          items: accStore.loggedInInstances
               .map((instance) => DropdownMenuItem(
                     value: instance,
                     child: Text(instance),
@@ -113,8 +115,6 @@ class CreatePost extends HookWidget {
     handleSubmit() async {
       final api = LemmyApi(selectedInstance.value).v1;
 
-      // TODO: this does not handle the case where this instance is added
-      // but user is not logged in
       final token = accStore.defaultTokenFor(selectedInstance.value);
 
       delayed.start();

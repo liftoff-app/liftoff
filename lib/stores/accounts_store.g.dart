@@ -37,6 +37,13 @@ mixin _$AccountsStore on _AccountsStore, Store {
       (_$instancesComputed ??= Computed<Iterable<String>>(() => super.instances,
               name: '_AccountsStore.instances'))
           .value;
+  Computed<Iterable<String>> _$loggedInInstancesComputed;
+
+  @override
+  Iterable<String> get loggedInInstances => (_$loggedInInstancesComputed ??=
+          Computed<Iterable<String>>(() => super.loggedInInstances,
+              name: '_AccountsStore.loggedInInstances'))
+      .value;
 
   final _$usersAtom = Atom(name: '_AccountsStore.users');
 
@@ -147,7 +154,8 @@ tokens: ${tokens},
 defaultUser: ${defaultUser},
 defaultToken: ${defaultToken},
 hasNoAccount: ${hasNoAccount},
-instances: ${instances}
+instances: ${instances},
+loggedInInstances: ${loggedInInstances}
     ''';
   }
 }
