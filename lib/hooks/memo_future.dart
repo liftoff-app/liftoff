@@ -3,4 +3,4 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 AsyncSnapshot<T> useMemoFuture<T>(Future<T> Function() valueBuilder,
         [List<Object> keys = const <dynamic>[]]) =>
-    useFuture(useMemoized<Future<T>>(valueBuilder, keys));
+    useFuture(useMemoized<Future<T>>(valueBuilder, keys), preserveState: false);
