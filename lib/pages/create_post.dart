@@ -5,7 +5,9 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
+import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
@@ -24,37 +26,43 @@ class CreatePostFab extends HookWidget {
 }
 
 class CreatePost extends HookWidget {
-  final String instanceUrl;
-  final String communityName;
-  final int communityId;
+  final CommunityView community;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  CreatePost()
-      : instanceUrl = null,
-        communityName = null,
-        communityId = null;
-
-  CreatePost.to({
-    @required this.instanceUrl,
-    @required this.communityName,
-    @required this.communityId,
-  })  : assert(instanceUrl != null),
-        assert(communityName != null),
-        assert(communityId != null);
+  CreatePost() : community = null;
+  CreatePost.toCommunity(this.community);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final urlController = useTextEditingController();
     final titleController = useTextEditingController();
     final bodyController = useTextEditingController();
     final accStore = useAccountsStore();
     final selectedInstance =
-        useState(instanceUrl ?? accStore.loggedInInstances.first);
-    final selectedCommunity = useState(communityName);
+        useState(community?.instanceUrl ?? accStore.loggedInInstances.first);
+    final selectedCommunity = useState(community);
     final showFancy = useState(false);
     final nsfw = useState(false);
     final delayed = useDelayedLoading();
+
+    final allInstancesSnap = useMemoFuture(
+      () => LemmyApi(selectedInstance.value)
+          .v1
+          .listCommunities(
+            sort: SortType.hot,
+            limit: 9999,
+            auth: accStore.defaultTokenFor(selectedInstance.value).raw,
+          )
+          .then(
+        (value) {
+          value.sort((a, b) => a.name.compareTo(b.name));
+          return value;
+        },
+      ),
+      [selectedInstance.value],
+    );
 
     // TODO: use drop down from AddAccountPage
     final instanceDropdown = InputDecorator(
@@ -71,6 +79,34 @@ class CreatePost extends HookWidget {
                     child: Text(instance),
                   ))
               .toList(),
+        ),
+      ),
+    );
+
+    // TODO: use lazy autocomplete
+    final communitiesDropdown = InputDecorator(
+      decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+          border: OutlineInputBorder()),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: selectedCommunity.value?.name,
+          hint: Text('Community'),
+          onChanged: (val) => selectedCommunity.value =
+              allInstancesSnap.data.firstWhere((e) => e.name == val),
+          items: allInstancesSnap.hasData
+              ? allInstancesSnap.data
+                  .map((e) => DropdownMenuItem(
+                        value: e.name,
+                        child: Text(e.name),
+                      ))
+                  .toList()
+              : [
+                  DropdownMenuItem(
+                    value: '',
+                    child: CircularProgressIndicator(),
+                  )
+                ],
         ),
       ),
     );
@@ -113,6 +149,13 @@ class CreatePost extends HookWidget {
     );
 
     handleSubmit() async {
+      if (selectedCommunity.value == null || titleController.text.isEmpty) {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text('Choosing a community and a title is required'),
+        ));
+        return;
+      }
+
       final api = LemmyApi(selectedInstance.value).v1;
 
       final token = accStore.defaultTokenFor(selectedInstance.value);
@@ -124,13 +167,12 @@ class CreatePost extends HookWidget {
             body: bodyController.text.isEmpty ? null : bodyController.text,
             nsfw: nsfw.value,
             name: titleController.text,
-            communityId: null,
+            communityId: selectedCommunity.value.id,
             auth: token.raw);
         goTo(context, (_) => FullPostPage.fromPostView(res));
         return;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        print(e);
         scaffoldKey.currentState
             .showSnackBar(SnackBar(content: Text('Failed to post')));
       }
@@ -154,6 +196,7 @@ class CreatePost extends HookWidget {
       body: Column(
         children: [
           instanceDropdown,
+          communitiesDropdown,
           url,
           title,
           Expanded(child: body),
