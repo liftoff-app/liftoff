@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
@@ -288,13 +289,21 @@ class _AboutTab extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final commSnap = useFuture(communitiesFuture);
+    final accStore = useAccountsStore();
 
     void goToCommunities() {
       goTo(
         context,
         (_) => CommunitiesListPage(
-            communities: commSnap.data,
-            title: 'Communities of ${site.site.name}'),
+          fetcher: (page, batchSize, sortType) =>
+              LemmyApi(instanceUrl).v1.listCommunities(
+                    sort: sortType,
+                    limit: batchSize,
+                    page: page,
+                    auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                  ),
+          title: 'Communities of ${site.site.name}',
+        ),
       );
     }
 
