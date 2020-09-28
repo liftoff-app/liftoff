@@ -27,6 +27,7 @@ class CommunitiesListPage extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        brightness: theme.brightness,
         title: Text(title ?? '', style: theme.textTheme.headline6),
         centerTitle: true,
         backgroundColor: theme.cardColor,
