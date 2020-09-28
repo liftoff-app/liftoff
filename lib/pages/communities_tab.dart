@@ -115,6 +115,7 @@ class CommunitiesTab extends HookWidget {
     toggleCollapse(int i) => isCollapsed.value =
         isCollapsed.value.mapWithIndex((e, j) => j == i ? !e : e).toList();
 
+    // TODO: add observer
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -140,6 +141,7 @@ class CommunitiesTab extends HookWidget {
             Column(
               children: [
                 ListTile(
+                  onTap: () {}, // TODO: open instance
                   onLongPress: () => toggleCollapse(i),
                   leading: instances[i].icon != null
                       ? CachedNetworkImage(
@@ -172,6 +174,7 @@ class CommunitiesTab extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 17),
                       child: ListTile(
+                        onTap: () {}, // TODO: open community
                         dense: true,
                         leading: VerticalDivider(
                           color: theme.hintColor,
