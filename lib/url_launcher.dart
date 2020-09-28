@@ -22,15 +22,16 @@ Future<void> linkLauncher({
   final instances = context.read<AccountsStore>().users.keys.toList();
 
   final chonks = url.split('/');
+  if (chonks.length == 1) return openInBrowser(url);
 
   // CHECK IF LINK TO USER
-  if (chonks[1] == 'u') {
+  if (url.startsWith('/u/')) {
     return push(
         () => UserPage.fromName(instanceUrl: instanceUrl, username: chonks[2]));
   }
 
   // CHECK IF LINK TO COMMUNITY
-  if (chonks[1] == 'c') {
+  if (url.startsWith('/c/')) {
     return push(() => CommunityPage.fromName(
         communityName: chonks[2], instanceUrl: instanceUrl));
   }
