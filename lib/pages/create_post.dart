@@ -36,7 +36,6 @@ class CreatePost extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final urlController = useTextEditingController();
     final titleController = useTextEditingController();
     final bodyController = useTextEditingController();
