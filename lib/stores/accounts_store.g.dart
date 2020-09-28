@@ -117,12 +117,24 @@ mixin _$AccountsStore on _AccountsStore, Store {
   final _$addInstanceAsyncAction = AsyncAction('_AccountsStore.addInstance');
 
   @override
-  Future<void> addInstance(String instanceUrl) {
-    return _$addInstanceAsyncAction.run(() => super.addInstance(instanceUrl));
+  Future<void> addInstance(String instanceUrl, {bool assumeValid = false}) {
+    return _$addInstanceAsyncAction
+        .run(() => super.addInstance(instanceUrl, assumeValid: assumeValid));
   }
 
   final _$_AccountsStoreActionController =
       ActionController(name: '_AccountsStore');
+
+  @override
+  void _assignDefaultAccounts() {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore._assignDefaultAccounts');
+    try {
+      return super._assignDefaultAccounts();
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setDefaultAccount(String instanceUrl, String username) {
@@ -141,6 +153,28 @@ mixin _$AccountsStore on _AccountsStore, Store {
         name: '_AccountsStore.setDefaultAccountFor');
     try {
       return super.setDefaultAccountFor(instanceUrl, username);
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeInstance(String instanceUrl) {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore.removeInstance');
+    try {
+      return super.removeInstance(instanceUrl);
+    } finally {
+      _$_AccountsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeAccount(String instanceUrl, String username) {
+    final _$actionInfo = _$_AccountsStoreActionController.startAction(
+        name: '_AccountsStore.removeAccount');
+    try {
+      return super.removeAccount(instanceUrl, username);
     } finally {
       _$_AccountsStoreActionController.endAction(_$actionInfo);
     }
