@@ -13,6 +13,7 @@ import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
+import '../widgets/infinite_post_list.dart';
 import '../widgets/markdown_text.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
@@ -212,11 +213,14 @@ class InstancePage extends HookWidget {
           ],
           body: TabBarView(
             children: [
-              ListView(
-                children: [
-                  Center(child: Text('posts go here')),
-                ],
-              ),
+              InfinitePostList(
+                  fetcher: (page, batchSize, sort) =>
+                      LemmyApi(instanceUrl).v1.getPosts(
+                            // TODO: switch between all and subscribed
+                            type: PostListingType.all,
+                            sort: sort,
+                            page: page,
+                          )),
               ListView(
                 children: [
                   Center(child: Text('comments go here')),
