@@ -436,7 +436,6 @@ class _Badge extends StatelessWidget {
           style:
               TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
         ),
-        // TODO: change border radius
       ),
     );
   }

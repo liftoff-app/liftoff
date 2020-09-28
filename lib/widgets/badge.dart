@@ -6,7 +6,7 @@ class Badge extends StatelessWidget {
 
   Badge({
     @required this.child,
-    this.borderRadius = const BorderRadius.all(Radius.circular(5)),
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   });
 
   @override

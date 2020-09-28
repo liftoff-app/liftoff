@@ -517,7 +517,6 @@ class _Badge extends StatelessWidget {
           style:
               TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
         ),
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
     );
   }
