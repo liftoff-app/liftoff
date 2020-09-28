@@ -14,6 +14,14 @@ Future<dynamic> goTo(
       builder: builder,
     ));
 
+Future<dynamic> goToReplace(
+  BuildContext context,
+  Widget Function(BuildContext context) builder,
+) =>
+    Navigator.of(context).pushReplacement(CupertinoPageRoute(
+      builder: builder,
+    ));
+
 void goToInstance(BuildContext context, String instanceUrl) =>
     goTo(context, (context) => InstancePage(instanceUrl: instanceUrl));
 

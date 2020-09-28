@@ -169,7 +169,7 @@ class CreatePost extends HookWidget {
             name: titleController.text,
             communityId: selectedCommunity.value.id,
             auth: token.raw);
-        goTo(context, (_) => FullPostPage.fromPostView(res));
+        goToReplace(context, (_) => FullPostPage.fromPostView(res));
         return;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
