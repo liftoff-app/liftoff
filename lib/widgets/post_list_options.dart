@@ -31,9 +31,7 @@ class PostListOptions extends HookWidget {
                   RadioListTile<SortType>(
                     value: x,
                     groupValue: sort.value,
-                    // TODO: use something more robust and user-friendly
-                    //       than describeEnum
-                    title: Text(describeEnum(x)),
+                    title: Text(x.value),
                     onChanged: (val) {
                       sort.value = val;
                       onChange(val);
@@ -57,7 +55,7 @@ class PostListOptions extends HookWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(describeEnum(sort.value)),
+                Text(sort.value.value),
                 const SizedBox(width: 8),
                 Icon(Icons.arrow_drop_down),
               ],
