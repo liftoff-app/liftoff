@@ -8,9 +8,11 @@ import 'bottom_modal.dart';
 class PostListOptions extends HookWidget {
   final void Function(SortType sort) onChange;
   final SortType defaultSort;
+  final bool styleButton;
 
   PostListOptions({
     @required this.onChange,
+    this.styleButton = true,
     this.defaultSort = SortType.active,
   });
 
@@ -62,10 +64,11 @@ class PostListOptions extends HookWidget {
             ),
           ),
           Spacer(),
-          IconButton(
-            icon: Icon(Icons.view_stream),
-            onPressed: () => print('TBD'),
-          )
+          if (styleButton)
+            IconButton(
+              icon: Icon(Icons.view_stream),
+              onPressed: () => print('TBD'),
+            ),
         ],
       ),
     );
