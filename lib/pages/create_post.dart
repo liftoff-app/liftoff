@@ -9,6 +9,7 @@ import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../util/spaced.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
@@ -194,7 +195,7 @@ class CreatePost extends HookWidget {
         ],
       ),
       body: Column(
-        children: [
+        children: spaced(6, [
           instanceDropdown,
           communitiesDropdown,
           url,
@@ -223,7 +224,7 @@ class CreatePost extends HookWidget {
               )
             ],
           ),
-        ],
+        ]),
       ),
     );
   }
