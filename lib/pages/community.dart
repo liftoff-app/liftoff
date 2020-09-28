@@ -8,7 +8,6 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
-import '../hooks/infinite_scroll.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
@@ -19,10 +18,8 @@ import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
-import '../widgets/infinite_scroll.dart';
+import '../widgets/infinite_post_list.dart';
 import '../widgets/markdown_text.dart';
-import '../widgets/post.dart';
-import '../widgets/post_list_options.dart';
 
 class CommunityPage extends HookWidget {
   final CommunityView _community;
@@ -211,7 +208,15 @@ class CommunityPage extends HookWidget {
           ],
           body: TabBarView(
             children: [
-              _PostsTab(community),
+              InfinitePostList(
+                  fetcher: (page, batchSize, sort) =>
+                      LemmyApi(community.instanceUrl).v1.getPosts(
+                            type: PostListingType.community,
+                            sort: sort,
+                            communityId: community.id,
+                            page: page,
+                            // limit: 10,
+                          )),
               ListView(
                 children: [
                   Center(child: Text('comments go here')),
@@ -490,47 +495,6 @@ class _AboutTab extends StatelessWidget {
             ),
         ]
       ],
-    );
-  }
-}
-
-class _PostsTab extends HookWidget {
-  final CommunityView community;
-
-  _PostsTab(this.community);
-
-  @override
-  Widget build(BuildContext context) {
-    final isc = useInfiniteScrollController();
-    final sort = useState(SortType.active);
-
-    void changeSorting(SortType newSort) {
-      sort.value = newSort;
-      isc.clear();
-    }
-
-    return InfiniteScroll<PostView>(
-      prepend: PostListOptions(
-        onChange: changeSorting,
-        defaultSort: SortType.active,
-      ),
-      builder: (post) => Column(
-        children: [
-          Post(post),
-          SizedBox(height: 20),
-        ],
-      ),
-      padding: EdgeInsets.zero,
-      fetchMore: (page, batchSize) =>
-          LemmyApi(community.instanceUrl).v1.getPosts(
-                type: PostListingType.community,
-                sort: sort.value,
-                communityId: community.id,
-                page: page,
-                // limit: 10,
-              ),
-      controller: isc,
-      // batchSize: 20,
     );
   }
 }
