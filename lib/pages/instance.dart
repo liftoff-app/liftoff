@@ -14,8 +14,8 @@ import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
-import '../widgets/infinite_post_list.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/sortable_infinite_list.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
 
