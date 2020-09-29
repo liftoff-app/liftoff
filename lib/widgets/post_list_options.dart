@@ -67,6 +67,7 @@ class PostListOptions extends HookWidget {
           if (styleButton)
             IconButton(
               icon: Icon(Icons.view_stream),
+              // TODO: create compact post and dropdown for selecting
               onPressed: () => print('TBD'),
             ),
         ],
