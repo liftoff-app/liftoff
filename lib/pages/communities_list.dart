@@ -15,8 +15,9 @@ class CommunitiesListPage extends StatelessWidget {
     SortType sortType,
   ) fetcher;
 
-  const CommunitiesListPage({Key key, @required this.fetcher, this.title})
+  const CommunitiesListPage({Key key, @required this.fetcher, this.title = ''})
       : assert(fetcher != null),
+        assert(title != null),
         super(key: key);
 
   @override
@@ -25,7 +26,7 @@ class CommunitiesListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         brightness: theme.brightness,
-        title: Text(title ?? '', style: theme.textTheme.headline6),
+        title: Text(title, style: theme.textTheme.headline6),
         centerTitle: true,
         backgroundColor: theme.cardColor,
         iconTheme: theme.iconTheme,
