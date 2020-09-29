@@ -38,6 +38,7 @@ class InstancePage extends HookWidget {
     final theme = Theme.of(context);
     final siteSnap = useFuture(siteFuture);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
+    final accStore = useAccountsStore();
 
     if (!siteSnap.hasData) {
       return Scaffold(
@@ -220,13 +221,19 @@ class InstancePage extends HookWidget {
                             // TODO: switch between all and subscribed
                             type: PostListingType.all,
                             sort: sort,
+                            limit: batchSize,
                             page: page,
+                            auth: accStore.defaultTokenFor(instanceUrl)?.raw,
                           )),
-              ListView(
-                children: [
-                  Center(child: Text('comments go here')),
-                ],
-              ),
+              InfiniteCommentList(
+                  fetcher: (page, batchSize, sort) =>
+                      LemmyApi(instanceUrl).v1.getComments(
+                            type: CommentListingType.all,
+                            sort: sort,
+                            limit: batchSize,
+                            page: page,
+                            auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                          )),
               _AboutTab(site,
                   communitiesFuture: communitiesFuture,
                   instanceUrl: instanceUrl),

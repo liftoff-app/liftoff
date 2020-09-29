@@ -18,8 +18,8 @@ import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
-import '../widgets/infinite_post_list.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/sortable_infinite_list.dart';
 
 class CommunityPage extends HookWidget {
   final CommunityView _community;
@@ -209,19 +209,27 @@ class CommunityPage extends HookWidget {
           body: TabBarView(
             children: [
               InfinitePostList(
-                  fetcher: (page, batchSize, sort) =>
-                      LemmyApi(community.instanceUrl).v1.getPosts(
-                            type: PostListingType.community,
-                            sort: sort,
-                            communityId: community.id,
-                            page: page,
-                            // limit: 10,
-                          )),
-              ListView(
-                children: [
-                  Center(child: Text('comments go here')),
-                ],
+                fetcher: (page, batchSize, sort) =>
+                    LemmyApi(community.instanceUrl).v1.getPosts(
+                          type: PostListingType.community,
+                          sort: sort,
+                          communityId: community.id,
+                          page: page,
+                          limit: 10,
+                        ),
               ),
+              InfiniteCommentList(
+                  fetcher: (page, batchSize, sortType) =>
+                      LemmyApi(community.instanceUrl).v1.getComments(
+                            communityId: community.id,
+                            auth: accountsStore
+                                .defaultTokenFor(community.instanceUrl)
+                                ?.raw,
+                            type: CommentListingType.community,
+                            sort: sortType,
+                            limit: batchSize,
+                            page: page,
+                          )),
               _AboutTab(
                 community: community,
                 moderators: fullCommunitySnap.data?.moderators,
