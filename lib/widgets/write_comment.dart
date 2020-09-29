@@ -62,7 +62,7 @@ class WriteComment extends HookWidget {
         final res = await api.createComment(
             content: controller.text,
             postId: post?.id ?? comment.postId,
-            parentId: comment?.parentId,
+            parentId: comment?.id,
             auth: token.raw);
         Navigator.of(context).pop(res);
         // ignore: avoid_catches_without_on_clauses

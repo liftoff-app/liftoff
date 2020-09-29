@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'hooks/stores.dart';
 import 'pages/communities_tab.dart';
+import 'pages/create_post.dart';
 import 'pages/profile_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
@@ -109,10 +110,7 @@ class MyHomePage extends HookWidget {
         index: currentTab.value,
         children: pages,
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {}, // TODO: create post
-      ),
+      floatingActionButton: CreatePostFab(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
