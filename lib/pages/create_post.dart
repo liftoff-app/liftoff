@@ -47,7 +47,7 @@ class CreatePost extends HookWidget {
     final nsfw = useState(false);
     final delayed = useDelayedLoading();
 
-    final allInstancesSnap = useMemoFuture(
+    final allCommunitiesSnap = useMemoFuture(
       () => LemmyApi(selectedInstance.value)
           .v1
           .listCommunities(
@@ -93,9 +93,9 @@ class CreatePost extends HookWidget {
           value: selectedCommunity.value?.name,
           hint: Text('Community'),
           onChanged: (val) => selectedCommunity.value =
-              allInstancesSnap.data.firstWhere((e) => e.name == val),
-          items: allInstancesSnap.hasData
-              ? allInstancesSnap.data
+              allCommunitiesSnap.data.firstWhere((e) => e.name == val),
+          items: allCommunitiesSnap.hasData
+              ? allCommunitiesSnap.data
                   .map((e) => DropdownMenuItem(
                         value: e.name,
                         child: Text(e.name),
