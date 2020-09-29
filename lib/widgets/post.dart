@@ -25,10 +25,11 @@ enum MediaType {
   gallery,
   video,
   other,
+  none,
 }
 
 MediaType whatType(String url) {
-  if (url == null) return MediaType.other;
+  if (url == null || url.isEmpty) return MediaType.none;
 
   // TODO: make detection more nuanced
   if (url.endsWith('.jpg') ||
@@ -141,7 +142,7 @@ class Post extends HookWidget {
         linkLauncher(context: context, url: post.url, instanceUrl: instanceUrl);
 
     final urlDomain = () {
-      if (post.url == null) return null;
+      if (whatType(post.url) == MediaType.none) return null;
 
       final url = post.url.split('/')[2];
       if (url.startsWith('www.')) return url.substring(4);
@@ -262,6 +263,9 @@ class Post extends HookWidget {
                     IconButton(
                       onPressed: () => showMoreMenu(context, post),
                       icon: Icon(Icons.more_vert),
+                      iconSize: 24,
+                      padding: EdgeInsets.all(0),
+                      visualDensity: VisualDensity.compact,
                     )
                   ],
                 )
@@ -283,8 +287,7 @@ class Post extends HookWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
-              if (post.url != null &&
-                  whatType(post.url) == MediaType.other &&
+              if (whatType(post.url) == MediaType.other &&
                   post.thumbnailUrl != null) ...[
                 Spacer(),
                 InkWell(
@@ -342,11 +345,12 @@ class Post extends HookWidget {
                   ]),
                   Row(children: [
                     Flexible(
-                        child: Text('${post.embedTitle}',
+                        child: Text('${post.embedTitle ?? ''}',
                             style: theme.textTheme.subtitle1
                                 .apply(fontWeightDelta: 2)))
                   ]),
-                  if (post.embedDescription != null)
+                  if (post.embedDescription != null &&
+                      post.embedDescription.isNotEmpty)
                     Row(children: [
                       Flexible(child: Text(post.embedDescription))
                     ]),
@@ -416,9 +420,10 @@ class Post extends HookWidget {
           children: [
             info(),
             title(),
-            if (whatType(post.url) != MediaType.other)
+            if (whatType(post.url) != MediaType.other &&
+                whatType(post.url) != MediaType.none)
               postImage()
-            else if (post.url != null)
+            else if (post.url != null && post.url.isNotEmpty)
               linkPreview(),
             if (post.body != null)
               Padding(

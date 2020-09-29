@@ -24,9 +24,13 @@ class InfiniteScroll<T> extends HookWidget {
   final Widget Function(T data) builder;
   final Future<List<T>> Function(int page, int batchSize) fetchMore;
   final InfiniteScrollController controller;
+  final Widget prepend;
+  final EdgeInsetsGeometry padding;
 
   InfiniteScroll({
     this.batchSize = 10,
+    this.prepend = const SizedBox.shrink(),
+    this.padding,
     this.loadingWidget =
         const ListTile(title: Center(child: CircularProgressIndicator())),
     @required this.builder,
@@ -54,14 +58,20 @@ class InfiniteScroll<T> extends HookWidget {
     final page = data.value.length ~/ batchSize + 1;
 
     return ListView.builder(
-      // +1 for the loading widget
-      itemCount: data.value.length + 1,
+      padding: padding,
+      // +2 for the loading widget and prepend widget
+      itemCount: data.value.length + 2,
       itemBuilder: (_, i) {
+        if (i == 0) {
+          return prepend;
+        }
+        i -= 1;
+
         // reached the bottom, fetch more
         if (i == data.value.length) {
           // if there are no more, skip
           if (!hasMore.current) {
-            return Container();
+            return SizedBox.shrink();
           }
 
           // if it's already fetching more, skip

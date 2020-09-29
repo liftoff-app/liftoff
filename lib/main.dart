@@ -122,8 +122,8 @@ class MyHomePage extends HookWidget {
             children: [
               tabButton(Icons.home),
               tabButton(Icons.list),
-              Container(),
-              Container(),
+              SizedBox.shrink(),
+              SizedBox.shrink(),
               tabButton(Icons.search),
               tabButton(Icons.person),
             ],

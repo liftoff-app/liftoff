@@ -19,6 +19,7 @@ import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/sortable_infinite_list.dart';
 
 class CommunityPage extends HookWidget {
   final CommunityView _community;
@@ -207,16 +208,28 @@ class CommunityPage extends HookWidget {
           ],
           body: TabBarView(
             children: [
-              ListView(
-                children: [
-                  Center(child: Text('posts go here')),
-                ],
+              InfinitePostList(
+                fetcher: (page, batchSize, sort) =>
+                    LemmyApi(community.instanceUrl).v1.getPosts(
+                          type: PostListingType.community,
+                          sort: sort,
+                          communityId: community.id,
+                          page: page,
+                          limit: batchSize,
+                        ),
               ),
-              ListView(
-                children: [
-                  Center(child: Text('comments go here')),
-                ],
-              ),
+              InfiniteCommentList(
+                  fetcher: (page, batchSize, sortType) =>
+                      LemmyApi(community.instanceUrl).v1.getComments(
+                            communityId: community.id,
+                            auth: accountsStore
+                                .defaultTokenFor(community.instanceUrl)
+                                ?.raw,
+                            type: CommentListingType.community,
+                            sort: sortType,
+                            limit: batchSize,
+                            page: page,
+                          )),
               _AboutTab(
                 community: community,
                 moderators: fullCommunitySnap.data?.moderators,
@@ -289,7 +302,7 @@ class _CommunityOverview extends StatelessWidget {
           url: community.banner,
           child: CachedNetworkImage(
             imageUrl: community.banner,
-            errorWidget: (_, __, ___) => Container(),
+            errorWidget: (_, __, ___) => SizedBox.shrink(),
           ),
         ),
       SafeArea(
@@ -486,7 +499,7 @@ class _AboutTab extends StatelessWidget {
           for (final mod in moderators)
             ListTile(
               title: Text(mod.userPreferredUsername ?? '@${mod.userName}'),
-              onTap: () => goToUser.byId(context, mod.instanceUrl, mod.id),
+              onTap: () => goToUser.byId(context, mod.instanceUrl, mod.userId),
             ),
         ]
       ],
@@ -512,7 +525,6 @@ class _Badge extends StatelessWidget {
           style:
               TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
         ),
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
     );
   }

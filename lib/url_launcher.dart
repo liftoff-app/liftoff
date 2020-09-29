@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'pages/community.dart';
-import 'pages/full_post.dart';
 import 'pages/instance.dart';
+import 'pages/media_view.dart';
 import 'pages/user.dart';
 import 'stores/accounts_store.dart';
 import 'util/goto.dart';
@@ -22,15 +22,16 @@ Future<void> linkLauncher({
   final instances = context.read<AccountsStore>().users.keys.toList();
 
   final chonks = url.split('/');
+  if (chonks.length == 1) return openInBrowser(url);
 
   // CHECK IF LINK TO USER
-  if (chonks[1] == 'u') {
+  if (url.startsWith('/u/')) {
     return push(
         () => UserPage.fromName(instanceUrl: instanceUrl, username: chonks[2]));
   }
 
   // CHECK IF LINK TO COMMUNITY
-  if (chonks[1] == 'c') {
+  if (url.startsWith('/c/')) {
     return push(() => CommunityPage.fromName(
         communityName: chonks[2], instanceUrl: instanceUrl));
   }
@@ -50,28 +51,23 @@ Future<void> linkLauncher({
     final split = rest.split('/');
     switch (split[1]) {
       case 'c':
-        return push(() => CommunityPage.fromName(
-            communityName: split[2], instanceUrl: matchedInstance));
+        return goToCommunity.byName(context, matchedInstance, split[2]);
 
       case 'u':
-        return push(() => UserPage.fromName(
-            instanceUrl: matchedInstance, username: split[2]));
+        return goToUser.byName(context, matchedInstance, split[2]);
 
       case 'post':
         if (split.length == 3) {
-          return push(() => FullPostPage(
-              id: int.parse(split[2]), instanceUrl: matchedInstance));
+          return goToPost(context, matchedInstance, int.parse(split[2]));
         } else if (split.length == 5) {
           // TODO: post with focus on comment thread
           print('comment in post');
-          return;
+          return goToPost(context, matchedInstance, int.parse(split[2]));
         }
         break;
 
       case 'pictrs':
-        // TODO: put here push to media view
-        print('pictrs');
-        return;
+        return push(() => MediaViewPage(url));
 
       case 'communities':
         // TODO: put here push to communities page

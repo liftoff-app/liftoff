@@ -80,7 +80,7 @@ class AddInstancePage extends HookWidget {
                 child: FullscreenableImage(
                   child: CachedNetworkImage(
                     imageUrl: icon.value,
-                    errorWidget: (_, __, ___) => Container(),
+                    errorWidget: (_, __, ___) => SizedBox.shrink(),
                   ),
                   url: icon.value,
                 ))

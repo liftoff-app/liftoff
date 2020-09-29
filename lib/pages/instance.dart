@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
@@ -14,6 +15,7 @@ import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/sortable_infinite_list.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
 
@@ -36,6 +38,7 @@ class InstancePage extends HookWidget {
     final theme = Theme.of(context);
     final siteSnap = useFuture(siteFuture);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
+    final accStore = useAccountsStore();
 
     if (!siteSnap.hasData) {
       return Scaffold(
@@ -165,7 +168,7 @@ class InstancePage extends HookWidget {
                       url: site.site.banner,
                       child: CachedNetworkImage(
                         imageUrl: site.site.banner,
-                        errorWidget: (_, __, ___) => Container(),
+                        errorWidget: (_, __, ___) => SizedBox.shrink(),
                       ),
                     ),
                   SafeArea(
@@ -212,16 +215,25 @@ class InstancePage extends HookWidget {
           ],
           body: TabBarView(
             children: [
-              ListView(
-                children: [
-                  Center(child: Text('posts go here')),
-                ],
-              ),
-              ListView(
-                children: [
-                  Center(child: Text('comments go here')),
-                ],
-              ),
+              InfinitePostList(
+                  fetcher: (page, batchSize, sort) =>
+                      LemmyApi(instanceUrl).v1.getPosts(
+                            // TODO: switch between all and subscribed
+                            type: PostListingType.all,
+                            sort: sort,
+                            limit: batchSize,
+                            page: page,
+                            auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                          )),
+              InfiniteCommentList(
+                  fetcher: (page, batchSize, sort) =>
+                      LemmyApi(instanceUrl).v1.getComments(
+                            type: CommentListingType.all,
+                            sort: sort,
+                            limit: batchSize,
+                            page: page,
+                            auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                          )),
               _AboutTab(site,
                   communitiesFuture: communitiesFuture,
                   instanceUrl: instanceUrl),
@@ -284,13 +296,21 @@ class _AboutTab extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final commSnap = useFuture(communitiesFuture);
+    final accStore = useAccountsStore();
 
     void goToCommunities() {
       goTo(
         context,
         (_) => CommunitiesListPage(
-            communities: commSnap.data,
-            title: 'Communities of ${site.site.name}'),
+          fetcher: (page, batchSize, sortType) =>
+              LemmyApi(instanceUrl).v1.listCommunities(
+                    sort: sortType,
+                    limit: batchSize,
+                    page: page,
+                    auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                  ),
+          title: 'Communities of ${site.site.name}',
+        ),
       );
     }
 
@@ -436,7 +456,6 @@ class _Badge extends StatelessWidget {
           style:
               TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
         ),
-        // TODO: change border radius
       ),
     );
   }

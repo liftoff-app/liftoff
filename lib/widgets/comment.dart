@@ -251,7 +251,7 @@ class Comment extends HookWidget {
     }();
 
     final actions = collapsed.value
-        ? Container()
+        ? SizedBox.shrink()
         : Row(children: [
             if (selectable.value && !comment.deleted && !comment.removed)
               _CommentAction(
@@ -324,7 +324,7 @@ class Comment extends HookWidget {
                               ),
                             ),
                           ),
-                          errorWidget: (_, __, ___) => Container(),
+                          errorWidget: (_, __, ___) => SizedBox.shrink(),
                         ),
                       ),
                     ),

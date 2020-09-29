@@ -8,9 +8,11 @@ import 'bottom_modal.dart';
 class PostListOptions extends HookWidget {
   final void Function(SortType sort) onChange;
   final SortType defaultSort;
+  final bool styleButton;
 
   PostListOptions({
     @required this.onChange,
+    this.styleButton = true,
     this.defaultSort = SortType.active,
   });
 
@@ -31,9 +33,7 @@ class PostListOptions extends HookWidget {
                   RadioListTile<SortType>(
                     value: x,
                     groupValue: sort.value,
-                    // TODO: use something more robust and user-friendly
-                    //       than describeEnum
-                    title: Text(describeEnum(x)),
+                    title: Text(x.value),
                     onChanged: (val) {
                       sort.value = val;
                       onChange(val);
@@ -57,17 +57,19 @@ class PostListOptions extends HookWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(describeEnum(sort.value)),
+                Text(sort.value.value),
                 const SizedBox(width: 8),
                 Icon(Icons.arrow_drop_down),
               ],
             ),
           ),
           Spacer(),
-          IconButton(
-            icon: Icon(Icons.view_stream),
-            onPressed: () => print('TBD'),
-          )
+          if (styleButton)
+            IconButton(
+              icon: Icon(Icons.view_stream),
+              // TODO: create compact post and dropdown for selecting
+              onPressed: () => print('TBD'),
+            ),
         ],
       ),
     );
