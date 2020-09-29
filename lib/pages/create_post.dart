@@ -193,37 +193,39 @@ class CreatePost extends HookWidget {
           ),
         ],
       ),
-      body: Column(
-        children: spaced(6, [
-          instanceDropdown,
-          communitiesDropdown,
-          url,
-          title,
-          Expanded(child: body),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: () => nsfw.value = !nsfw.value,
-                child: Row(
-                  children: [
-                    Checkbox(
-                      value: nsfw.value,
-                      onChanged: (val) => nsfw.value = val,
-                    ),
-                    Text('NSFW')
-                  ],
+      body: SafeArea(
+        child: Column(
+          children: spaced(6, [
+            instanceDropdown,
+            communitiesDropdown,
+            url,
+            title,
+            Expanded(child: body),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () => nsfw.value = !nsfw.value,
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: nsfw.value,
+                        onChanged: (val) => nsfw.value = val,
+                      ),
+                      Text('NSFW')
+                    ],
+                  ),
                 ),
-              ),
-              FlatButton(
-                onPressed: delayed.pending ? () {} : handleSubmit,
-                child: delayed.loading
-                    ? CircularProgressIndicator()
-                    : Text('post'),
-              )
-            ],
-          ),
-        ]),
+                FlatButton(
+                  onPressed: delayed.pending ? () {} : handleSubmit,
+                  child: delayed.loading
+                      ? CircularProgressIndicator()
+                      : Text('post'),
+                )
+              ],
+            ),
+          ]),
+        ),
       ),
     );
   }
