@@ -10,6 +10,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/iterators.dart';
+import '../util/goto.dart';
 import '../util/text_color.dart';
 
 class CommunitiesTab extends HookWidget {
@@ -26,6 +27,7 @@ class CommunitiesTab extends HookWidget {
         useMemoized(() => accountsStore.loggedInInstances.length);
     final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
+    // TODO: rebuild when instances/accounts change
     final instancesSnap = useMemoFuture(() {
       final futures = accountsStore.loggedInInstances
           .map(
@@ -112,7 +114,6 @@ class CommunitiesTab extends HookWidget {
     toggleCollapse(int i) => isCollapsed.value =
         isCollapsed.value.mapWithIndex((e, j) => j == i ? !e : e).toList();
 
-    // TODO: add observer
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -138,7 +139,8 @@ class CommunitiesTab extends HookWidget {
             Column(
               children: [
                 ListTile(
-                  onTap: () {}, // TODO: open instance
+                  onTap: () => goToInstance(
+                      context, accountsStore.loggedInInstances.elementAt(i)),
                   onLongPress: () => toggleCollapse(i),
                   leading: instances[i].icon != null
                       ? CachedNetworkImage(
@@ -171,7 +173,10 @@ class CommunitiesTab extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 17),
                       child: ListTile(
-                        onTap: () {}, // TODO: open community
+                        onTap: () => goToCommunity.byId(
+                            context,
+                            accountsStore.loggedInInstances.elementAt(i),
+                            comm.communityId),
                         dense: true,
                         leading: VerticalDivider(
                           color: theme.hintColor,
