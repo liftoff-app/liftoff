@@ -46,7 +46,7 @@ class AddAccountPage extends HookWidget {
         builder: (context) => BottomModal(
           title: 'select instance',
           child: Column(children: [
-            for (final i in accountsStore.users.keys)
+            for (final i in accountsStore.instances)
               RadioListTile<String>(
                 value: i,
                 groupValue: selectedInstance.value,

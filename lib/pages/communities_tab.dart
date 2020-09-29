@@ -22,14 +22,12 @@ class CommunitiesTab extends HookWidget {
     useValueListenable(filterController);
     final accountsStore = useAccountsStore();
 
-    final amountOfDisplayInstances = useMemoized(() => accountsStore.users.keys
-        .where((e) => !accountsStore.isAnonymousFor(e))
-        .length);
+    final amountOfDisplayInstances =
+        useMemoized(() => accountsStore.loggedInInstances.length);
     final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
     final instancesSnap = useMemoFuture(() {
-      final futures = accountsStore.users.keys
-          .where((e) => !accountsStore.isAnonymousFor(e))
+      final futures = accountsStore.loggedInInstances
           .map(
             (instanceUrl) =>
                 LemmyApi(instanceUrl).v1.getSite().then((e) => e.site),
@@ -39,8 +37,7 @@ class CommunitiesTab extends HookWidget {
       return Future.wait(futures);
     });
     final communitiesSnap = useMemoFuture(() {
-      final futures = accountsStore.users.keys
-          .where((e) => !accountsStore.isAnonymousFor(e))
+      final futures = accountsStore.loggedInInstances
           .map(
             (instanceUrl) => LemmyApi(instanceUrl)
                 .v1

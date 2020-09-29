@@ -19,7 +19,7 @@ Future<void> linkLauncher({
     goTo(context, (c) => builder());
   }
 
-  final instances = context.read<AccountsStore>().users.keys.toList();
+  final instances = context.read<AccountsStore>().instances;
 
   final chonks = url.split('/');
   if (chonks.length == 1) return openInBrowser(url);

@@ -9,13 +9,20 @@ part of 'accounts_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$AccountsStore on _AccountsStore, Store {
-  Computed<User> _$defaultUserComputed;
+  Computed<String> _$defaultUsernameComputed;
 
   @override
-  User get defaultUser =>
-      (_$defaultUserComputed ??= Computed<User>(() => super.defaultUser,
-              name: '_AccountsStore.defaultUser'))
-          .value;
+  String get defaultUsername => (_$defaultUsernameComputed ??= Computed<String>(
+          () => super.defaultUsername,
+          name: '_AccountsStore.defaultUsername'))
+      .value;
+  Computed<String> _$defaultInstanceUrlComputed;
+
+  @override
+  String get defaultInstanceUrl => (_$defaultInstanceUrlComputed ??=
+          Computed<String>(() => super.defaultInstanceUrl,
+              name: '_AccountsStore.defaultInstanceUrl'))
+      .value;
   Computed<Jwt> _$defaultTokenComputed;
 
   @override
@@ -44,21 +51,6 @@ mixin _$AccountsStore on _AccountsStore, Store {
           Computed<Iterable<String>>(() => super.loggedInInstances,
               name: '_AccountsStore.loggedInInstances'))
       .value;
-
-  final _$usersAtom = Atom(name: '_AccountsStore.users');
-
-  @override
-  ObservableMap<String, ObservableMap<String, User>> get users {
-    _$usersAtom.reportRead();
-    return super.users;
-  }
-
-  @override
-  set users(ObservableMap<String, ObservableMap<String, User>> value) {
-    _$usersAtom.reportWrite(value, super.users, () {
-      super.users = value;
-    });
-  }
 
   final _$tokensAtom = Atom(name: '_AccountsStore.tokens');
 
@@ -183,9 +175,9 @@ mixin _$AccountsStore on _AccountsStore, Store {
   @override
   String toString() {
     return '''
-users: ${users},
 tokens: ${tokens},
-defaultUser: ${defaultUser},
+defaultUsername: ${defaultUsername},
+defaultInstanceUrl: ${defaultInstanceUrl},
 defaultToken: ${defaultToken},
 hasNoAccount: ${hasNoAccount},
 instances: ${instances},
