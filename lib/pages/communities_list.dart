@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmur/widgets/sortable_infinite_list.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
-import '../hooks/infinite_scroll.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
-import '../widgets/infinite_scroll.dart';
 import '../widgets/markdown_text.dart';
-import '../widgets/post_list_options.dart';
 
 class CommunitiesListPage extends StatelessWidget {
   final String title;
@@ -46,59 +44,42 @@ class InfiniteCommunitiesList extends HookWidget {
   InfiniteCommunitiesList({@required this.fetcher}) : assert(fetcher != null);
 
   @override
-  Widget build(BuildContext context) {
-    final isc = useInfiniteScrollController();
-    final sort = useState(SortType.active);
-
-    void changeSorting(SortType newSort) {
-      sort.value = newSort;
-      isc.clear();
-    }
-
-    return InfiniteScroll<CommunityView>(
-      prepend: PostListOptions(
-        onChange: changeSorting,
-        styleButton: false,
-      ),
-      builder: (community) => Column(
-        children: [
-          Divider(),
-          ListTile(
-            title: Text(community.name),
-            subtitle: community.description != null
-                ? Opacity(
-                    opacity: 0.5,
-                    child: MarkdownText(
-                      community.description,
-                      instanceUrl: community.instanceUrl,
-                    ),
-                  )
-                : null,
-            onTap: () => goToCommunity.byId(
-                context, community.instanceUrl, community.id),
-            leading: community.icon != null
-                ? CachedNetworkImage(
-                    height: 50,
-                    width: 50,
-                    imageUrl: community.icon,
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.cover, image: imageProvider),
+  Widget build(BuildContext context) => SortableInfiniteList<CommunityView>(
+        fetcher: fetcher,
+        builder: (community) => Column(
+          children: [
+            Divider(),
+            ListTile(
+              title: Text(community.name),
+              subtitle: community.description != null
+                  ? Opacity(
+                      opacity: 0.5,
+                      child: MarkdownText(
+                        community.description,
+                        instanceUrl: community.instanceUrl,
                       ),
-                    ),
-                    errorWidget: (_, __, ___) => SizedBox(width: 50),
-                  )
-                : SizedBox(width: 50),
-            // TODO: add trailing button for un/subscribing to communities
-          ),
-        ],
-      ),
-      padding: EdgeInsets.zero,
-      fetchMore: (page, batchSize) => fetcher(page, batchSize, sort.value),
-      controller: isc,
-      batchSize: 20,
-    );
-  }
+                    )
+                  : null,
+              onTap: () => goToCommunity.byId(
+                  context, community.instanceUrl, community.id),
+              leading: community.icon != null
+                  ? CachedNetworkImage(
+                      height: 50,
+                      width: 50,
+                      imageUrl: community.icon,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover, image: imageProvider),
+                        ),
+                      ),
+                      errorWidget: (_, __, ___) => SizedBox(width: 50),
+                    )
+                  : SizedBox(width: 50),
+              // TODO: add trailing button for un/subscribing to communities
+            ),
+          ],
+        ),
+      );
 }
