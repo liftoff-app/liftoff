@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:lemmur/widgets/sortable_infinite_list.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/sortable_infinite_list.dart';
 
 class CommunitiesListPage extends StatelessWidget {
   final String title;

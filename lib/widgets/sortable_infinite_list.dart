@@ -54,18 +54,16 @@ class InfinitePostList extends StatelessWidget {
 
   InfinitePostList({this.fetcher});
 
-  Widget build(BuildContext context) {
-    return SortableInfiniteList<PostView>(
-      onStyleChange: () {},
-      builder: (post) => Column(
-        children: [
-          Post(post),
-          SizedBox(height: 20),
-        ],
-      ),
-      fetcher: fetcher,
-    );
-  }
+  Widget build(BuildContext context) => SortableInfiniteList<PostView>(
+        onStyleChange: () {},
+        builder: (post) => Column(
+          children: [
+            Post(post),
+            SizedBox(height: 20),
+          ],
+        ),
+        fetcher: fetcher,
+      );
 }
 
 class InfiniteCommentList extends StatelessWidget {
