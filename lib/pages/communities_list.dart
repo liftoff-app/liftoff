@@ -64,7 +64,6 @@ class CommunitiesListPage extends StatelessWidget {
                       errorWidget: (_, __, ___) => SizedBox(width: 50),
                     )
                   : SizedBox(width: 50),
-              // TODO: add trailing button for un/subscribing to communities
             ),
           ],
         ),
