@@ -29,7 +29,7 @@ class InfiniteScroll<T> extends HookWidget {
 
   InfiniteScroll({
     this.batchSize = 10,
-    this.prepend = const SizedBox(height: 0, width: 0),
+    this.prepend = const SizedBox.shrink(),
     this.padding,
     this.loadingWidget =
         const ListTile(title: Center(child: CircularProgressIndicator())),
@@ -71,7 +71,7 @@ class InfiniteScroll<T> extends HookWidget {
         if (i == data.value.length) {
           // if there are no more, skip
           if (!hasMore.current) {
-            return Container();
+            return SizedBox.shrink();
           }
 
           // if it's already fetching more, skip

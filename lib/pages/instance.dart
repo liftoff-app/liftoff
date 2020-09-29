@@ -168,7 +168,7 @@ class InstancePage extends HookWidget {
                       url: site.site.banner,
                       child: CachedNetworkImage(
                         imageUrl: site.site.banner,
-                        errorWidget: (_, __, ___) => Container(),
+                        errorWidget: (_, __, ___) => SizedBox.shrink(),
                       ),
                     ),
                   SafeArea(

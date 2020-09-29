@@ -120,7 +120,7 @@ class AddAccountPage extends HookWidget {
                   url: icon.value,
                   child: CachedNetworkImage(
                     imageUrl: icon.value,
-                    errorWidget: (_, __, ___) => Container(),
+                    errorWidget: (_, __, ___) => SizedBox.shrink(),
                   ),
                 ),
               ),

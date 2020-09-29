@@ -302,7 +302,7 @@ class _CommunityOverview extends StatelessWidget {
           url: community.banner,
           child: CachedNetworkImage(
             imageUrl: community.banner,
-            errorWidget: (_, __, ___) => Container(),
+            errorWidget: (_, __, ___) => SizedBox.shrink(),
           ),
         ),
       SafeArea(

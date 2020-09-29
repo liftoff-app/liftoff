@@ -96,7 +96,7 @@ class UserProfile extends HookWidget {
           if (userViewSnap.data?.banner != null)
             CachedNetworkImage(
               imageUrl: userViewSnap.data.banner,
-              errorWidget: (_, __, ___) => Container(),
+              errorWidget: (_, __, ___) => SizedBox.shrink(),
             )
           else
             Container(
@@ -155,7 +155,7 @@ class UserProfile extends HookWidget {
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                         child: CachedNetworkImage(
                           imageUrl: userViewSnap.data.avatar,
-                          errorWidget: (_, __, ___) => Container(),
+                          errorWidget: (_, __, ___) => SizedBox.shrink(),
                         ),
                       ),
                     ),
