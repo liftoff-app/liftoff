@@ -52,7 +52,7 @@ class InfinitePostList extends StatelessWidget {
   final Future<List<PostView>> Function(
       int page, int batchSize, SortType sortType) fetcher;
 
-  InfinitePostList({this.fetcher});
+  InfinitePostList({@required this.fetcher}) : assert(fetcher != null);
 
   Widget build(BuildContext context) => SortableInfiniteList<PostView>(
         onStyleChange: () {},
@@ -70,7 +70,7 @@ class InfiniteCommentList extends StatelessWidget {
   final Future<List<CommentView>> Function(
       int page, int batchSize, SortType sortType) fetcher;
 
-  InfiniteCommentList({this.fetcher});
+  InfiniteCommentList({@required this.fetcher}) : assert(fetcher != null);
 
   Widget build(BuildContext context) => SortableInfiniteList<CommentView>(
         builder: (comment) => Comment(
