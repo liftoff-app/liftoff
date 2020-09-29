@@ -215,7 +215,7 @@ class CommunityPage extends HookWidget {
                           sort: sort,
                           communityId: community.id,
                           page: page,
-                          limit: 10,
+                          limit: batchSize,
                         ),
               ),
               InfiniteCommentList(
