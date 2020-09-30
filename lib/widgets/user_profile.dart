@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
@@ -312,6 +313,11 @@ class _AboutTab extends HookWidget {
     final theme = Theme.of(context);
     final instanceUrl = userDetails.user.instanceUrl;
 
+    final accStore = useAccountsStore();
+
+    final isOwnedAccount = accStore.loggedInInstances.contains(instanceUrl) &&
+        accStore.tokens[instanceUrl].containsKey(userDetails.user.name);
+
     const wallPadding = EdgeInsets.symmetric(horizontal: 15);
 
     final divider = Padding(
@@ -323,6 +329,14 @@ class _AboutTab extends HookWidget {
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 20),
       children: [
+        if (isOwnedAccount)
+          Center(
+            child: FlatButton.icon(
+              icon: Icon(Icons.edit),
+              label: Text('edit profile'),
+              onPressed: () {}, // TODO: go to account editing
+            ),
+          ),
         if (userDetails.user.bio != null) ...[
           Padding(
               padding: wallPadding,
