@@ -43,6 +43,8 @@ class UserProfileTab extends HookWidget {
 
         return Scaffold(
           extendBodyBehindAppBar: true,
+          // TODO: this is not visible in light mode when the sliver app bar
+          // in UserProfile is folded
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
