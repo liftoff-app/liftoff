@@ -11,33 +11,32 @@ import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'badge.dart';
 import 'fullscreenable_image.dart';
+import 'markdown_text.dart';
+import 'sortable_infinite_list.dart';
 
 /// Shared widget of UserPage and ProfileTab
 class UserProfile extends HookWidget {
-  final Future<UserView> _userView;
+  final Future<UserDetails> _userDetails;
   final String instanceUrl;
 
   UserProfile({@required int userId, @required this.instanceUrl})
-      : _userView = LemmyApi(instanceUrl)
-            .v1
-            .getUserDetails(
-                userId: userId, savedOnly: true, sort: SortType.active)
-            .then((res) => res.user);
+      : _userDetails = LemmyApi(instanceUrl).v1.getUserDetails(
+            userId: userId, savedOnly: false, sort: SortType.active);
 
-  UserProfile.fromUserView(UserView userView)
-      : _userView = Future.value(userView),
-        instanceUrl = userView.instanceUrl;
+  UserProfile.fromUserDetails(UserDetails userDetails)
+      : _userDetails = Future.value(userDetails),
+        instanceUrl = userDetails.user.instanceUrl;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final userViewSnap = useFuture(_userView, preserveState: false);
+    final userDetailsSnap = useFuture(_userDetails, preserveState: false);
 
-    if (!userViewSnap.hasData) {
+    if (!userDetailsSnap.hasData) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final userView = userViewSnap.data;
+    final userView = userDetailsSnap.data.user;
 
     return DefaultTabController(
       length: 3,
@@ -65,47 +64,40 @@ class UserProfile extends HookWidget {
           ),
         ],
         body: TabBarView(children: [
-          ListView(children: [
-            Text(
-              'Posts',
-              style: const TextStyle(fontSize: 36),
-            )
-          ]),
-          ListView(children: [
-            Text(
-              'Comments',
-              style: const TextStyle(fontSize: 36),
-            )
-          ]),
-          // InfinitePostList(
-          //       fetcher: (page, batchSize, sort) =>
-          //           LemmyApi(community.instanceUrl).v1.getPosts(
-          //                 type: PostListingType.community,
-          //                 sort: sort,
-          //                 communityId: community.id,
-          //                 page: page,
-          //                 limit: batchSize,
-          //               ),
-          //     ),
-          //     InfiniteCommentList(
-          //         fetcher: (page, batchSize, sortType) =>
-          //             LemmyApi(community.instanceUrl).v1.getComments(
-          //                   communityId: community.id,
-          //                   auth: accountsStore
-          //                       .defaultTokenFor(community.instanceUrl)
-          //                       ?.raw,
-          //                   type: CommentListingType.community,
-          //                   sort: sortType,
-          //                   limit: batchSize,
-          //                   page: page,
-          //                 )),
-          _AboutTab(userView),
+          // TODO: first batch is already fetched on render
+          // TODO: comment and post come from the same endpoint, could be shared
+          InfinitePostList(
+            fetcher: (page, batchSize, sort) => LemmyApi(instanceUrl)
+                .v1
+                .getUserDetails(
+                  userId: userView.id,
+                  savedOnly: false,
+                  sort: SortType.active,
+                  page: page,
+                  limit: batchSize,
+                )
+                .then((val) => val.posts),
+          ),
+          InfiniteCommentList(
+            fetcher: (page, batchSize, sort) => LemmyApi(instanceUrl)
+                .v1
+                .getUserDetails(
+                  userId: userView.id,
+                  savedOnly: false,
+                  sort: SortType.active,
+                  page: page,
+                  limit: batchSize,
+                )
+                .then((val) => val.comments),
+          ),
+          _AboutTab(userDetailsSnap.data),
         ]),
       ),
     );
   }
 }
 
+/// Content in the sliver flexible space
 class _UserOverview extends HookWidget {
   final UserView userView;
 
@@ -311,28 +303,70 @@ class _UserOverview extends HookWidget {
 }
 
 class _AboutTab extends HookWidget {
-  final UserView userView;
+  final UserDetails userDetails;
 
-  const _AboutTab(this.userView);
+  const _AboutTab(this.userDetails);
 
   @override
   Widget build(BuildContext context) {
-    final bio = () {
-      if (userView.bio != null) {
-        return Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(userView.bio),
-        );
-      } else {
-        return Center(
-          child: Text(
-            'no bio',
-            style: const TextStyle(fontStyle: FontStyle.italic),
-          ),
-        );
-      }
-    }();
+    final theme = Theme.of(context);
+    final instanceUrl = userDetails.user.instanceUrl;
 
-    return ListView();
+    const wallPadding = EdgeInsets.symmetric(horizontal: 15);
+
+    final divider = Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: wallPadding.horizontal / 2, vertical: 10),
+      child: Divider(),
+    );
+
+    return ListView(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      children: [
+        if (userDetails.user.bio != null) ...[
+          Padding(
+              padding: wallPadding,
+              child:
+                  MarkdownText(userDetails.user.bio, instanceUrl: instanceUrl)),
+          divider,
+        ],
+        if (userDetails.moderates.isNotEmpty) ...[
+          Padding(
+            padding: wallPadding,
+            child: Text('Moderates', style: theme.textTheme.subtitle2),
+          ),
+          for (final comm in userDetails.moderates)
+            ListTile(
+              dense: true,
+              title: Text('!${comm.communityName}'),
+              onTap: () =>
+                  goToCommunity.byId(context, instanceUrl, comm.communityId),
+            ),
+          divider
+        ],
+        Padding(
+          padding: wallPadding,
+          child: Text('Subscribed', style: theme.textTheme.subtitle2),
+        ),
+        if (userDetails.follows.isEmpty)
+          for (final comm in userDetails.follows)
+            ListTile(
+              dense: true,
+              title: Text('!${comm.communityName}'),
+              onTap: () =>
+                  goToCommunity.byId(context, instanceUrl, comm.communityId),
+            )
+        else
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Center(
+              child: Text(
+                'this user does not subscribe to any community',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          )
+      ],
+    );
   }
 }
