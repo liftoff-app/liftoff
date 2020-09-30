@@ -7,6 +7,7 @@ import '../util/goto.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
 
+/// Infinite list of Communities fetched by the given fetcher
 class CommunitiesListPage extends StatelessWidget {
   final String title;
   final Future<List<CommunityView>> Function(

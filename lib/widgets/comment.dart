@@ -20,6 +20,7 @@ import 'bottom_modal.dart';
 import 'markdown_text.dart';
 import 'write_comment.dart';
 
+/// A single comment that renders its replies
 class Comment extends HookWidget {
   final int indent;
   final int postCreatorId;

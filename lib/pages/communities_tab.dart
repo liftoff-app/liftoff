@@ -10,8 +10,10 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/iterators.dart';
+import '../util/goto.dart';
 import '../util/text_color.dart';
 
+/// List of subscribed communities per instance
 class CommunitiesTab extends HookWidget {
   CommunitiesTab();
 
@@ -22,14 +24,13 @@ class CommunitiesTab extends HookWidget {
     useValueListenable(filterController);
     final accountsStore = useAccountsStore();
 
-    final amountOfDisplayInstances = useMemoized(() => accountsStore.users.keys
-        .where((e) => !accountsStore.isAnonymousFor(e))
-        .length);
+    final amountOfDisplayInstances =
+        useMemoized(() => accountsStore.loggedInInstances.length);
     final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
+    // TODO: rebuild when instances/accounts change
     final instancesSnap = useMemoFuture(() {
-      final futures = accountsStore.users.keys
-          .where((e) => !accountsStore.isAnonymousFor(e))
+      final futures = accountsStore.loggedInInstances
           .map(
             (instanceUrl) =>
                 LemmyApi(instanceUrl).v1.getSite().then((e) => e.site),
@@ -39,8 +40,7 @@ class CommunitiesTab extends HookWidget {
       return Future.wait(futures);
     });
     final communitiesSnap = useMemoFuture(() {
-      final futures = accountsStore.users.keys
-          .where((e) => !accountsStore.isAnonymousFor(e))
+      final futures = accountsStore.loggedInInstances
           .map(
             (instanceUrl) => LemmyApi(instanceUrl)
                 .v1
@@ -115,7 +115,6 @@ class CommunitiesTab extends HookWidget {
     toggleCollapse(int i) => isCollapsed.value =
         isCollapsed.value.mapWithIndex((e, j) => j == i ? !e : e).toList();
 
-    // TODO: add observer
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -141,7 +140,8 @@ class CommunitiesTab extends HookWidget {
             Column(
               children: [
                 ListTile(
-                  onTap: () {}, // TODO: open instance
+                  onTap: () => goToInstance(
+                      context, accountsStore.loggedInInstances.elementAt(i)),
                   onLongPress: () => toggleCollapse(i),
                   leading: instances[i].icon != null
                       ? CachedNetworkImage(
@@ -174,7 +174,10 @@ class CommunitiesTab extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 17),
                       child: ListTile(
-                        onTap: () {}, // TODO: open community
+                        onTap: () => goToCommunity.byId(
+                            context,
+                            accountsStore.loggedInInstances.elementAt(i),
+                            comm.communityId),
                         dense: true,
                         leading: VerticalDivider(
                           color: theme.hintColor,

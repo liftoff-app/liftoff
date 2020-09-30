@@ -11,6 +11,7 @@ import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'badge.dart';
 
+/// Shared widget of UserPage and ProfileTab
 class UserProfile extends HookWidget {
   final Future<UserView> _userView;
   final String instanceUrl;

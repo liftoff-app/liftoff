@@ -13,6 +13,7 @@ import '../widgets/post.dart';
 import '../widgets/save_post_button.dart';
 import '../widgets/write_comment.dart';
 
+/// Displays a post with its comment section
 class FullPostPage extends HookWidget {
   final int id;
   final String instanceUrl;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A badge with accent color as background
 class Badge extends StatelessWidget {
   final Widget child;
   final BorderRadiusGeometry borderRadius;

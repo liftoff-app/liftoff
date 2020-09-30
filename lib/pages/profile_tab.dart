@@ -4,12 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../hooks/stores.dart';
-import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/user_profile.dart';
 import 'settings.dart';
 
+/// Profile page for a logged in user. The difference between this and
+/// UserPage is that here you have access to settings
 class UserProfileTab extends HookWidget {
   UserProfileTab();
 
@@ -40,8 +41,6 @@ class UserProfileTab extends HookWidget {
           );
         }
 
-        final user = accountsStore.defaultUser;
-
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
@@ -54,7 +53,8 @@ class UserProfileTab extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '@${user.name}', // TODO: fix overflow issues
+                    // TODO: fix overflow issues
+                    '@${accountsStore.defaultUsername}',
                     style: theme.primaryTextTheme.headline6,
                     overflow: TextOverflow.fade,
                   ),
@@ -71,37 +71,33 @@ class UserProfileTab extends HookWidget {
                   builder: (_) {
                     final userTags = <String>[];
 
-                    accountsStore.users.forEach((instanceUrl, value) {
+                    accountsStore.tokens.forEach((instanceUrl, value) {
                       value.forEach((username, _) {
                         userTags.add('$username@$instanceUrl');
                       });
                     });
 
                     return Observer(
-                      builder: (ctx) {
-                        final user = accountsStore.defaultUser;
-                        final instanceUrl = user.instanceUrl;
-
-                        return BottomModal(
-                          title: 'account',
-                          child: Column(
-                            children: [
-                              for (final tag in userTags)
-                                RadioListTile<String>(
-                                  value: tag,
-                                  title: Text(tag),
-                                  groupValue: '${user.name}@$instanceUrl',
-                                  onChanged: (selected) {
-                                    final userTag = selected.split('@');
-                                    accountsStore.setDefaultAccount(
-                                        userTag[1], userTag[0]);
-                                    Navigator.of(ctx).pop();
-                                  },
-                                )
-                            ],
-                          ),
-                        );
-                      },
+                      builder: (ctx) => BottomModal(
+                        title: 'account',
+                        child: Column(
+                          children: [
+                            for (final tag in userTags)
+                              RadioListTile<String>(
+                                value: tag,
+                                title: Text(tag),
+                                groupValue: '${accountsStore.defaultUsername}'
+                                    '@${accountsStore.defaultInstanceUrl}',
+                                onChanged: (selected) {
+                                  final userTag = selected.split('@');
+                                  accountsStore.setDefaultAccount(
+                                      userTag[1], userTag[0]);
+                                  Navigator.of(ctx).pop();
+                                },
+                              )
+                          ],
+                        ),
+                      ),
                     );
                   },
                 );
@@ -117,8 +113,8 @@ class UserProfileTab extends HookWidget {
             ],
           ),
           body: UserProfile(
-            userId: user.id,
-            instanceUrl: user.instanceUrl,
+            userId: accountsStore.defaultToken.payload.id,
+            instanceUrl: accountsStore.defaultInstanceUrl,
           ),
         );
       },

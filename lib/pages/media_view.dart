@@ -7,6 +7,7 @@ import 'package:photo_view/photo_view.dart';
 
 import '../widgets/bottom_modal.dart';
 
+/// View to interact with a media object. Zoom in/out, download, share, etc.
 class MediaViewPage extends HookWidget {
   final String url;
 

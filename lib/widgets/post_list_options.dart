@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import 'bottom_modal.dart';
 
+/// Dropdown filters where you can change sorting or viewing type
 class PostListOptions extends HookWidget {
   final void Function(SortType sort) onChange;
   final SortType defaultSort;

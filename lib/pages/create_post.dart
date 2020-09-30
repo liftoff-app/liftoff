@@ -13,6 +13,7 @@ import '../util/spaced.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
+/// Fab that triggers the [CreatePost] modal
 class CreatePostFab extends HookWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class CreatePostFab extends HookWidget {
   }
 }
 
+/// Modal for creating a post to some community in some instance
 class CreatePost extends HookWidget {
   final CommunityView community;
 

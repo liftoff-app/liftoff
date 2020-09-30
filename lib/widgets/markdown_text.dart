@@ -6,6 +6,7 @@ import 'package:markdown/markdown.dart' as md;
 import '../url_launcher.dart';
 import 'fullscreenable_image.dart';
 
+/// A Markdown renderer with link/image handling
 class MarkdownText extends StatelessWidget {
   final String instanceUrl;
   final String text;

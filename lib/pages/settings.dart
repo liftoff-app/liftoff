@@ -10,6 +10,7 @@ import '../util/goto.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
 
+/// Page with a list of different settings sections
 class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,7 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
+/// Settings for theme color, AMOLED switch
 class AppearanceConfigPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
@@ -89,6 +91,7 @@ class AppearanceConfigPage extends HookWidget {
   }
 }
 
+/// Settings for managing accounts
 class AccountsConfigPage extends HookWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -169,7 +172,7 @@ class AccountsConfigPage extends HookWidget {
             onTap: () => showCupertinoModalPopup(
                 context: context,
                 builder: (_) =>
-                    AddAccountPage(instanceUrl: accountsStore.users.keys.last)),
+                    AddAccountPage(instanceUrl: accountsStore.instances.last)),
           ),
           SpeedDialChild(
             child: Icon(Icons.dns),
@@ -186,7 +189,7 @@ class AccountsConfigPage extends HookWidget {
 
           return ListView(
             children: [
-              if (accountsStore.users.isEmpty)
+              if (accountsStore.tokens.isEmpty)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -205,7 +208,7 @@ class AccountsConfigPage extends HookWidget {
                     ),
                   ],
                 ),
-              for (final entry in accountsStore.users.entries) ...[
+              for (final entry in accountsStore.tokens.entries) ...[
                 SizedBox(height: 40),
                 Slidable(
                   actionPane: SlidableBehindActionPane(),
@@ -243,7 +246,7 @@ class AccountsConfigPage extends HookWidget {
                       decoration: BoxDecoration(color: theme.canvasColor),
                       child: ListTile(
                         trailing: username ==
-                                accountsStore.defaultUserFor(entry.key).name
+                                accountsStore.defaultUsernameFor(entry.key)
                             ? Icon(
                                 Icons.check_circle_outline,
                                 color: theme.accentColor,
@@ -254,7 +257,6 @@ class AccountsConfigPage extends HookWidget {
                           accountsStore.setDefaultAccountFor(
                               entry.key, username);
                         },
-
                         onTap: () {}, // TODO: go to managing account
                       ),
                     ),
