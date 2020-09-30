@@ -13,6 +13,7 @@ import '../util/extensions/iterators.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
 
+/// List of subscribed communities per instance
 class CommunitiesTab extends HookWidget {
   CommunitiesTab();
 

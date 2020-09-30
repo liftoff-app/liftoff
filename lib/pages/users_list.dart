@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import '../util/extensions/api.dart';
 import '../widgets/markdown_text.dart';
 
+/// Infinite list of Users fetched by the given fetcher
 class UsersListPage extends StatelessWidget {
   final String title;
   final List<UserView> users;
@@ -13,6 +14,7 @@ class UsersListPage extends StatelessWidget {
       : assert(users != null),
         super(key: key);
 
+  // TODO: go to user
   void goToUser(BuildContext context, int id) {
     print('GO TO USER $id');
   }
@@ -20,6 +22,8 @@ class UsersListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    // TODO: change to infinite scroll
     return Scaffold(
         appBar: AppBar(
           title: Text(title ?? '', style: theme.textTheme.headline6),

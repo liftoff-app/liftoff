@@ -10,6 +10,7 @@ import '../util/goto.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
 
+/// Page with a list of different settings sections
 class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,7 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
+/// Settings for theme color, AMOLED switch
 class AppearanceConfigPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
@@ -89,6 +91,7 @@ class AppearanceConfigPage extends HookWidget {
   }
 }
 
+/// Settings for managing accounts
 class AccountsConfigPage extends HookWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 

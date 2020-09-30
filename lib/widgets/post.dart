@@ -44,6 +44,7 @@ MediaType whatType(String url) {
   return MediaType.other;
 }
 
+/// A post overview card
 class Post extends HookWidget {
   final PostView post;
   final String instanceUrl;
@@ -426,6 +427,7 @@ class Post extends HookWidget {
             else if (post.url != null && post.url.isNotEmpty)
               linkPreview(),
             if (post.body != null)
+            // TODO: trim content
               Padding(
                   padding: const EdgeInsets.all(10),
                   child: MarkdownText(post.body, instanceUrl: instanceUrl)),

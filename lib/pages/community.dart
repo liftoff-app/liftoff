@@ -21,6 +21,7 @@ import '../widgets/fullscreenable_image.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
 
+/// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
   final CommunityView _community;
   final String instanceUrl;

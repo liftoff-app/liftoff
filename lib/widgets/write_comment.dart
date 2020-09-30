@@ -7,6 +7,7 @@ import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import 'markdown_text.dart';
 
+/// Modal for writing a comment to a given post/comment (aka reply)
 /// on submit pops the navigator stack with a [CommentView]
 /// or `null` if cancelled
 class WriteComment extends HookWidget {

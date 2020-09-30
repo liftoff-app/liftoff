@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'config_store.g.dart';
 
+/// Store managing user-level configuration such as theme or language
 class ConfigStore extends _ConfigStore with _$ConfigStore {}
 
 abstract class _ConfigStore with Store {
@@ -42,5 +43,6 @@ abstract class _ConfigStore with Store {
   bool amoledDarkMode;
 }
 
+/// converts string to ThemeMode
 ThemeMode _themeModeFromString(String theme) =>
     ThemeMode.values.firstWhere((e) => describeEnum(e) == theme);

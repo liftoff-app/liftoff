@@ -10,6 +10,8 @@ import 'pages/user.dart';
 import 'stores/accounts_store.dart';
 import 'util/goto.dart';
 
+/// Decides where does a link link to. Either somewhere in-app:
+/// opens the correct page, or outside of the app: opens in a browser
 Future<void> linkLauncher({
   @required BuildContext context,
   @required String url,

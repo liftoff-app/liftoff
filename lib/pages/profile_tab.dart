@@ -9,6 +9,8 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/user_profile.dart';
 import 'settings.dart';
 
+/// Profile page for a logged in user. The difference between this and
+/// UserPage is that here you have access to settings 
 class UserProfileTab extends HookWidget {
   UserProfileTab();
 

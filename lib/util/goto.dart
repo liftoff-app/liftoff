@@ -6,6 +6,7 @@ import '../pages/full_post.dart';
 import '../pages/instance.dart';
 import '../pages/user.dart';
 
+/// Pushes onto the navigator stack the given widget
 Future<dynamic> goTo(
   BuildContext context,
   Widget Function(BuildContext context) builder,
@@ -14,6 +15,7 @@ Future<dynamic> goTo(
       builder: builder,
     ));
 
+/// Replaces the top of the navigator stack with the given widget
 Future<dynamic> goToReplace(
   BuildContext context,
   Widget Function(BuildContext context) builder,

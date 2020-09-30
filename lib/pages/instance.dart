@@ -19,6 +19,7 @@ import '../widgets/sortable_infinite_list.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
 
+/// Displays posts, comments, and general info about the given instance
 class InstancePage extends HookWidget {
   final String instanceUrl;
   final Future<FullSiteView> siteFuture;

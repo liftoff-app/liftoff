@@ -146,6 +146,7 @@ class AddInstancePage extends HookWidget {
   }
 }
 
+/// removes protocol and trailing slash
 String _fixInstanceUrl(String inst) {
   if (inst.startsWith('https://')) {
     inst = inst.substring(8);
@@ -155,7 +156,9 @@ String _fixInstanceUrl(String inst) {
     inst = inst.substring(7);
   }
 
-  if (inst.endsWith('/')) inst = inst.substring(0, inst.length - 1);
+  if (inst.endsWith('/')) {
+    inst = inst.substring(0, inst.length - 1);
+  }
 
   return inst;
 }

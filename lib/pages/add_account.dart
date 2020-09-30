@@ -11,6 +11,7 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import 'add_instance.dart';
 
+/// A modal where an account can be added for a given instance
 class AddAccountPage extends HookWidget {
   final String instanceUrl;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
@@ -27,7 +28,7 @@ class AddAccountPage extends HookWidget {
     useValueListenable(passwordController);
     final accountsStore = useAccountsStore();
 
-    final loading = useDelayedLoading(Duration(milliseconds: 500));
+    final loading = useDelayedLoading();
     final selectedInstance = useState(instanceUrl);
     final icon = useState<String>(null);
     useEffect(() {
@@ -38,6 +39,7 @@ class AddAccountPage extends HookWidget {
       return null;
     }, [selectedInstance.value]);
 
+    // show a modal with a list of instance checkboxes
     selectInstance() async {
       final val = await showModalBottomSheet<String>(
         backgroundColor: Colors.transparent,

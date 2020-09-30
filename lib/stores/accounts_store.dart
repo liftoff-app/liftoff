@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'accounts_store.g.dart';
 
+/// Store that manages all accounts
 class AccountsStore extends _AccountsStore with _$AccountsStore {}
 
 abstract class _AccountsStore with Store {
@@ -24,7 +25,7 @@ abstract class _AccountsStore with Store {
       (_) => save(),
     );
 
-    // check if there's a default profile and if not, select one
+    // automatically set new default accounts when accounts are added/removed
     _pickDefaultsDisposer = reaction(
       (_) => [
         tokens.forEach((k, submap) =>
@@ -87,6 +88,8 @@ abstract class _AccountsStore with Store {
   void load() async {
     final prefs = await SharedPreferences.getInstance();
 
+    // I barely understand what I did. Long story short it asserts a 
+    // raw json into a nested ObservableMap
     nestedMapsCast<T>(String key, T f(Map<String, dynamic> json)) =>
         ObservableMap.of(
           (jsonDecode(prefs.getString(key) ?? '{}') as Map<String, dynamic>)
@@ -118,6 +121,9 @@ abstract class _AccountsStore with Store {
     await prefs.setString('tokens', jsonEncode(tokens));
   }
 
+  /// Map containing JWT tokens of specific users.
+  /// If a token is in this map, the user is considered logged in 
+  /// for that account.
   /// `tokens['instanceUrl']['username']`
   @observable
   ObservableMap<String, ObservableMap<String, Jwt>> tokens;
@@ -128,7 +134,7 @@ abstract class _AccountsStore with Store {
   ObservableMap<String, String> _defaultAccounts;
 
   /// default account for the app
-  /// username@instanceUrl
+  /// It is in a form of `username@instanceUrl`
   @observable
   String _defaultAccount;
 
@@ -188,6 +194,8 @@ abstract class _AccountsStore with Store {
     _defaultAccounts[instanceUrl] = username;
   }
 
+  /// An instance is considered anonymous if it was not
+  /// added or there are no accounts assigned to it.
   bool isAnonymousFor(String instanceUrl) => Computed(() {
         if (!instances.contains(instanceUrl)) {
           return true;
@@ -196,6 +204,7 @@ abstract class _AccountsStore with Store {
         return tokens[instanceUrl].isEmpty;
       }).value;
 
+  /// `true` if no added instance has an account assigned to it
   @computed
   bool get hasNoAccount => loggedInInstances.isEmpty;
 
@@ -234,7 +243,8 @@ abstract class _AccountsStore with Store {
   }
 
   /// adds a new instance with no accounts associated with it.
-  /// Additionally makes a test GET /site request to check if the instance exists
+  /// Additionally makes a test `GET /site` request to check if the instance exists.
+  /// Check is skipped when [assumeValid] is `true`
   @action
   Future<void> addInstance(
     String instanceUrl, {
@@ -256,6 +266,7 @@ abstract class _AccountsStore with Store {
     tokens[instanceUrl] = ObservableMap();
   }
 
+  /// This also removes all accounts assigned to this instance
   @action
   void removeInstance(String instanceUrl) {
     tokens.remove(instanceUrl);

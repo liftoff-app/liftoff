@@ -18,6 +18,7 @@ class InfiniteScrollController {
   }
 }
 
+/// `ListView.builder` with asynchronous data fetching
 class InfiniteScroll<T> extends HookWidget {
   final int batchSize;
   final Widget loadingWidget;

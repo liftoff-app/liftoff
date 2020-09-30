@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Should be spawned with a showModalBottomSheet, not routed to.
 class BottomModal extends StatelessWidget {
   final Widget child;
   final String title;
