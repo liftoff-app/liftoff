@@ -5,7 +5,6 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../widgets/user_profile.dart';
 
-
 /// Page showing posts, comments, and general info about a user.
 class UserPage extends HookWidget {
   final int userId;

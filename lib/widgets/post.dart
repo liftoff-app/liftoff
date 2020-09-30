@@ -427,7 +427,7 @@ class Post extends HookWidget {
             else if (post.url != null && post.url.isNotEmpty)
               linkPreview(),
             if (post.body != null)
-            // TODO: trim content
+              // TODO: trim content
               Padding(
                   padding: const EdgeInsets.all(10),
                   child: MarkdownText(post.body, instanceUrl: instanceUrl)),

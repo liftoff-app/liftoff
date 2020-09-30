@@ -88,7 +88,7 @@ abstract class _AccountsStore with Store {
   void load() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // I barely understand what I did. Long story short it asserts a 
+    // I barely understand what I did. Long story short it asserts a
     // raw json into a nested ObservableMap
     nestedMapsCast<T>(String key, T f(Map<String, dynamic> json)) =>
         ObservableMap.of(
@@ -122,7 +122,7 @@ abstract class _AccountsStore with Store {
   }
 
   /// Map containing JWT tokens of specific users.
-  /// If a token is in this map, the user is considered logged in 
+  /// If a token is in this map, the user is considered logged in
   /// for that account.
   /// `tokens['instanceUrl']['username']`
   @observable
