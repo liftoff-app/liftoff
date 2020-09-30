@@ -88,7 +88,7 @@ abstract class _AccountsStore with Store {
   void load() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // I barely understand what I did. Long story short it asserts a
+    // I barely understand what I did. Long story short it casts a
     // raw json into a nested ObservableMap
     nestedMapsCast<T>(String key, T f(Map<String, dynamic> json)) =>
         ObservableMap.of(

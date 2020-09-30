@@ -39,7 +39,7 @@ class AddAccountPage extends HookWidget {
       return null;
     }, [selectedInstance.value]);
 
-    // show a modal with a list of instance checkboxes
+    /// show a modal with a list of instance checkboxes
     selectInstance() async {
       final val = await showModalBottomSheet<String>(
         backgroundColor: Colors.transparent,
