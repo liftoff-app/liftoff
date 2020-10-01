@@ -124,8 +124,8 @@ class _UserOverview extends HookWidget {
         else
           Container(
             width: double.infinity,
-            height: double.infinity,
-            color: theme.primaryColor,
+            height: 200,
+            color: theme.accentColor,
           ),
         Container(
           height: 200,
