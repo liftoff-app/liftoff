@@ -7,6 +7,8 @@ import '../hooks/memo_future.dart';
 import '../url_launcher.dart';
 import 'bottom_modal.dart';
 
+/// Title that opens a dialog with information about Lemmur.
+/// Licenses, changelog, version etc.
 class AboutTile extends HookWidget {
   @override
   Widget build(BuildContext context) {
