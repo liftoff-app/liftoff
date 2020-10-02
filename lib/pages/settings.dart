@@ -7,6 +7,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../hooks/stores.dart';
 import '../util/goto.dart';
+import '../widgets/about_tile.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
 
@@ -41,7 +42,8 @@ class SettingsPage extends StatelessWidget {
               onTap: () {
                 goTo(context, (_) => AppearanceConfigPage());
               },
-            )
+            ),
+            AboutTile()
           ],
         ),
       ),
