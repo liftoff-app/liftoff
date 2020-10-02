@@ -9,34 +9,29 @@ import '../widgets/user_profile.dart';
 class UserPage extends HookWidget {
   final int userId;
   final String instanceUrl;
-  final Future<UserView> _userView;
+  final Future<UserDetails> _userDetails;
 
   UserPage({@required this.userId, @required this.instanceUrl})
       : assert(userId != null),
         assert(instanceUrl != null),
-        _userView = LemmyApi(instanceUrl)
-            .v1
-            .getUserDetails(
-                userId: userId, savedOnly: true, sort: SortType.active)
-            .then((res) => res.user);
+        _userDetails = LemmyApi(instanceUrl).v1.getUserDetails(
+            userId: userId, savedOnly: true, sort: SortType.active);
+
   UserPage.fromName({@required this.instanceUrl, @required String username})
       : assert(instanceUrl != null),
         assert(username != null),
         userId = null,
-        _userView = LemmyApi(instanceUrl)
-            .v1
-            .getUserDetails(
-                username: username, savedOnly: true, sort: SortType.active)
-            .then((res) => res.user);
+        _userDetails = LemmyApi(instanceUrl).v1.getUserDetails(
+            username: username, savedOnly: true, sort: SortType.active);
 
   @override
   Widget build(BuildContext context) {
-    final userViewSnap = useFuture(_userView);
+    final userDetailsSnap = useFuture(_userDetails);
 
     final body = () {
-      if (userViewSnap.hasData) {
-        return UserProfile.fromUserView(userViewSnap.data);
-      } else if (userViewSnap.hasError) {
+      if (userDetailsSnap.hasData) {
+        return UserProfile.fromUserDetails(userDetailsSnap.data);
+      } else if (userDetailsSnap.hasError) {
         return Center(child: Text('Could not find that user.'));
       } else {
         return Center(child: CircularProgressIndicator());
@@ -49,15 +44,15 @@ class UserPage extends HookWidget {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         actions: [
-          if (userViewSnap.hasData) ...[
+          if (userDetailsSnap.hasData) ...[
             IconButton(
               icon: Icon(Icons.email),
               onPressed: () {}, // TODO: go to messaging page
             ),
             IconButton(
               icon: Icon(Icons.share),
-              onPressed: () => Share.text(
-                  'Share user', userViewSnap.data.actorId, 'text/plain'),
+              onPressed: () => Share.text('Share user',
+                  userDetailsSnap.data.user.actorId, 'text/plain'),
             )
           ]
         ],
