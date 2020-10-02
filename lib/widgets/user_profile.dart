@@ -35,6 +35,16 @@ class UserProfile extends HookWidget {
 
     if (!userDetailsSnap.hasData) {
       return const Center(child: CircularProgressIndicator());
+    } else if (userDetailsSnap.hasError) {
+      return Center(
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(Icons.error),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text('ERROR: ${userDetailsSnap.error}'),
+          )
+        ]),
+      );
     }
 
     final userView = userDetailsSnap.data.user;
@@ -45,7 +55,7 @@ class UserProfile extends HookWidget {
         headerSliverBuilder: (_, __) => [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 255,
+            expandedHeight: 265,
             toolbarHeight: 0,
             forceElevated: true,
             elevation: 0,
@@ -99,6 +109,9 @@ class UserProfile extends HookWidget {
 }
 
 /// Content in the sliver flexible space
+/// Renders general info about the given user.
+/// Such as his nickname, no. of posts, no. of posts,
+/// banner, avatar etc.
 class _UserOverview extends HookWidget {
   final UserView userView;
 
@@ -326,16 +339,42 @@ class _AboutTab extends HookWidget {
       child: Divider(),
     );
 
+    communityTile(String name, String icon, int id) => ListTile(
+          dense: true,
+          onTap: () => goToCommunity.byId(context, instanceUrl, id),
+          title: Text('!$name'),
+          leading: icon != null
+              ? CachedNetworkImage(
+                  height: 40,
+                  width: 40,
+                  imageUrl: icon,
+                  errorWidget: (_, __, ___) => SizedBox(width: 40, height: 40),
+                  imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: imageProvider,
+                          ),
+                        ),
+                      ))
+              : SizedBox(width: 40),
+        );
+
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 20),
       children: [
         if (isOwnedAccount)
-          Center(
-            child: FlatButton.icon(
-              icon: Icon(Icons.edit),
-              label: Text('edit profile'),
-              onPressed: () {}, // TODO: go to account editing
+          ListTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.edit),
+                SizedBox(width: 10),
+                Text('edit profile'),
+              ],
             ),
+            onTap: () {}, // TODO: go to account editing
           ),
         if (userDetails.user.bio != null) ...[
           Padding(
@@ -345,31 +384,35 @@ class _AboutTab extends HookWidget {
           divider,
         ],
         if (userDetails.moderates.isNotEmpty) ...[
-          Padding(
-            padding: wallPadding,
-            child: Text('Moderates', style: theme.textTheme.subtitle2),
-          ),
-          for (final comm in userDetails.moderates)
-            ListTile(
-              dense: true,
-              title: Text('!${comm.communityName}'),
-              onTap: () =>
-                  goToCommunity.byId(context, instanceUrl, comm.communityId),
+          ListTile(
+            title: Center(
+              child: Text(
+                'Moderates:',
+                style: theme.textTheme.headline6.copyWith(fontSize: 18),
+              ),
             ),
+          ),
+          for (final comm
+              in userDetails.moderates
+                ..sort((a, b) => a.communityName.compareTo(b.communityName)))
+            communityTile(
+                comm.communityName, comm.communityIcon, comm.communityId),
           divider
         ],
-        Padding(
-          padding: wallPadding,
-          child: Text('Subscribed', style: theme.textTheme.subtitle2),
+        ListTile(
+          title: Center(
+            child: Text(
+              'Subscribed:',
+              style: theme.textTheme.headline6.copyWith(fontSize: 18),
+            ),
+          ),
         ),
-        if (userDetails.follows.isEmpty)
-          for (final comm in userDetails.follows)
-            ListTile(
-              dense: true,
-              title: Text('!${comm.communityName}'),
-              onTap: () =>
-                  goToCommunity.byId(context, instanceUrl, comm.communityId),
-            )
+        if (userDetails.follows.isNotEmpty)
+          for (final comm
+              in userDetails.follows
+                ..sort((a, b) => a.communityName.compareTo(b.communityName)))
+            communityTile(
+                comm.communityName, comm.communityIcon, comm.communityId)
         else
           Padding(
             padding: const EdgeInsets.only(top: 8),
