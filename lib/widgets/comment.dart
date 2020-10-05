@@ -300,11 +300,12 @@ class Comment extends HookWidget {
               tooltip: 'more',
             ),
             _SaveComment(commentTree.comment),
-            _CommentAction(
-              icon: Icons.reply,
-              onPressed: loggedInAction((_) => reply()),
-              tooltip: 'reply',
-            ),
+            if (!isDeleted.value && !comment.removed)
+              _CommentAction(
+                icon: Icons.reply,
+                onPressed: loggedInAction((_) => reply()),
+                tooltip: 'reply',
+              ),
             _CommentAction(
               icon: Icons.arrow_upward,
               iconColor: myVote.value == VoteType.up ? theme.accentColor : null,
