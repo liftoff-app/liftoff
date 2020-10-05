@@ -104,11 +104,19 @@ class HomeTab extends HookWidget {
                       : SizedBox(width: 30),
                 ),
                 ListTile(
-                  title: Text('Subscribed'),
-                  onTap: () => pop(SelectedList(
-                    listingType: PostListingType.subscribed,
-                    instanceUrl: instance,
-                  )),
+                  title: Text(
+                    'Subscribed',
+                    style: TextStyle(
+                        color: accStore.isAnonymousFor(instance)
+                            ? theme.textTheme.bodyText1.color.withOpacity(0.4)
+                            : null),
+                  ),
+                  onTap: accStore.isAnonymousFor(instance)
+                      ? null
+                      : () => pop(SelectedList(
+                            listingType: PostListingType.subscribed,
+                            instanceUrl: instance,
+                          )),
                   leading: SizedBox(width: 20),
                 ),
                 ListTile(
