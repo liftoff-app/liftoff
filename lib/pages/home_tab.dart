@@ -139,6 +139,7 @@ class HomeTab extends HookWidget {
     }();
 
     return Scaffold(
+      // TODO: make appbar autohide when scrolling down
       appBar: AppBar(
         actions: [
           IconButton(
