@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/infinite_scroll.dart';
+import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
@@ -19,6 +21,17 @@ class HomeTab extends HookWidget {
     final accStore = useAccountsStore();
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
+    final instancesIcons = useMemoFuture(() async {
+      final map = <String, String>{};
+      final instances = accStore.instances.toList(growable: false);
+      final sites = await Future.wait(instances
+          .map((e) => LemmyApi(e).v1.getSite().catchError((e) => null)));
+      for (var i in Iterable.generate(sites.length)) {
+        map[instances[i]] = sites[i].site.icon;
+      }
+
+      return map;
+    });
 
     handleListChange() async {
       final val = await showModalBottomSheet<SelectedList>(
@@ -30,13 +43,14 @@ class HomeTab extends HookWidget {
           return BottomModal(
               child: Column(
             children: [
+              SizedBox(height: 5),
               ListTile(
                 title: Text('EVERYTHING'),
                 dense: true,
                 contentPadding: EdgeInsets.zero,
                 visualDensity:
                     VisualDensity(vertical: VisualDensity.minimumDensity),
-                leading: SizedBox(width: 20, height: 20),
+                leading: SizedBox.shrink(),
               ),
               ListTile(
                 title: Text('Subscribed'),
@@ -51,7 +65,10 @@ class HomeTab extends HookWidget {
                     pop(SelectedList(listingType: PostListingType.all)),
               ),
               for (final instance in accStore.instances) ...[
-                Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Divider(),
+                ),
                 ListTile(
                   title: Text(
                     instance.toUpperCase(),
@@ -63,7 +80,25 @@ class HomeTab extends HookWidget {
                   contentPadding: EdgeInsets.zero,
                   visualDensity:
                       VisualDensity(vertical: VisualDensity.minimumDensity),
-                  leading: SizedBox(width: 30),
+                  leading: (instancesIcons.hasData &&
+                          instancesIcons.data[instance] != null)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(width: 20),
+                            SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CachedNetworkImage(
+                                imageUrl: instancesIcons.data[instance],
+                                height: 25,
+                                width: 25,
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(width: 30),
                 ),
                 ListTile(
                   title: Text('Subscribed'),
