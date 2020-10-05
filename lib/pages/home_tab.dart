@@ -152,31 +152,32 @@ class HomeTab extends HookWidget {
         ],
         centerTitle: true,
         title: TextButton(
-            style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              primary: theme.buttonColor,
-              textStyle: theme.textTheme.headline6,
-            ),
-            onPressed: handleListChange,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Text(
-                    title,
-                    style: TextStyle(color: theme.textTheme.headline6.color),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+          style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            primary: theme.buttonColor,
+            textStyle: theme.primaryTextTheme.headline6,
+          ),
+          onPressed: handleListChange,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  title,
+                  style: theme.primaryTextTheme.headline6,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Icon(
-                  Icons.arrow_drop_down,
-                  color: theme.textTheme.headline6.color,
-                ),
-              ],
-            )),
+              ),
+              Icon(
+                Icons.arrow_drop_down,
+                color: theme.primaryTextTheme.headline6.color,
+              ),
+            ],
+          ),
+        ),
       ),
       body: InfiniteHomeList(
         controller: isc,
