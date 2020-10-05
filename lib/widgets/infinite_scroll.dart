@@ -49,10 +49,7 @@ class InfiniteScroll<T> extends HookWidget {
 
     useEffect(() {
       if (controller != null) {
-        controller.clear = () {
-          data.value = [];
-          hasMore.current = true;
-        };
+        controller.clear = () => data.value = [];
         return controller.dispose;
       }
 
