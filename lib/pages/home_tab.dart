@@ -160,9 +160,12 @@ class HomeTab extends HookWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(color: theme.textTheme.headline6.color),
+                Flexible(
+                  child: Text(
+                    title,
+                    style: TextStyle(color: theme.textTheme.headline6.color),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 Icon(
                   Icons.arrow_drop_down,
