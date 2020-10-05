@@ -1,6 +1,7 @@
 import 'dart:math' show max;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
@@ -13,6 +14,7 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/post.dart';
 import '../widgets/post_list_options.dart';
+import 'add_account.dart';
 import 'inbox.dart';
 
 class HomeTab extends HookWidget {
@@ -112,7 +114,9 @@ class HomeTab extends HookWidget {
                             : null),
                   ),
                   onTap: accStore.isAnonymousFor(instance)
-                      ? null
+                      ? () => showCupertinoModalPopup(
+                          context: context,
+                          builder: (_) => AddAccountPage(instanceUrl: instance))
                       : () => pop(SelectedList(
                             listingType: PostListingType.subscribed,
                             instanceUrl: instance,
