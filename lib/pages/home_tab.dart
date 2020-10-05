@@ -76,6 +76,7 @@ class HomeTab extends HookWidget {
                         color:
                             theme.textTheme.bodyText1.color.withOpacity(0.7)),
                   ),
+                  onTap: () => goToInstance(context, instance),
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   visualDensity:
