@@ -22,6 +22,7 @@ class HomeTab extends HookWidget {
   Widget build(BuildContext context) {
     final selectedList =
         useState(SelectedList(listingType: PostListingType.subscribed));
+    // TODO: needs to be an observer? for accounts changes
     final accStore = useAccountsStore();
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
