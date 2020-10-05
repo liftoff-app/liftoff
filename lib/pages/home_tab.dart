@@ -93,6 +93,16 @@ class HomeTab extends HookWidget {
       }
     }
 
+    final title = () {
+      final first = selectedList.value.listingType == PostListingType.subscribed
+          ? 'Subscribed'
+          : 'All';
+      final last = selectedList.value.instanceUrl == null
+          ? ''
+          : '@${selectedList.value.instanceUrl}';
+      return '$first$last';
+    }();
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -115,8 +125,14 @@ class HomeTab extends HookWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Subscribed'),
-                Icon(Icons.arrow_drop_down),
+                Text(
+                  title,
+                  style: TextStyle(color: theme.textTheme.headline6.color),
+                ),
+                Icon(
+                  Icons.arrow_drop_down,
+                  color: theme.textTheme.headline6.color,
+                ),
               ],
             )),
       ),
