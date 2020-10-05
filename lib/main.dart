@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'hooks/stores.dart';
 import 'pages/communities_tab.dart';
 import 'pages/create_post.dart';
-import 'pages/home_tab.dart';
 import 'pages/profile_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
@@ -72,7 +71,7 @@ class MyApp extends HookWidget {
 
 class MyHomePage extends HookWidget {
   final List<Widget> pages = [
-    HomeTab(),
+    Center(child: Text('home')), // TODO: home tab
     CommunitiesTab(),
     Center(child: Text('search')), // TODO: search tab
     UserProfileTab(),
