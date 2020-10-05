@@ -182,17 +182,17 @@ class Comment extends HookWidget {
                   pop();
                 },
               ),
-              ListTile(
-                leading: Icon(Icons.info_outline),
-                title: Text('Nerd stuff'),
-                onTap: () => _showCommentInfo(context),
-              ),
               if (isMine)
                 ListTile(
                   leading: Icon(isDeleted.value ? Icons.restore : Icons.delete),
                   title: Text(isDeleted.value ? 'Restore' : 'Delete'),
                   onTap: loggedInAction(handleDelete),
-                )
+                ),
+              ListTile(
+                leading: Icon(Icons.info_outline),
+                title: Text('Nerd stuff'),
+                onTap: () => _showCommentInfo(context),
+              ),
             ],
           ),
         ),
