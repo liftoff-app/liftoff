@@ -286,11 +286,3 @@ class SelectedList {
   String toString() =>
       'SelectedList({instanceUrl: $instanceUrl, listingType: $listingType})';
 }
-
-// class _Divider extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) => Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-//         child: Divider(),
-//       );
-// }
