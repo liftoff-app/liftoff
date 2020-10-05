@@ -98,6 +98,8 @@ class Comment extends HookWidget {
   }
 
   bool get isOP => commentTree.comment.creatorId == postCreatorId;
+  bool get isMine =>
+      commentTree.comment.creatorId == commentTree.comment.userId;
 
   @override
   Widget build(BuildContext context) {
@@ -106,11 +108,31 @@ class Comment extends HookWidget {
     final showRaw = useState(false);
     final collapsed = useState(false);
     final myVote = useState(commentTree.comment.myVote ?? VoteType.none);
+    final isDeleted = useState(commentTree.comment.deleted);
     final delayedVoting = useDelayedLoading();
+    final delayedDeletion = useDelayedLoading();
     final loggedInAction = useLoggedInAction(commentTree.comment.instanceUrl);
     final newReplies = useState(const <CommentTree>[]);
 
     final comment = commentTree.comment;
+
+    handleDelete(Jwt token) async {
+      final api = LemmyApi(token.payload.iss).v1;
+
+      delayedDeletion.start();
+      Navigator.of(context).pop();
+      try {
+        final res = await api.deleteComment(
+            editId: comment.id, deleted: !isDeleted.value, auth: token.raw);
+        isDeleted.value = res.deleted;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to delete/restore comment')));
+        return;
+      }
+      delayedDeletion.cancel();
+    }
 
     void _openMoreMenu(BuildContext context) {
       pop() => Navigator.of(context).pop();
@@ -165,6 +187,12 @@ class Comment extends HookWidget {
                 title: Text('Nerd stuff'),
                 onTap: () => _showCommentInfo(context),
               ),
+              if (isMine)
+                ListTile(
+                  leading: Icon(isDeleted.value ? Icons.restore : Icons.delete),
+                  title: Text(isDeleted.value ? 'Restore' : 'Delete'),
+                  onTap: loggedInAction(handleDelete),
+                )
             ],
           ),
         ),
@@ -209,7 +237,7 @@ class Comment extends HookWidget {
     }();
 
     final body = () {
-      if (comment.deleted) {
+      if (isDeleted.value) {
         return Flexible(
           child: Text(
             'comment deleted by creator',
@@ -254,7 +282,7 @@ class Comment extends HookWidget {
     final actions = collapsed.value
         ? SizedBox.shrink()
         : Row(children: [
-            if (selectable.value && !comment.deleted && !comment.removed)
+            if (selectable.value && !isDeleted.value && !comment.removed)
               _CommentAction(
                   icon: Icons.content_copy,
                   tooltip: 'copy',
@@ -268,6 +296,7 @@ class Comment extends HookWidget {
             _CommentAction(
               icon: Icons.more_horiz,
               onPressed: () => _openMoreMenu(context),
+              loading: delayedDeletion.loading,
               tooltip: 'more',
             ),
             _SaveComment(commentTree.comment),
