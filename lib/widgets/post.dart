@@ -13,7 +13,6 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../pages/full_post.dart';
 import '../url_launcher.dart';
-import '../util/cleanup_url.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import 'bottom_modal.dart';
@@ -210,7 +209,7 @@ class Post extends HookWidget {
                               text: '@',
                               style: TextStyle(fontWeight: FontWeight.w300)),
                           TextSpan(
-                              text: cleanUpUrl(instanceUrl),
+                              text: instanceUrl,
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap =
