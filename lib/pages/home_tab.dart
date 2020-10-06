@@ -90,21 +90,17 @@ class HomeTab extends HookWidget {
                         VisualDensity(vertical: VisualDensity.minimumDensity),
                     leading: (instancesIcons.hasData &&
                             instancesIcons.data[instance] != null)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(width: 20),
-                              SizedBox(
-                                width: 25,
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CachedNetworkImage(
+                                imageUrl: instancesIcons.data[instance],
                                 height: 25,
-                                child: CachedNetworkImage(
-                                  imageUrl: instancesIcons.data[instance],
-                                  height: 25,
-                                  width: 25,
-                                ),
+                                width: 25,
                               ),
-                            ],
+                            ),
                           )
                         : SizedBox(width: 30),
                   ),
