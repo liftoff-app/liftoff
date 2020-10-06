@@ -221,7 +221,11 @@ class InfiniteHomeList extends HookWidget {
       controller.clear();
     }
 
-    Future<List<PostView>> ultimateFetcher(
+    /// fetches post from many instances at once and combines them into a single
+    /// list
+    ///
+    /// Process of combining them works sort of like zip function in python
+    Future<List<PostView>> generalFetcher(
       int page,
       int limit,
       SortType sort,
@@ -259,7 +263,7 @@ class InfiniteHomeList extends HookWidget {
       return newPosts;
     }
 
-    Future<List<PostView>> Function(int, int) _fetcherFromInstance(
+    Future<List<PostView>> Function(int, int) fetcherFromInstance(
             String instanceUrl, PostListingType listingType, SortType sort) =>
         (page, batchSize) => LemmyApi(instanceUrl).v1.getPosts(
               type: listingType,
@@ -288,8 +292,8 @@ class InfiniteHomeList extends HookWidget {
       padding: EdgeInsets.zero,
       fetchMore: selectedList.instanceUrl == null
           ? (page, limit) =>
-              ultimateFetcher(page, limit, sort.value, selectedList.listingType)
-          : _fetcherFromInstance(
+              generalFetcher(page, limit, sort.value, selectedList.listingType)
+          : fetcherFromInstance(
               selectedList.instanceUrl,
               selectedList.listingType,
               sort.value,
