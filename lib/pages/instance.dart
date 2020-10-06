@@ -8,6 +8,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
@@ -352,7 +353,7 @@ class _AboutTab extends HookWidget {
               ),
             ),
             if (commSnap.hasData)
-              ...commSnap.data.getRangeOrShorter(0, 6).map((e) => ListTile(
+              ...commSnap.data.take(6).map((e) => ListTile(
                     onTap: () =>
                         goToCommunity.byId(context, e.instanceUrl, e.id),
                     title: Text(e.name),
@@ -467,14 +468,4 @@ class _Divider extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Divider(),
       );
-}
-
-extension GetRangeOrShorter on List {
-  Iterable getRangeOrShorter(int start, int end) {
-    if (length < end) {
-      return getRange(start, length);
-    } else {
-      return getRange(start, end);
-    }
-  }
 }
