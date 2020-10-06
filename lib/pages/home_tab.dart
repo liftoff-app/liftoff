@@ -259,15 +259,14 @@ class InfiniteHomeList extends HookWidget {
     }
 
     Future<List<PostView>> Function(int, int) _fetcherFromInstance(
-        String instanceUrl, PostListingType listingType, SortType sort) {
-      return (page, batchSize) => LemmyApi(instanceUrl).v1.getPosts(
-            type: listingType,
-            sort: sort,
-            page: page,
-            limit: batchSize,
-            auth: accStore.defaultTokenFor(instanceUrl)?.raw,
-          );
-    }
+            String instanceUrl, PostListingType listingType, SortType sort) =>
+        (page, batchSize) => LemmyApi(instanceUrl).v1.getPosts(
+              type: listingType,
+              sort: sort,
+              page: page,
+              limit: batchSize,
+              auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+            );
 
     return InfiniteScroll<PostView>(
       prepend: Column(
