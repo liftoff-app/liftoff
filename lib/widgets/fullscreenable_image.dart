@@ -15,13 +15,9 @@ class FullscreenableImage extends StatelessWidget {
     @required this.child,
   }) : super(key: key);
 
-  _onTap(BuildContext c) {
-    goToMedia(c, url);
-  }
-
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: () => _onTap(context),
+        onTap: () => goToMedia(context, url),
         child: Hero(
           tag: url,
           child: child,
