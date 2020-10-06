@@ -138,7 +138,6 @@ class HomeTab extends HookWidget {
         },
       );
       if (val != null) {
-        print(val);
         selectedList.value = val;
         isc.clear();
       }
