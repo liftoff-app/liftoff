@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 
 import '../pages/community.dart';
 import '../pages/full_post.dart';
@@ -63,8 +62,11 @@ void goToPost(BuildContext context, String instanceUrl, int postId) => goTo(
     context, (context) => FullPostPage(instanceUrl: instanceUrl, id: postId));
 
 void goToMedia(BuildContext context, String url) => Navigator.push(
-    context,
-    PageTransition(
-      type: PageTransitionType.fade,
-      child: MediaViewPage(url),
-    ));
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => MediaViewPage(url),
+        transitionDuration: const Duration(milliseconds: 300),
+        transitionsBuilder: (_, animation, __, child) =>
+            FadeTransition(opacity: animation, child: child),
+      ),
+    );
