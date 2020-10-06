@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmur/util/cleanup_url.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/debounce.dart';
@@ -26,7 +27,7 @@ class AddInstancePage extends HookWidget {
     final debounce = useDebounce(() async {
       if (prevInput == instanceController.text) return;
 
-      final inst = _fixInstanceUrl(instanceController.text);
+      final inst = cleanUpUrl(instanceController.text);
       if (inst.isEmpty) {
         isSite.value = null;
         return;
@@ -47,7 +48,7 @@ class AddInstancePage extends HookWidget {
         instanceController.removeListener(debounce);
       };
     }, []);
-    final inst = _fixInstanceUrl(instanceController.text);
+    final inst = cleanUpUrl(instanceController.text);
     handleOnAdd() async {
       try {
         await accountsStore.addInstance(inst, assumeValid: true);
@@ -144,21 +145,4 @@ class AddInstancePage extends HookWidget {
       ),
     );
   }
-}
-
-/// removes protocol and trailing slash
-String _fixInstanceUrl(String inst) {
-  if (inst.startsWith('https://')) {
-    inst = inst.substring(8);
-  }
-
-  if (inst.startsWith('http://')) {
-    inst = inst.substring(7);
-  }
-
-  if (inst.endsWith('/')) {
-    inst = inst.substring(0, inst.length - 1);
-  }
-
-  return inst;
 }
