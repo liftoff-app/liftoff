@@ -48,95 +48,97 @@ class HomeTab extends HookWidget {
         builder: (context) {
           pop(SelectedList thing) => Navigator.of(context).pop(thing);
           return BottomModal(
-              child: Column(
-            children: [
-              SizedBox(height: 5),
-              ListTile(
-                title: Text('EVERYTHING'),
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                visualDensity:
-                    VisualDensity(vertical: VisualDensity.minimumDensity),
-                leading: SizedBox.shrink(),
-              ),
-              ListTile(
-                title: Text('Subscribed'),
-                leading: SizedBox(width: 20, height: 20),
-                onTap: () =>
-                    pop(SelectedList(listingType: PostListingType.subscribed)),
-              ),
-              ListTile(
-                title: Text('All'),
-                leading: SizedBox(width: 20, height: 20),
-                onTap: () =>
-                    pop(SelectedList(listingType: PostListingType.all)),
-              ),
-              for (final instance in accStore.instances) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Divider(),
-                ),
+            child: Column(
+              children: [
+                SizedBox(height: 5),
                 ListTile(
-                  title: Text(
-                    instance.toUpperCase(),
-                    style: TextStyle(
-                        color:
-                            theme.textTheme.bodyText1.color.withOpacity(0.7)),
-                  ),
-                  onTap: () => goToInstance(context, instance),
+                  title: Text('EVERYTHING'),
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   visualDensity:
                       VisualDensity(vertical: VisualDensity.minimumDensity),
-                  leading: (instancesIcons.hasData &&
-                          instancesIcons.data[instance] != null)
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(width: 20),
-                            SizedBox(
-                              width: 25,
-                              height: 25,
-                              child: CachedNetworkImage(
-                                imageUrl: instancesIcons.data[instance],
-                                height: 25,
-                                width: 25,
-                              ),
-                            ),
-                          ],
-                        )
-                      : SizedBox(width: 30),
+                  leading: SizedBox.shrink(),
                 ),
                 ListTile(
-                  title: Text(
-                    'Subscribed',
-                    style: TextStyle(
-                        color: accStore.isAnonymousFor(instance)
-                            ? theme.textTheme.bodyText1.color.withOpacity(0.4)
-                            : null),
-                  ),
-                  onTap: accStore.isAnonymousFor(instance)
-                      ? () => showCupertinoModalPopup(
-                          context: context,
-                          builder: (_) => AddAccountPage(instanceUrl: instance))
-                      : () => pop(SelectedList(
-                            listingType: PostListingType.subscribed,
-                            instanceUrl: instance,
-                          )),
-                  leading: SizedBox(width: 20),
+                  title: Text('Subscribed'),
+                  leading: SizedBox(width: 20, height: 20),
+                  onTap: () => pop(
+                      SelectedList(listingType: PostListingType.subscribed)),
                 ),
                 ListTile(
                   title: Text('All'),
-                  onTap: () => pop(SelectedList(
-                    listingType: PostListingType.all,
-                    instanceUrl: instance,
-                  )),
-                  leading: SizedBox(width: 20),
+                  leading: SizedBox(width: 20, height: 20),
+                  onTap: () =>
+                      pop(SelectedList(listingType: PostListingType.all)),
                 ),
-              ]
-            ],
-          ));
+                for (final instance in accStore.instances) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Divider(),
+                  ),
+                  ListTile(
+                    title: Text(
+                      instance.toUpperCase(),
+                      style: TextStyle(
+                          color:
+                              theme.textTheme.bodyText1.color.withOpacity(0.7)),
+                    ),
+                    onTap: () => goToInstance(context, instance),
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    visualDensity:
+                        VisualDensity(vertical: VisualDensity.minimumDensity),
+                    leading: (instancesIcons.hasData &&
+                            instancesIcons.data[instance] != null)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(width: 20),
+                              SizedBox(
+                                width: 25,
+                                height: 25,
+                                child: CachedNetworkImage(
+                                  imageUrl: instancesIcons.data[instance],
+                                  height: 25,
+                                  width: 25,
+                                ),
+                              ),
+                            ],
+                          )
+                        : SizedBox(width: 30),
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Subscribed',
+                      style: TextStyle(
+                          color: accStore.isAnonymousFor(instance)
+                              ? theme.textTheme.bodyText1.color.withOpacity(0.4)
+                              : null),
+                    ),
+                    onTap: accStore.isAnonymousFor(instance)
+                        ? () => showCupertinoModalPopup(
+                            context: context,
+                            builder: (_) =>
+                                AddAccountPage(instanceUrl: instance))
+                        : () => pop(SelectedList(
+                              listingType: PostListingType.subscribed,
+                              instanceUrl: instance,
+                            )),
+                    leading: SizedBox(width: 20),
+                  ),
+                  ListTile(
+                    title: Text('All'),
+                    onTap: () => pop(SelectedList(
+                      listingType: PostListingType.all,
+                      instanceUrl: instance,
+                    )),
+                    leading: SizedBox(width: 20),
+                  ),
+                ]
+              ],
+            ),
+          );
         },
       );
       if (val != null) {
