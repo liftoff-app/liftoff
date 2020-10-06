@@ -353,7 +353,7 @@ class _AboutTab extends HookWidget {
               ),
             ),
             if (commSnap.hasData)
-              ...commSnap.data.getRange(0, 6).map((e) => ListTile(
+              ...commSnap.data.take(6).map((e) => ListTile(
                     onTap: () =>
                         goToCommunity.byId(context, e.instanceUrl, e.id),
                     title: Text(e.name),
