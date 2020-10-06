@@ -1,3 +1,4 @@
+/// Strips protocol, 'www.', and trailing '/' from [url] aka. cleans it up
 String cleanUpUrl(String url) {
   if (url.startsWith('https://')) {
     url = url.substring(8);

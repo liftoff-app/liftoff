@@ -17,6 +17,8 @@ import '../widgets/post_list_options.dart';
 import 'add_account.dart';
 import 'inbox.dart';
 
+/// First thing users sees when opening the app
+/// Shows list of posts from all or just specific instances
 class HomeTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
@@ -200,6 +202,7 @@ class HomeTab extends HookWidget {
   }
 }
 
+/// Infinite list of posts
 class InfiniteHomeList extends HookWidget {
   final Function onStyleChange;
   final InfiniteScrollController controller;
