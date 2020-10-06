@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../pages/community.dart';
 import '../pages/full_post.dart';
 import '../pages/instance.dart';
+import '../pages/media_view.dart';
 import '../pages/user.dart';
 
 /// Pushes onto the navigator stack the given widget
@@ -59,3 +61,10 @@ abstract class goToUser {
 
 void goToPost(BuildContext context, String instanceUrl, int postId) => goTo(
     context, (context) => FullPostPage(instanceUrl: instanceUrl, id: postId));
+
+void goToMedia(BuildContext context, String url) => Navigator.push(
+    context,
+    PageTransition(
+      type: PageTransitionType.fade,
+      child: MediaViewPage(url),
+    ));

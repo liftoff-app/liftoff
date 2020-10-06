@@ -16,7 +16,7 @@ class FullscreenableImage extends StatelessWidget {
   }) : super(key: key);
 
   _onTap(BuildContext c) {
-    goTo(c, (context) => MediaViewPage(url));
+    goToMedia(c, url);
   }
 
   @override
