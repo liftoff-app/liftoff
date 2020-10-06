@@ -209,6 +209,7 @@ class InfiniteHomeList extends HookWidget {
     this.onStyleChange,
     this.controller,
   }) : assert(selectedList != null);
+
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
