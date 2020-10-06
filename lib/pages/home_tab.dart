@@ -246,7 +246,7 @@ class InfiniteHomeList extends HookWidget {
                 limit: limit,
                 auth: accStore.defaultTokenFor(instanceUrl)?.raw,
               ));
-      final posts = (await Future.wait(futures));
+      final posts = await Future.wait(futures);
       final newPosts = <PostView>[];
       for (final i
           in Iterable.generate(posts.map((e) => e.length).reduce(max))) {
