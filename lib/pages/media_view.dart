@@ -10,13 +10,19 @@ import '../widgets/bottom_modal.dart';
 /// View to interact with a media object. Zoom in/out, download, share, etc.
 class MediaViewPage extends HookWidget {
   final String url;
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
 
-  const MediaViewPage(this.url);
+  MediaViewPage(this.url);
 
   @override
   Widget build(BuildContext context) {
     final showButtons = useState(true);
     final isZoomedOut = useState(true);
+
+    notImplemented() {
+      _key.currentState.showSnackBar(SnackBar(
+          content: Text("this feature hasn't been implemented yet 😰")));
+    }
 
     useEffect(() {
       if (showButtons.value) {
@@ -57,6 +63,7 @@ class MediaViewPage extends HookWidget {
                 title: Text('Share file'),
                 onTap: () {
                   Navigator.of(context).pop();
+                  notImplemented();
                   // TODO: share file
                 },
               ),
@@ -67,6 +74,7 @@ class MediaViewPage extends HookWidget {
     }
 
     return Scaffold(
+      key: _key,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: showButtons.value
@@ -83,7 +91,7 @@ class MediaViewPage extends HookWidget {
                 IconButton(
                   icon: Icon(Icons.file_download),
                   tooltip: 'download',
-                  onPressed: () {},
+                  onPressed: notImplemented,
                 ),
               ],
             )
