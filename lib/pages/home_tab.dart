@@ -23,7 +23,7 @@ class HomeTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedList =
-        useState(SelectedList(listingType: PostListingType.subscribed));
+        useState(_SelectedList(listingType: PostListingType.subscribed));
     // TODO: needs to be an observer? for accounts changes
     final accStore = useAccountsStore();
     final isc = useInfiniteScrollController();
@@ -41,12 +41,12 @@ class HomeTab extends HookWidget {
     });
 
     handleListChange() async {
-      final val = await showModalBottomSheet<SelectedList>(
+      final val = await showModalBottomSheet<_SelectedList>(
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          pop(SelectedList thing) => Navigator.of(context).pop(thing);
+          pop(_SelectedList thing) => Navigator.of(context).pop(thing);
           return BottomModal(
             child: Column(
               children: [
@@ -63,13 +63,13 @@ class HomeTab extends HookWidget {
                   title: Text('Subscribed'),
                   leading: SizedBox(width: 20, height: 20),
                   onTap: () => pop(
-                      SelectedList(listingType: PostListingType.subscribed)),
+                      _SelectedList(listingType: PostListingType.subscribed)),
                 ),
                 ListTile(
                   title: Text('All'),
                   leading: SizedBox(width: 20, height: 20),
                   onTap: () =>
-                      pop(SelectedList(listingType: PostListingType.all)),
+                      pop(_SelectedList(listingType: PostListingType.all)),
                 ),
                 for (final instance in accStore.instances) ...[
                   Padding(
@@ -117,7 +117,7 @@ class HomeTab extends HookWidget {
                             context: context,
                             builder: (_) =>
                                 AddAccountPage(instanceUrl: instance))
-                        : () => pop(SelectedList(
+                        : () => pop(_SelectedList(
                               listingType: PostListingType.subscribed,
                               instanceUrl: instance,
                             )),
@@ -125,7 +125,7 @@ class HomeTab extends HookWidget {
                   ),
                   ListTile(
                     title: Text('All'),
-                    onTap: () => pop(SelectedList(
+                    onTap: () => pop(_SelectedList(
                       listingType: PostListingType.all,
                       instanceUrl: instance,
                     )),
@@ -203,7 +203,7 @@ class HomeTab extends HookWidget {
 class InfiniteHomeList extends HookWidget {
   final Function onStyleChange;
   final InfiniteScrollController controller;
-  final SelectedList selectedList;
+  final _SelectedList selectedList;
   InfiniteHomeList({
     @required this.selectedList,
     this.onStyleChange,
@@ -304,10 +304,10 @@ class InfiniteHomeList extends HookWidget {
   }
 }
 
-class SelectedList {
+class _SelectedList {
   final String instanceUrl;
   final PostListingType listingType;
-  SelectedList({
+  _SelectedList({
     @required this.listingType,
     this.instanceUrl,
   });

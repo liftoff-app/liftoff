@@ -9,27 +9,27 @@ import '../cleanup_url.dart';
 // TODO: change it to something more robust? regex?
 
 extension GetInstanceCommunityView on CommunityView {
-  String get instanceUrl => extract(actorId);
+  String get instanceUrl => _extract(actorId);
 }
 
 extension GetInstanceUserView on UserView {
-  String get instanceUrl => extract(actorId);
+  String get instanceUrl => _extract(actorId);
 }
 
 extension GetInstanceCommunityModeratorView on CommunityModeratorView {
-  String get instanceUrl => extract(userActorId);
+  String get instanceUrl => _extract(userActorId);
 }
 
 extension GetInstancePostView on PostView {
-  String get instanceUrl => extract(apId);
+  String get instanceUrl => _extract(apId);
 }
 
 extension GetInstanceUser on User {
-  String get instanceUrl => extract(actorId);
+  String get instanceUrl => _extract(actorId);
 }
 
 extension GetInstanceCommentView on CommentView {
-  String get instanceUrl => extract(apId);
+  String get instanceUrl => _extract(apId);
 }
 
-String extract(String s) => cleanUpUrl(s.split('/')[2]);
+String _extract(String s) => cleanUpUrl(s.split('/')[2]);
