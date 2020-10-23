@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
+import '../hooks/image_picker.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../util/pictrs.dart';
 import '../util/spaced.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
@@ -48,6 +51,8 @@ class CreatePost extends HookWidget {
     final showFancy = useState(false);
     final nsfw = useState(false);
     final delayed = useDelayedLoading();
+    final imagePicker = useImagePicker();
+    final imageUploadLoading = useState(false);
 
     final allCommunitiesSnap = useMemoFuture(
       () => LemmyApi(selectedInstance.value)
@@ -65,6 +70,21 @@ class CreatePost extends HookWidget {
       ),
       [selectedInstance.value],
     );
+
+    uploadPicture() async {
+      final pic = await imagePicker.getImage(source: ImageSource.gallery);
+      // pic is null when the picker was cancelled
+      if (pic != null) {
+        imageUploadLoading.value = true;
+        final pictrs = LemmyApi(selectedInstance.value).pictrs;
+        // TODO: consider auto removing pictures when not used
+        // TODO: would help with preventing people from abusing uploads
+        final upload = await pictrs.upload(pic.path);
+        urlController.text =
+            pathToPictrs(selectedInstance.value, upload.files[0].file);
+        imageUploadLoading.value = false;
+      }
+    }
 
     // TODO: use drop down from AddAccountPage
     final instanceDropdown = InputDecorator(
@@ -113,13 +133,24 @@ class CreatePost extends HookWidget {
       ),
     );
 
-    final url = TextField(
-      controller: urlController,
-      decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'URL',
-          suffixIcon: Icon(Icons.link)),
-    );
+    final url = Row(children: [
+      Expanded(
+        child: TextField(
+          controller: urlController,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'URL',
+              suffixIcon: Icon(Icons.link)),
+        ),
+      ),
+      SizedBox(width: 5),
+      IconButton(
+        icon: imageUploadLoading.value
+            ? CircularProgressIndicator()
+            : Icon(Icons.add_photo_alternate),
+        onPressed: uploadPicture,
+      )
+    ]);
 
     final title = TextField(
       controller: titleController,
