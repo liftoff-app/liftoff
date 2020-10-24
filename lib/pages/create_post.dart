@@ -191,6 +191,7 @@ class CreatePost extends HookWidget {
           controller: bodyController,
           keyboardType: TextInputType.multiline,
           maxLines: null,
+          minLines: 5,
           textAlignVertical: TextAlignVertical.top,
           decoration:
               InputDecoration(border: OutlineInputBorder(), labelText: 'Body'),
