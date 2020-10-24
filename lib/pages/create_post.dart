@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lemmur/widgets/markdown_text.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
@@ -13,6 +12,7 @@ import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
+import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
