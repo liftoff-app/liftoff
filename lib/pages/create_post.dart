@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lemmur/widgets/markdown_text.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
@@ -12,8 +13,6 @@ import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
-import '../util/spaced.dart';
-import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
@@ -190,7 +189,7 @@ class CreatePost extends HookWidget {
       children: [
         TextField(
           controller: bodyController,
-          expands: true,
+          keyboardType: TextInputType.multiline,
           maxLines: null,
           textAlignVertical: TextAlignVertical.top,
           decoration:
@@ -202,7 +201,7 @@ class CreatePost extends HookWidget {
             bodyController.text,
             instanceUrl: selectedInstance.value,
           ),
-        )
+        ),
       ],
     );
 
@@ -252,13 +251,19 @@ class CreatePost extends HookWidget {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: spaced(6, [
+        child: ListView(
+          padding: EdgeInsets.all(5),
+          children: [
             instanceDropdown,
+            SizedBox(height: 5),
             communitiesDropdown,
+            SizedBox(height: 5),
             url,
+            SizedBox(height: 5),
             title,
-            Expanded(child: body),
+            SizedBox(height: 5),
+            body,
+            SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -282,7 +287,7 @@ class CreatePost extends HookWidget {
                 )
               ],
             ),
-          ]),
+          ],
         ),
       ),
     );
