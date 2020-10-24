@@ -53,6 +53,7 @@ class CreatePost extends HookWidget {
     final delayed = useDelayedLoading();
     final imagePicker = useImagePicker();
     final imageUploadLoading = useState(false);
+    final pictrsDeleteToken = useState<PictrsUploadFile>(null);
 
     final allCommunitiesSnap = useMemoFuture(
       () => LemmyApi(selectedInstance.value)
@@ -76,14 +77,25 @@ class CreatePost extends HookWidget {
       // pic is null when the picker was cancelled
       if (pic != null) {
         imageUploadLoading.value = true;
+
         final pictrs = LemmyApi(selectedInstance.value).pictrs;
-        // TODO: consider auto removing pictures when not used
-        // TODO: would help with preventing people from abusing uploads
         final upload = await pictrs.upload(pic.path);
+
+        pictrsDeleteToken.value = upload.files[0];
         urlController.text =
             pathToPictrs(selectedInstance.value, upload.files[0].file);
         imageUploadLoading.value = false;
       }
+    }
+
+    removePicture() {
+      LemmyApi(selectedInstance.value)
+          .pictrs
+          .delete(pictrsDeleteToken.value)
+          .catchError((_) {});
+
+      pictrsDeleteToken.value = null;
+      urlController.text = '';
     }
 
     // TODO: use drop down from AddAccountPage
@@ -136,6 +148,7 @@ class CreatePost extends HookWidget {
     final url = Row(children: [
       Expanded(
         child: TextField(
+          enabled: pictrsDeleteToken.value == null,
           controller: urlController,
           decoration: InputDecoration(
               border: OutlineInputBorder(),
@@ -147,8 +160,13 @@ class CreatePost extends HookWidget {
       IconButton(
         icon: imageUploadLoading.value
             ? CircularProgressIndicator()
-            : Icon(Icons.add_photo_alternate),
-        onPressed: uploadPicture,
+            : Icon(pictrsDeleteToken.value == null
+                ? Icons.add_photo_alternate
+                : Icons.close),
+        onPressed:
+            pictrsDeleteToken.value == null ? uploadPicture : removePicture,
+        tooltip:
+            pictrsDeleteToken.value == null ? 'Add picture' : 'Delete picture',
       )
     ]);
 
