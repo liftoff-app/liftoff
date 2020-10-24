@@ -34,6 +34,7 @@ dependencies:
   url_launcher: ^5.5.1
   shared_preferences: ">=0.5.0 <2.0.0"
   package_info: ^0.4.3
+  image_picker: ^0.6.7
 
   # state management
   flutter_hooks: ^0.13.2
@@ -44,7 +45,7 @@ dependencies:
   # utils
   timeago: ^2.0.27
   fuzzy: <1.0.0
-  lemmy_api_client: ^0.6.0
+  lemmy_api_client: ^0.7.3
 
   flutter:
     sdk: flutter

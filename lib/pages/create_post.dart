@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
+import '../hooks/image_picker.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../util/pictrs.dart';
 import '../util/spaced.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
@@ -48,6 +51,9 @@ class CreatePost extends HookWidget {
     final showFancy = useState(false);
     final nsfw = useState(false);
     final delayed = useDelayedLoading();
+    final imagePicker = useImagePicker();
+    final imageUploadLoading = useState(false);
+    final pictrsDeleteToken = useState<PictrsUploadFile>(null);
 
     final allCommunitiesSnap = useMemoFuture(
       () => LemmyApi(selectedInstance.value)
@@ -65,6 +71,39 @@ class CreatePost extends HookWidget {
       ),
       [selectedInstance.value],
     );
+
+    uploadPicture() async {
+      try {
+        final pic = await imagePicker.getImage(source: ImageSource.gallery);
+        // pic is null when the picker was cancelled
+        if (pic != null) {
+          imageUploadLoading.value = true;
+
+          final pictrs = LemmyApi(selectedInstance.value).pictrs;
+          final upload = await pictrs.upload(pic.path);
+
+          pictrsDeleteToken.value = upload.files[0];
+          urlController.text =
+              pathToPictrs(selectedInstance.value, upload.files[0].file);
+        }
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text('Failed to upload image')));
+      } finally {
+        imageUploadLoading.value = false;
+      }
+    }
+
+    removePicture() {
+      LemmyApi(selectedInstance.value)
+          .pictrs
+          .delete(pictrsDeleteToken.value)
+          .catchError((_) {});
+
+      pictrsDeleteToken.value = null;
+      urlController.text = '';
+    }
 
     // TODO: use drop down from AddAccountPage
     final instanceDropdown = InputDecorator(
@@ -113,13 +152,30 @@ class CreatePost extends HookWidget {
       ),
     );
 
-    final url = TextField(
-      controller: urlController,
-      decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'URL',
-          suffixIcon: Icon(Icons.link)),
-    );
+    final url = Row(children: [
+      Expanded(
+        child: TextField(
+          enabled: pictrsDeleteToken.value == null,
+          controller: urlController,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'URL',
+              suffixIcon: Icon(Icons.link)),
+        ),
+      ),
+      SizedBox(width: 5),
+      IconButton(
+        icon: imageUploadLoading.value
+            ? CircularProgressIndicator()
+            : Icon(pictrsDeleteToken.value == null
+                ? Icons.add_photo_alternate
+                : Icons.close),
+        onPressed:
+            pictrsDeleteToken.value == null ? uploadPicture : removePicture,
+        tooltip:
+            pictrsDeleteToken.value == null ? 'Add picture' : 'Delete picture',
+      )
+    ]);
 
     final title = TextField(
       controller: titleController,
