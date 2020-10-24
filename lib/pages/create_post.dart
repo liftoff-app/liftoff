@@ -73,17 +73,24 @@ class CreatePost extends HookWidget {
     );
 
     uploadPicture() async {
-      final pic = await imagePicker.getImage(source: ImageSource.gallery);
-      // pic is null when the picker was cancelled
-      if (pic != null) {
-        imageUploadLoading.value = true;
+      try {
+        final pic = await imagePicker.getImage(source: ImageSource.gallery);
+        // pic is null when the picker was cancelled
+        if (pic != null) {
+          imageUploadLoading.value = true;
 
-        final pictrs = LemmyApi(selectedInstance.value).pictrs;
-        final upload = await pictrs.upload(pic.path);
+          final pictrs = LemmyApi(selectedInstance.value).pictrs;
+          final upload = await pictrs.upload(pic.path);
 
-        pictrsDeleteToken.value = upload.files[0];
-        urlController.text =
-            pathToPictrs(selectedInstance.value, upload.files[0].file);
+          pictrsDeleteToken.value = upload.files[0];
+          urlController.text =
+              pathToPictrs(selectedInstance.value, upload.files[0].file);
+        }
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text('Failed to upload image')));
+      } finally {
         imageUploadLoading.value = false;
       }
     }
