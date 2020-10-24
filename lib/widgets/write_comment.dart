@@ -89,7 +89,7 @@ class WriteComment extends HookWidget {
           ),
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
@@ -107,7 +107,7 @@ class WriteComment extends HookWidget {
                 TextField(
                   controller: controller,
                   autofocus: true,
-                  expands: true,
+                  minLines: 5,
                   maxLines: null,
                   textAlignVertical: TextAlignVertical.top,
                   decoration: InputDecoration(border: OutlineInputBorder()),
