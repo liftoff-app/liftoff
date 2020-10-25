@@ -9,8 +9,8 @@ on:
     branches: [master]
 
 jobs:
-  build:
-    name: Build
+  CI:
+    name: CI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -35,14 +35,45 @@ jobs:
       - name: Run tests
         run: flutter test
 
-      - name: Build APKs
+      - name: Android build
         run: flutter build apk --split-per-abi
 
+  linux-build:
+    name: Linux build
+    needs: CI
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'krawieck/lemmur'
+    steps:
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "dev"
+
+      - name: Get additional dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libblkid-dev
+
+      - name: Enable linux support
+        run: |
+          flutter config --enable-linux-desktop
+
+      - name: Linux build
+        run: |
+          flutter build linux
+          cd build/linux/release/
+          zip -r linux.zip *
+
+  release:
+    name: Release
+    needs: linux-build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'krawieck/lemmur'
+    steps:
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'krawieck/lemmur'
         with:
           files: |
             build/app/outputs/apk/release/*.apk
+            build/linux/release/linux.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
