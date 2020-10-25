@@ -10,9 +10,9 @@ import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
-import '../util/spaced.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
@@ -255,7 +255,7 @@ class CreatePost extends HookWidget {
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.all(5),
-          children: spaced(5, [
+          children: [
             instanceDropdown,
             communitiesDropdown,
             url,
@@ -284,7 +284,7 @@ class CreatePost extends HookWidget {
                 )
               ],
             ),
-          ]),
+          ].spaced(6),
         ),
       ),
     );
