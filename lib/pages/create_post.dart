@@ -13,7 +13,6 @@ import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
-import '../util/spaced.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
