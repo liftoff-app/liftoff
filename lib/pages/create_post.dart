@@ -190,8 +190,9 @@ class CreatePost extends HookWidget {
       children: [
         TextField(
           controller: bodyController,
-          expands: true,
+          keyboardType: TextInputType.multiline,
           maxLines: null,
+          minLines: 5,
           textAlignVertical: TextAlignVertical.top,
           decoration:
               InputDecoration(border: OutlineInputBorder(), labelText: 'Body'),
@@ -202,7 +203,7 @@ class CreatePost extends HookWidget {
             bodyController.text,
             instanceUrl: selectedInstance.value,
           ),
-        )
+        ),
       ],
     );
 
@@ -252,13 +253,14 @@ class CreatePost extends HookWidget {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: spaced(6, [
+        child: ListView(
+          padding: EdgeInsets.all(5),
+          children: spaced(5, [
             instanceDropdown,
             communitiesDropdown,
             url,
             title,
-            Expanded(child: body),
+            body,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
