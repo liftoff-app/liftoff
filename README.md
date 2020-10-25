@@ -5,15 +5,35 @@
 
 A lemmy mobile client
 
+- [lemmur](#lemmur)
+  - [Build from source](#build-from-source)
+    - [Prerequisites](#prerequisites)
+    - [Android](#android)
+    - [Linux](#linux)
 
-## How to build
+## Build from source
 
-Requirements: [flutter](https://flutter.dev/docs/get-started/install) installed and added to path
+### Prerequisites
 
-```
-git clone https://github.com/krawieck/lemmur
-cd lemmur
-flutter build apk
-```
+- Install [flutter](https://flutter.dev/docs/get-started/install): To check if this step was successful run `flutter doctor` (Installing android studio is not required if you setup the android SDK yourself)
+- Clone this repo: `git clone https://github.com/krawieck/lemmur`
+- Enter the repo: `cd lemmur`
 
-the apk will be in `lemmur/build/app/outputs/flutter-apk/app-release.apk`
+### Android
+
+1. Build: `flutter build apk`
+
+The apk will be in `build/app/outputs/flutter-apk/app-release.apk`
+
+### Linux
+
+1. Make sure you have the additional [linux requirements](https://flutter.dev/desktop#additional-linux-requirements)
+2. Switch to dev channel of flutter:
+   ```sh
+   flutter channel dev
+   flutter upgrade
+   flutter config --enable-linux-desktop
+   ```
+3. Build: `flutter build linux`
+
+The executable will be in `build/linux/release/bundle/lemmur` (be aware, however, that this executable is not standalone)
