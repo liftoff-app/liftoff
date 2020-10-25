@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'shared_pref_keys.dart';
+
 /// Store that manages all accounts
 class AccountsStore extends ChangeNotifier {
   /// Map containing JWT tokens of specific users.
@@ -28,7 +30,7 @@ class AccountsStore extends ChangeNotifier {
     // I barely understand what I did. Long story short it casts a
     // raw json into a nested ObservableMap
     nestedMapsCast<T>(T f(Map<String, dynamic> json)) => HashMap.of(
-          (jsonDecode(prefs.getString('tokens') ?? '{}')
+          (jsonDecode(prefs.getString(SharedPrefKeys.tokens) ?? '{}')
                   as Map<String, dynamic>)
               ?.map(
             (k, e) => MapEntry(
@@ -45,9 +47,10 @@ class AccountsStore extends ChangeNotifier {
 
     // set saved settings or create defaults
     _tokens = nestedMapsCast((json) => Jwt(json['raw']));
-    _defaultAccount = prefs.getString('defaultAccount');
+    _defaultAccount = prefs.getString(SharedPrefKeys.defaultAccount);
     _defaultAccounts = HashMap.of(Map.castFrom(
-        jsonDecode(prefs.getString('defaultAccounts') ?? 'null') ?? {}));
+        jsonDecode(prefs.getString(SharedPrefKeys.defaultAccounts) ?? 'null') ??
+            {}));
 
     notifyListeners();
   }
@@ -55,9 +58,10 @@ class AccountsStore extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('defaultAccount', _defaultAccount);
-    await prefs.setString('defaultAccounts', jsonEncode(_defaultAccounts));
-    await prefs.setString('tokens', jsonEncode(tokens));
+    await prefs.setString(SharedPrefKeys.defaultAccount, _defaultAccount);
+    await prefs.setString(
+        SharedPrefKeys.defaultAccounts, jsonEncode(_defaultAccounts));
+    await prefs.setString(SharedPrefKeys.tokens, jsonEncode(tokens));
   }
 
   /// automatically sets default accounts
