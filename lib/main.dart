@@ -28,9 +28,8 @@ Future<void> main() async {
         ChangeNotifierProvider.value(
           value: configStore,
         ),
-        Provider<AccountsStore>(
-          create: (_) => accountsStore,
-          dispose: (_, store) => store.dispose(),
+        ChangeNotifierProvider.value(
+          value: accountsStore,
         ),
       ],
       child: MyApp(),

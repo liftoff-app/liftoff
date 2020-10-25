@@ -1,41 +1,66 @@
+import 'dart:collection';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
-import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-part 'accounts_store.g.dart';
-
 /// Store that manages all accounts
-class AccountsStore extends _AccountsStore with _$AccountsStore {}
+class AccountsStore extends ChangeNotifier {
+  /// Map containing JWT tokens of specific users.
+  /// If a token is in this map, the user is considered logged in
+  /// for that account.
+  /// `tokens['instanceUrl']['username']`
+  HashMap<String, HashMap<String, Jwt>> get tokens => _tokens;
+  HashMap<String, HashMap<String, Jwt>> _tokens;
 
-abstract class _AccountsStore with Store {
-  ReactionDisposer _saveReactionDisposer;
-  ReactionDisposer _pickDefaultsDisposer;
+  /// default account for a given instance
+  /// map where keys are instanceUrls and values are usernames
+  HashMap<String, String> _defaultAccounts;
 
-  _AccountsStore() {
-    // persistently save settings each time they are changed
-    _saveReactionDisposer = reaction(
-      (_) => [
-        tokens.forEach((k, submap) =>
-            MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
-        _defaultAccount,
-        _defaultAccounts.asObservable(),
-      ],
-      (_) => save(),
-    );
+  /// default account for the app
+  /// It is in a form of `username@instanceUrl`
+  String _defaultAccount;
 
-    // automatically set new default accounts when accounts are added/removed
-    _pickDefaultsDisposer = reaction(
-      (_) => [
-        tokens.forEach((k, submap) =>
-            MapEntry(k, submap.forEach((k2, v2) => MapEntry(k2, v2)))),
-      ],
-      (_) => _assignDefaultAccounts(),
-    );
+  Future<void> load() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // I barely understand what I did. Long story short it casts a
+    // raw json into a nested ObservableMap
+    nestedMapsCast<T>(T f(Map<String, dynamic> json)) => HashMap.of(
+          (jsonDecode(prefs.getString('tokens') ?? '{}')
+                  as Map<String, dynamic>)
+              ?.map(
+            (k, e) => MapEntry(
+              k,
+              HashMap.of(
+                (e as Map<String, dynamic>)?.map(
+                  (k, e) => MapEntry(
+                      k, e == null ? null : f(e as Map<String, dynamic>)),
+                ),
+              ),
+            ),
+          ),
+        );
+
+    // set saved settings or create defaults
+    _tokens = nestedMapsCast((json) => Jwt(json['raw']));
+    _defaultAccount = prefs.getString('defaultAccount');
+    _defaultAccounts = HashMap.of(Map.castFrom(
+        jsonDecode(prefs.getString('defaultAccounts') ?? 'null') ?? {}));
+
+    notifyListeners();
   }
 
-  @action
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('defaultAccount', _defaultAccount);
+    await prefs.setString('defaultAccounts', jsonEncode(_defaultAccounts));
+    await prefs.setString('tokens', jsonEncode(tokens));
+  }
+
+  /// automatically sets default accounts
   void _assignDefaultAccounts() {
     // remove dangling defaults
     _defaultAccounts.entries.map((dft) {
@@ -80,65 +105,6 @@ abstract class _AccountsStore with Store {
     }
   }
 
-  void dispose() {
-    _saveReactionDisposer();
-    _pickDefaultsDisposer();
-  }
-
-  void load() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // I barely understand what I did. Long story short it casts a
-    // raw json into a nested ObservableMap
-    nestedMapsCast<T>(String key, T f(Map<String, dynamic> json)) =>
-        ObservableMap.of(
-          (jsonDecode(prefs.getString(key) ?? '{}') as Map<String, dynamic>)
-              ?.map(
-            (k, e) => MapEntry(
-              k,
-              ObservableMap.of(
-                (e as Map<String, dynamic>)?.map(
-                  (k, e) => MapEntry(
-                      k, e == null ? null : f(e as Map<String, dynamic>)),
-                ),
-              ),
-            ),
-          ),
-        );
-
-    // set saved settings or create defaults
-    tokens = nestedMapsCast('tokens', (json) => Jwt(json['raw']));
-    _defaultAccount = prefs.getString('defaultAccount');
-    _defaultAccounts = ObservableMap.of(Map.castFrom(
-        jsonDecode(prefs.getString('defaultAccounts') ?? 'null') ?? {}));
-  }
-
-  void save() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString('defaultAccount', _defaultAccount);
-    await prefs.setString('defaultAccounts', jsonEncode(_defaultAccounts));
-    await prefs.setString('tokens', jsonEncode(tokens));
-  }
-
-  /// Map containing JWT tokens of specific users.
-  /// If a token is in this map, the user is considered logged in
-  /// for that account.
-  /// `tokens['instanceUrl']['username']`
-  @observable
-  ObservableMap<String, ObservableMap<String, Jwt>> tokens;
-
-  /// default account for a given instance
-  /// map where keys are instanceUrls and values are usernames
-  @observable
-  ObservableMap<String, String> _defaultAccounts;
-
-  /// default account for the app
-  /// It is in a form of `username@instanceUrl`
-  @observable
-  String _defaultAccount;
-
-  @computed
   String get defaultUsername {
     if (_defaultAccount == null) {
       return null;
@@ -147,7 +113,6 @@ abstract class _AccountsStore with Store {
     return _defaultAccount.split('@')[0];
   }
 
-  @computed
   String get defaultInstanceUrl {
     if (_defaultAccount == null) {
       return null;
@@ -156,15 +121,14 @@ abstract class _AccountsStore with Store {
     return _defaultAccount.split('@')[1];
   }
 
-  String defaultUsernameFor(String instanceUrl) => Computed(() {
-        if (isAnonymousFor(instanceUrl)) {
-          return null;
-        }
+  String defaultUsernameFor(String instanceUrl) {
+    if (isAnonymousFor(instanceUrl)) {
+      return null;
+    }
 
-        return _defaultAccounts[instanceUrl];
-      }).value;
+    return _defaultAccounts[instanceUrl];
+  }
 
-  @computed
   Jwt get defaultToken {
     if (_defaultAccount == null) {
       return null;
@@ -174,44 +138,45 @@ abstract class _AccountsStore with Store {
     return tokens[userTag[1]][userTag[0]];
   }
 
-  Jwt defaultTokenFor(String instanceUrl) => Computed(() {
-        if (isAnonymousFor(instanceUrl)) {
-          return null;
-        }
+  Jwt defaultTokenFor(String instanceUrl) {
+    if (isAnonymousFor(instanceUrl)) {
+      return null;
+    }
 
-        return tokens[instanceUrl][_defaultAccounts[instanceUrl]];
-      }).value;
+    return tokens[instanceUrl][_defaultAccounts[instanceUrl]];
+  }
 
   /// sets globally default account
-  @action
   void setDefaultAccount(String instanceUrl, String username) {
     _defaultAccount = '$username@$instanceUrl';
+
+    notifyListeners();
+    save();
   }
 
   /// sets default account for given instance
-  @action
   void setDefaultAccountFor(String instanceUrl, String username) {
     _defaultAccounts[instanceUrl] = username;
+
+    notifyListeners();
+    save();
   }
 
   /// An instance is considered anonymous if it was not
   /// added or there are no accounts assigned to it.
-  bool isAnonymousFor(String instanceUrl) => Computed(() {
-        if (!instances.contains(instanceUrl)) {
-          return true;
-        }
+  bool isAnonymousFor(String instanceUrl) {
+    if (!instances.contains(instanceUrl)) {
+      return true;
+    }
 
-        return tokens[instanceUrl].isEmpty;
-      }).value;
+    return tokens[instanceUrl].isEmpty;
+  }
 
   /// `true` if no added instance has an account assigned to it
-  @computed
   bool get hasNoAccount => loggedInInstances.isEmpty;
 
-  @computed
   Iterable<String> get instances => tokens.keys;
 
-  @computed
   Iterable<String> get loggedInInstances =>
       instances.where((e) => !isAnonymousFor(e));
 
@@ -220,7 +185,6 @@ abstract class _AccountsStore with Store {
   /// set as default for the app
   /// if it's the first account for an instance the account is
   /// set as default for that instance
-  @action
   Future<void> addAccount(
     String instanceUrl,
     String usernameOrEmail,
@@ -240,12 +204,15 @@ abstract class _AccountsStore with Store {
         await lemmy.getSite(auth: token.raw).then((value) => value.myUser);
 
     tokens[instanceUrl][userData.name] = token;
+
+    _assignDefaultAccounts();
+    notifyListeners();
+    save();
   }
 
   /// adds a new instance with no accounts associated with it.
   /// Additionally makes a test `GET /site` request to check if the instance exists.
   /// Check is skipped when [assumeValid] is `true`
-  @action
   Future<void> addInstance(
     String instanceUrl, {
     bool assumeValid = false,
@@ -263,17 +230,27 @@ abstract class _AccountsStore with Store {
       }
     }
 
-    tokens[instanceUrl] = ObservableMap();
+    tokens[instanceUrl] = HashMap();
+
+    _assignDefaultAccounts();
+    notifyListeners();
+    save();
   }
 
   /// This also removes all accounts assigned to this instance
-  @action
   void removeInstance(String instanceUrl) {
     tokens.remove(instanceUrl);
+
+    _assignDefaultAccounts();
+    notifyListeners();
+    save();
   }
 
-  @action
   void removeAccount(String instanceUrl, String username) {
     tokens[instanceUrl].remove(username);
+
+    _assignDefaultAccounts();
+    notifyListeners();
+    save();
   }
 }
