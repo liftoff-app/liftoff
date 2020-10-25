@@ -12,6 +12,7 @@ import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
+import '../util/spaced.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
@@ -254,17 +255,12 @@ class CreatePost extends HookWidget {
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.all(5),
-          children: [
+          children: spaced(5, [
             instanceDropdown,
-            SizedBox(height: 5),
             communitiesDropdown,
-            SizedBox(height: 5),
             url,
-            SizedBox(height: 5),
             title,
-            SizedBox(height: 5),
             body,
-            SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -288,7 +284,7 @@ class CreatePost extends HookWidget {
                 )
               ],
             ),
-          ],
+          ]),
         ),
       ),
     );
