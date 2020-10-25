@@ -89,7 +89,7 @@ class WriteComment extends HookWidget {
           ),
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
@@ -100,27 +100,25 @@ class WriteComment extends HookWidget {
             ),
           ),
           Divider(),
-          Expanded(
-            child: IndexedStack(
-              index: showFancy.value ? 1 : 0,
-              children: [
-                TextField(
-                  controller: controller,
-                  autofocus: true,
-                  expands: true,
-                  maxLines: null,
-                  textAlignVertical: TextAlignVertical.top,
-                  decoration: InputDecoration(border: OutlineInputBorder()),
+          IndexedStack(
+            index: showFancy.value ? 1 : 0,
+            children: [
+              TextField(
+                controller: controller,
+                autofocus: true,
+                minLines: 5,
+                maxLines: null,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: InputDecoration(border: OutlineInputBorder()),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: MarkdownText(
+                  controller.text,
+                  instanceUrl: instanceUrl,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: MarkdownText(
-                    controller.text,
-                    instanceUrl: instanceUrl,
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
