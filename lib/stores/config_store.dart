@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Store managing user-level configuration such as theme or language
 class ConfigStore extends ChangeNotifier {
   ThemeMode _theme;
   ThemeMode get theme => _theme;
