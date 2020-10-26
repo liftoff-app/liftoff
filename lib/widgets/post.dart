@@ -17,6 +17,7 @@ import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import 'bottom_modal.dart';
 import 'fullscreenable_image.dart';
+import 'info_table_popup.dart';
 import 'markdown_text.dart';
 import 'save_post_button.dart';
 
@@ -73,59 +74,21 @@ class Post extends HookWidget {
               leading: Icon(Icons.info_outline),
               title: Text('Nerd stuff'),
               onTap: () {
-                showDialog(
-                  context: context,
-                  child: SimpleDialog(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 15,
-                    ),
-                    children: [
-                      Table(
-                        children: [
-                          TableRow(children: [
-                            Text('upvotes:'),
-                            Text(post.upvotes.toString()),
-                          ]),
-                          TableRow(children: [
-                            Text('downvotes:'),
-                            Text(post.downvotes.toString()),
-                          ]),
-                          TableRow(children: [
-                            Text('score:'),
-                            Text(post.score.toString()),
-                          ]),
-                          TableRow(children: [
-                            Text('% of upvotes:'),
-                            Text(
-                                '''${(100 * (post.upvotes / (post.upvotes + post.downvotes))).toInt()}%'''),
-                          ]),
-                          TableRow(children: [
-                            Text('hotrank:'),
-                            Text(post.hotRank.toString()),
-                          ]),
-                          TableRow(children: [
-                            Text('hotrank active:'),
-                            Text(post.hotRankActive.toString()),
-                          ]),
-                          TableRow(children: [
-                            Text('published:'),
-                            Text(
-                                '''${DateFormat.yMMMd().format(post.published)}'''
-                                ''' ${DateFormat.Hms().format(post.published)}'''),
-                          ]),
-                          TableRow(children: [
-                            Text('updated:'),
-                            Text(post.updated != null
-                                ? '''${DateFormat.yMMMd().format(post.updated)}'''
-                                    ''' ${DateFormat.Hms().format(post.updated)}'''
-                                : 'never'),
-                          ]),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+                showInfoTablePopup(context, {
+                  'id:': post.id.toString(),
+                  'apId:': post.apId,
+                  'upvotes:': post.upvotes.toString(),
+                  'downvotes:': post.downvotes.toString(),
+                  'score': post.score.toString(),
+                  '% of upvotes:':
+                      '''${(100 * (post.upvotes / (post.upvotes + post.downvotes))).toInt()}%''',
+                  'hotRank:': post.hotRank.toString(),
+                  'hotRank active': post.hotRankActive.toString(),
+                  'local:': post.local.toString(),
+                  'published:': post.published.toString(),
+                  'updated': post.updated?.toString() ?? 'never',
+                  'newestActivityTime:': post.newestActivityTime.toString(),
+                });
               },
             ),
           ],

@@ -3,7 +3,6 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
@@ -18,6 +17,7 @@ import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
+import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
 
@@ -131,33 +131,13 @@ class CommunityPage extends HookWidget {
                 leading: Icon(Icons.info_outline),
                 title: Text('Nerd stuff'),
                 onTap: () {
-                  showDialog(
-                      context: context,
-                      child: SimpleDialog(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 15,
-                          ),
-                          children: [
-                            Table(
-                              children: [
-                                TableRow(children: [
-                                  Text('created by:'),
-                                  Text('@${community.creatorName}'),
-                                ]),
-                                TableRow(children: [
-                                  Text('hot rank:'),
-                                  Text(community.hotRank.toString()),
-                                ]),
-                                TableRow(children: [
-                                  Text('published:'),
-                                  Text(
-                                      '''${DateFormat.yMMMd().format(community.published)}'''
-                                      ''' ${DateFormat.Hms().format(community.published)}'''),
-                                ]),
-                              ],
-                            ),
-                          ]));
+                  showInfoTablePopup(context, {
+                    'id:': community.id,
+                    'actorId': community.actorId,
+                    'created by:': '@${community.creatorName}',
+                    'hot rank:': community.hotRank.toString(),
+                    'published:': community.published.toString(),
+                  });
                 },
               ),
             ],

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
@@ -17,6 +16,7 @@ import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'bottom_modal.dart';
+import 'info_table_popup.dart';
 import 'markdown_text.dart';
 import 'write_comment.dart';
 
@@ -45,56 +45,20 @@ class Comment extends HookWidget {
 
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
-    showDialog(
-        context: context,
-        child: SimpleDialog(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 15,
-            ),
-            children: [
-              Table(
-                children: [
-                  TableRow(children: [
-                    Text('upvotes:'),
-                    Text(com.upvotes.toString()),
-                  ]),
-                  TableRow(children: [
-                    Text('downvotes:'),
-                    Text(com.downvotes.toString()),
-                  ]),
-                  TableRow(children: [
-                    Text('score:'),
-                    Text(com.score.toString()),
-                  ]),
-                  TableRow(children: [
-                    Text('% of upvotes:'),
-                    Text(
-                        '''${(100 * (com.upvotes / (com.upvotes + com.downvotes))).toInt()}%'''),
-                  ]),
-                  TableRow(children: [
-                    Text('hotrank:'),
-                    Text(com.hotRank.toString()),
-                  ]),
-                  TableRow(children: [
-                    Text('hotrank active:'),
-                    Text(com.hotRankActive.toString()),
-                  ]),
-                  TableRow(children: [
-                    Text('published:'),
-                    Text('''${DateFormat.yMMMd().format(com.published)}'''
-                        ''' ${DateFormat.Hms().format(com.published)}'''),
-                  ]),
-                  TableRow(children: [
-                    Text('updated:'),
-                    Text(com.updated != null
-                        ? '''${DateFormat.yMMMd().format(com.updated)}'''
-                            ''' ${DateFormat.Hms().format(com.updated)}'''
-                        : 'never'),
-                  ]),
-                ],
-              ),
-            ]));
+    showInfoTablePopup(context, {
+      'id': com.id.toString(),
+      'apId': com.apId.toString(),
+      'userId': com.userId.toString(),
+      'upvotes:': com.upvotes.toString(),
+      'downvotes:': com.downvotes.toString(),
+      'score:': com.score.toString(),
+      '% of upvotes:':
+          '${(100 * (com.upvotes / (com.upvotes + com.downvotes)))}%',
+      'hotRank:': com.hotRank.toString(),
+      'hotRankActive:': com.hotRankActive.toString(),
+      'published:': com.published.toString(),
+      'updated': com.updated.toString(),
+    });
   }
 
   bool get isOP => commentTree.comment.creatorId == postCreatorId;
