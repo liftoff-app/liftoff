@@ -1,46 +1,42 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-part 'config_store.g.dart';
+import 'shared_pref_keys.dart';
 
 /// Store managing user-level configuration such as theme or language
-class ConfigStore extends _ConfigStore with _$ConfigStore {}
-
-abstract class _ConfigStore with Store {
-  ReactionDisposer _saveReactionDisposer;
-
-  _ConfigStore() {
-    // persitently save settings each time they are changed
-    _saveReactionDisposer = reaction((_) => [theme, amoledDarkMode], (_) {
-      save();
-    });
+class ConfigStore extends ChangeNotifier {
+  ThemeMode _theme;
+  ThemeMode get theme => _theme;
+  set theme(ThemeMode theme) {
+    _theme = theme;
+    notifyListeners();
+    save();
   }
 
-  void dispose() {
-    _saveReactionDisposer();
+  bool _amoledDarkMode;
+  bool get amoledDarkMode => _amoledDarkMode;
+  set amoledDarkMode(bool amoledDarkMode) {
+    _amoledDarkMode = amoledDarkMode;
+    notifyListeners();
+    save();
   }
 
-  void load() async {
+  Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     // load saved settings or create defaults
-    theme = _themeModeFromString(prefs.getString('theme') ?? 'system');
-    amoledDarkMode = prefs.getBool('amoledDarkMode') ?? false;
+    theme =
+        _themeModeFromString(prefs.getString(SharedPrefKeys.theme) ?? 'system');
+    amoledDarkMode = prefs.getBool(SharedPrefKeys.amoledDarkMode) ?? false;
+    notifyListeners();
   }
 
-  void save() async {
+  Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('theme', describeEnum(theme));
-    await prefs.setBool('amoledDarkMode', amoledDarkMode);
+    await prefs.setString(SharedPrefKeys.theme, describeEnum(theme));
+    await prefs.setBool(SharedPrefKeys.amoledDarkMode, amoledDarkMode);
   }
-
-  @observable
-  ThemeMode theme;
-
-  @observable
-  bool amoledDarkMode;
 }
 
 /// converts string to ThemeMode

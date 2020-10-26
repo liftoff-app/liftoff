@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'hooks/stores.dart';
@@ -26,13 +25,11 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider<ConfigStore>(
-          create: (_) => configStore,
-          dispose: (_, store) => store.dispose(),
+        ChangeNotifierProvider.value(
+          value: configStore,
         ),
-        Provider<AccountsStore>(
-          create: (_) => accountsStore,
-          dispose: (_, store) => store.dispose(),
+        ChangeNotifierProvider.value(
+          value: accountsStore,
         ),
       ],
       child: MyApp(),
@@ -44,28 +41,22 @@ class MyApp extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final configStore = useConfigStore();
+    final maybeAmoledColor = configStore.amoledDarkMode ? Colors.black : null;
 
-    return Observer(
-      builder: (ctx) {
-        final maybeAmoledColor =
-            configStore.amoledDarkMode ? Colors.black : null;
-
-        return MaterialApp(
-          title: 'Lemmur',
-          themeMode: configStore.theme,
-          darkTheme: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: maybeAmoledColor,
-            backgroundColor: maybeAmoledColor,
-            canvasColor: maybeAmoledColor,
-            cardColor: maybeAmoledColor,
-            splashColor: maybeAmoledColor,
-          ),
-          theme: ThemeData(
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: MyHomePage(),
-        );
-      },
+    return MaterialApp(
+      title: 'Lemmur',
+      themeMode: configStore.theme,
+      darkTheme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: maybeAmoledColor,
+        backgroundColor: maybeAmoledColor,
+        canvasColor: maybeAmoledColor,
+        cardColor: maybeAmoledColor,
+        splashColor: maybeAmoledColor,
+      ),
+      theme: ThemeData(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: MyHomePage(),
     );
   }
 }
