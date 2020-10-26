@@ -12,14 +12,8 @@ jobs:
   CI:
     name: CI
     runs-on: ubuntu-latest
-    outputs:
-      linuxReleaseName: lemmur-${{ steps.vars.outputs.tag }}-x86_64-linux
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set variables
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       - uses: actions/setup-java@v1
         with:
@@ -67,13 +61,11 @@ jobs:
         run: |
           flutter build linux
           cd build/linux/release/
-          tar -czf ${{ needs.CI.outputs.linuxReleaseName }}.tar.gz *
+          zip -r linux.zip *
 
   release:
     name: Release
-    needs:
-      - linux-build
-      - CI
+    needs: linux-build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/') && github.repository == 'krawieck/lemmur'
     steps:
@@ -82,7 +74,6 @@ jobs:
         with:
           files: |
             build/app/outputs/apk/release/*.apk
-            build/linux/release/${{ needs.CI.outputs.linuxReleaseName }}.tar.gz
+            build/linux/release/linux.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
