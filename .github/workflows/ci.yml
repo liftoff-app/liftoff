@@ -12,8 +12,14 @@ jobs:
   CI:
     name: CI
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.vars.outputs.tag }}
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set variables
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       - uses: actions/setup-java@v1
         with:
@@ -38,12 +44,23 @@ jobs:
       - name: Android build
         run: flutter build apk --split-per-abi
 
+      - uses: actions/upload-artifact@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: android-build
+          path: |
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            build/app/outputs/flutter-apk/app-x86_64-release.apk
+
   linux-build:
     name: Linux build
     needs: CI
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'krawieck/lemmur'
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
+      - uses: actions/checkout@v2
+
       - uses: subosito/flutter-action@v1
         with:
           channel: "dev"
@@ -60,20 +77,42 @@ jobs:
       - name: Linux build
         run: |
           flutter build linux
-          cd build/linux/release/
-          zip -r linux.zip *
+
+      - name: Archive
+        working-directory: build/linux/release/bundle
+        run: |
+          tar -czf lemmur-${{ needs.CI.outputs.tag }}-x86_64-linux.tar.gz *
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linux-build
+          path: build/linux/release/bundle/lemmur-*.tar.gz
 
   release:
     name: Release
-    needs: linux-build
+    needs:
+      - linux-build
+      - CI
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/') && github.repository == 'krawieck/lemmur'
     steps:
+      - uses: actions/download-artifact@v2
+
+      - name: Rename artifacts
+        working-directory: android-build
+        run: |
+          mv app-arm64-v8a-release.apk lemmur-${{ needs.CI.outputs.tag }}-arm64-v8a-android.apk
+          mv app-armeabi-v7a-release.apk lemmur-${{ needs.CI.outputs.tag }}-armeabi-v7a-android.apk
+          mv app-x86_64-release.apk lemmur-${{ needs.CI.outputs.tag }}-x86_64-android.apk
+
+      - name: ls
+        run: ls -R
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/app/outputs/apk/release/*.apk
-            build/linux/release/linux.zip
+            android-build/*
+            linux-build/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
