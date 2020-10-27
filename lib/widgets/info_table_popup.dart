@@ -11,7 +11,8 @@ void showInfoTablePopup(BuildContext context, Map<String, dynamic> table) {
       children: [
         Table(
           children: table.entries
-              .map((e) => TableRow(children: [Text(e.key), Text(e.value)]))
+              .map((e) => TableRow(
+                  children: [Text('${e.key}:'), Text(e.value.toString())]))
               .toList(),
         ),
       ],

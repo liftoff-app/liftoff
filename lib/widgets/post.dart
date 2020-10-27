@@ -75,19 +75,19 @@ class Post extends HookWidget {
               title: Text('Nerd stuff'),
               onTap: () {
                 showInfoTablePopup(context, {
-                  'id:': post.id.toString(),
-                  'apId:': post.apId,
-                  'upvotes:': post.upvotes.toString(),
-                  'downvotes:': post.downvotes.toString(),
-                  'score': post.score.toString(),
-                  '% of upvotes:':
+                  'id': post.id,
+                  'apId': post.apId,
+                  'upvotes': post.upvotes,
+                  'downvotes': post.downvotes,
+                  'score': post.score,
+                  '% of upvotes':
                       '''${(100 * (post.upvotes / (post.upvotes + post.downvotes))).toInt()}%''',
-                  'hotRank:': post.hotRank.toString(),
-                  'hotRank active': post.hotRankActive.toString(),
-                  'local:': post.local.toString(),
-                  'published:': post.published.toString(),
-                  'updated': post.updated?.toString() ?? 'never',
-                  'newestActivityTime:': post.newestActivityTime.toString(),
+                  'hotRank': post.hotRank,
+                  'hotRank active': post.hotRankActive,
+                  'local': post.local,
+                  'published': post.published,
+                  'updated': post.updated ?? 'never',
+                  'newestActivityTime': post.newestActivityTime,
                 });
               },
             ),

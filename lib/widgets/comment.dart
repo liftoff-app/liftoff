@@ -46,18 +46,18 @@ class Comment extends HookWidget {
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
     showInfoTablePopup(context, {
-      'id': com.id.toString(),
-      'apId': com.apId.toString(),
-      'userId': com.userId.toString(),
-      'upvotes:': com.upvotes.toString(),
-      'downvotes:': com.downvotes.toString(),
-      'score:': com.score.toString(),
-      '% of upvotes:':
+      'id': com.id,
+      'apId': com.apId,
+      'userId': com.userId,
+      'upvotes': com.upvotes,
+      'downvotes': com.downvotes,
+      'score': com.score,
+      '% of upvotes':
           '${(100 * (com.upvotes / (com.upvotes + com.downvotes)))}%',
-      'hotRank:': com.hotRank.toString(),
-      'hotRankActive:': com.hotRankActive.toString(),
-      'published:': com.published.toString(),
-      'updated': com.updated.toString(),
+      'hotRank': com.hotRank,
+      'hotRankActive': com.hotRankActive,
+      'published': com.published,
+      'updated': com.updated,
     });
   }
 

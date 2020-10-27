@@ -132,11 +132,11 @@ class CommunityPage extends HookWidget {
                 title: Text('Nerd stuff'),
                 onTap: () {
                   showInfoTablePopup(context, {
-                    'id:': community.id,
+                    'id': community.id,
                     'actorId': community.actorId,
-                    'created by:': '@${community.creatorName}',
-                    'hot rank:': community.hotRank.toString(),
-                    'published:': community.published.toString(),
+                    'created by': '@${community.creatorName}',
+                    'hot rank': community.hotRank,
+                    'published': community.published,
                   });
                 },
               ),

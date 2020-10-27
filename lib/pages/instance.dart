@@ -69,13 +69,13 @@ class InstancePage extends HookWidget {
 
     void _openMoreMenu(BuildContext c) {
       showInfoTablePopup(context, {
-        'url:': instanceUrl,
-        'creator:': '@${site.site.creatorName}',
-        'version:': site.version,
-        'enableDownvotes:': site.site.enableDownvotes.toString(),
-        'enableNsfw:': site.site.enableNsfw.toString(),
-        'published:': site.site.published,
-        'updated:': site.site.updated,
+        'url': instanceUrl,
+        'creator': '@${site.site.creatorName}',
+        'version': site.version,
+        'enableDownvotes': site.site.enableDownvotes,
+        'enableNsfw': site.site.enableNsfw,
+        'published': site.site.published,
+        'updated': site.site.updated,
       });
     }
 
