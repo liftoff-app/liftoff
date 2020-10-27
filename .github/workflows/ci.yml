@@ -74,7 +74,7 @@ jobs:
         run: |
           flutter config --enable-linux-desktop
 
-      - name: Linux build
+      - name: Build
         run: |
           flutter build linux
 
@@ -88,11 +88,42 @@ jobs:
           name: linux-build
           path: build/linux/release/bundle/lemmur-*.tar.gz
 
+  windows-build:
+    name: Windows build
+    needs: CI
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "dev"
+
+      - name: Enable windows support
+        run: |
+          flutter config --enable-windows-desktop
+
+      - name: Build
+        run: |
+          flutter build windows
+
+      - name: Archive
+        working-directory: build/windows/runner/Release
+        run: |
+          7z a lemmur-${{ needs.CI.outputs.tag }}-x86_64-windows.zip *
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: windows-build
+          path: build/windows/runner/Release/lemmur-*.zip
+
   release:
     name: Release
     needs:
-      - linux-build
       - CI
+      - linux-build
+      - windows-build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/') && github.repository == 'krawieck/lemmur'
     steps:
@@ -114,5 +145,6 @@ jobs:
           files: |
             android-build/*
             linux-build/*
+            windows-build/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
