@@ -32,6 +32,7 @@ class UserProfileTab extends HookWidget {
         appBar: AppBar(
           actions: actions,
           backgroundColor: Colors.transparent,
+          iconTheme: theme.iconTheme,
           shadowColor: Colors.transparent,
         ),
         body: Center(
