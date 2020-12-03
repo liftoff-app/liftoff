@@ -22,10 +22,12 @@ import 'inbox.dart';
 class HomeTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final selectedList =
-        useState(_SelectedList(listingType: PostListingType.subscribed));
-    // TODO: needs to be an observer? for accounts changes
     final accStore = useAccountsStore();
+    final selectedList = useState(_SelectedList(
+        listingType: accStore.hasNoAccount
+            ? PostListingType.all
+            : PostListingType.subscribed));
+    // TODO: needs to be an observer? for accounts changes
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
     final instancesIcons = useMemoFuture(() async {
@@ -152,6 +154,12 @@ class HomeTab extends HookWidget {
           : '@${selectedList.value.instanceUrl}';
       return '$first$last';
     }();
+
+    if (accStore.instances.isEmpty) {
+      return Scaffold(
+        body: Text('there needs to be at least one instance'),
+      );
+    }
 
     return Scaffold(
       // TODO: make appbar autohide when scrolling down
