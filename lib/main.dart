@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'hooks/stores.dart';
 import 'pages/communities_tab.dart';
@@ -65,11 +66,33 @@ class MyApp extends HookWidget {
   }
 }
 
+class TemporarySearchTab extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final accStore = useAccountsStore();
+    return ListView(
+      children: [
+        ListTile(
+          title: Center(
+              child: Text('🚧 this tab is still under construction 🚧\n'
+                  'but you can open your instances in a browser')),
+        ),
+        Divider(),
+        for (final inst in accStore.instances)
+          ListTile(
+            title: Text(inst),
+            onTap: () => ul.launch('https://$inst/'),
+          )
+      ],
+    );
+  }
+}
+
 class MyHomePage extends HookWidget {
   final List<Widget> pages = [
     HomeTab(),
     CommunitiesTab(),
-    Center(child: Text('search')), // TODO: search tab
+    TemporarySearchTab(), // TODO: search tab
     UserProfileTab(),
   ];
 
