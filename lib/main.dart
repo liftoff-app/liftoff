@@ -75,7 +75,8 @@ class TemporarySearchTab extends HookWidget {
         ListTile(
           title: Center(
               child: Text('🚧 this tab is still under construction 🚧\n'
-                  'but you can open your instances in a browser')),
+                  'but you can open your instances in a browser '
+                  ' for missing functionality')),
         ),
         Divider(),
         for (final inst in accStore.instances)
