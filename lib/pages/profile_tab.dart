@@ -18,8 +18,22 @@ class UserProfileTab extends HookWidget {
     final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
+    final actions = [
+      IconButton(
+        icon: Icon(Icons.settings),
+        onPressed: () {
+          goTo(context, (_) => SettingsPage());
+        },
+      )
+    ];
+
     if (accountsStore.hasNoAccount) {
       return Scaffold(
+        appBar: AppBar(
+          actions: actions,
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,14 +114,7 @@ class UserProfileTab extends HookWidget {
             );
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              goTo(context, (_) => SettingsPage());
-            },
-          )
-        ],
+        actions: actions,
       ),
       body: UserProfile(
         userId: accountsStore.defaultToken.payload.id,
