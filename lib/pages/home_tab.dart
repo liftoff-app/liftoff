@@ -157,7 +157,12 @@ class HomeTab extends HookWidget {
 
     if (accStore.instances.isEmpty) {
       return Scaffold(
-        body: Text('there needs to be at least one instance'),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(child: Text('there needs to be at least one instance')),
+          ],
+        ),
       );
     }
 
