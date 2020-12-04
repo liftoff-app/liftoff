@@ -46,9 +46,37 @@ class AboutTile extends HookWidget {
         FlatButton.icon(
           icon: Icon(Icons.monetization_on),
           label: Text('support development'),
-          onPressed: () {}, // TODO: link to some donation site
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (_) => Dialog(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FlatButton(
+                      child: Text('Patreon'),
+                      onPressed: () =>
+                          openInBrowser('https://patreon.com/lemmur'),
+                    ),
+                    FlatButton(
+                      child: Text('Buy Me a Coffee'),
+                      onPressed: () =>
+                          openInBrowser('https://buymeacoff.ee/lemmur'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }, // TODO: link to some donation site
         ),
       ],
+      applicationIcon: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.asset(
+          'assets/app_icon.png',
+          width: 54,
+        ),
+      ),
       applicationVersion: packageInfo.version,
     );
   }
