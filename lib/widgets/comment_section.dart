@@ -105,6 +105,7 @@ class CommentSection extends HookWidget {
           )
       else
         for (final com in comments) Comment(com, postCreatorId: postCreatorId),
+      SizedBox(height: 50),
     ]);
   }
 }
