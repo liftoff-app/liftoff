@@ -22,12 +22,12 @@ import 'inbox.dart';
 class HomeTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    // TODO: needs to be an observer? for accounts changes
     final accStore = useAccountsStore();
     final selectedList = useState(_SelectedList(
         listingType: accStore.hasNoAccount
             ? PostListingType.all
             : PostListingType.subscribed));
-    // TODO: needs to be an observer? for accounts changes
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
     final instancesIcons = useMemoFuture(() async {
