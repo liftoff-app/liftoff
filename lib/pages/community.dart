@@ -13,6 +13,7 @@ import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
+import '../util/more_icon.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
@@ -164,8 +165,7 @@ class CommunityPage extends HookWidget {
                   style: TextStyle(color: colorOnCard)),
               actions: [
                 IconButton(icon: Icon(Icons.share), onPressed: _share),
-                IconButton(
-                    icon: Icon(Icons.more_vert), onPressed: _openMoreMenu),
+                IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background:

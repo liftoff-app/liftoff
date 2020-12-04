@@ -15,6 +15,7 @@ import '../pages/full_post.dart';
 import '../url_launcher.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../util/more_icon.dart';
 import 'bottom_modal.dart';
 import 'fullscreenable_image.dart';
 import 'info_table_popup.dart';
@@ -226,7 +227,7 @@ class Post extends HookWidget {
                   children: [
                     IconButton(
                       onPressed: () => showMoreMenu(context, post),
-                      icon: Icon(Icons.more_vert),
+                      icon: Icon(moreIcon),
                       iconSize: 24,
                       padding: EdgeInsets.all(0),
                       visualDensity: VisualDensity.compact,

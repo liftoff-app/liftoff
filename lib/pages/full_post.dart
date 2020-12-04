@@ -8,6 +8,7 @@ import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
+import '../util/more_icon.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
 import '../widgets/save_post_button.dart';
@@ -82,7 +83,7 @@ class FullPostPage extends HookWidget {
             IconButton(icon: Icon(Icons.share), onPressed: sharePost),
             SavePostButton(post),
             IconButton(
-                icon: Icon(Icons.more_vert),
+                icon: Icon(moreIcon),
                 onPressed: () => Post.showMoreMenu(context, post)),
           ],
         ),

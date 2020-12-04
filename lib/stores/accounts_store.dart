@@ -30,8 +30,8 @@ class AccountsStore extends ChangeNotifier {
     // I barely understand what I did. Long story short it casts a
     // raw json into a nested ObservableMap
     nestedMapsCast<T>(T f(Map<String, dynamic> json)) => HashMap.of(
-          (jsonDecode(prefs.getString(SharedPrefKeys.tokens) ?? '{}')
-                  as Map<String, dynamic>)
+          (jsonDecode(prefs.getString(SharedPrefKeys.tokens) ??
+                  '{"lemmy.ml":{}}') as Map<String, dynamic>)
               ?.map(
             (k, e) => MapEntry(
               k,
