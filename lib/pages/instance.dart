@@ -8,6 +8,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../util/more_icon.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
 import '../widgets/fullscreenable_image.dart';
@@ -99,7 +100,7 @@ class InstancePage extends HookWidget {
               actions: [
                 IconButton(icon: Icon(Icons.share), onPressed: _share),
                 IconButton(
-                    icon: Icon(Icons.more_vert),
+                    icon: Icon(moreIcon),
                     onPressed: () => _openMoreMenu(context)),
               ],
               flexibleSpace: FlexibleSpaceBar(
