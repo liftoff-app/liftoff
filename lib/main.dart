@@ -23,10 +23,6 @@ Future<void> main() async {
   final accountsStore = AccountsStore();
   await accountsStore.load();
 
-  if (accountsStore.instances.isEmpty) {
-    accountsStore.addInstance('lemmy.ml');
-  }
-
   runApp(
     MultiProvider(
       providers: [
