@@ -79,13 +79,15 @@ class CreatePost extends HookWidget {
         if (pic != null) {
           imageUploadLoading.value = true;
 
+          final token = accStore.defaultTokenFor(selectedInstance.value);
           final pictrs = LemmyApi(selectedInstance.value).pictrs;
-          final upload = await pictrs.upload(pic.path);
-
+          final upload =
+              await pictrs.upload(filePath: pic.path, auth: token.raw);
           pictrsDeleteToken.value = upload.files[0];
           urlController.text =
               pathToPictrs(selectedInstance.value, upload.files[0].file);
         }
+        print(urlController.text);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         scaffoldKey.currentState
