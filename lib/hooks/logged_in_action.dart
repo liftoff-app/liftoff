@@ -14,13 +14,13 @@ import 'stores.dart';
 Function(
   Function(Jwt token) action, [
   String message,
-]) useLoggedInAction(String instanceUrl, {bool any = false}) {
+]) useLoggedInAction(String instanceHost, {bool any = false}) {
   final context = useContext();
   final store = useAccountsStore();
 
   return (Function(Jwt token) action, [message]) {
     if (any && store.hasNoAccount ||
-        !any && store.isAnonymousFor(instanceUrl)) {
+        !any && store.isAnonymousFor(instanceHost)) {
       return () {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text(message ?? 'you have to be logged in to do that'),
@@ -30,7 +30,7 @@ Function(
         ));
       };
     }
-    final token = store.defaultTokenFor(instanceUrl);
+    final token = store.defaultTokenFor(instanceHost);
     return () => action(token);
   };
 }

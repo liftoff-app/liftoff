@@ -12,16 +12,16 @@ class AccountsStore extends ChangeNotifier {
   /// Map containing JWT tokens of specific users.
   /// If a token is in this map, the user is considered logged in
   /// for that account.
-  /// `tokens['instanceUrl']['username']`
+  /// `tokens['instanceHost']['username']`
   HashMap<String, HashMap<String, Jwt>> get tokens => _tokens;
   HashMap<String, HashMap<String, Jwt>> _tokens;
 
   /// default account for a given instance
-  /// map where keys are instanceUrls and values are usernames
+  /// map where keys are instanceHosts and values are usernames
   HashMap<String, String> _defaultAccounts;
 
   /// default account for the app
-  /// It is in a form of `username@instanceUrl`
+  /// It is in a form of `username@instanceHost`
   String _defaultAccount;
 
   Future<void> load() async {
@@ -87,12 +87,12 @@ class AccountsStore extends ChangeNotifier {
     }
 
     // set local defaults
-    for (final instanceUrl in instances) {
+    for (final instanceHost in instances) {
       // if this instance is not in defaults
-      if (!_defaultAccounts.containsKey(instanceUrl)) {
+      if (!_defaultAccounts.containsKey(instanceHost)) {
         // select first account in this instance, if any
-        if (!isAnonymousFor(instanceUrl)) {
-          setDefaultAccountFor(instanceUrl, tokens[instanceUrl].keys.first);
+        if (!isAnonymousFor(instanceHost)) {
+          setDefaultAccountFor(instanceHost, tokens[instanceHost].keys.first);
         }
       }
     }
@@ -100,10 +100,10 @@ class AccountsStore extends ChangeNotifier {
     // set global default
     if (_defaultAccount == null) {
       // select first account of first instance
-      for (final instanceUrl in instances) {
+      for (final instanceHost in instances) {
         // select first account in this instance, if any
-        if (!isAnonymousFor(instanceUrl)) {
-          setDefaultAccount(instanceUrl, tokens[instanceUrl].keys.first);
+        if (!isAnonymousFor(instanceHost)) {
+          setDefaultAccount(instanceHost, tokens[instanceHost].keys.first);
         }
       }
     }
@@ -117,7 +117,7 @@ class AccountsStore extends ChangeNotifier {
     return _defaultAccount.split('@')[0];
   }
 
-  String get defaultInstanceUrl {
+  String get defaultInstanceHost {
     if (_defaultAccount == null) {
       return null;
     }
@@ -125,12 +125,12 @@ class AccountsStore extends ChangeNotifier {
     return _defaultAccount.split('@')[1];
   }
 
-  String defaultUsernameFor(String instanceUrl) {
-    if (isAnonymousFor(instanceUrl)) {
+  String defaultUsernameFor(String instanceHost) {
+    if (isAnonymousFor(instanceHost)) {
       return null;
     }
 
-    return _defaultAccounts[instanceUrl];
+    return _defaultAccounts[instanceHost];
   }
 
   Jwt get defaultToken {
@@ -142,25 +142,25 @@ class AccountsStore extends ChangeNotifier {
     return tokens[userTag[1]][userTag[0]];
   }
 
-  Jwt defaultTokenFor(String instanceUrl) {
-    if (isAnonymousFor(instanceUrl)) {
+  Jwt defaultTokenFor(String instanceHost) {
+    if (isAnonymousFor(instanceHost)) {
       return null;
     }
 
-    return tokens[instanceUrl][_defaultAccounts[instanceUrl]];
+    return tokens[instanceHost][_defaultAccounts[instanceHost]];
   }
 
   /// sets globally default account
-  void setDefaultAccount(String instanceUrl, String username) {
-    _defaultAccount = '$username@$instanceUrl';
+  void setDefaultAccount(String instanceHost, String username) {
+    _defaultAccount = '$username@$instanceHost';
 
     notifyListeners();
     save();
   }
 
   /// sets default account for given instance
-  void setDefaultAccountFor(String instanceUrl, String username) {
-    _defaultAccounts[instanceUrl] = username;
+  void setDefaultAccountFor(String instanceHost, String username) {
+    _defaultAccounts[instanceHost] = username;
 
     notifyListeners();
     save();
@@ -168,12 +168,12 @@ class AccountsStore extends ChangeNotifier {
 
   /// An instance is considered anonymous if it was not
   /// added or there are no accounts assigned to it.
-  bool isAnonymousFor(String instanceUrl) {
-    if (!instances.contains(instanceUrl)) {
+  bool isAnonymousFor(String instanceHost) {
+    if (!instances.contains(instanceHost)) {
       return true;
     }
 
-    return tokens[instanceUrl].isEmpty;
+    return tokens[instanceHost].isEmpty;
   }
 
   /// `true` if no added instance has an account assigned to it
@@ -190,15 +190,15 @@ class AccountsStore extends ChangeNotifier {
   /// if it's the first account for an instance the account is
   /// set as default for that instance
   Future<void> addAccount(
-    String instanceUrl,
+    String instanceHost,
     String usernameOrEmail,
     String password,
   ) async {
-    if (!instances.contains(instanceUrl)) {
+    if (!instances.contains(instanceHost)) {
       throw Exception('No such instance was added');
     }
 
-    final lemmy = LemmyApi(instanceUrl).v1;
+    final lemmy = LemmyApi(instanceHost).v1;
 
     final token = await lemmy.login(
       usernameOrEmail: usernameOrEmail,
@@ -207,7 +207,7 @@ class AccountsStore extends ChangeNotifier {
     final userData =
         await lemmy.getSite(auth: token.raw).then((value) => value.myUser);
 
-    tokens[instanceUrl][userData.name] = token;
+    tokens[instanceHost][userData.name] = token;
 
     _assignDefaultAccounts();
     notifyListeners();
@@ -218,23 +218,23 @@ class AccountsStore extends ChangeNotifier {
   /// Additionally makes a test `GET /site` request to check if the instance exists.
   /// Check is skipped when [assumeValid] is `true`
   Future<void> addInstance(
-    String instanceUrl, {
+    String instanceHost, {
     bool assumeValid = false,
   }) async {
-    if (instances.contains(instanceUrl)) {
+    if (instances.contains(instanceHost)) {
       throw Exception('This instance has already been added');
     }
 
     if (!assumeValid) {
       try {
-        await LemmyApi(instanceUrl).v1.getSite();
+        await LemmyApi(instanceHost).v1.getSite();
         // ignore: avoid_catches_without_on_clauses
       } catch (_) {
         throw Exception('This instance seems to not exist');
       }
     }
 
-    tokens[instanceUrl] = HashMap();
+    tokens[instanceHost] = HashMap();
 
     _assignDefaultAccounts();
     notifyListeners();
@@ -242,16 +242,16 @@ class AccountsStore extends ChangeNotifier {
   }
 
   /// This also removes all accounts assigned to this instance
-  void removeInstance(String instanceUrl) {
-    tokens.remove(instanceUrl);
+  void removeInstance(String instanceHost) {
+    tokens.remove(instanceHost);
 
     _assignDefaultAccounts();
     notifyListeners();
     save();
   }
 
-  void removeAccount(String instanceUrl, String username) {
-    tokens[instanceUrl].remove(username);
+  void removeAccount(String instanceHost, String username) {
+    tokens[instanceHost].remove(username);
 
     _assignDefaultAccounts();
     notifyListeners();

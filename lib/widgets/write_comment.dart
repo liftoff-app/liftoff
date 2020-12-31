@@ -4,7 +4,6 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
-import '../util/extensions/api.dart';
 import 'markdown_text.dart';
 
 /// Modal for writing a comment to a given post/comment (aka reply)
@@ -14,14 +13,14 @@ class WriteComment extends HookWidget {
   final PostView post;
   final CommentView comment;
 
-  final String instanceUrl;
+  final String instanceHost;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   WriteComment.toPost(this.post)
-      : instanceUrl = post.instanceUrl,
+      : instanceHost = post.instanceHost,
         comment = null;
   WriteComment.toComment(this.comment)
-      : instanceUrl = comment.instanceUrl,
+      : instanceHost = comment.instanceHost,
         post = null;
 
   @override
@@ -34,7 +33,7 @@ class WriteComment extends HookWidget {
     final preview = () {
       final body = MarkdownText(
         comment?.content ?? post.body ?? '',
-        instanceUrl: instanceUrl,
+        instanceHost: instanceHost,
       );
 
       if (post != null) {
@@ -54,9 +53,9 @@ class WriteComment extends HookWidget {
     }();
 
     handleSubmit() async {
-      final api = LemmyApi(instanceUrl).v1;
+      final api = LemmyApi(instanceHost).v1;
 
-      final token = accStore.defaultTokenFor(instanceUrl);
+      final token = accStore.defaultTokenFor(instanceHost);
 
       delayed.start();
       try {
@@ -115,7 +114,7 @@ class WriteComment extends HookWidget {
                 padding: const EdgeInsets.all(16),
                 child: MarkdownText(
                   controller.text,
-                  instanceUrl: instanceUrl,
+                  instanceHost: instanceHost,
                 ),
               )
             ],

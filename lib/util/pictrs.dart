@@ -1,2 +1,2 @@
-String pathToPictrs(String instanceUrl, String imgId) =>
-    'https://$instanceUrl/pictrs/image/$imgId';
+String pathToPictrs(String instanceHost, String imgId) =>
+    'https://$instanceHost/pictrs/image/$imgId';

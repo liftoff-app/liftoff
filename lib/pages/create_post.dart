@@ -9,7 +9,6 @@ import '../hooks/image_picker.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
-import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
@@ -46,7 +45,7 @@ class CreatePost extends HookWidget {
     final bodyController = useTextEditingController();
     final accStore = useAccountsStore();
     final selectedInstance =
-        useState(community?.instanceUrl ?? accStore.loggedInInstances.first);
+        useState(community?.instanceHost ?? accStore.loggedInInstances.first);
     final selectedCommunity = useState(community);
     final showFancy = useState(false);
     final nsfw = useState(false);
@@ -203,7 +202,7 @@ class CreatePost extends HookWidget {
           padding: const EdgeInsets.all(16),
           child: MarkdownText(
             bodyController.text,
-            instanceUrl: selectedInstance.value,
+            instanceHost: selectedInstance.value,
           ),
         ),
       ],

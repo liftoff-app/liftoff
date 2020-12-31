@@ -118,10 +118,10 @@ class HomeTab extends HookWidget {
                         ? () => showCupertinoModalPopup(
                             context: context,
                             builder: (_) =>
-                                AddAccountPage(instanceUrl: instance))
+                                AddAccountPage(instanceHost: instance))
                         : () => pop(_SelectedList(
                               listingType: PostListingType.subscribed,
-                              instanceUrl: instance,
+                              instanceHost: instance,
                             )),
                     leading: SizedBox(width: 20),
                   ),
@@ -129,7 +129,7 @@ class HomeTab extends HookWidget {
                     title: Text('All'),
                     onTap: () => pop(_SelectedList(
                       listingType: PostListingType.all,
-                      instanceUrl: instance,
+                      instanceHost: instance,
                     )),
                     leading: SizedBox(width: 20),
                   ),
@@ -149,9 +149,9 @@ class HomeTab extends HookWidget {
       final first = selectedList.value.listingType == PostListingType.subscribed
           ? 'Subscribed'
           : 'All';
-      final last = selectedList.value.instanceUrl == null
+      final last = selectedList.value.instanceHost == null
           ? ''
-          : '@${selectedList.value.instanceUrl}';
+          : '@${selectedList.value.instanceHost}';
       return '$first$last';
     }();
 
@@ -256,12 +256,12 @@ class InfiniteHomeList extends HookWidget {
       }();
 
       final futures =
-          instances.map((instanceUrl) => LemmyApi(instanceUrl).v1.getPosts(
+          instances.map((instanceHost) => LemmyApi(instanceHost).v1.getPosts(
                 type: listingType,
                 sort: sort,
                 page: page,
                 limit: limit,
-                auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                auth: accStore.defaultTokenFor(instanceHost)?.raw,
               ));
       final posts = await Future.wait(futures);
       final newPosts = <PostView>[];
@@ -277,13 +277,13 @@ class InfiniteHomeList extends HookWidget {
     }
 
     Future<List<PostView>> Function(int, int) fetcherFromInstance(
-            String instanceUrl, PostListingType listingType, SortType sort) =>
-        (page, batchSize) => LemmyApi(instanceUrl).v1.getPosts(
+            String instanceHost, PostListingType listingType, SortType sort) =>
+        (page, batchSize) => LemmyApi(instanceHost).v1.getPosts(
               type: listingType,
               sort: sort,
               page: page,
               limit: batchSize,
-              auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+              auth: accStore.defaultTokenFor(instanceHost)?.raw,
             );
 
     return InfiniteScroll<PostView>(
@@ -303,11 +303,11 @@ class InfiniteHomeList extends HookWidget {
         ],
       ),
       padding: EdgeInsets.zero,
-      fetchMore: selectedList.instanceUrl == null
+      fetchMore: selectedList.instanceHost == null
           ? (page, limit) =>
               generalFetcher(page, limit, sort.value, selectedList.listingType)
           : fetcherFromInstance(
-              selectedList.instanceUrl,
+              selectedList.instanceHost,
               selectedList.listingType,
               sort.value,
             ),
@@ -318,13 +318,13 @@ class InfiniteHomeList extends HookWidget {
 }
 
 class _SelectedList {
-  final String instanceUrl;
+  final String instanceHost;
   final PostListingType listingType;
   _SelectedList({
     @required this.listingType,
-    this.instanceUrl,
+    this.instanceHost,
   });
 
   String toString() =>
-      'SelectedList({instanceUrl: $instanceUrl, listingType: $listingType})';
+      'SelectedList({instanceHost: $instanceHost, listingType: $listingType})';
 }

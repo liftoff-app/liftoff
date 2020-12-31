@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
-import '../util/extensions/api.dart';
 import '../widgets/markdown_text.dart';
 
 /// Infinite list of Users fetched by the given fetcher
@@ -42,7 +41,7 @@ class UsersListPage extends StatelessWidget {
                     opacity: 0.5,
                     child: MarkdownText(
                       users[i].bio,
-                      instanceUrl: users[i].instanceUrl,
+                      instanceHost: users[i].instanceHost,
                     ),
                   )
                 : null,
