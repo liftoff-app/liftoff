@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 import '../comment_tree.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
@@ -191,12 +192,18 @@ class Comment extends HookWidget {
 
     // decide which username to use
     final username = () {
-      if (comment.creatorPreferredUsername != null &&
-          comment.creatorPreferredUsername != '') {
-        return comment.creatorPreferredUsername;
-      } else {
-        return '@${comment.creatorName}';
-      }
+      final name = () {
+        if (comment.creatorPreferredUsername != null &&
+            comment.creatorPreferredUsername != '') {
+          return comment.creatorPreferredUsername;
+        } else {
+          return '@${comment.creatorName}';
+        }
+      }();
+
+      if (!comment.isLocal) return '$name@${comment.originInstanceHost}';
+
+      return name;
     }();
 
     final body = () {

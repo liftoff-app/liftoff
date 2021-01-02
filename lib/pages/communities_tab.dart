@@ -9,6 +9,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/extensions/iterators.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
@@ -205,7 +206,9 @@ class CommunitiesTab extends HookWidget {
                             else
                               SizedBox(width: 30),
                             SizedBox(width: 10),
-                            Text('!${comm.communityName}'),
+                            Text(
+                              '''!${comm.communityName}${comm.isLocal ? '' : '@${comm.originInstanceHost}'}''',
+                            ),
                           ],
                         ),
                         trailing: _CommunitySubscribeToggle(

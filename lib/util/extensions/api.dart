@@ -8,28 +8,31 @@ import '../cleanup_url.dart';
 // `post.instanceHost == 'lemmy.ml'
 // && post.originInstanceHost == 'lemmygrad.ml``
 
+// [.isLocal] is true iff `.originInstanceHost == .instanceHost`
+
 extension GetInstanceCommunityView on CommunityView {
   String get originInstanceHost => _extract(actorId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
 extension GetInstanceUserView on UserView {
   String get originInstanceHost => _extract(actorId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceCommunityModeratorView on CommunityModeratorView {
-  String get originInstanceHost => _extract(userActorId);
+extension GetInstanceCommunityFollowerView on CommunityFollowerView {
+  String get originInstanceHost => _extract(communityActorId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
 extension GetInstancePostView on PostView {
   String get originInstanceHost => _extract(apId);
-}
-
-extension GetInstanceUser on User {
-  String get originInstanceHost => _extract(actorId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
 extension GetInstanceCommentView on CommentView {
   String get originInstanceHost => _extract(apId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
 // TODO: change it to something more robust? regex?
