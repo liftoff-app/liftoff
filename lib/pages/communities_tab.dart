@@ -209,7 +209,7 @@ class CommunitiesTab extends HookWidget {
                           ],
                         ),
                         trailing: _CommunitySubscribeToggle(
-                          instanceHost: comm.communityActorId.split('/')[2],
+                          instanceHost: comm.instanceHost,
                           communityId: comm.communityId,
                         ),
                       ),
