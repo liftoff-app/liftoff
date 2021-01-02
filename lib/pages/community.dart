@@ -10,6 +10,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/more_icon.dart';
@@ -315,10 +316,11 @@ class _CommunityOverview extends StatelessWidget {
                         text: '@',
                         style: TextStyle(fontWeight: FontWeight.w200)),
                     TextSpan(
-                        text: instanceHost,
+                        text: community.originInstanceHost,
                         style: TextStyle(fontWeight: FontWeight.w600),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => goToInstance(context, instanceHost)),
+                          ..onTap = () => goToInstance(
+                              context, community.originInstanceHost)),
                   ],
                 ),
               ),

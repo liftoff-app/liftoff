@@ -6,6 +6,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
@@ -221,9 +222,10 @@ class _UserOverview extends HookWidget {
                       style: theme.textTheme.caption,
                     ),
                     InkWell(
-                      onTap: () => goToInstance(context, userView.instanceHost),
+                      onTap: () =>
+                          goToInstance(context, userView.originInstanceHost),
                       child: Text(
-                        '${userView.instanceHost}',
+                        '${userView.originInstanceHost}',
                         style: theme.textTheme.caption,
                       ),
                     )

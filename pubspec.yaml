@@ -43,7 +43,7 @@ dependencies:
   # utils
   timeago: ^2.0.27
   fuzzy: <1.0.0
-  lemmy_api_client: ^0.8.2
+  lemmy_api_client: ^0.8.5
 
   flutter:
     sdk: flutter
