@@ -8,12 +8,13 @@ import 'fullscreenable_image.dart';
 
 /// A Markdown renderer with link/image handling
 class MarkdownText extends StatelessWidget {
-  final String instanceUrl;
+  final String instanceHost;
   final String text;
   final bool selectable;
 
-  MarkdownText(this.text, {@required this.instanceUrl, this.selectable = false})
-      : assert(instanceUrl != null);
+  MarkdownText(this.text,
+      {@required this.instanceHost, this.selectable = false})
+      : assert(instanceHost != null);
 
   @override
   Widget build(BuildContext context) => MarkdownBody(
@@ -21,7 +22,7 @@ class MarkdownText extends StatelessWidget {
         data: text,
         extensionSet: md.ExtensionSet.gitHubWeb,
         onTapLink: (href) {
-          linkLauncher(context: context, url: href, instanceUrl: instanceUrl)
+          linkLauncher(context: context, url: href, instanceHost: instanceHost)
               .catchError((e) => Scaffold.of(context).showSnackBar(SnackBar(
                     content: Row(
                       children: [

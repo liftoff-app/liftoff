@@ -7,7 +7,6 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
-import '../util/extensions/api.dart';
 import '../util/more_icon.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
@@ -17,24 +16,24 @@ import '../widgets/write_comment.dart';
 /// Displays a post with its comment section
 class FullPostPage extends HookWidget {
   final int id;
-  final String instanceUrl;
+  final String instanceHost;
   final PostView post;
 
-  FullPostPage({@required this.id, @required this.instanceUrl})
+  FullPostPage({@required this.id, @required this.instanceHost})
       : assert(id != null),
-        assert(instanceUrl != null),
+        assert(instanceHost != null),
         post = null;
   FullPostPage.fromPostView(this.post)
       : id = post.id,
-        instanceUrl = post.instanceUrl;
+        instanceHost = post.instanceHost;
 
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
-    final fullPostSnap = useMemoFuture(() => LemmyApi(instanceUrl)
+    final fullPostSnap = useMemoFuture(() => LemmyApi(instanceHost)
         .v1
-        .getPost(id: id, auth: accStore.defaultTokenFor(instanceUrl)?.raw));
-    final loggedInAction = useLoggedInAction(instanceUrl);
+        .getPost(id: id, auth: accStore.defaultTokenFor(instanceHost)?.raw));
+    final loggedInAction = useLoggedInAction(instanceHost);
     final newComments = useState(const <CommentView>[]);
 
     // FALLBACK VIEW

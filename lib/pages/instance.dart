@@ -6,7 +6,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/stores.dart';
-import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../util/text_color.dart';
@@ -20,18 +19,18 @@ import 'users_list.dart';
 
 /// Displays posts, comments, and general info about the given instance
 class InstancePage extends HookWidget {
-  final String instanceUrl;
+  final String instanceHost;
   final Future<FullSiteView> siteFuture;
   final Future<List<CommunityView>> communitiesFuture;
 
   void _share() =>
-      Share.text('Share instance', 'https://$instanceUrl', 'text/plain');
+      Share.text('Share instance', 'https://$instanceHost', 'text/plain');
 
-  InstancePage({@required this.instanceUrl})
-      : assert(instanceUrl != null),
-        siteFuture = LemmyApi(instanceUrl).v1.getSite(),
+  InstancePage({@required this.instanceHost})
+      : assert(instanceHost != null),
+        siteFuture = LemmyApi(instanceHost).v1.getSite(),
         communitiesFuture =
-            LemmyApi(instanceUrl).v1.listCommunities(sort: SortType.hot);
+            LemmyApi(instanceHost).v1.listCommunities(sort: SortType.hot);
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +69,7 @@ class InstancePage extends HookWidget {
 
     void _openMoreMenu(BuildContext c) {
       showInfoTablePopup(context, {
-        'url': instanceUrl,
+        'url': instanceHost,
         'creator': '@${site.site.creatorName}',
         'version': site.version,
         'enableDownvotes': site.site.enableDownvotes,
@@ -132,7 +131,7 @@ class InstancePage extends HookWidget {
                           ),
                           Text(site.site.name,
                               style: theme.textTheme.headline6),
-                          Text(instanceUrl, style: theme.textTheme.caption)
+                          Text(instanceHost, style: theme.textTheme.caption)
                         ],
                       ),
                     ),
@@ -159,26 +158,26 @@ class InstancePage extends HookWidget {
             children: [
               InfinitePostList(
                   fetcher: (page, batchSize, sort) =>
-                      LemmyApi(instanceUrl).v1.getPosts(
+                      LemmyApi(instanceHost).v1.getPosts(
                             // TODO: switch between all and subscribed
                             type: PostListingType.all,
                             sort: sort,
                             limit: batchSize,
                             page: page,
-                            auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                            auth: accStore.defaultTokenFor(instanceHost)?.raw,
                           )),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sort) =>
-                      LemmyApi(instanceUrl).v1.getComments(
+                      LemmyApi(instanceHost).v1.getComments(
                             type: CommentListingType.all,
                             sort: sort,
                             limit: batchSize,
                             page: page,
-                            auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                            auth: accStore.defaultTokenFor(instanceHost)?.raw,
                           )),
               _AboutTab(site,
                   communitiesFuture: communitiesFuture,
-                  instanceUrl: instanceUrl),
+                  instanceHost: instanceHost),
             ],
           ),
         ),
@@ -211,12 +210,12 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class _AboutTab extends HookWidget {
   final FullSiteView site;
   final Future<List<CommunityView>> communitiesFuture;
-  final String instanceUrl;
+  final String instanceHost;
 
   const _AboutTab(this.site,
-      {@required this.communitiesFuture, @required this.instanceUrl})
+      {@required this.communitiesFuture, @required this.instanceHost})
       : assert(communitiesFuture != null),
-        assert(instanceUrl != null);
+        assert(instanceHost != null);
 
   void goToUser(int id) {
     print('GO TO USER $id');
@@ -245,11 +244,11 @@ class _AboutTab extends HookWidget {
         context,
         (_) => CommunitiesListPage(
           fetcher: (page, batchSize, sortType) =>
-              LemmyApi(instanceUrl).v1.listCommunities(
+              LemmyApi(instanceHost).v1.listCommunities(
                     sort: sortType,
                     limit: batchSize,
                     page: page,
-                    auth: accStore.defaultTokenFor(instanceUrl)?.raw,
+                    auth: accStore.defaultTokenFor(instanceHost)?.raw,
                   ),
           title: 'Communities of ${site.site.name}',
         ),
@@ -265,7 +264,7 @@ class _AboutTab extends HookWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: MarkdownText(
                 site.site.description,
-                instanceUrl: instanceUrl,
+                instanceHost: instanceHost,
               ),
             ),
             _Divider(),
@@ -296,7 +295,7 @@ class _AboutTab extends HookWidget {
             if (commSnap.hasData)
               ...commSnap.data.take(6).map((e) => ListTile(
                     onTap: () =>
-                        goToCommunity.byId(context, e.instanceUrl, e.id),
+                        goToCommunity.byId(context, e.instanceHost, e.id),
                     title: Text(e.name),
                     leading: e.icon != null
                         ? CachedNetworkImage(
@@ -345,7 +344,7 @@ class _AboutTab extends HookWidget {
                       ? '@${e.name}'
                       : e.preferredUsername),
                   subtitle: e.bio != null
-                      ? MarkdownText(e.bio, instanceUrl: instanceUrl)
+                      ? MarkdownText(e.bio, instanceHost: instanceHost)
                       : null,
                   onTap: () => goToUser(e.id),
                   leading: e.avatar != null

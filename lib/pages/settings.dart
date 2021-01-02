@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -72,7 +73,7 @@ class AppearanceConfigPage extends HookWidget {
           for (final theme in ThemeMode.values)
             RadioListTile<ThemeMode>(
               value: theme,
-              title: Text(theme.toString().split('.')[1]),
+              title: Text(describeEnum(theme)),
               groupValue: configStore.theme,
               onChanged: (selected) {
                 configStore.theme = selected;
@@ -99,12 +100,12 @@ class AccountsConfigPage extends HookWidget {
     final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
-    removeInstanceDialog(String instanceUrl) async {
+    removeInstanceDialog(String instanceHost) async {
       if (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
               title: Text('Remove instance?'),
-              content: Text('Are you sure you want to remove $instanceUrl?'),
+              content: Text('Are you sure you want to remove $instanceHost?'),
               actions: [
                 FlatButton(
                   child: Text('no'),
@@ -118,17 +119,17 @@ class AccountsConfigPage extends HookWidget {
             ),
           ) ??
           false) {
-        accountsStore.removeInstance(instanceUrl);
+        accountsStore.removeInstance(instanceHost);
       }
     }
 
-    Future<void> removeUserDialog(String instanceUrl, String username) async {
+    Future<void> removeUserDialog(String instanceHost, String username) async {
       if (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
               title: Text('Remove user?'),
               content: Text(
-                  'Are you sure you want to remove $username@$instanceUrl?'),
+                  'Are you sure you want to remove $username@$instanceHost?'),
               actions: [
                 FlatButton(
                   child: Text('no'),
@@ -142,7 +143,7 @@ class AccountsConfigPage extends HookWidget {
             ),
           ) ??
           false) {
-        accountsStore.removeAccount(instanceUrl, username);
+        accountsStore.removeAccount(instanceHost, username);
       }
     }
 
@@ -171,7 +172,7 @@ class AccountsConfigPage extends HookWidget {
             onTap: () => showCupertinoModalPopup(
                 context: context,
                 builder: (_) =>
-                    AddAccountPage(instanceUrl: accountsStore.instances.last)),
+                    AddAccountPage(instanceHost: accountsStore.instances.last)),
           ),
           SpeedDialChild(
             child: Icon(Icons.dns),
@@ -263,7 +264,7 @@ class AccountsConfigPage extends HookWidget {
                 onTap: () {
                   showCupertinoModalPopup(
                       context: context,
-                      builder: (_) => AddAccountPage(instanceUrl: entry.key));
+                      builder: (_) => AddAccountPage(instanceHost: entry.key));
                 },
               ),
           ]

@@ -25,26 +25,26 @@ import '../widgets/sortable_infinite_list.dart';
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
   final CommunityView _community;
-  final String instanceUrl;
+  final String instanceHost;
   final String communityName;
   final int communityId;
 
   CommunityPage.fromName({
     @required this.communityName,
-    @required this.instanceUrl,
+    @required this.instanceHost,
   })  : assert(communityName != null),
-        assert(instanceUrl != null),
+        assert(instanceHost != null),
         communityId = null,
         _community = null;
   CommunityPage.fromId({
     @required this.communityId,
-    @required this.instanceUrl,
+    @required this.instanceHost,
   })  : assert(communityId != null),
-        assert(instanceUrl != null),
+        assert(instanceHost != null),
         communityName = null,
         _community = null;
   CommunityPage.fromCommunityView(this._community)
-      : instanceUrl = _community.instanceUrl,
+      : instanceHost = _community.instanceHost,
         communityId = _community.id,
         communityName = _community.name;
 
@@ -54,15 +54,15 @@ class CommunityPage extends HookWidget {
     final accountsStore = useAccountsStore();
 
     final fullCommunitySnap = useMemoFuture(() {
-      final token = accountsStore.defaultTokenFor(instanceUrl);
+      final token = accountsStore.defaultTokenFor(instanceHost);
 
       if (communityId != null) {
-        return LemmyApi(instanceUrl).v1.getCommunity(
+        return LemmyApi(instanceHost).v1.getCommunity(
               id: communityId,
               auth: token?.raw,
             );
       } else {
-        return LemmyApi(instanceUrl).v1.getCommunity(
+        return LemmyApi(instanceHost).v1.getCommunity(
               name: communityName,
               auth: token?.raw,
             );
@@ -169,7 +169,7 @@ class CommunityPage extends HookWidget {
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background:
-                    _CommunityOverview(community, instanceUrl: instanceUrl),
+                    _CommunityOverview(community, instanceHost: instanceHost),
               ),
             ),
             SliverPersistentHeader(
@@ -191,7 +191,7 @@ class CommunityPage extends HookWidget {
             children: [
               InfinitePostList(
                 fetcher: (page, batchSize, sort) =>
-                    LemmyApi(community.instanceUrl).v1.getPosts(
+                    LemmyApi(community.instanceHost).v1.getPosts(
                           type: PostListingType.community,
                           sort: sort,
                           communityId: community.id,
@@ -201,10 +201,10 @@ class CommunityPage extends HookWidget {
               ),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sortType) =>
-                      LemmyApi(community.instanceUrl).v1.getComments(
+                      LemmyApi(community.instanceHost).v1.getComments(
                             communityId: community.id,
                             auth: accountsStore
-                                .defaultTokenFor(community.instanceUrl)
+                                .defaultTokenFor(community.instanceHost)
                                 ?.raw,
                             type: CommentListingType.community,
                             sort: sortType,
@@ -225,12 +225,12 @@ class CommunityPage extends HookWidget {
 
 class _CommunityOverview extends StatelessWidget {
   final CommunityView community;
-  final String instanceUrl;
+  final String instanceHost;
 
   _CommunityOverview(
     this.community, {
-    @required this.instanceUrl,
-  })  : assert(instanceUrl != null),
+    @required this.instanceHost,
+  })  : assert(instanceHost != null),
         assert(goToInstance != null);
 
   @override
@@ -316,10 +316,11 @@ class _CommunityOverview extends StatelessWidget {
                         text: '@',
                         style: TextStyle(fontWeight: FontWeight.w200)),
                     TextSpan(
-                        text: instanceUrl,
+                        text: community.originInstanceHost,
                         style: TextStyle(fontWeight: FontWeight.w600),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => goToInstance(context, instanceUrl)),
+                          ..onTap = () => goToInstance(
+                              context, community.originInstanceHost)),
                   ],
                 ),
               ),
@@ -423,7 +424,7 @@ class _AboutTab extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: MarkdownText(community.description,
-                instanceUrl: community.instanceUrl),
+                instanceHost: community.instanceHost),
           ),
           _Divider(),
         ],
@@ -480,7 +481,7 @@ class _AboutTab extends StatelessWidget {
           for (final mod in moderators)
             ListTile(
               title: Text(mod.userPreferredUsername ?? '@${mod.userName}'),
-              onTap: () => goToUser.byId(context, mod.instanceUrl, mod.userId),
+              onTap: () => goToUser.byId(context, mod.instanceHost, mod.userId),
             ),
         ]
       ],
@@ -530,14 +531,14 @@ class _FollowButton extends HookWidget {
 
     final isSubbed = useState(community.subscribed ?? false);
     final delayed = useDelayedLoading(const Duration(milliseconds: 500));
-    final loggedInAction = useLoggedInAction(community.instanceUrl);
+    final loggedInAction = useLoggedInAction(community.instanceHost);
 
     final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
 
     subscribe(Jwt token) async {
       delayed.start();
       try {
-        await LemmyApi(community.instanceUrl).v1.followCommunity(
+        await LemmyApi(community.instanceHost).v1.followCommunity(
             communityId: community.id,
             follow: !isSubbed.value,
             auth: token.raw);

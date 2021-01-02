@@ -4,7 +4,6 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
-import '../util/extensions/api.dart';
 
 // TODO: sync this button between post and fullpost. the same with voting
 
@@ -18,10 +17,10 @@ class SavePostButton extends HookWidget {
     final isSaved = useState(post.saved ?? false);
     final savedIcon = isSaved.value ? Icons.bookmark : Icons.bookmark_border;
     final loading = useDelayedLoading(Duration(milliseconds: 500));
-    final loggedInAction = useLoggedInAction(post.instanceUrl);
+    final loggedInAction = useLoggedInAction(post.instanceHost);
 
     savePost(Jwt token) async {
-      final api = LemmyApi(post.instanceUrl).v1;
+      final api = LemmyApi(post.instanceHost).v1;
 
       loading.start();
       try {

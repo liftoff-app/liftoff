@@ -18,15 +18,15 @@ import 'sortable_infinite_list.dart';
 /// Shared widget of UserPage and ProfileTab
 class UserProfile extends HookWidget {
   final Future<UserDetails> _userDetails;
-  final String instanceUrl;
+  final String instanceHost;
 
-  UserProfile({@required int userId, @required this.instanceUrl})
-      : _userDetails = LemmyApi(instanceUrl).v1.getUserDetails(
+  UserProfile({@required int userId, @required this.instanceHost})
+      : _userDetails = LemmyApi(instanceHost).v1.getUserDetails(
             userId: userId, savedOnly: false, sort: SortType.active);
 
   UserProfile.fromUserDetails(UserDetails userDetails)
       : _userDetails = Future.value(userDetails),
-        instanceUrl = userDetails.user.instanceUrl;
+        instanceHost = userDetails.user.instanceHost;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class UserProfile extends HookWidget {
           // TODO: first batch is already fetched on render
           // TODO: comment and post come from the same endpoint, could be shared
           InfinitePostList(
-            fetcher: (page, batchSize, sort) => LemmyApi(instanceUrl)
+            fetcher: (page, batchSize, sort) => LemmyApi(instanceHost)
                 .v1
                 .getUserDetails(
                   userId: userView.id,
@@ -90,7 +90,7 @@ class UserProfile extends HookWidget {
                 .then((val) => val.posts),
           ),
           InfiniteCommentList(
-            fetcher: (page, batchSize, sort) => LemmyApi(instanceUrl)
+            fetcher: (page, batchSize, sort) => LemmyApi(instanceHost)
                 .v1
                 .getUserDetails(
                   userId: userView.id,
@@ -222,9 +222,10 @@ class _UserOverview extends HookWidget {
                       style: theme.textTheme.caption,
                     ),
                     InkWell(
-                      onTap: () => goToInstance(context, userView.instanceUrl),
+                      onTap: () =>
+                          goToInstance(context, userView.originInstanceHost),
                       child: Text(
-                        '${userView.instanceUrl}',
+                        '${userView.originInstanceHost}',
                         style: theme.textTheme.caption,
                       ),
                     )
@@ -324,12 +325,12 @@ class _AboutTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final instanceUrl = userDetails.user.instanceUrl;
+    final instanceHost = userDetails.user.instanceHost;
 
     final accStore = useAccountsStore();
 
-    final isOwnedAccount = accStore.loggedInInstances.contains(instanceUrl) &&
-        accStore.tokens[instanceUrl].containsKey(userDetails.user.name);
+    final isOwnedAccount = accStore.loggedInInstances.contains(instanceHost) &&
+        accStore.tokens[instanceHost].containsKey(userDetails.user.name);
 
     const wallPadding = EdgeInsets.symmetric(horizontal: 15);
 
@@ -341,7 +342,7 @@ class _AboutTab extends HookWidget {
 
     communityTile(String name, String icon, int id) => ListTile(
           dense: true,
-          onTap: () => goToCommunity.byId(context, instanceUrl, id),
+          onTap: () => goToCommunity.byId(context, instanceHost, id),
           title: Text('!$name'),
           leading: icon != null
               ? CachedNetworkImage(
@@ -379,8 +380,8 @@ class _AboutTab extends HookWidget {
         if (userDetails.user.bio != null) ...[
           Padding(
               padding: wallPadding,
-              child:
-                  MarkdownText(userDetails.user.bio, instanceUrl: instanceUrl)),
+              child: MarkdownText(userDetails.user.bio,
+                  instanceHost: instanceHost)),
           divider,
         ],
         if (userDetails.moderates.isNotEmpty) ...[

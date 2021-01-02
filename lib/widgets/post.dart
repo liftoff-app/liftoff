@@ -49,10 +49,10 @@ MediaType whatType(String url) {
 /// A post overview card
 class Post extends HookWidget {
   final PostView post;
-  final String instanceUrl;
+  final String instanceHost;
   final bool fullPost;
 
-  Post(this.post, {this.fullPost = false}) : instanceUrl = post.instanceUrl;
+  Post(this.post, {this.fullPost = false}) : instanceHost = post.instanceHost;
 
   // == ACTIONS ==
 
@@ -103,8 +103,8 @@ class Post extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    void _openLink() =>
-        linkLauncher(context: context, url: post.url, instanceUrl: instanceUrl);
+    void _openLink() => linkLauncher(
+        context: context, url: post.url, instanceHost: instanceHost);
 
     final urlDomain = () {
       if (whatType(post.url) == MediaType.none) return null;
@@ -127,7 +127,7 @@ class Post extends HookWidget {
                       padding: const EdgeInsets.only(right: 10),
                       child: InkWell(
                         onTap: () => goToCommunity.byId(
-                            context, instanceUrl, post.communityId),
+                            context, instanceHost, post.communityId),
                         child: SizedBox(
                           height: 40,
                           width: 40,
@@ -168,16 +168,16 @@ class Post extends HookWidget {
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => goToCommunity.byId(
-                                    context, instanceUrl, post.communityId)),
+                                    context, instanceHost, post.communityId)),
                           TextSpan(
                               text: '@',
                               style: TextStyle(fontWeight: FontWeight.w300)),
                           TextSpan(
-                              text: instanceUrl,
+                              text: post.originInstanceHost,
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
-                                ..onTap =
-                                    () => goToInstance(context, instanceUrl)),
+                                ..onTap = () => goToInstance(
+                                    context, post.originInstanceHost)),
                         ],
                       ),
                     )
@@ -199,7 +199,7 @@ class Post extends HookWidget {
                               style: TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => goToUser.byId(
-                                    context, post.instanceUrl, post.creatorId),
+                                    context, post.instanceHost, post.creatorId),
                             ),
                             TextSpan(
                                 text:
@@ -377,10 +377,7 @@ class Post extends HookWidget {
       child: InkWell(
         onTap: fullPost
             ? null
-            : () => goTo(
-                context,
-                (context) =>
-                    FullPostPage.fromPostView(post)), //, instanceUrl, post.id),
+            : () => goTo(context, (context) => FullPostPage.fromPostView(post)),
         child: Column(
           children: [
             info(),
@@ -394,7 +391,7 @@ class Post extends HookWidget {
               // TODO: trim content
               Padding(
                   padding: const EdgeInsets.all(10),
-                  child: MarkdownText(post.body, instanceUrl: instanceUrl)),
+                  child: MarkdownText(post.body, instanceHost: instanceHost)),
             actions(),
           ],
         ),
@@ -416,10 +413,10 @@ class _Voting extends HookWidget {
     final theme = Theme.of(context);
     final myVote = useState(post.myVote ?? VoteType.none);
     final loading = useDelayedLoading(Duration(milliseconds: 500));
-    final loggedInAction = useLoggedInAction(post.instanceUrl);
+    final loggedInAction = useLoggedInAction(post.instanceHost);
 
     vote(VoteType vote, Jwt token) async {
-      final api = LemmyApi(post.instanceUrl).v1;
+      final api = LemmyApi(post.instanceHost).v1;
 
       loading.start();
       try {

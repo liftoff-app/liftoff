@@ -13,10 +13,10 @@ import 'add_instance.dart';
 
 /// A modal where an account can be added for a given instance
 class AddAccountPage extends HookWidget {
-  final String instanceUrl;
+  final String instanceHost;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  AddAccountPage({@required this.instanceUrl}) : assert(instanceUrl != null);
+  AddAccountPage({@required this.instanceHost}) : assert(instanceHost != null);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class AddAccountPage extends HookWidget {
     final accountsStore = useAccountsStore();
 
     final loading = useDelayedLoading();
-    final selectedInstance = useState(instanceUrl);
+    final selectedInstance = useState(instanceHost);
     final icon = useState<String>(null);
     useEffect(() {
       LemmyApi(selectedInstance.value)

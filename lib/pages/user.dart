@@ -8,20 +8,20 @@ import '../widgets/user_profile.dart';
 /// Page showing posts, comments, and general info about a user.
 class UserPage extends HookWidget {
   final int userId;
-  final String instanceUrl;
+  final String instanceHost;
   final Future<UserDetails> _userDetails;
 
-  UserPage({@required this.userId, @required this.instanceUrl})
+  UserPage({@required this.userId, @required this.instanceHost})
       : assert(userId != null),
-        assert(instanceUrl != null),
-        _userDetails = LemmyApi(instanceUrl).v1.getUserDetails(
+        assert(instanceHost != null),
+        _userDetails = LemmyApi(instanceHost).v1.getUserDetails(
             userId: userId, savedOnly: true, sort: SortType.active);
 
-  UserPage.fromName({@required this.instanceUrl, @required String username})
-      : assert(instanceUrl != null),
+  UserPage.fromName({@required this.instanceHost, @required String username})
+      : assert(instanceHost != null),
         assert(username != null),
         userId = null,
-        _userDetails = LemmyApi(instanceUrl).v1.getUserDetails(
+        _userDetails = LemmyApi(instanceHost).v1.getUserDetails(
             username: username, savedOnly: true, sort: SortType.active);
 
   @override

@@ -85,9 +85,9 @@ class UserProfileTab extends HookWidget {
               builder: (ctx) {
                 final userTags = <String>[];
 
-                accountsStore.tokens.forEach((instanceUrl, value) {
+                accountsStore.tokens.forEach((instanceHost, value) {
                   value.forEach((username, _) {
-                    userTags.add('$username@$instanceUrl');
+                    userTags.add('$username@$instanceHost');
                   });
                 });
 
@@ -100,7 +100,7 @@ class UserProfileTab extends HookWidget {
                           value: tag,
                           title: Text(tag),
                           groupValue: '${accountsStore.defaultUsername}'
-                              '@${accountsStore.defaultInstanceUrl}',
+                              '@${accountsStore.defaultInstanceHost}',
                           onChanged: (selected) {
                             final userTag = selected.split('@');
                             accountsStore.setDefaultAccount(
@@ -119,7 +119,7 @@ class UserProfileTab extends HookWidget {
       ),
       body: UserProfile(
         userId: accountsStore.defaultToken.payload.id,
-        instanceUrl: accountsStore.defaultInstanceUrl,
+        instanceHost: accountsStore.defaultInstanceHost,
       ),
     );
   }

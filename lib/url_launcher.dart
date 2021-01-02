@@ -15,7 +15,7 @@ import 'util/goto.dart';
 Future<void> linkLauncher({
   @required BuildContext context,
   @required String url,
-  @required String instanceUrl,
+  @required String instanceHost,
 }) async {
   push(Widget Function() builder) {
     goTo(context, (c) => builder());
@@ -28,14 +28,14 @@ Future<void> linkLauncher({
 
   // CHECK IF LINK TO USER
   if (url.startsWith('/u/')) {
-    return push(
-        () => UserPage.fromName(instanceUrl: instanceUrl, username: chonks[2]));
+    return push(() =>
+        UserPage.fromName(instanceHost: instanceHost, username: chonks[2]));
   }
 
   // CHECK IF LINK TO COMMUNITY
   if (url.startsWith('/c/')) {
     return push(() => CommunityPage.fromName(
-        communityName: chonks[2], instanceUrl: instanceUrl));
+        communityName: chonks[2], instanceHost: instanceHost));
   }
 
   // CHECK IF REDIRECTS TO A PAGE ON ONE OF ADDED INSTANCES
@@ -48,7 +48,7 @@ Future<void> linkLauncher({
 
   if (matchedInstance != null && instances.any((e) => e == match.group(1))) {
     if (rest.isEmpty || rest == '/') {
-      return push(() => InstancePage(instanceUrl: matchedInstance));
+      return push(() => InstancePage(instanceHost: matchedInstance));
     }
     final split = rest.split('/');
     switch (split[1]) {

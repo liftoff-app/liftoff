@@ -25,41 +25,42 @@ Future<dynamic> goToReplace(
       builder: builder,
     ));
 
-void goToInstance(BuildContext context, String instanceUrl) =>
-    goTo(context, (context) => InstancePage(instanceUrl: instanceUrl));
+void goToInstance(BuildContext context, String instanceHost) =>
+    goTo(context, (context) => InstancePage(instanceHost: instanceHost));
 
 // ignore: camel_case_types
 abstract class goToCommunity {
   /// Navigates to `CommunityPage`
-  static void byId(BuildContext context, String instanceUrl, int communityId) =>
+  static void byId(
+          BuildContext context, String instanceHost, int communityId) =>
       goTo(
         context,
         (context) => CommunityPage.fromId(
-            instanceUrl: instanceUrl, communityId: communityId),
+            instanceHost: instanceHost, communityId: communityId),
       );
 
   static void byName(
-          BuildContext context, String instanceUrl, String communityName) =>
+          BuildContext context, String instanceHost, String communityName) =>
       goTo(
         context,
         (context) => CommunityPage.fromName(
-            instanceUrl: instanceUrl, communityName: communityName),
+            instanceHost: instanceHost, communityName: communityName),
       );
 }
 
 // ignore: camel_case_types
 abstract class goToUser {
-  static void byId(BuildContext context, String instanceUrl, int userId) =>
+  static void byId(BuildContext context, String instanceHost, int userId) =>
       goTo(context,
-          (context) => UserPage(instanceUrl: instanceUrl, userId: userId));
+          (context) => UserPage(instanceHost: instanceHost, userId: userId));
 
   static void byName(
-          BuildContext context, String instanceUrl, String userName) =>
+          BuildContext context, String instanceHost, String userName) =>
       throw UnimplementedError('need to create UserProfile constructor first');
 }
 
-void goToPost(BuildContext context, String instanceUrl, int postId) => goTo(
-    context, (context) => FullPostPage(instanceUrl: instanceUrl, id: postId));
+void goToPost(BuildContext context, String instanceHost, int postId) => goTo(
+    context, (context) => FullPostPage(instanceHost: instanceHost, id: postId));
 
 void goToMedia(BuildContext context, String url) => Navigator.push(
       context,

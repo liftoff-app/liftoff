@@ -9,6 +9,7 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/extensions/iterators.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
@@ -32,8 +33,8 @@ class CommunitiesTab extends HookWidget {
     final instancesSnap = useMemoFuture(() {
       final futures = accountsStore.loggedInInstances
           .map(
-            (instanceUrl) =>
-                LemmyApi(instanceUrl).v1.getSite().then((e) => e.site),
+            (instanceHost) =>
+                LemmyApi(instanceHost).v1.getSite().then((e) => e.site),
           )
           .toList();
 
@@ -42,12 +43,13 @@ class CommunitiesTab extends HookWidget {
     final communitiesSnap = useMemoFuture(() {
       final futures = accountsStore.loggedInInstances
           .map(
-            (instanceUrl) => LemmyApi(instanceUrl)
+            (instanceHost) => LemmyApi(instanceHost)
                 .v1
                 .getUserDetails(
                   sort: SortType.active,
                   savedOnly: false,
-                  userId: accountsStore.defaultTokenFor(instanceUrl).payload.id,
+                  userId:
+                      accountsStore.defaultTokenFor(instanceHost).payload.id,
                 )
                 .then((e) => e.follows),
           )
@@ -204,11 +206,13 @@ class CommunitiesTab extends HookWidget {
                             else
                               SizedBox(width: 30),
                             SizedBox(width: 10),
-                            Text('!${comm.communityName}'),
+                            Text(
+                              '''!${comm.communityName}${comm.isLocal ? '' : '@${comm.originInstanceHost}'}''',
+                            ),
                           ],
                         ),
                         trailing: _CommunitySubscribeToggle(
-                          instanceUrl: comm.communityActorId.split('/')[2],
+                          instanceHost: comm.instanceHost,
                           communityId: comm.communityId,
                         ),
                       ),
@@ -223,11 +227,11 @@ class CommunitiesTab extends HookWidget {
 
 class _CommunitySubscribeToggle extends HookWidget {
   final int communityId;
-  final String instanceUrl;
+  final String instanceHost;
 
   _CommunitySubscribeToggle(
-      {@required this.instanceUrl, @required this.communityId})
-      : assert(instanceUrl != null),
+      {@required this.instanceHost, @required this.communityId})
+      : assert(instanceHost != null),
         assert(communityId != null);
 
   @override
@@ -241,10 +245,10 @@ class _CommunitySubscribeToggle extends HookWidget {
       delayed.start();
 
       try {
-        await LemmyApi(instanceUrl).v1.followCommunity(
+        await LemmyApi(instanceHost).v1.followCommunity(
               communityId: communityId,
               follow: !subbed.value,
-              auth: accountsStore.defaultTokenFor(instanceUrl).raw,
+              auth: accountsStore.defaultTokenFor(instanceHost).raw,
             );
         subbed.value = !subbed.value;
       } on Exception catch (err) {

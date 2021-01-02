@@ -2,34 +2,38 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../cleanup_url.dart';
 
-// Extensions to lemmy api objects which give a [.instanceUrl] getter
-// allowing for a convenient way of knowing from which instance did this
-// object come from
+// Extensions to lemmy api objects which give a [.originInstanceHost] getter
+// allowing for a convenient way of knowing what is the origin of the object
+// For example if a post on lemmy.ml is federated from lemmygrad.ml then
+// `post.instanceHost == 'lemmy.ml'
+// && post.originInstanceHost == 'lemmygrad.ml``
 
-// TODO: change it to something more robust? regex?
+// [.isLocal] is true iff `.originInstanceHost == .instanceHost`
 
 extension GetInstanceCommunityView on CommunityView {
-  String get instanceUrl => _extract(actorId);
+  String get originInstanceHost => _extract(actorId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
 extension GetInstanceUserView on UserView {
-  String get instanceUrl => _extract(actorId);
+  String get originInstanceHost => _extract(actorId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceCommunityModeratorView on CommunityModeratorView {
-  String get instanceUrl => _extract(userActorId);
+extension GetInstanceCommunityFollowerView on CommunityFollowerView {
+  String get originInstanceHost => _extract(communityActorId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
 extension GetInstancePostView on PostView {
-  String get instanceUrl => _extract(apId);
-}
-
-extension GetInstanceUser on User {
-  String get instanceUrl => _extract(actorId);
+  String get originInstanceHost => _extract(apId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
 extension GetInstanceCommentView on CommentView {
-  String get instanceUrl => _extract(apId);
+  String get originInstanceHost => _extract(apId);
+  bool get isLocal => originInstanceHost == instanceHost;
 }
 
+// TODO: change it to something more robust? regex?
 String _extract(String s) => cleanUpUrl(s.split('/')[2]);

@@ -75,7 +75,7 @@ class Comment extends HookWidget {
     final isDeleted = useState(commentTree.comment.deleted);
     final delayedVoting = useDelayedLoading();
     final delayedDeletion = useDelayedLoading();
-    final loggedInAction = useLoggedInAction(commentTree.comment.instanceUrl);
+    final loggedInAction = useLoggedInAction(commentTree.comment.instanceHost);
     final newReplies = useState(const <CommentTree>[]);
 
     final comment = commentTree.comment;
@@ -192,12 +192,18 @@ class Comment extends HookWidget {
 
     // decide which username to use
     final username = () {
-      if (comment.creatorPreferredUsername != null &&
-          comment.creatorPreferredUsername != '') {
-        return comment.creatorPreferredUsername;
-      } else {
-        return '@${comment.creatorName}';
-      }
+      final name = () {
+        if (comment.creatorPreferredUsername != null &&
+            comment.creatorPreferredUsername != '') {
+          return comment.creatorPreferredUsername;
+        } else {
+          return '@${comment.creatorName}';
+        }
+      }();
+
+      if (!comment.isLocal) return '$name@${comment.originInstanceHost}';
+
+      return name;
     }();
 
     final body = () {
@@ -237,7 +243,7 @@ class Comment extends HookWidget {
                     : Text(commentTree.comment.content)
                 : MarkdownText(
                     commentTree.comment.content,
-                    instanceUrl: commentTree.comment.instanceUrl,
+                    instanceHost: commentTree.comment.instanceHost,
                     selectable: selectable.value,
                   ));
       }
@@ -305,7 +311,7 @@ class Comment extends HookWidget {
                       padding: const EdgeInsets.only(right: 5),
                       child: InkWell(
                         onTap: () => goToUser.byId(
-                            context, comment.instanceUrl, comment.creatorId),
+                            context, comment.instanceHost, comment.creatorId),
                         child: CachedNetworkImage(
                           imageUrl: comment.creatorAvatar,
                           height: 20,
@@ -329,7 +335,7 @@ class Comment extends HookWidget {
                           color: Theme.of(context).accentColor,
                         )),
                     onTap: () => goToUser.byId(
-                        context, comment.instanceUrl, comment.creatorId),
+                        context, comment.instanceHost, comment.creatorId),
                   ),
                   if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
                   if (comment.banned) _CommentTag('BANNED', Colors.red),
@@ -394,12 +400,12 @@ class _SaveComment extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInAction = useLoggedInAction(comment.instanceUrl);
+    final loggedInAction = useLoggedInAction(comment.instanceHost);
     final isSaved = useState(comment.saved ?? false);
     final delayed = useDelayedLoading(const Duration(milliseconds: 500));
 
     handleSave(Jwt token) async {
-      final api = LemmyApi(comment.instanceUrl).v1;
+      final api = LemmyApi(comment.instanceHost).v1;
 
       delayed.start();
       try {
