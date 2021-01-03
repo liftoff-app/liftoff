@@ -44,7 +44,7 @@ class SettingsPage extends StatelessWidget {
               goTo(context, (_) => const AppearanceConfigPage());
             },
           ),
-          AboutTile()
+          const AboutTile()
         ],
       ),
     );
