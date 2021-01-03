@@ -12,19 +12,22 @@ import '../hooks/stores.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
+import '../util/unawaited.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
 class CreatePostFab extends HookWidget {
+  const CreatePostFab();
+
   @override
   Widget build(BuildContext context) {
     final loggedInAction = useLoggedInAction(null, any: true);
 
     return FloatingActionButton(
-      child: Icon(Icons.add),
       onPressed: loggedInAction((_) => showCupertinoModalPopup(
           context: context, builder: (_) => CreatePost())),
+      child: const Icon(Icons.add),
     );
   }
 }
@@ -89,8 +92,8 @@ class CreatePost extends HookWidget {
         print(urlController.text);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        scaffoldKey.currentState
-            .showSnackBar(SnackBar(content: Text('Failed to upload image')));
+        scaffoldKey.currentState.showSnackBar(
+            const SnackBar(content: Text('Failed to upload image')));
       } finally {
         imageUploadLoading.value = false;
       }
@@ -133,7 +136,7 @@ class CreatePost extends HookWidget {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedCommunity.value?.name,
-          hint: Text('Community'),
+          hint: const Text('Community'),
           onChanged: (val) => selectedCommunity.value =
               allCommunitiesSnap.data.firstWhere((e) => e.name == val),
           items: allCommunitiesSnap.hasData
@@ -143,7 +146,7 @@ class CreatePost extends HookWidget {
                         child: Text(e.name),
                       ))
                   .toList()
-              : [
+              : const [
                   DropdownMenuItem(
                     value: '',
                     child: CircularProgressIndicator(),
@@ -158,16 +161,16 @@ class CreatePost extends HookWidget {
         child: TextField(
           enabled: pictrsDeleteToken.value == null,
           controller: urlController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'URL',
               suffixIcon: Icon(Icons.link)),
         ),
       ),
-      SizedBox(width: 5),
+      const SizedBox(width: 5),
       IconButton(
         icon: imageUploadLoading.value
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : Icon(pictrsDeleteToken.value == null
                 ? Icons.add_photo_alternate
                 : Icons.close),
@@ -182,8 +185,8 @@ class CreatePost extends HookWidget {
       controller: titleController,
       minLines: 1,
       maxLines: 2,
-      decoration:
-          InputDecoration(border: OutlineInputBorder(), labelText: 'Title'),
+      decoration: const InputDecoration(
+          border: OutlineInputBorder(), labelText: 'Title'),
     );
 
     final body = IndexedStack(
@@ -195,8 +198,8 @@ class CreatePost extends HookWidget {
           maxLines: null,
           minLines: 5,
           textAlignVertical: TextAlignVertical.top,
-          decoration:
-              InputDecoration(border: OutlineInputBorder(), labelText: 'Body'),
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(), labelText: 'Body'),
         ),
         Padding(
           padding: const EdgeInsets.all(16),
@@ -210,7 +213,7 @@ class CreatePost extends HookWidget {
 
     handleSubmit() async {
       if (selectedCommunity.value == null || titleController.text.isEmpty) {
-        scaffoldKey.currentState.showSnackBar(SnackBar(
+        scaffoldKey.currentState.showSnackBar(const SnackBar(
           content: Text('Choosing a community and a title is required'),
         ));
         return;
@@ -229,12 +232,12 @@ class CreatePost extends HookWidget {
             name: titleController.text,
             communityId: selectedCommunity.value.id,
             auth: token.raw);
-        goToReplace(context, (_) => FullPostPage.fromPostView(res));
+        unawaited(goToReplace(context, (_) => FullPostPage.fromPostView(res)));
         return;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         scaffoldKey.currentState
-            .showSnackBar(SnackBar(content: Text('Failed to post')));
+            .showSnackBar(const SnackBar(content: Text('Failed to post')));
       }
       delayed.cancel();
     }
@@ -243,7 +246,7 @@ class CreatePost extends HookWidget {
       key: scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: Navigator.of(context).pop,
         ),
         actions: [
@@ -255,7 +258,7 @@ class CreatePost extends HookWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           children: [
             instanceDropdown,
             communitiesDropdown,
@@ -273,15 +276,15 @@ class CreatePost extends HookWidget {
                         value: nsfw.value,
                         onChanged: (val) => nsfw.value = val,
                       ),
-                      Text('NSFW')
+                      const Text('NSFW')
                     ],
                   ),
                 ),
                 FlatButton(
                   onPressed: delayed.pending ? () {} : handleSubmit,
                   child: delayed.loading
-                      ? CircularProgressIndicator()
-                      : Text('post'),
+                      ? const CircularProgressIndicator()
+                      : const Text('post'),
                 )
               ],
             ),

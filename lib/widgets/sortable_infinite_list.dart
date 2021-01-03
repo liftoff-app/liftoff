@@ -16,7 +16,7 @@ class SortableInfiniteList<T> extends HookWidget {
   final Widget Function(T) builder;
   final Function onStyleChange;
 
-  SortableInfiniteList({
+  const SortableInfiniteList({
     @required this.fetcher,
     @required this.builder,
     this.onStyleChange,
@@ -36,7 +36,6 @@ class SortableInfiniteList<T> extends HookWidget {
     return InfiniteScroll<T>(
       prepend: PostListOptions(
         onChange: changeSorting,
-        defaultSort: SortType.active,
         styleButton: onStyleChange != null,
       ),
       builder: builder,
@@ -52,14 +51,14 @@ class InfinitePostList extends StatelessWidget {
   final Future<List<PostView>> Function(
       int page, int batchSize, SortType sortType) fetcher;
 
-  InfinitePostList({@required this.fetcher}) : assert(fetcher != null);
+  const InfinitePostList({@required this.fetcher}) : assert(fetcher != null);
 
   Widget build(BuildContext context) => SortableInfiniteList<PostView>(
         onStyleChange: () {},
         builder: (post) => Column(
           children: [
             Post(post),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
         fetcher: fetcher,
@@ -70,7 +69,7 @@ class InfiniteCommentList extends StatelessWidget {
   final Future<List<CommentView>> Function(
       int page, int batchSize, SortType sortType) fetcher;
 
-  InfiniteCommentList({@required this.fetcher}) : assert(fetcher != null);
+  const InfiniteCommentList({@required this.fetcher}) : assert(fetcher != null);
 
   Widget build(BuildContext context) => SortableInfiniteList<CommentView>(
         builder: (comment) => Comment(

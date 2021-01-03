@@ -20,6 +20,8 @@ import 'inbox.dart';
 /// First thing users sees when opening the app
 /// Shows list of posts from all or just specific instances
 class HomeTab extends HookWidget {
+  const HomeTab();
+
   @override
   Widget build(BuildContext context) {
     // TODO: needs to be an observer? for accounts changes
@@ -31,15 +33,13 @@ class HomeTab extends HookWidget {
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
     final instancesIcons = useMemoFuture(() async {
-      final map = <String, String>{};
       final instances = accStore.instances.toList(growable: false);
       final sites = await Future.wait(instances
           .map((e) => LemmyApi(e).v1.getSite().catchError((e) => null)));
-      for (var i in Iterable.generate(sites.length)) {
-        map[instances[i]] = sites[i].site.icon;
-      }
 
-      return map;
+      return {
+        for (var i = 0; i < sites.length; i++) instances[i]: sites[i].site.icon
+      };
     });
 
     handleListChange() async {
@@ -52,8 +52,8 @@ class HomeTab extends HookWidget {
           return BottomModal(
             child: Column(
               children: [
-                SizedBox(height: 5),
-                ListTile(
+                const SizedBox(height: 5),
+                const ListTile(
                   title: Text('EVERYTHING'),
                   dense: true,
                   contentPadding: EdgeInsets.zero,
@@ -62,20 +62,20 @@ class HomeTab extends HookWidget {
                   leading: SizedBox.shrink(),
                 ),
                 ListTile(
-                  title: Text('Subscribed'),
-                  leading: SizedBox(width: 20, height: 20),
-                  onTap: () => pop(
-                      _SelectedList(listingType: PostListingType.subscribed)),
+                  title: const Text('Subscribed'),
+                  leading: const SizedBox(width: 20, height: 20),
+                  onTap: () => pop(const _SelectedList(
+                      listingType: PostListingType.subscribed)),
                 ),
                 ListTile(
-                  title: Text('All'),
-                  leading: SizedBox(width: 20, height: 20),
-                  onTap: () =>
-                      pop(_SelectedList(listingType: PostListingType.all)),
+                  title: const Text('All'),
+                  leading: const SizedBox(width: 20, height: 20),
+                  onTap: () => pop(
+                      const _SelectedList(listingType: PostListingType.all)),
                 ),
                 for (final instance in accStore.instances) ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Divider(),
                   ),
                   ListTile(
@@ -88,8 +88,8 @@ class HomeTab extends HookWidget {
                     onTap: () => goToInstance(context, instance),
                     dense: true,
                     contentPadding: EdgeInsets.zero,
-                    visualDensity:
-                        VisualDensity(vertical: VisualDensity.minimumDensity),
+                    visualDensity: const VisualDensity(
+                        vertical: VisualDensity.minimumDensity),
                     leading: (instancesIcons.hasData &&
                             instancesIcons.data[instance] != null)
                         ? Padding(
@@ -104,7 +104,7 @@ class HomeTab extends HookWidget {
                               ),
                             ),
                           )
-                        : SizedBox(width: 30),
+                        : const SizedBox(width: 30),
                   ),
                   ListTile(
                     title: Text(
@@ -123,15 +123,15 @@ class HomeTab extends HookWidget {
                               listingType: PostListingType.subscribed,
                               instanceHost: instance,
                             )),
-                    leading: SizedBox(width: 20),
+                    leading: const SizedBox(width: 20),
                   ),
                   ListTile(
-                    title: Text('All'),
+                    title: const Text('All'),
                     onTap: () => pop(_SelectedList(
                       listingType: PostListingType.all,
                       instanceHost: instance,
                     )),
-                    leading: SizedBox(width: 20),
+                    leading: const SizedBox(width: 20),
                   ),
                 ]
               ],
@@ -159,7 +159,7 @@ class HomeTab extends HookWidget {
       return Scaffold(
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Center(child: Text('there needs to be at least one instance')),
           ],
         ),
@@ -171,16 +171,16 @@ class HomeTab extends HookWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () => goTo(context, (_) => InboxPage()),
+            icon: const Icon(Icons.notifications),
+            onPressed: () => goTo(context, (_) => const InboxPage()),
           )
         ],
         centerTitle: true,
         title: TextButton(
           style: TextButton.styleFrom(
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10))),
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             primary: theme.buttonColor,
             textStyle: theme.primaryTextTheme.headline6,
           ),
@@ -217,7 +217,8 @@ class InfiniteHomeList extends HookWidget {
   final Function onStyleChange;
   final InfiniteScrollController controller;
   final _SelectedList selectedList;
-  InfiniteHomeList({
+
+  const InfiniteHomeList({
     @required this.selectedList,
     this.onStyleChange,
     this.controller,
@@ -265,14 +266,16 @@ class InfiniteHomeList extends HookWidget {
               ));
       final posts = await Future.wait(futures);
       final newPosts = <PostView>[];
-      for (final i
-          in Iterable.generate(posts.map((e) => e.length).reduce(max))) {
+      final longest = posts.map((e) => e.length).reduce(max);
+
+      for (var i = 0; i < longest; i++) {
         for (final el in posts) {
           if (el.elementAt(i) != null) {
             newPosts.add(el[i]);
           }
         }
       }
+
       return newPosts;
     }
 
@@ -291,7 +294,6 @@ class InfiniteHomeList extends HookWidget {
         children: [
           PostListOptions(
             onChange: changeSorting,
-            defaultSort: SortType.active,
             styleButton: onStyleChange != null,
           ),
         ],
@@ -299,7 +301,7 @@ class InfiniteHomeList extends HookWidget {
       builder: (post) => Column(
         children: [
           Post(post),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
       padding: EdgeInsets.zero,
@@ -320,7 +322,8 @@ class InfiniteHomeList extends HookWidget {
 class _SelectedList {
   final String instanceHost;
   final PostListingType listingType;
-  _SelectedList({
+
+  const _SelectedList({
     @required this.listingType,
     this.instanceHost,
   });

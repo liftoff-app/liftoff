@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../hooks/ref.dart';
 
 class InfiniteScrollController {
-  Function() clear;
+  VoidCallback clear;
 
   InfiniteScrollController() {
     usedBeforeCreation() => throw Exception(
@@ -28,7 +28,7 @@ class InfiniteScroll<T> extends HookWidget {
   final Widget prepend;
   final EdgeInsetsGeometry padding;
 
-  InfiniteScroll({
+  const InfiniteScroll({
     this.batchSize = 10,
     this.prepend = const SizedBox.shrink(),
     this.padding,
@@ -75,7 +75,7 @@ class InfiniteScroll<T> extends HookWidget {
         if (i == data.value.length) {
           // if there are no more, skip
           if (!hasMore.current) {
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }
 
           // if it's already fetching more, skip

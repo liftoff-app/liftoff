@@ -11,7 +11,7 @@ import 'settings.dart';
 /// Profile page for a logged in user. The difference between this and
 /// UserPage is that here you have access to settings
 class UserProfileTab extends HookWidget {
-  UserProfileTab();
+  const UserProfileTab();
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,9 @@ class UserProfileTab extends HookWidget {
 
     final actions = [
       IconButton(
-        icon: Icon(Icons.settings),
+        icon: const Icon(Icons.settings),
         onPressed: () {
-          goTo(context, (_) => SettingsPage());
+          goTo(context, (_) => const SettingsPage());
         },
       )
     ];
@@ -39,13 +39,13 @@ class UserProfileTab extends HookWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('No account was added.'),
+              const Text('No account was added.'),
               FlatButton.icon(
                 onPressed: () {
                   goTo(context, (_) => AccountsConfigPage());
                 },
-                icon: Icon(Icons.add),
-                label: Text('Add account'),
+                icon: const Icon(Icons.add),
+                label: const Text('Add account'),
               )
             ],
           ),
@@ -62,22 +62,6 @@ class UserProfileTab extends HookWidget {
         shadowColor: Colors.transparent,
         centerTitle: true,
         title: FlatButton(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                // TODO: fix overflow issues
-                '@${accountsStore.defaultUsername}',
-                style: theme.primaryTextTheme.headline6,
-                overflow: TextOverflow.fade,
-              ),
-              Icon(
-                Icons.expand_more,
-                color: theme.primaryIconTheme.color,
-              ),
-            ],
-          ),
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -114,6 +98,22 @@ class UserProfileTab extends HookWidget {
               },
             );
           },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                // TODO: fix overflow issues
+                '@${accountsStore.defaultUsername}',
+                style: theme.primaryTextTheme.headline6,
+                overflow: TextOverflow.fade,
+              ),
+              Icon(
+                Icons.expand_more,
+                color: theme.primaryIconTheme.color,
+              ),
+            ],
+          ),
         ),
         actions: actions,
       ),

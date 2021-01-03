@@ -20,7 +20,7 @@ class MediaViewPage extends HookWidget {
     final isZoomedOut = useState(true);
 
     notImplemented() {
-      _key.currentState.showSnackBar(SnackBar(
+      _key.currentState.showSnackBar(const SnackBar(
           content: Text("this feature hasn't been implemented yet 😰")));
     }
 
@@ -51,16 +51,16 @@ class MediaViewPage extends HookWidget {
           child: Column(
             children: [
               ListTile(
-                leading: Icon(Icons.link),
-                title: Text('Share link'),
+                leading: const Icon(Icons.link),
+                title: const Text('Share link'),
                 onTap: () {
                   Navigator.of(context).pop();
                   Share.text('Share image url', url, 'text/plain');
                 },
               ),
               ListTile(
-                leading: Icon(Icons.image),
-                title: Text('Share file'),
+                leading: const Icon(Icons.image),
+                title: const Text('Share file'),
                 onTap: () {
                   Navigator.of(context).pop();
                   notImplemented();
@@ -81,15 +81,15 @@ class MediaViewPage extends HookWidget {
           ? AppBar(
               backgroundColor: Colors.black38,
               shadowColor: Colors.transparent,
-              leading: CloseButton(),
+              leading: const CloseButton(),
               actions: [
                 IconButton(
-                  icon: Icon(Icons.share),
+                  icon: const Icon(Icons.share),
                   tooltip: 'share',
                   onPressed: share,
                 ),
                 IconButton(
-                  icon: Icon(Icons.file_download),
+                  icon: const Icon(Icons.file_download),
                   tooltip: 'download',
                   onPressed: notImplemented,
                 ),
@@ -115,7 +115,7 @@ class MediaViewPage extends HookWidget {
           imageProvider: CachedNetworkImageProvider(url),
           heroAttributes: PhotoViewHeroAttributes(tag: url),
           loadingBuilder: (context, event) =>
-              Center(child: CircularProgressIndicator()),
+              const Center(child: CircularProgressIndicator()),
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../util/unawaited.dart';
 import 'shared_pref_keys.dart';
 
 /// Store that manages all accounts
@@ -46,11 +47,13 @@ class AccountsStore extends ChangeNotifier {
         );
 
     // set saved settings or create defaults
-    _tokens = nestedMapsCast((json) => Jwt(json['raw']));
+    _tokens = nestedMapsCast((json) => Jwt(json['raw'] as String));
     _defaultAccount = prefs.getString(SharedPrefKeys.defaultAccount);
     _defaultAccounts = HashMap.of(Map.castFrom(
-        jsonDecode(prefs.getString(SharedPrefKeys.defaultAccounts) ?? 'null') ??
-            {}));
+      jsonDecode(prefs.getString(SharedPrefKeys.defaultAccounts) ?? 'null')
+              as Map<dynamic, dynamic> ??
+          {},
+    ));
 
     notifyListeners();
   }
@@ -211,7 +214,7 @@ class AccountsStore extends ChangeNotifier {
 
     _assignDefaultAccounts();
     notifyListeners();
-    save();
+    unawaited(save());
   }
 
   /// adds a new instance with no accounts associated with it.
@@ -238,7 +241,7 @@ class AccountsStore extends ChangeNotifier {
 
     _assignDefaultAccounts();
     notifyListeners();
-    save();
+    unawaited(save());
   }
 
   /// This also removes all accounts assigned to this instance

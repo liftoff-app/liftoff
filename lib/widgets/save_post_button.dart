@@ -10,13 +10,13 @@ import '../hooks/logged_in_action.dart';
 class SavePostButton extends HookWidget {
   final PostView post;
 
-  SavePostButton(this.post);
+  const SavePostButton(this.post);
 
   @override
   Widget build(BuildContext context) {
     final isSaved = useState(post.saved ?? false);
     final savedIcon = isSaved.value ? Icons.bookmark : Icons.bookmark_border;
-    final loading = useDelayedLoading(Duration(milliseconds: 500));
+    final loading = useDelayedLoading();
     final loggedInAction = useLoggedInAction(post.instanceHost);
 
     savePost(Jwt token) async {
@@ -30,7 +30,7 @@ class SavePostButton extends HookWidget {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text('saving failed :(')));
+            .showSnackBar(const SnackBar(content: Text('saving failed :(')));
       }
       loading.cancel();
     }

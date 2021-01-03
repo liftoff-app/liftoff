@@ -29,14 +29,14 @@ class CommunityPage extends HookWidget {
   final String communityName;
   final int communityId;
 
-  CommunityPage.fromName({
+  const CommunityPage.fromName({
     @required this.communityName,
     @required this.instanceHost,
   })  : assert(communityName != null),
         assert(instanceHost != null),
         communityId = null,
         _community = null;
-  CommunityPage.fromId({
+  const CommunityPage.fromId({
     @required this.communityId,
     @required this.instanceHost,
   })  : assert(communityId != null),
@@ -96,13 +96,13 @@ class CommunityPage extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (fullCommunitySnap.hasError) ...[
-                Icon(Icons.error),
+                const Icon(Icons.error),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text('ERROR: ${fullCommunitySnap.error}'),
                 )
               ] else
-                CircularProgressIndicator(semanticsLabel: 'loading')
+                const CircularProgressIndicator(semanticsLabel: 'loading')
             ],
           ),
         ),
@@ -121,16 +121,16 @@ class CommunityPage extends HookWidget {
           child: Column(
             children: [
               ListTile(
-                leading: Icon(Icons.open_in_browser),
-                title: Text('Open in browser'),
+                leading: const Icon(Icons.open_in_browser),
+                title: const Text('Open in browser'),
                 onTap: () async => await ul.canLaunch(community.actorId)
                     ? ul.launch(community.actorId)
                     : Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text("can't open in browser"))),
+                        const SnackBar(content: Text("can't open in browser"))),
               ),
               ListTile(
-                leading: Icon(Icons.info_outline),
-                title: Text('Nerd stuff'),
+                leading: const Icon(Icons.info_outline),
+                title: const Text('Nerd stuff'),
                 onTap: () {
                   showInfoTablePopup(context, {
                     'id': community.id,
@@ -155,7 +155,6 @@ class CommunityPage extends HookWidget {
             // TODO: change top section to be more flexible
             SliverAppBar(
               expandedHeight: 300,
-              floating: false,
               pinned: true,
               elevation: 0,
               backgroundColor: theme.cardColor,
@@ -164,7 +163,7 @@ class CommunityPage extends HookWidget {
               title: Text('!${community.name}',
                   style: TextStyle(color: colorOnCard)),
               actions: [
-                IconButton(icon: Icon(Icons.share), onPressed: _share),
+                IconButton(icon: const Icon(Icons.share), onPressed: _share),
                 IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(
@@ -177,7 +176,7 @@ class CommunityPage extends HookWidget {
                 TabBar(
                   labelColor: theme.textTheme.bodyText1.color,
                   unselectedLabelColor: Colors.grey,
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'Posts'),
                     Tab(text: 'Comments'),
                     Tab(text: 'About'),
@@ -227,7 +226,7 @@ class _CommunityOverview extends StatelessWidget {
   final CommunityView community;
   final String instanceHost;
 
-  _CommunityOverview(
+  const _CommunityOverview(
     this.community, {
     @required this.instanceHost,
   })  : assert(instanceHost != null),
@@ -253,7 +252,7 @@ class _CommunityOverview extends StatelessWidget {
                           color: Colors.black.withOpacity(0.7), blurRadius: 3)
                     ]),
               ),
-              Container(
+              SizedBox(
                 width: 83,
                 height: 83,
                 child: FullscreenableImage(
@@ -269,7 +268,7 @@ class _CommunityOverview extends StatelessWidget {
                         ),
                       ),
                     ),
-                    errorWidget: (_, __, ___) => Icon(Icons.warning),
+                    errorWidget: (_, __, ___) => const Icon(Icons.warning),
                   ),
                 ),
               ),
@@ -283,48 +282,45 @@ class _CommunityOverview extends StatelessWidget {
           url: community.banner,
           child: CachedNetworkImage(
             imageUrl: community.banner,
-            errorWidget: (_, __, ___) => SizedBox.shrink(),
+            errorWidget: (_, __, ___) => const SizedBox.shrink(),
           ),
         ),
       SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(top: 45),
           child: Column(children: [
-            if (community.icon != null)
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 0),
-                  child: Center(child: icon),
-                ),
-              ),
+            if (community.icon != null) icon,
             // NAME
             Center(
-                child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: RichText(
-                overflow: TextOverflow.ellipsis, // TODO: fix overflowing
-                text: TextSpan(
-                  style: theme.textTheme.subtitle1.copyWith(shadows: [shadow]),
-                  children: [
-                    TextSpan(
-                        text: '!',
-                        style: TextStyle(fontWeight: FontWeight.w200)),
-                    TextSpan(
-                        text: community.name,
-                        style: TextStyle(fontWeight: FontWeight.w600)),
-                    TextSpan(
-                        text: '@',
-                        style: TextStyle(fontWeight: FontWeight.w200)),
-                    TextSpan(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: RichText(
+                  overflow: TextOverflow.ellipsis, // TODO: fix overflowing
+                  text: TextSpan(
+                    style:
+                        theme.textTheme.subtitle1.copyWith(shadows: [shadow]),
+                    children: [
+                      const TextSpan(
+                          text: '!',
+                          style: TextStyle(fontWeight: FontWeight.w200)),
+                      TextSpan(
+                          text: community.name,
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
+                      const TextSpan(
+                          text: '@',
+                          style: TextStyle(fontWeight: FontWeight.w200)),
+                      TextSpan(
                         text: community.originInstanceHost,
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => goToInstance(
-                              context, community.originInstanceHost)),
-                  ],
+                              context, community.originInstanceHost),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )),
+            ),
             // TITLE/MOTTO
             Center(
                 child: Padding(
@@ -345,21 +341,21 @@ class _CommunityOverview extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 5),
                     child: Row(
                       children: [
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 3),
+                        const Spacer(),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 3),
                           child: Icon(Icons.people, size: 20),
                         ),
                         Text(compactNumber(community.numberOfSubscribers)),
-                        Spacer(
+                        const Spacer(
                           flex: 4,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 3),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 3),
                           child: Icon(Icons.record_voice_over, size: 20),
                         ),
-                        Text('xx'), // TODO: display online users
-                        Spacer(),
+                        const Text('xx'), // TODO: display online users
+                        const Spacer(),
                       ],
                     ),
                   ),
@@ -375,9 +371,9 @@ class _CommunityOverview extends StatelessWidget {
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
-
   final TabBar _tabBar;
+
+  const _SliverAppBarDelegate(this._tabBar);
 
   @override
   double get minExtent => _tabBar.preferredSize.height;
@@ -388,7 +384,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = Theme.of(context);
-    return Container(child: _tabBar, color: theme.cardColor);
+    return Container(color: theme.cardColor, child: _tabBar);
   }
 
   @override
@@ -418,7 +414,7 @@ class _AboutTab extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListView(
-      padding: EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 20),
       children: [
         if (community.description != null) ...[
           Padding(
@@ -426,7 +422,7 @@ class _AboutTab extends StatelessWidget {
             child: MarkdownText(community.description,
                 instanceHost: community.instanceHost),
           ),
-          _Divider(),
+          const _Divider(),
         ],
         SizedBox(
           height: 25,
@@ -434,8 +430,8 @@ class _AboutTab extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: [
               // TODO: consider using Chips
-              Padding(
-                padding: const EdgeInsets.only(left: 7),
+              const Padding(
+                padding: EdgeInsets.only(left: 7),
                 child: _Badge('X users online'),
               ),
               _Badge(
@@ -450,29 +446,29 @@ class _AboutTab extends StatelessWidget {
             ],
           ),
         ),
-        _Divider(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-          child: OutlineButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text('${community.categoryName}'),
-            onPressed: goToCategories,
-          ),
-        ),
-        _Divider(),
+        const _Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: OutlineButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text('Modlog'),
-            onPressed: goToModlog,
+            onPressed: goToCategories,
+            child: Text(community.categoryName),
           ),
         ),
-        _Divider(),
+        const _Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: OutlineButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            onPressed: goToModlog,
+            child: const Text('Modlog'),
+          ),
+        ),
+        const _Divider(),
         if (moderators != null && moderators.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -493,7 +489,7 @@ class _Badge extends StatelessWidget {
   final String text;
   final bool noPad;
 
-  _Badge(this.text, {this.noPad = false});
+  const _Badge(this.text, {this.noPad = false});
 
   @override
   Widget build(BuildContext context) {
@@ -513,9 +509,11 @@ class _Badge extends StatelessWidget {
 }
 
 class _Divider extends StatelessWidget {
+  const _Divider();
+
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+  Widget build(BuildContext context) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Divider(),
       );
 }
@@ -523,14 +521,14 @@ class _Divider extends StatelessWidget {
 class _FollowButton extends HookWidget {
   final CommunityView community;
 
-  _FollowButton(this.community);
+  const _FollowButton(this.community);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     final isSubbed = useState(community.subscribed ?? false);
-    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+    final delayed = useDelayedLoading();
     final loggedInAction = useLoggedInAction(community.instanceHost);
 
     final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
@@ -548,8 +546,8 @@ class _FollowButton extends HookWidget {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Row(
             children: [
-              Icon(Icons.warning),
-              SizedBox(width: 10),
+              const Icon(Icons.warning),
+              const SizedBox(width: 10),
               Text("couldn't ${isSubbed.value ? 'un' : ''}sub :<"),
             ],
           ),
@@ -566,17 +564,18 @@ class _FollowButton extends HookWidget {
         child: delayed.loading
             ? RaisedButton(
                 onPressed: null,
-                child: SizedBox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const SizedBox(
                   height: 15,
                   width: 15,
                   child: CircularProgressIndicator(),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
               )
             : RaisedButton.icon(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 onPressed: loggedInAction(delayed.pending ? (_) {} : subscribe),
                 icon: isSubbed.value
                     ? Icon(Icons.remove, size: 18, color: colorOnTopOfAccent)

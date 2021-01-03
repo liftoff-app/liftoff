@@ -3,9 +3,58 @@ include: package:effective_dart/analysis_options.yaml
 linter:
   rules:
     public_member_api_docs: false
-    prefer_expression_function_bodies: true
+
     prefer_single_quotes: true
     prefer_final_locals: true
+    prefer_expression_function_bodies: true
+    avoid_bool_literals_in_conditional_expressions: true
+    exhaustive_cases: true
+    prefer_for_elements_to_map_fromIterable: true
+    prefer_if_null_operators: true
+    prefer_is_not_operator: true
+    use_is_even_rather_than_modulo: true
+    unnecessary_string_escapes: true
+    use_full_hex_values_for_flutter_colors: true
+    sort_unnamed_constructors_first: true
+    use_raw_strings: true
+    unnecessary_string_interpolations: true
+    void_checks: true
+    unnecessary_null_in_if_null_operators: true
+    unnecessary_raw_strings: true
+    unnecessary_null_aware_assignments: true
+    unnecessary_parenthesis: true
+    prefer_if_elements_to_conditional_expressions: true
+    unawaited_futures: true
+    prefer_typing_uninitialized_variables: true
+    sized_box_for_whitespace: true
+    recursive_getters: true
+    prefer_int_literals: true
+    prefer_spread_collections: true
+    prefer_null_aware_operators: true
+    prefer_final_in_for_each: true
+    prefer_contains: true
+    prefer_constructors_over_static_methods: true
+    prefer_conditional_assignment: true
+    prefer_asserts_in_initializer_lists: true
+    parameter_assignments: true
+    avoid_unused_constructor_parameters: true
+    empty_catches: true
+    cascade_invocations: true
+    await_only_futures: true
+    avoid_void_async: true
+    avoid_unnecessary_containers: true
+    avoid_single_cascade_in_expression_statements: true
+    avoid_returning_null_for_void: true
+    avoid_redundant_argument_values: true
+    avoid_escaping_inner_quotes: true
+    sort_child_properties_last: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_const_constructors_in_immutables: true
+
 analyzer:
   exclude:
     - "**/*.g.dart"
+  strong-mode:
+    implicit-casts: false

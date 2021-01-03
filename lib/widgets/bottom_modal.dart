@@ -5,7 +5,7 @@ class BottomModal extends StatelessWidget {
   final Widget child;
   final String title;
 
-  BottomModal({@required this.child, this.title});
+  const BottomModal({@required this.child, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +13,13 @@ class BottomModal extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: SingleChildScrollView(
           child: Container(
             padding: title != null ? const EdgeInsets.only(top: 10) : null,
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
-              borderRadius: BorderRadius.all(const Radius.circular(10.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -34,7 +34,7 @@ class BottomModal extends StatelessWidget {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     indent: 20,
                     endIndent: 20,
                   )

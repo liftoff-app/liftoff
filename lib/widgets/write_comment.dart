@@ -41,9 +41,9 @@ class WriteComment extends HookWidget {
           children: [
             Text(
               post.name,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             body,
           ],
         );
@@ -68,8 +68,8 @@ class WriteComment extends HookWidget {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         print(e);
-        scaffoldKey.currentState
-            .showSnackBar(SnackBar(content: Text('Failed to post comment')));
+        scaffoldKey.currentState.showSnackBar(
+            const SnackBar(content: Text('Failed to post comment')));
       }
       delayed.cancel();
     }
@@ -78,7 +78,7 @@ class WriteComment extends HookWidget {
       key: scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: Navigator.of(context).pop,
         ),
         actions: [
@@ -98,7 +98,7 @@ class WriteComment extends HookWidget {
               child: preview,
             ),
           ),
-          Divider(),
+          const Divider(),
           IndexedStack(
             index: showFancy.value ? 1 : 0,
             children: [
@@ -108,7 +108,7 @@ class WriteComment extends HookWidget {
                 minLines: 5,
                 maxLines: null,
                 textAlignVertical: TextAlignVertical.top,
-                decoration: InputDecoration(border: OutlineInputBorder()),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -125,8 +125,8 @@ class WriteComment extends HookWidget {
               FlatButton(
                 onPressed: delayed.pending ? () {} : handleSubmit,
                 child: delayed.loading
-                    ? CircularProgressIndicator()
-                    : Text('post'),
+                    ? const CircularProgressIndicator()
+                    : const Text('post'),
               )
             ],
           ),

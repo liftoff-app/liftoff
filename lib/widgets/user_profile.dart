@@ -38,7 +38,7 @@ class UserProfile extends HookWidget {
     } else if (userDetailsSnap.hasError) {
       return Center(
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(Icons.error),
+          const Icon(Icons.error),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Text('ERROR: ${userDetailsSnap.error}'),
@@ -66,7 +66,7 @@ class UserProfile extends HookWidget {
                 FlexibleSpaceBar(background: _UserOverview(userView)),
             bottom: TabBar(
               labelColor: theme.textTheme.bodyText1.color,
-              tabs: [
+              tabs: const [
                 Tab(text: 'Posts'),
                 Tab(text: 'Comments'),
                 Tab(text: 'About'),
@@ -131,7 +131,7 @@ class _UserOverview extends HookWidget {
             url: userView.banner,
             child: CachedNetworkImage(
               imageUrl: userView.banner,
-              errorWidget: (_, __, ___) => SizedBox.shrink(),
+              errorWidget: (_, __, ___) => const SizedBox.shrink(),
             ),
           )
         else
@@ -142,7 +142,7 @@ class _UserOverview extends HookWidget {
           ),
         Container(
           height: 200,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: FractionalOffset.topCenter,
               end: FractionalOffset.bottomCenter,
@@ -161,7 +161,7 @@ class _UserOverview extends HookWidget {
               height: double.infinity,
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(40),
                     topLeft: Radius.circular(40),
                   ),
@@ -181,19 +181,19 @@ class _UserOverview extends HookWidget {
                   child: Container(
                     // clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(blurRadius: 6, color: Colors.black54)
                       ],
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
                       border: Border.all(color: Colors.white, width: 3),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
                       child: FullscreenableImage(
                         url: userView.avatar,
                         child: CachedNetworkImage(
                           imageUrl: userView.avatar,
-                          errorWidget: (_, __, ___) => SizedBox.shrink(),
+                          errorWidget: (_, __, ___) => const SizedBox.shrink(),
                         ),
                       ),
                     ),
@@ -201,7 +201,7 @@ class _UserOverview extends HookWidget {
                 ),
               Padding(
                 padding: userView.avatar != null
-                    ? const EdgeInsets.only(top: 8.0)
+                    ? const EdgeInsets.only(top: 8)
                     : const EdgeInsets.only(top: 70),
                 child: Padding(
                   padding:
@@ -213,7 +213,7 @@ class _UserOverview extends HookWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 4.0),
+                padding: const EdgeInsets.only(top: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -225,7 +225,7 @@ class _UserOverview extends HookWidget {
                       onTap: () =>
                           goToInstance(context, userView.originInstanceHost),
                       child: Text(
-                        '${userView.originInstanceHost}',
+                        userView.originInstanceHost,
                         style: theme.textTheme.caption,
                       ),
                     )
@@ -246,7 +246,7 @@ class _UserOverview extends HookWidget {
                             color: colorOnTopOfAccentColor,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
+                            padding: const EdgeInsets.only(left: 4),
                             child: Text(
                               '${compactNumber(userView.numberOfPosts)}'
                               ' Post${pluralS(userView.numberOfPosts)}',
@@ -257,7 +257,7 @@ class _UserOverview extends HookWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: const EdgeInsets.only(left: 16),
                       child: Badge(
                         child: Row(
                           children: [
@@ -267,7 +267,7 @@ class _UserOverview extends HookWidget {
                               color: colorOnTopOfAccentColor,
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
+                              padding: const EdgeInsets.only(left: 4),
                               child: Text(
                                 '${compactNumber(userView.numberOfComments)}'
                                 ' Comment${pluralS(userView.numberOfComments)}',
@@ -294,12 +294,12 @@ class _UserOverview extends HookWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.cake,
                       size: 13,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
+                      padding: const EdgeInsets.only(left: 4),
                       child: Text(
                         DateFormat('MMM dd, yyyy').format(userView.published),
                         style: theme.textTheme.bodyText1,
@@ -337,7 +337,7 @@ class _AboutTab extends HookWidget {
     final divider = Padding(
       padding: EdgeInsets.symmetric(
           horizontal: wallPadding.horizontal / 2, vertical: 10),
-      child: Divider(),
+      child: const Divider(),
     );
 
     communityTile(String name, String icon, int id) => ListTile(
@@ -349,7 +349,8 @@ class _AboutTab extends HookWidget {
                   height: 40,
                   width: 40,
                   imageUrl: icon,
-                  errorWidget: (_, __, ___) => SizedBox(width: 40, height: 40),
+                  errorWidget: (_, __, ___) =>
+                      const SizedBox(width: 40, height: 40),
                   imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -359,17 +360,17 @@ class _AboutTab extends HookWidget {
                           ),
                         ),
                       ))
-              : SizedBox(width: 40),
+              : const SizedBox(width: 40),
         );
 
     return ListView(
-      padding: EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       children: [
         if (isOwnedAccount)
           ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: const [
                 Icon(Icons.edit),
                 SizedBox(width: 10),
                 Text('edit profile'),
@@ -415,8 +416,8 @@ class _AboutTab extends HookWidget {
             communityTile(
                 comm.communityName, comm.communityIcon, comm.communityId)
         else
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
             child: Center(
               child: Text(
                 'this user does not subscribe to any community',

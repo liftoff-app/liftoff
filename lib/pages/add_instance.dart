@@ -68,10 +68,10 @@ class AddInstancePage extends HookWidget {
         shadowColor: Colors.transparent,
         iconTheme: theme.iconTheme,
         centerTitle: true,
-        leading: CloseButton(),
+        leading: const CloseButton(),
         actionsIconTheme: theme.iconTheme,
         textTheme: theme.textTheme,
-        title: Text('Add instance'),
+        title: const Text('Add instance'),
       ),
       body: ListView(
         children: [
@@ -79,26 +79,26 @@ class AddInstancePage extends HookWidget {
             SizedBox(
                 height: 150,
                 child: FullscreenableImage(
+                  url: icon.value,
                   child: CachedNetworkImage(
                     imageUrl: icon.value,
-                    errorWidget: (_, __, ___) => SizedBox.shrink(),
+                    errorWidget: (_, __, ___) => const SizedBox.shrink(),
                   ),
-                  url: icon.value,
                 ))
           else if (isSite.value == false)
             SizedBox(
               height: 150,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Icon(Icons.close, color: Colors.red),
                   Text('instance not found')
                 ],
               ),
             )
           else
-            SizedBox(height: 150),
-          SizedBox(height: 15),
+            const SizedBox(height: 150),
+          const SizedBox(height: 15),
           SizedBox(
             height: 40,
             child: Padding(
@@ -117,7 +117,7 @@ class AddInstancePage extends HookWidget {
               ),
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: SizedBox(
@@ -127,8 +127,9 @@ class AddInstancePage extends HookWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 color: theme.accentColor,
+                onPressed: isSite.value == true ? handleOnAdd : null,
                 child: !debounce.loading
-                    ? Text('Add')
+                    ? const Text('Add')
                     : SizedBox(
                         height: 20,
                         width: 20,
@@ -137,7 +138,6 @@ class AddInstancePage extends HookWidget {
                               AlwaysStoppedAnimation<Color>(theme.canvasColor),
                         ),
                       ),
-                onPressed: isSite.value == true ? handleOnAdd : null,
               ),
             ),
           ),

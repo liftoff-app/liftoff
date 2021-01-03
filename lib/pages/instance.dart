@@ -52,13 +52,13 @@ class InstancePage extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (siteSnap.hasError) ...[
-                Icon(Icons.error),
+                const Icon(Icons.error),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text('ERROR: ${siteSnap.error}'),
                 )
               ] else
-                CircularProgressIndicator(semanticsLabel: 'loading')
+                const CircularProgressIndicator(semanticsLabel: 'loading')
             ],
           ),
         ),
@@ -87,7 +87,6 @@ class InstancePage extends HookWidget {
             SliverAppBar(
               brightness: theme.brightness,
               expandedHeight: 200,
-              floating: false,
               pinned: true,
               elevation: 0,
               backgroundColor: theme.cardColor,
@@ -97,7 +96,7 @@ class InstancePage extends HookWidget {
                 style: TextStyle(color: colorOnCard),
               ),
               actions: [
-                IconButton(icon: Icon(Icons.share), onPressed: _share),
+                IconButton(icon: const Icon(Icons.share), onPressed: _share),
                 IconButton(
                     icon: Icon(moreIcon),
                     onPressed: () => _openMoreMenu(context)),
@@ -109,7 +108,7 @@ class InstancePage extends HookWidget {
                       url: site.site.banner,
                       child: CachedNetworkImage(
                         imageUrl: site.site.banner,
-                        errorWidget: (_, __, ___) => SizedBox.shrink(),
+                        errorWidget: (_, __, ___) => const SizedBox.shrink(),
                       ),
                     ),
                   SafeArea(
@@ -125,7 +124,7 @@ class InstancePage extends HookWidget {
                                 height: 100,
                                 imageUrl: site.site.icon,
                                 errorWidget: (_, __, ___) =>
-                                    Icon(Icons.warning),
+                                    const Icon(Icons.warning),
                               ),
                             ),
                           ),
@@ -144,7 +143,7 @@ class InstancePage extends HookWidget {
                 TabBar(
                   labelColor: theme.textTheme.bodyText1.color,
                   unselectedLabelColor: Colors.grey,
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'Posts'),
                     Tab(text: 'Comments'),
                     Tab(text: 'About'),
@@ -187,9 +186,9 @@ class InstancePage extends HookWidget {
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
-
   final TabBar _tabBar;
+
+  const _SliverAppBarDelegate(this._tabBar);
 
   @override
   double get minExtent => _tabBar.preferredSize.height;
@@ -200,7 +199,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = Theme.of(context);
-    return Container(child: _tabBar, color: theme.cardColor);
+    return Container(color: theme.cardColor, child: _tabBar);
   }
 
   @override
@@ -267,23 +266,23 @@ class _AboutTab extends HookWidget {
                 instanceHost: instanceHost,
               ),
             ),
-            _Divider(),
+            const _Divider(),
             SizedBox(
               height: 25,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  SizedBox(width: 7),
-                  _Badge('X users online'),
+                  const SizedBox(width: 7),
+                  const _Badge('X users online'),
                   _Badge('${site.site.numberOfUsers} users'),
                   _Badge('${site.site.numberOfCommunities} communities'),
                   _Badge('${site.site.numberOfPosts} posts'),
                   _Badge('${site.site.numberOfComments} comments'),
-                  SizedBox(width: 15),
+                  const SizedBox(width: 15),
                 ],
               ),
             ),
-            _Divider(),
+            const _Divider(),
             ListTile(
               title: Center(
                 child: Text(
@@ -303,7 +302,7 @@ class _AboutTab extends HookWidget {
                             width: 50,
                             imageUrl: e.icon,
                             errorWidget: (_, __, ___) =>
-                                SizedBox(width: 50, height: 50),
+                                const SizedBox(width: 50, height: 50),
                             imageBuilder: (context, imageProvider) => Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -313,23 +312,23 @@ class _AboutTab extends HookWidget {
                                     ),
                                   ),
                                 ))
-                        : SizedBox(width: 50),
+                        : const SizedBox(width: 50),
                   ))
             else if (commSnap.hasError)
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Text("Can't load communities, ${commSnap.error}"),
               )
             else
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
                 child: CircularProgressIndicator(),
               ),
             ListTile(
-              title: Center(child: Text('See all')),
+              title: const Center(child: Text('See all')),
               onTap: goToCommunities,
             ),
-            _Divider(),
+            const _Divider(),
             ListTile(
               title: Center(
                 child: Text(
@@ -353,7 +352,7 @@ class _AboutTab extends HookWidget {
                           width: 50,
                           imageUrl: e.avatar,
                           errorWidget: (_, __, ___) =>
-                              SizedBox(width: 50, height: 50),
+                              const SizedBox(width: 50, height: 50),
                           imageBuilder: (context, imageProvider) => Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -361,18 +360,18 @@ class _AboutTab extends HookWidget {
                                       fit: BoxFit.cover, image: imageProvider),
                                 ),
                               ))
-                      : SizedBox(width: 50),
+                      : const SizedBox(width: 50),
                 )),
-            _Divider(),
+            const _Divider(),
             ListTile(
-              title: Center(child: Text('Banned users')),
+              title: const Center(child: Text('Banned users')),
               onTap: () => goToBannedUsers(context),
             ),
             ListTile(
-              title: Center(child: Text('Modlog')),
+              title: const Center(child: Text('Modlog')),
               onTap: goToModLog,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -383,7 +382,7 @@ class _AboutTab extends HookWidget {
 class _Badge extends StatelessWidget {
   final String text;
 
-  _Badge(this.text);
+  const _Badge(this.text);
 
   @override
   Widget build(BuildContext context) {
@@ -403,9 +402,11 @@ class _Badge extends StatelessWidget {
 }
 
 class _Divider extends StatelessWidget {
+  const _Divider();
+
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+  Widget build(BuildContext context) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Divider(),
       );
 }

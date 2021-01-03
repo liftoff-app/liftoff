@@ -33,12 +33,14 @@ Future<void> main() async {
           value: accountsStore,
         ),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends HookWidget {
+  const MyApp();
+
   @override
   Widget build(BuildContext context) {
     final configStore = useConfigStore();
@@ -57,24 +59,26 @@ class MyApp extends HookWidget {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class TemporarySearchTab extends HookWidget {
+  const TemporarySearchTab();
+
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
     return ListView(
       children: [
-        ListTile(
+        const ListTile(
           title: Center(
               child: Text('🚧 this tab is still under construction 🚧\n'
                   'but you can open your instances in a browser '
                   ' for missing functionality')),
         ),
-        Divider(),
+        const Divider(),
         for (final inst in accStore.instances)
           ListTile(
             title: Text(inst),
@@ -86,7 +90,9 @@ class TemporarySearchTab extends HookWidget {
 }
 
 class MyHomePage extends HookWidget {
-  final List<Widget> pages = [
+  const MyHomePage();
+
+  static const List<Widget> pages = [
     HomeTab(),
     CommunitiesTab(),
     TemporarySearchTab(), // TODO: search tab
@@ -126,20 +132,20 @@ class MyHomePage extends HookWidget {
         index: currentTab.value,
         children: pages,
       ),
-      floatingActionButton: CreatePostFab(),
+      floatingActionButton: const CreatePostFab(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 7,
-        child: Container(
+        child: SizedBox(
           height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               tabButton(Icons.home),
               tabButton(Icons.list),
-              SizedBox.shrink(),
-              SizedBox.shrink(),
+              const SizedBox.shrink(),
+              const SizedBox.shrink(),
               tabButton(Icons.search),
               tabButton(Icons.person),
             ],
