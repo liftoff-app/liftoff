@@ -8,8 +8,8 @@ import 'ref.dart';
 class DelayedLoading {
   final bool pending;
   final bool loading;
-  final void Function() start;
-  final void Function() cancel;
+  final VoidCallback start;
+  final VoidCallback cancel;
 
   const DelayedLoading({
     @required this.pending,

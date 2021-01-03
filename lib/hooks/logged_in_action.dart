@@ -11,14 +11,15 @@ import 'stores.dart';
 /// Snackbar is rendered. If [any] is set to true, this check is performed for
 /// all instances and if any of them have an account, the wrapped action will be
 /// called with a null token.
-Function(
-  Function(Jwt token) action, [
+
+VoidCallback Function(
+  void Function(Jwt token) action, [
   String message,
 ]) useLoggedInAction(String instanceHost, {bool any = false}) {
   final context = useContext();
   final store = useAccountsStore();
 
-  return (Function(Jwt token) action, [message]) {
+  return (action, [message]) {
     if (any && store.hasNoAccount ||
         !any && store.isAnonymousFor(instanceHost)) {
       return () {

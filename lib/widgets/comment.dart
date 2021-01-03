@@ -456,7 +456,7 @@ class _CommentTag extends StatelessWidget {
 
 class _CommentAction extends StatelessWidget {
   final IconData icon;
-  final void Function() onPressed;
+  final VoidCallback onPressed;
   final String tooltip;
   final bool loading;
   final Color iconColor;

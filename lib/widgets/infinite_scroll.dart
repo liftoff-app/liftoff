@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../hooks/ref.dart';
 
 class InfiniteScrollController {
-  Function() clear;
+  VoidCallback clear;
 
   InfiniteScrollController() {
     usedBeforeCreation() => throw Exception(

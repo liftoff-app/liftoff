@@ -7,7 +7,7 @@ import 'ref.dart';
 
 class Debounce {
   final bool loading;
-  final void Function() callback;
+  final VoidCallback callback;
 
   const Debounce({
     @required this.loading,
@@ -20,7 +20,7 @@ class Debounce {
 /// will run `callback()` after debounce hook hasn't been called for the
 /// specified `delayDuration`
 Debounce useDebounce(
-  Future<Null> Function() callback, [
+  Future<void> Function() callback, [
   Duration delayDuration = const Duration(seconds: 1),
 ]) {
   final loading = useState(false);
