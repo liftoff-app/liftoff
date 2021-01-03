@@ -52,8 +52,7 @@ class Comment extends HookWidget {
       'upvotes': com.upvotes,
       'downvotes': com.downvotes,
       'score': com.score,
-      '% of upvotes':
-          '${(100 * (com.upvotes / (com.upvotes + com.downvotes)))}%',
+      '% of upvotes': '${100 * (com.upvotes / (com.upvotes + com.downvotes))}%',
       'hotRank': com.hotRank,
       'hotRankActive': com.hotRankActive,
       'published': com.published,
@@ -402,7 +401,7 @@ class _SaveComment extends HookWidget {
   Widget build(BuildContext context) {
     final loggedInAction = useLoggedInAction(comment.instanceHost);
     final isSaved = useState(comment.saved ?? false);
-    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+    final delayed = useDelayedLoading();
 
     handleSave(Jwt token) async {
       final api = LemmyApi(comment.instanceHost).v1;

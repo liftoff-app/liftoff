@@ -87,7 +87,6 @@ class InstancePage extends HookWidget {
             SliverAppBar(
               brightness: theme.brightness,
               expandedHeight: 200,
-              floating: false,
               pinned: true,
               elevation: 0,
               backgroundColor: theme.cardColor,
@@ -317,7 +316,7 @@ class _AboutTab extends HookWidget {
                   ))
             else if (commSnap.hasError)
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Text("Can't load communities, ${commSnap.error}"),
               )
             else

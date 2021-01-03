@@ -35,7 +35,7 @@ class HomeTab extends HookWidget {
       final instances = accStore.instances.toList(growable: false);
       final sites = await Future.wait(instances
           .map((e) => LemmyApi(e).v1.getSite().catchError((e) => null)));
-      for (var i in Iterable.generate(sites.length)) {
+      for (final i in Iterable.generate(sites.length)) {
         map[instances[i]] = sites[i].site.icon;
       }
 
@@ -291,7 +291,6 @@ class InfiniteHomeList extends HookWidget {
         children: [
           PostListOptions(
             onChange: changeSorting,
-            defaultSort: SortType.active,
             styleButton: onStyleChange != null,
           ),
         ],

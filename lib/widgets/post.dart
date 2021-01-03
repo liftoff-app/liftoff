@@ -228,7 +228,6 @@ class Post extends HookWidget {
                     IconButton(
                       onPressed: () => showMoreMenu(context, post),
                       icon: Icon(moreIcon),
-                      iconSize: 24,
                       padding: EdgeInsets.all(0),
                       visualDensity: VisualDensity.compact,
                     )
@@ -246,7 +245,7 @@ class Post extends HookWidget {
               Expanded(
                 flex: 100,
                 child: Text(
-                  '${post.name}',
+                  post.name,
                   textAlign: TextAlign.left,
                   softWrap: true,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -294,7 +293,6 @@ class Post extends HookWidget {
           child: Container(
             decoration: BoxDecoration(
                 border: Border.all(
-                    width: 1,
                     color: Theme.of(context).iconTheme.color.withAlpha(170)),
                 borderRadius: BorderRadius.circular(5)),
             child: Padding(
@@ -310,7 +308,7 @@ class Post extends HookWidget {
                   ]),
                   Row(children: [
                     Flexible(
-                        child: Text('${post.embedTitle ?? ''}',
+                        child: Text(post.embedTitle ?? '',
                             style: theme.textTheme.subtitle1
                                 .apply(fontWeightDelta: 2)))
                   ]),

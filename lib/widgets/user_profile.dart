@@ -201,7 +201,7 @@ class _UserOverview extends HookWidget {
                 ),
               Padding(
                 padding: userView.avatar != null
-                    ? const EdgeInsets.only(top: 8.0)
+                    ? const EdgeInsets.only(top: 8)
                     : const EdgeInsets.only(top: 70),
                 child: Padding(
                   padding:
@@ -213,7 +213,7 @@ class _UserOverview extends HookWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 4.0),
+                padding: const EdgeInsets.only(top: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -225,7 +225,7 @@ class _UserOverview extends HookWidget {
                       onTap: () =>
                           goToInstance(context, userView.originInstanceHost),
                       child: Text(
-                        '${userView.originInstanceHost}',
+                        userView.originInstanceHost,
                         style: theme.textTheme.caption,
                       ),
                     )
@@ -246,7 +246,7 @@ class _UserOverview extends HookWidget {
                             color: colorOnTopOfAccentColor,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
+                            padding: const EdgeInsets.only(left: 4),
                             child: Text(
                               '${compactNumber(userView.numberOfPosts)}'
                               ' Post${pluralS(userView.numberOfPosts)}',
@@ -257,7 +257,7 @@ class _UserOverview extends HookWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: const EdgeInsets.only(left: 16),
                       child: Badge(
                         child: Row(
                           children: [
@@ -267,7 +267,7 @@ class _UserOverview extends HookWidget {
                               color: colorOnTopOfAccentColor,
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
+                              padding: const EdgeInsets.only(left: 4),
                               child: Text(
                                 '${compactNumber(userView.numberOfComments)}'
                                 ' Comment${pluralS(userView.numberOfComments)}',
@@ -299,7 +299,7 @@ class _UserOverview extends HookWidget {
                       size: 13,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
+                      padding: const EdgeInsets.only(left: 4),
                       child: Text(
                         DateFormat('MMM dd, yyyy').format(userView.published),
                         style: theme.textTheme.bodyText1,

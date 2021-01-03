@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../util/unawaited.dart';
 import 'shared_pref_keys.dart';
 
 /// Store that manages all accounts
@@ -211,7 +212,7 @@ class AccountsStore extends ChangeNotifier {
 
     _assignDefaultAccounts();
     notifyListeners();
-    save();
+    unawaited(save());
   }
 
   /// adds a new instance with no accounts associated with it.
@@ -238,7 +239,7 @@ class AccountsStore extends ChangeNotifier {
 
     _assignDefaultAccounts();
     notifyListeners();
-    save();
+    unawaited(save());
   }
 
   /// This also removes all accounts assigned to this instance

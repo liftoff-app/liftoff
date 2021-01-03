@@ -36,7 +36,6 @@ class SortableInfiniteList<T> extends HookWidget {
     return InfiniteScroll<T>(
       prepend: PostListOptions(
         onChange: changeSorting,
-        defaultSort: SortType.active,
         styleButton: onStyleChange != null,
       ),
       builder: builder,

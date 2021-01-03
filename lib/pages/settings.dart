@@ -26,26 +26,24 @@ class SettingsPage extends StatelessWidget {
         title: Text('Settings', style: theme.textTheme.headline6),
         centerTitle: true,
       ),
-      body: Container(
-        child: ListView(
-          children: [
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Accounts'),
-              onTap: () {
-                goTo(context, (_) => AccountsConfigPage());
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.color_lens),
-              title: Text('Appearance'),
-              onTap: () {
-                goTo(context, (_) => AppearanceConfigPage());
-              },
-            ),
-            AboutTile()
-          ],
-        ),
+      body: ListView(
+        children: [
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Accounts'),
+            onTap: () {
+              goTo(context, (_) => AccountsConfigPage());
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.color_lens),
+            title: Text('Appearance'),
+            onTap: () {
+              goTo(context, (_) => AppearanceConfigPage());
+            },
+          ),
+          AboutTile()
+        ],
       ),
     );
   }
@@ -159,7 +157,6 @@ class AccountsConfigPage extends HookWidget {
       ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x
-        closeManually: false,
         curve: Curves.bounceIn,
         tooltip: 'Add account or instance',
         child: Icon(Icons.add),
@@ -210,7 +207,6 @@ class AccountsConfigPage extends HookWidget {
               actionPane: SlidableBehindActionPane(),
               secondaryActions: [
                 IconSlideAction(
-                  closeOnTap: true,
                   onTap: () => removeInstanceDialog(entry.key),
                   icon: Icons.delete_sweep,
                   color: Colors.red,
@@ -221,7 +217,7 @@ class AccountsConfigPage extends HookWidget {
                 color: theme.canvasColor,
                 child: ListTile(
                   dense: true,
-                  contentPadding: EdgeInsets.only(left: 0, top: 0),
+                  contentPadding: EdgeInsets.zero,
                   title: _SectionHeading(entry.key),
                 ),
               ),
@@ -232,7 +228,6 @@ class AccountsConfigPage extends HookWidget {
                 key: Key('$username@${entry.key}'),
                 secondaryActions: [
                   IconSlideAction(
-                    closeOnTap: true,
                     onTap: () => removeUserDialog(entry.key, username),
                     icon: Icons.delete_sweep,
                     color: Colors.red,
@@ -285,7 +280,7 @@ class _SectionHeading extends StatelessWidget {
     return Padding(
       child: Text(text.toUpperCase(),
           style: theme.textTheme.subtitle2.copyWith(color: theme.accentColor)),
-      padding: EdgeInsets.only(left: 20, top: 0),
+      padding: EdgeInsets.only(left: 20),
     );
   }
 }

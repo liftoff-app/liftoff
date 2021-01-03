@@ -66,7 +66,7 @@ class CommunitiesTab extends HookWidget {
             children: [
               Icon(Icons.error),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Text(
                   communitiesSnap.error?.toString() ??
                       instancesSnap.error?.toString(),
@@ -238,7 +238,7 @@ class _CommunitySubscribeToggle extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final subbed = useState(true);
-    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+    final delayed = useDelayedLoading();
     final accountsStore = useAccountsStore();
 
     handleTap() async {
@@ -271,7 +271,7 @@ class _CommunitySubscribeToggle extends HookWidget {
                 borderRadius: BorderRadius.circular(7),
               ),
         child: delayed.loading
-            ? Container(
+            ? SizedBox(
                 width: 20, height: 20, child: CircularProgressIndicator())
             : Icon(
                 subbed.value ? Icons.done : Icons.add,

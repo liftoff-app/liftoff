@@ -13,13 +13,13 @@ class BottomModal extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: SingleChildScrollView(
           child: Container(
             padding: title != null ? const EdgeInsets.only(top: 10) : null,
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
-              borderRadius: BorderRadius.all(const Radius.circular(10.0)),
+              borderRadius: BorderRadius.all(const Radius.circular(10)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

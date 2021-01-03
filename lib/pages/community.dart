@@ -155,7 +155,6 @@ class CommunityPage extends HookWidget {
             // TODO: change top section to be more flexible
             SliverAppBar(
               expandedHeight: 300,
-              floating: false,
               pinned: true,
               elevation: 0,
               backgroundColor: theme.cardColor,
@@ -253,7 +252,7 @@ class _CommunityOverview extends StatelessWidget {
                           color: Colors.black.withOpacity(0.7), blurRadius: 3)
                     ]),
               ),
-              Container(
+              SizedBox(
                 width: 83,
                 height: 83,
                 child: FullscreenableImage(
@@ -290,41 +289,38 @@ class _CommunityOverview extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 45),
           child: Column(children: [
-            if (community.icon != null)
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 0),
-                  child: Center(child: icon),
-                ),
-              ),
+            if (community.icon != null) icon,
             // NAME
             Center(
-                child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: RichText(
-                overflow: TextOverflow.ellipsis, // TODO: fix overflowing
-                text: TextSpan(
-                  style: theme.textTheme.subtitle1.copyWith(shadows: [shadow]),
-                  children: [
-                    TextSpan(
-                        text: '!',
-                        style: TextStyle(fontWeight: FontWeight.w200)),
-                    TextSpan(
-                        text: community.name,
-                        style: TextStyle(fontWeight: FontWeight.w600)),
-                    TextSpan(
-                        text: '@',
-                        style: TextStyle(fontWeight: FontWeight.w200)),
-                    TextSpan(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: RichText(
+                  overflow: TextOverflow.ellipsis, // TODO: fix overflowing
+                  text: TextSpan(
+                    style:
+                        theme.textTheme.subtitle1.copyWith(shadows: [shadow]),
+                    children: [
+                      TextSpan(
+                          text: '!',
+                          style: TextStyle(fontWeight: FontWeight.w200)),
+                      TextSpan(
+                          text: community.name,
+                          style: TextStyle(fontWeight: FontWeight.w600)),
+                      TextSpan(
+                          text: '@',
+                          style: TextStyle(fontWeight: FontWeight.w200)),
+                      TextSpan(
                         text: community.originInstanceHost,
                         style: TextStyle(fontWeight: FontWeight.w600),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => goToInstance(
-                              context, community.originInstanceHost)),
-                  ],
+                              context, community.originInstanceHost),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )),
+            ),
             // TITLE/MOTTO
             Center(
                 child: Padding(
@@ -452,12 +448,12 @@ class _AboutTab extends StatelessWidget {
         ),
         _Divider(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: OutlineButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text('${community.categoryName}'),
+            child: Text(community.categoryName),
             onPressed: goToCategories,
           ),
         ),
@@ -530,7 +526,7 @@ class _FollowButton extends HookWidget {
     final theme = Theme.of(context);
 
     final isSubbed = useState(community.subscribed ?? false);
-    final delayed = useDelayedLoading(const Duration(milliseconds: 500));
+    final delayed = useDelayedLoading();
     final loggedInAction = useLoggedInAction(community.instanceHost);
 
     final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);

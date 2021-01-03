@@ -12,6 +12,7 @@ import '../hooks/stores.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
+import '../util/unawaited.dart';
 import '../widgets/markdown_text.dart';
 import 'full_post.dart';
 
@@ -229,7 +230,7 @@ class CreatePost extends HookWidget {
             name: titleController.text,
             communityId: selectedCommunity.value.id,
             auth: token.raw);
-        goToReplace(context, (_) => FullPostPage.fromPostView(res));
+        unawaited(goToReplace(context, (_) => FullPostPage.fromPostView(res)));
         return;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
