@@ -47,7 +47,6 @@ linter:
     avoid_returning_null_for_void: true
     avoid_redundant_argument_values: true
     avoid_escaping_inner_quotes: true
-    # always_declare_return_types: true
     sort_child_properties_last: true
     prefer_const_constructors: true
     prefer_const_declarations: true
@@ -59,4 +58,3 @@ analyzer:
     - "**/*.g.dart"
   strong-mode:
     implicit-casts: false
-    # implicit-dynamic: false
