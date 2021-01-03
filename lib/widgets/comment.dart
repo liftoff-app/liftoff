@@ -302,6 +302,15 @@ class Comment extends HookWidget {
       child: Column(
         children: [
           Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.only(left: indent > 1 ? (indent - 1) * 5.0 : 0),
+            decoration: BoxDecoration(
+                border: Border(
+                    left: indent > 0
+                        ? BorderSide(
+                            color: colors[indent % colors.length], width: 5)
+                        : BorderSide.none,
+                    top: BorderSide(width: 0.2))),
             child: Column(
               children: [
                 Row(children: [
@@ -329,12 +338,12 @@ class Comment extends HookWidget {
                       ),
                     ),
                   InkWell(
+                    onTap: () => goToUser.byId(
+                        context, comment.instanceHost, comment.creatorId),
                     child: Text(username,
                         style: TextStyle(
                           color: Theme.of(context).accentColor,
                         )),
-                    onTap: () => goToUser.byId(
-                        context, comment.instanceHost, comment.creatorId),
                   ),
                   if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
                   if (comment.banned) _CommentTag('BANNED', Colors.red),
@@ -369,15 +378,6 @@ class Comment extends HookWidget {
                 actions,
               ],
             ),
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(left: indent > 1 ? (indent - 1) * 5.0 : 0),
-            decoration: BoxDecoration(
-                border: Border(
-                    left: indent > 0
-                        ? BorderSide(
-                            color: colors[indent % colors.length], width: 5)
-                        : BorderSide.none,
-                    top: BorderSide(width: 0.2))),
           ),
           if (!collapsed.value)
             for (final c in newReplies.value.followedBy(commentTree.children))

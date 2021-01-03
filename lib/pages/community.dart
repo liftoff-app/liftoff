@@ -384,7 +384,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = Theme.of(context);
-    return Container(child: _tabBar, color: theme.cardColor);
+    return Container(color: theme.cardColor, child: _tabBar);
   }
 
   @override
@@ -453,8 +453,8 @@ class _AboutTab extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text(community.categoryName),
             onPressed: goToCategories,
+            child: Text(community.categoryName),
           ),
         ),
         _Divider(),
@@ -464,8 +464,8 @@ class _AboutTab extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text('Modlog'),
             onPressed: goToModlog,
+            child: Text('Modlog'),
           ),
         ),
         _Divider(),
@@ -562,13 +562,13 @@ class _FollowButton extends HookWidget {
         child: delayed.loading
             ? RaisedButton(
                 onPressed: null,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: SizedBox(
                   height: 15,
                   width: 15,
                   child: CircularProgressIndicator(),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
                 ),
               )
             : RaisedButton.icon(

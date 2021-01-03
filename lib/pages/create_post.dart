@@ -23,9 +23,9 @@ class CreatePostFab extends HookWidget {
     final loggedInAction = useLoggedInAction(null, any: true);
 
     return FloatingActionButton(
-      child: Icon(Icons.add),
       onPressed: loggedInAction((_) => showCupertinoModalPopup(
           context: context, builder: (_) => CreatePost())),
+      child: Icon(Icons.add),
     );
   }
 }

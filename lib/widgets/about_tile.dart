@@ -54,14 +54,14 @@ class AboutTile extends HookWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     FlatButton(
-                      child: Text('Patreon'),
                       onPressed: () =>
                           openInBrowser('https://patreon.com/lemmur'),
+                      child: Text('Patreon'),
                     ),
                     FlatButton(
-                      child: Text('Buy Me a Coffee'),
                       onPressed: () =>
                           openInBrowser('https://buymeacoff.ee/lemmur'),
+                      child: Text('Buy Me a Coffee'),
                     ),
                   ],
                 ),

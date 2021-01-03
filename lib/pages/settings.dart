@@ -106,12 +106,12 @@ class AccountsConfigPage extends HookWidget {
               content: Text('Are you sure you want to remove $instanceHost?'),
               actions: [
                 FlatButton(
-                  child: Text('no'),
                   onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('no'),
                 ),
                 FlatButton(
-                  child: Text('yes'),
                   onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('yes'),
                 ),
               ],
             ),
@@ -130,12 +130,12 @@ class AccountsConfigPage extends HookWidget {
                   'Are you sure you want to remove $username@$instanceHost?'),
               actions: [
                 FlatButton(
-                  child: Text('no'),
                   onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('no'),
                 ),
                 FlatButton(
-                  child: Text('yes'),
                   onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('yes'),
                 ),
               ],
             ),
@@ -159,7 +159,6 @@ class AccountsConfigPage extends HookWidget {
         animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x
         curve: Curves.bounceIn,
         tooltip: 'Add account or instance',
-        child: Icon(Icons.add),
         overlayColor: theme.canvasColor,
         children: [
           SpeedDialChild(
@@ -179,6 +178,7 @@ class AccountsConfigPage extends HookWidget {
                 context: context, builder: (_) => AddInstancePage()),
           ),
         ],
+        child: Icon(Icons.add),
       ),
       body: ListView(
         children: [
@@ -278,9 +278,9 @@ class _SectionHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
+      padding: EdgeInsets.only(left: 20),
       child: Text(text.toUpperCase(),
           style: theme.textTheme.subtitle2.copyWith(color: theme.accentColor)),
-      padding: EdgeInsets.only(left: 20),
     );
   }
 }

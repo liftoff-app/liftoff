@@ -199,7 +199,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = Theme.of(context);
-    return Container(child: _tabBar, color: theme.cardColor);
+    return Container(color: theme.cardColor, child: _tabBar);
   }
 
   @override

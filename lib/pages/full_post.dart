@@ -110,8 +110,8 @@ class FullPostPage extends HookWidget {
               )
             else
               Container(
-                child: Center(child: CircularProgressIndicator()),
                 padding: EdgeInsets.only(top: 40),
+                child: Center(child: CircularProgressIndicator()),
               ),
           ],
         ));

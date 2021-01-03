@@ -62,22 +62,6 @@ class UserProfileTab extends HookWidget {
         shadowColor: Colors.transparent,
         centerTitle: true,
         title: FlatButton(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                // TODO: fix overflow issues
-                '@${accountsStore.defaultUsername}',
-                style: theme.primaryTextTheme.headline6,
-                overflow: TextOverflow.fade,
-              ),
-              Icon(
-                Icons.expand_more,
-                color: theme.primaryIconTheme.color,
-              ),
-            ],
-          ),
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -114,6 +98,22 @@ class UserProfileTab extends HookWidget {
               },
             );
           },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                // TODO: fix overflow issues
+                '@${accountsStore.defaultUsername}',
+                style: theme.primaryTextTheme.headline6,
+                overflow: TextOverflow.fade,
+              ),
+              Icon(
+                Icons.expand_more,
+                color: theme.primaryIconTheme.color,
+              ),
+            ],
+          ),
         ),
         actions: actions,
       ),

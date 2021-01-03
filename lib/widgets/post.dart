@@ -151,6 +151,7 @@ class Post extends HookWidget {
                 ],
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(children: [
                     RichText(
@@ -219,7 +220,6 @@ class Post extends HookWidget {
                         ))
                   ]),
                 ],
-                crossAxisAlignment: CrossAxisAlignment.start,
               ),
               Spacer(),
               if (!fullPost)
@@ -444,7 +444,7 @@ class _Voting extends HookWidget {
               ),
             )),
         if (loading.loading)
-          SizedBox(child: CircularProgressIndicator(), width: 20, height: 20)
+          SizedBox(width: 20, height: 20, child: CircularProgressIndicator())
         else
           Text(NumberFormat.compact()
               .format(post.score + (wasVoted ? 0 : myVote.value.value))),

@@ -79,11 +79,11 @@ class AddInstancePage extends HookWidget {
             SizedBox(
                 height: 150,
                 child: FullscreenableImage(
+                  url: icon.value,
                   child: CachedNetworkImage(
                     imageUrl: icon.value,
                     errorWidget: (_, __, ___) => SizedBox.shrink(),
                   ),
-                  url: icon.value,
                 ))
           else if (isSite.value == false)
             SizedBox(
@@ -127,6 +127,7 @@ class AddInstancePage extends HookWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 color: theme.accentColor,
+                onPressed: isSite.value == true ? handleOnAdd : null,
                 child: !debounce.loading
                     ? Text('Add')
                     : SizedBox(
@@ -137,7 +138,6 @@ class AddInstancePage extends HookWidget {
                               AlwaysStoppedAnimation<Color>(theme.canvasColor),
                         ),
                       ),
-                onPressed: isSite.value == true ? handleOnAdd : null,
               ),
             ),
           ),

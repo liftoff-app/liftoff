@@ -128,15 +128,15 @@ class AddAccountPage extends HookWidget {
               ),
             FlatButton(
               onPressed: selectInstance,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(selectedInstance.value),
                   Icon(Icons.arrow_drop_down),
                 ],
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
               ),
             ),
             // TODO: add support for password managers
@@ -173,6 +173,12 @@ class AddAccountPage extends HookWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
+              onPressed: usernameController.text.isEmpty ||
+                      passwordController.text.isEmpty
+                  ? null
+                  : loading.pending
+                      ? () {}
+                      : handleOnAdd,
               child: !loading.loading
                   ? Text('Sign in')
                   : SizedBox(
@@ -183,21 +189,15 @@ class AddAccountPage extends HookWidget {
                             AlwaysStoppedAnimation<Color>(theme.canvasColor),
                       ),
                     ),
-              onPressed: usernameController.text.isEmpty ||
-                      passwordController.text.isEmpty
-                  ? null
-                  : loading.pending
-                      ? () {}
-                      : handleOnAdd,
             ),
             FlatButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Text('Register'),
               onPressed: () {
                 ul.launch('https://${selectedInstance.value}/login');
               },
+              child: Text('Register'),
             ),
           ],
         ),
