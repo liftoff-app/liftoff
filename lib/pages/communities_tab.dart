@@ -64,7 +64,7 @@ class CommunitiesTab extends HookWidget {
         body: Center(
           child: Row(
             children: [
-              Icon(Icons.error),
+              const Icon(Icons.error),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
@@ -79,7 +79,7 @@ class CommunitiesTab extends HookWidget {
     } else if (!communitiesSnap.hasData || !instancesSnap.hasData) {
       return Scaffold(
         appBar: AppBar(),
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -92,7 +92,7 @@ class CommunitiesTab extends HookWidget {
 
     final filterIcon = () {
       if (filterController.text.isEmpty) {
-        return Icon(Icons.filter_list);
+        return const Icon(Icons.filter_list);
       }
 
       return IconButton(
@@ -100,7 +100,7 @@ class CommunitiesTab extends HookWidget {
           filterController.clear();
           primaryFocus.unfocus();
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       );
     }();
 
@@ -121,7 +121,7 @@ class CommunitiesTab extends HookWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.style),
+            icon: const Icon(Icons.style),
             onPressed: () {}, // TODO: change styles?
           ),
         ],
@@ -131,7 +131,7 @@ class CommunitiesTab extends HookWidget {
           decoration: InputDecoration(
             suffixIcon: filterIcon,
             isDense: true,
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             hintText: 'Filter', // TODO: hint with an filter icon
           ),
         ),
@@ -157,9 +157,10 @@ class CommunitiesTab extends HookWidget {
                                   fit: BoxFit.cover, image: imageProvider),
                             ),
                           ),
-                          errorWidget: (_, __, ___) => SizedBox(width: 50),
+                          errorWidget: (_, __, ___) =>
+                              const SizedBox(width: 50),
                         )
-                      : SizedBox(width: 50),
+                      : const SizedBox(width: 50),
                   title: Text(
                     instances[i].name,
                     style: theme.textTheme.headline6,
@@ -201,11 +202,11 @@ class CommunitiesTab extends HookWidget {
                                   ),
                                 ),
                                 errorWidget: (_, __, ___) =>
-                                    SizedBox(width: 30),
+                                    const SizedBox(width: 30),
                               )
                             else
-                              SizedBox(width: 30),
-                            SizedBox(width: 10),
+                              const SizedBox(width: 30),
+                            const SizedBox(width: 10),
                             Text(
                               '''!${comm.communityName}${comm.isLocal ? '' : '@${comm.originInstanceHost}'}''',
                             ),
@@ -271,7 +272,7 @@ class _CommunitySubscribeToggle extends HookWidget {
                 borderRadius: BorderRadius.circular(7),
               ),
         child: delayed.loading
-            ? SizedBox(
+            ? const SizedBox(
                 width: 20, height: 20, child: CircularProgressIndicator())
             : Icon(
                 subbed.value ? Icons.done : Icons.add,

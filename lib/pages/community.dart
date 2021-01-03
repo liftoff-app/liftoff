@@ -96,13 +96,13 @@ class CommunityPage extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (fullCommunitySnap.hasError) ...[
-                Icon(Icons.error),
+                const Icon(Icons.error),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text('ERROR: ${fullCommunitySnap.error}'),
                 )
               ] else
-                CircularProgressIndicator(semanticsLabel: 'loading')
+                const CircularProgressIndicator(semanticsLabel: 'loading')
             ],
           ),
         ),
@@ -121,16 +121,16 @@ class CommunityPage extends HookWidget {
           child: Column(
             children: [
               ListTile(
-                leading: Icon(Icons.open_in_browser),
-                title: Text('Open in browser'),
+                leading: const Icon(Icons.open_in_browser),
+                title: const Text('Open in browser'),
                 onTap: () async => await ul.canLaunch(community.actorId)
                     ? ul.launch(community.actorId)
                     : Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text("can't open in browser"))),
+                        const SnackBar(content: Text("can't open in browser"))),
               ),
               ListTile(
-                leading: Icon(Icons.info_outline),
-                title: Text('Nerd stuff'),
+                leading: const Icon(Icons.info_outline),
+                title: const Text('Nerd stuff'),
                 onTap: () {
                   showInfoTablePopup(context, {
                     'id': community.id,
@@ -163,7 +163,7 @@ class CommunityPage extends HookWidget {
               title: Text('!${community.name}',
                   style: TextStyle(color: colorOnCard)),
               actions: [
-                IconButton(icon: Icon(Icons.share), onPressed: _share),
+                IconButton(icon: const Icon(Icons.share), onPressed: _share),
                 IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(
@@ -268,7 +268,7 @@ class _CommunityOverview extends StatelessWidget {
                         ),
                       ),
                     ),
-                    errorWidget: (_, __, ___) => Icon(Icons.warning),
+                    errorWidget: (_, __, ___) => const Icon(Icons.warning),
                   ),
                 ),
               ),
@@ -282,7 +282,7 @@ class _CommunityOverview extends StatelessWidget {
           url: community.banner,
           child: CachedNetworkImage(
             imageUrl: community.banner,
-            errorWidget: (_, __, ___) => SizedBox.shrink(),
+            errorWidget: (_, __, ___) => const SizedBox.shrink(),
           ),
         ),
       SafeArea(
@@ -300,18 +300,18 @@ class _CommunityOverview extends StatelessWidget {
                     style:
                         theme.textTheme.subtitle1.copyWith(shadows: [shadow]),
                     children: [
-                      TextSpan(
+                      const TextSpan(
                           text: '!',
                           style: TextStyle(fontWeight: FontWeight.w200)),
                       TextSpan(
                           text: community.name,
-                          style: TextStyle(fontWeight: FontWeight.w600)),
-                      TextSpan(
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
+                      const TextSpan(
                           text: '@',
                           style: TextStyle(fontWeight: FontWeight.w200)),
                       TextSpan(
                         text: community.originInstanceHost,
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => goToInstance(
                               context, community.originInstanceHost),
@@ -341,21 +341,21 @@ class _CommunityOverview extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 5),
                     child: Row(
                       children: [
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 3),
+                        const Spacer(),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 3),
                           child: Icon(Icons.people, size: 20),
                         ),
                         Text(compactNumber(community.numberOfSubscribers)),
-                        Spacer(
+                        const Spacer(
                           flex: 4,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 3),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 3),
                           child: Icon(Icons.record_voice_over, size: 20),
                         ),
-                        Text('xx'), // TODO: display online users
-                        Spacer(),
+                        const Text('xx'), // TODO: display online users
+                        const Spacer(),
                       ],
                     ),
                   ),
@@ -371,9 +371,9 @@ class _CommunityOverview extends StatelessWidget {
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
-
   final TabBar _tabBar;
+
+  const _SliverAppBarDelegate(this._tabBar);
 
   @override
   double get minExtent => _tabBar.preferredSize.height;
@@ -414,7 +414,7 @@ class _AboutTab extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListView(
-      padding: EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 20),
       children: [
         if (community.description != null) ...[
           Padding(
@@ -422,7 +422,7 @@ class _AboutTab extends StatelessWidget {
             child: MarkdownText(community.description,
                 instanceHost: community.instanceHost),
           ),
-          _Divider(),
+          const _Divider(),
         ],
         SizedBox(
           height: 25,
@@ -430,8 +430,8 @@ class _AboutTab extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: [
               // TODO: consider using Chips
-              Padding(
-                padding: const EdgeInsets.only(left: 7),
+              const Padding(
+                padding: EdgeInsets.only(left: 7),
                 child: _Badge('X users online'),
               ),
               _Badge(
@@ -446,7 +446,7 @@ class _AboutTab extends StatelessWidget {
             ],
           ),
         ),
-        _Divider(),
+        const _Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: OutlineButton(
@@ -457,7 +457,7 @@ class _AboutTab extends StatelessWidget {
             child: Text(community.categoryName),
           ),
         ),
-        _Divider(),
+        const _Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: OutlineButton(
@@ -465,10 +465,10 @@ class _AboutTab extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             onPressed: goToModlog,
-            child: Text('Modlog'),
+            child: const Text('Modlog'),
           ),
         ),
-        _Divider(),
+        const _Divider(),
         if (moderators != null && moderators.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -509,9 +509,11 @@ class _Badge extends StatelessWidget {
 }
 
 class _Divider extends StatelessWidget {
+  const _Divider();
+
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+  Widget build(BuildContext context) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Divider(),
       );
 }
@@ -544,8 +546,8 @@ class _FollowButton extends HookWidget {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Row(
             children: [
-              Icon(Icons.warning),
-              SizedBox(width: 10),
+              const Icon(Icons.warning),
+              const SizedBox(width: 10),
               Text("couldn't ${isSubbed.value ? 'un' : ''}sub :<"),
             ],
           ),
@@ -565,14 +567,15 @@ class _FollowButton extends HookWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: SizedBox(
+                child: const SizedBox(
                   height: 15,
                   width: 15,
                   child: CircularProgressIndicator(),
                 ),
               )
             : RaisedButton.icon(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 onPressed: loggedInAction(delayed.pending ? (_) {} : subscribe),
                 icon: isSubbed.value
                     ? Icon(Icons.remove, size: 18, color: colorOnTopOfAccent)

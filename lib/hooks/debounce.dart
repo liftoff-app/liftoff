@@ -9,14 +9,12 @@ class Debounce {
   final bool loading;
   final void Function() callback;
 
-  void call() => callback();
-
-  // void dispose() {}
-
   const Debounce({
     @required this.loading,
     @required this.callback,
   });
+
+  void call() => callback();
 }
 
 /// will run `callback()` after debounce hook hasn't been called for the

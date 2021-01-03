@@ -32,9 +32,9 @@ class UserPage extends HookWidget {
       if (userDetailsSnap.hasData) {
         return UserProfile.fromUserDetails(userDetailsSnap.data);
       } else if (userDetailsSnap.hasError) {
-        return Center(child: Text('Could not find that user.'));
+        return const Center(child: Text('Could not find that user.'));
       } else {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       }
     }();
 
@@ -46,11 +46,11 @@ class UserPage extends HookWidget {
         actions: [
           if (userDetailsSnap.hasData) ...[
             IconButton(
-              icon: Icon(Icons.email),
+              icon: const Icon(Icons.email),
               onPressed: () {}, // TODO: go to messaging page
             ),
             IconButton(
-              icon: Icon(Icons.share),
+              icon: const Icon(Icons.share),
               onPressed: () => Share.text('Share user',
                   userDetailsSnap.data.user.actorId, 'text/plain'),
             )

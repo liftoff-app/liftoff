@@ -58,11 +58,11 @@ class AddAccountPage extends HookWidget {
                 title: Text(i),
               ),
             ListTile(
-              leading: Padding(
-                padding: const EdgeInsets.all(8),
+              leading: const Padding(
+                padding: EdgeInsets.all(8),
                 child: Icon(Icons.add),
               ),
-              title: Text('Add instance'),
+              title: const Text('Add instance'),
               onTap: () async {
                 final val = await showCupertinoModalPopup<String>(
                   context: context,
@@ -99,13 +99,13 @@ class AddAccountPage extends HookWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        leading: CloseButton(),
+        leading: const CloseButton(),
         actionsIconTheme: theme.iconTheme,
         iconTheme: theme.iconTheme,
         textTheme: theme.textTheme,
         brightness: theme.brightness,
         centerTitle: true,
-        title: Text('Add account'),
+        title: const Text('Add account'),
         backgroundColor: theme.canvasColor,
         shadowColor: Colors.transparent,
       ),
@@ -114,7 +114,7 @@ class AddAccountPage extends HookWidget {
         child: ListView(
           children: [
             if (icon.value == null)
-              SizedBox(height: 150)
+              const SizedBox(height: 150)
             else
               SizedBox(
                 height: 150,
@@ -122,7 +122,7 @@ class AddAccountPage extends HookWidget {
                   url: icon.value,
                   child: CachedNetworkImage(
                     imageUrl: icon.value,
-                    errorWidget: (_, __, ___) => SizedBox.shrink(),
+                    errorWidget: (_, __, ___) => const SizedBox.shrink(),
                   ),
                 ),
               ),
@@ -135,7 +135,7 @@ class AddAccountPage extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(selectedInstance.value),
-                  Icon(Icons.arrow_drop_down),
+                  const Icon(Icons.arrow_drop_down),
                 ],
               ),
             ),
@@ -146,7 +146,7 @@ class AddAccountPage extends HookWidget {
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -160,7 +160,7 @@ class AddAccountPage extends HookWidget {
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -169,7 +169,7 @@ class AddAccountPage extends HookWidget {
             ),
             RaisedButton(
               color: theme.accentColor,
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -180,7 +180,7 @@ class AddAccountPage extends HookWidget {
                       ? () {}
                       : handleOnAdd,
               child: !loading.loading
-                  ? Text('Sign in')
+                  ? const Text('Sign in')
                   : SizedBox(
                       width: 20,
                       height: 20,
@@ -197,7 +197,7 @@ class AddAccountPage extends HookWidget {
               onPressed: () {
                 ul.launch('https://${selectedInstance.value}/login');
               },
-              child: Text('Register'),
+              child: const Text('Register'),
             ),
           ],
         ),

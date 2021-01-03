@@ -19,7 +19,7 @@ class BottomModal extends StatelessWidget {
             padding: title != null ? const EdgeInsets.only(top: 10) : null,
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
-              borderRadius: BorderRadius.all(const Radius.circular(10)),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -34,7 +34,7 @@ class BottomModal extends StatelessWidget {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     indent: 20,
                     endIndent: 20,
                   )

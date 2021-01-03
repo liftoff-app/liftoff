@@ -91,7 +91,7 @@ class Comment extends HookWidget {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to delete/restore comment')));
+            const SnackBar(content: Text('Failed to delete/restore comment')));
         return;
       }
       delayedDeletion.cancel();
@@ -108,22 +108,22 @@ class Comment extends HookWidget {
           child: Column(
             children: [
               ListTile(
-                leading: Icon(Icons.open_in_browser),
-                title: Text('Open in browser'),
+                leading: const Icon(Icons.open_in_browser),
+                title: const Text('Open in browser'),
                 onTap: () async => await ul.canLaunch(com.apId)
                     ? ul.launch(com.apId)
                     : Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text("can't open in browser"))),
+                        const SnackBar(content: Text("can't open in browser"))),
               ),
               ListTile(
-                leading: Icon(Icons.share),
-                title: Text('Share url'),
+                leading: const Icon(Icons.share),
+                title: const Text('Share url'),
                 onTap: () =>
                     Share.text('Share comment url', com.apId, 'text/plain'),
               ),
               ListTile(
-                leading: Icon(Icons.share),
-                title: Text('Share text'),
+                leading: const Icon(Icons.share),
+                title: const Text('Share text'),
                 onTap: () =>
                     Share.text('Share comment text', com.content, 'text/plain'),
               ),
@@ -152,8 +152,8 @@ class Comment extends HookWidget {
                   onTap: loggedInAction(handleDelete),
                 ),
               ListTile(
-                leading: Icon(Icons.info_outline),
-                title: Text('Nerd stuff'),
+                leading: const Icon(Icons.info_outline),
+                title: const Text('Nerd stuff'),
                 onTap: () => _showCommentInfo(context),
               ),
             ],
@@ -183,7 +183,7 @@ class Comment extends HookWidget {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text('voting failed :(')));
+            .showSnackBar(const SnackBar(content: Text('voting failed :(')));
         return;
       }
       delayedVoting.cancel();
@@ -207,14 +207,14 @@ class Comment extends HookWidget {
 
     final body = () {
       if (isDeleted.value) {
-        return Flexible(
+        return const Flexible(
           child: Text(
             'comment deleted by creator',
             style: TextStyle(fontStyle: FontStyle.italic),
           ),
         );
       } else if (comment.removed) {
-        return Flexible(
+        return const Flexible(
           child: Text(
             'comment deleted by moderator',
             style: TextStyle(fontStyle: FontStyle.italic),
@@ -249,7 +249,7 @@ class Comment extends HookWidget {
     }();
 
     final actions = collapsed.value
-        ? SizedBox.shrink()
+        ? const SizedBox.shrink()
         : Row(children: [
             if (selectable.value && !isDeleted.value && !comment.removed)
               _CommentAction(
@@ -258,10 +258,11 @@ class Comment extends HookWidget {
                   onPressed: () {
                     Clipboard.setData(
                             ClipboardData(text: commentTree.comment.content))
-                        .then((_) => Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text('comment copied to clipboard'))));
+                        .then((_) => Scaffold.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('comment copied to clipboard'))));
                   }),
-            Spacer(),
+            const Spacer(),
             _CommentAction(
               icon: Icons.more_horiz,
               onPressed: () => _openMoreMenu(context),
@@ -302,7 +303,7 @@ class Comment extends HookWidget {
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             margin: EdgeInsets.only(left: indent > 1 ? (indent - 1) * 5.0 : 0),
             decoration: BoxDecoration(
                 border: Border(
@@ -310,7 +311,7 @@ class Comment extends HookWidget {
                         ? BorderSide(
                             color: colors[indent % colors.length], width: 5)
                         : BorderSide.none,
-                    top: BorderSide(width: 0.2))),
+                    top: const BorderSide(width: 0.2))),
             child: Column(
               children: [
                 Row(children: [
@@ -333,7 +334,7 @@ class Comment extends HookWidget {
                               ),
                             ),
                           ),
-                          errorWidget: (_, __, ___) => SizedBox.shrink(),
+                          errorWidget: (_, __, ___) => const SizedBox.shrink(),
                         ),
                       ),
                     ),
@@ -346,14 +347,14 @@ class Comment extends HookWidget {
                         )),
                   ),
                   if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
-                  if (comment.banned) _CommentTag('BANNED', Colors.red),
+                  if (comment.banned) const _CommentTag('BANNED', Colors.red),
                   if (comment.bannedFromCommunity)
-                    _CommentTag('BANNED FROM COMMUNITY', Colors.red),
-                  Spacer(),
+                    const _CommentTag('BANNED FROM COMMUNITY', Colors.red),
+                  const Spacer(),
                   if (collapsed.value && commentTree.children.length > 0) ...[
                     _CommentTag('+${commentTree.children.length}',
                         Theme.of(context).accentColor),
-                    SizedBox(width: 7),
+                    const SizedBox(width: 7),
                   ],
                   InkWell(
                     onTap: () => _showCommentInfo(context),
@@ -361,20 +362,20 @@ class Comment extends HookWidget {
                       children: [
                         if (delayedVoting.loading)
                           SizedBox.fromSize(
-                              size: Size.square(16),
-                              child: CircularProgressIndicator())
+                              size: const Size.square(16),
+                              child: const CircularProgressIndicator())
                         else
                           Text(compactNumber(comment.score +
                               (wasVoted ? 0 : myVote.value.value))),
-                        Text(' · '),
+                        const Text(' · '),
                         Text(timeago.format(comment.published)),
                       ],
                     ),
                   )
                 ]),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(children: [body]),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 actions,
               ],
             ),
@@ -414,7 +415,7 @@ class _SaveComment extends HookWidget {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text('saving failed :(')));
+            .showSnackBar(const SnackBar(content: Text('saving failed :(')));
       }
       delayed.cancel();
     }
@@ -439,10 +440,10 @@ class _CommentTag extends StatelessWidget {
         padding: const EdgeInsets.only(left: 5),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
             color: bgColor,
           ),
-          padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
           child: Text(text,
               style: TextStyle(
                 color: textColorBasedOnBackground(bgColor),
@@ -471,10 +472,11 @@ class _CommentAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        constraints: BoxConstraints.tight(Size(32, 26)),
+        constraints: BoxConstraints.tight(const Size(32, 26)),
         icon: loading
             ? SizedBox.fromSize(
-                size: Size.square(22), child: CircularProgressIndicator())
+                size: const Size.square(22),
+                child: const CircularProgressIndicator())
             : Icon(
                 icon,
                 color: iconColor ??
@@ -484,6 +486,6 @@ class _CommentAction extends StatelessWidget {
         onPressed: onPressed,
         iconSize: 22,
         tooltip: tooltip,
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
       );
 }

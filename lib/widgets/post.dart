@@ -64,16 +64,16 @@ class Post extends HookWidget {
         child: Column(
           children: [
             ListTile(
-              leading: Icon(Icons.open_in_browser),
-              title: Text('Open in browser'),
+              leading: const Icon(Icons.open_in_browser),
+              title: const Text('Open in browser'),
               onTap: () async => await ul.canLaunch(post.apId)
                   ? ul.launch(post.apId)
                   : Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text("can't open in browser"))),
+                      const SnackBar(content: Text("can't open in browser"))),
             ),
             ListTile(
-              leading: Icon(Icons.info_outline),
-              title: Text('Nerd stuff'),
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Nerd stuff'),
               onTap: () {
                 showInfoTablePopup(context, {
                   'id': post.id,
@@ -161,21 +161,23 @@ class Post extends HookWidget {
                             fontSize: 15,
                             color: theme.textTheme.bodyText1.color),
                         children: [
-                          TextSpan(
+                          const TextSpan(
                               text: '!',
                               style: TextStyle(fontWeight: FontWeight.w300)),
                           TextSpan(
                               text: post.communityName,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => goToCommunity.byId(
                                     context, instanceHost, post.communityId)),
-                          TextSpan(
+                          const TextSpan(
                               text: '@',
                               style: TextStyle(fontWeight: FontWeight.w300)),
                           TextSpan(
                               text: post.originInstanceHost,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => goToInstance(
                                     context, post.originInstanceHost)),
@@ -191,13 +193,14 @@ class Post extends HookWidget {
                               fontSize: 13,
                               color: theme.textTheme.bodyText1.color),
                           children: [
-                            TextSpan(
+                            const TextSpan(
                                 text: 'by',
                                 style: TextStyle(fontWeight: FontWeight.w300)),
                             TextSpan(
                               text:
                                   ''' ${post.creatorPreferredUsername ?? post.creatorName}''',
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => goToUser.byId(
                                     context, post.instanceHost, post.creatorId),
@@ -205,30 +208,32 @@ class Post extends HookWidget {
                             TextSpan(
                                 text:
                                     ''' · ${timeago.format(post.published, locale: 'en_short')}'''),
-                            if (post.locked) TextSpan(text: ' · 🔒'),
-                            if (post.stickied) TextSpan(text: ' · 📌'),
-                            if (post.nsfw) TextSpan(text: ' · '),
+                            if (post.locked) const TextSpan(text: ' · 🔒'),
+                            if (post.stickied) const TextSpan(text: ' · 📌'),
+                            if (post.nsfw) const TextSpan(text: ' · '),
                             if (post.nsfw)
-                              TextSpan(
+                              const TextSpan(
                                   text: 'NSFW',
                                   style: TextStyle(color: Colors.red)),
                             if (urlDomain != null)
                               TextSpan(text: ' · $urlDomain'),
-                            if (post.removed) TextSpan(text: ' · REMOVED'),
-                            if (post.deleted) TextSpan(text: ' · DELETED'),
+                            if (post.removed)
+                              const TextSpan(text: ' · REMOVED'),
+                            if (post.deleted)
+                              const TextSpan(text: ' · DELETED'),
                           ],
                         ))
                   ]),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               if (!fullPost)
                 Column(
                   children: [
                     IconButton(
                       onPressed: () => showMoreMenu(context, post),
                       icon: Icon(moreIcon),
-                      padding: EdgeInsets.all(0),
+                      padding: const EdgeInsets.all(0),
                       visualDensity: VisualDensity.compact,
                     )
                   ],
@@ -248,26 +253,28 @@ class Post extends HookWidget {
                   post.name,
                   textAlign: TextAlign.left,
                   softWrap: true,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
               if (whatType(post.url) == MediaType.other &&
                   post.thumbnailUrl != null) ...[
-                Spacer(),
+                const Spacer(),
                 InkWell(
                   onTap: _openLink,
                   child: Stack(children: [
                     ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: CachedNetworkImage(
-                          imageUrl: post.thumbnailUrl,
-                          width: 70,
-                          height: 70,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                              Text(error.toString()),
-                        )),
-                    Positioned(
+                      borderRadius: BorderRadius.circular(20),
+                      child: CachedNetworkImage(
+                        imageUrl: post.thumbnailUrl,
+                        width: 70,
+                        height: 70,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) =>
+                            Text(error.toString()),
+                      ),
+                    ),
+                    const Positioned(
                       top: 8,
                       right: 8,
                       child: Icon(
@@ -300,11 +307,11 @@ class Post extends HookWidget {
               child: Column(
                 children: [
                   Row(children: [
-                    Spacer(),
+                    const Spacer(),
                     Text('$urlDomain ',
                         style: theme.textTheme.caption
                             .apply(fontStyle: FontStyle.italic)),
-                    Icon(Icons.launch, size: 12),
+                    const Icon(Icons.launch, size: 12),
                   ]),
                   Row(children: [
                     Flexible(
@@ -333,7 +340,7 @@ class Post extends HookWidget {
         url: post.url,
         child: CachedNetworkImage(
           imageUrl: post.url,
-          errorWidget: (_, __, ___) => Icon(Icons.warning),
+          errorWidget: (_, __, ___) => const Icon(Icons.warning),
           progressIndicatorBuilder: (context, url, progress) =>
               CircularProgressIndicator(value: progress.progress),
         ),
@@ -345,7 +352,7 @@ class Post extends HookWidget {
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
           child: Row(
             children: [
-              Icon(Icons.comment),
+              const Icon(Icons.comment),
               Expanded(
                 flex: 999,
                 child: Text(
@@ -354,10 +361,10 @@ class Post extends HookWidget {
                   softWrap: false,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               if (!fullPost)
                 IconButton(
-                    icon: Icon(Icons.share),
+                    icon: const Icon(Icons.share),
                     onPressed: () => Share.text('Share post url', post.apId,
                         'text/plain')), // TODO: find a way to mark it as url
               if (!fullPost) SavePostButton(post),
@@ -368,9 +375,9 @@ class Post extends HookWidget {
 
     return Container(
       decoration: BoxDecoration(
-        boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black54)],
+        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black54)],
         color: theme.cardColor,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
       child: InkWell(
         onTap: fullPost
@@ -410,7 +417,7 @@ class _Voting extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final myVote = useState(post.myVote ?? VoteType.none);
-    final loading = useDelayedLoading(Duration(milliseconds: 500));
+    final loading = useDelayedLoading();
     final loggedInAction = useLoggedInAction(post.instanceHost);
 
     vote(VoteType vote, Jwt token) async {
@@ -424,7 +431,7 @@ class _Voting extends HookWidget {
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text('voting failed :(')));
+            .showSnackBar(const SnackBar(content: Text('voting failed :(')));
         return;
       }
       loading.cancel();
@@ -444,7 +451,8 @@ class _Voting extends HookWidget {
               ),
             )),
         if (loading.loading)
-          SizedBox(width: 20, height: 20, child: CircularProgressIndicator())
+          const SizedBox(
+              width: 20, height: 20, child: CircularProgressIndicator())
         else
           Text(NumberFormat.compact()
               .format(post.score + (wasVoted ? 0 : myVote.value.value))),

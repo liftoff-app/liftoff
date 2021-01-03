@@ -10,6 +10,8 @@ import 'bottom_modal.dart';
 /// Title that opens a dialog with information about Lemmur.
 /// Licenses, changelog, version etc.
 class AboutTile extends HookWidget {
+  const AboutTile();
+
   @override
   Widget build(BuildContext context) {
     final packageInfoSnap = useMemoFuture(PackageInfo.fromPlatform);
@@ -26,11 +28,11 @@ class AboutTile extends HookWidget {
 
     // TODO: add app icon
     return AboutListTile(
-      icon: Icon(Icons.info),
+      icon: const Icon(Icons.info),
       aboutBoxChildren: [
         FlatButton.icon(
-          icon: Icon(Icons.subject),
-          label: Text('changelog'),
+          icon: const Icon(Icons.subject),
+          label: const Text('changelog'),
           onPressed: () => showModalBottomSheet(
             context: context,
             builder: (_) => BottomModal(
@@ -39,13 +41,13 @@ class AboutTile extends HookWidget {
           ),
         ),
         FlatButton.icon(
-          icon: Icon(Icons.code),
-          label: Text('source code'),
+          icon: const Icon(Icons.code),
+          label: const Text('source code'),
           onPressed: () => openInBrowser('https://github.com/krawieck/lemmur'),
         ),
         FlatButton.icon(
-          icon: Icon(Icons.monetization_on),
-          label: Text('support development'),
+          icon: const Icon(Icons.monetization_on),
+          label: const Text('support development'),
           onPressed: () {
             showDialog(
               context: context,
@@ -56,12 +58,12 @@ class AboutTile extends HookWidget {
                     FlatButton(
                       onPressed: () =>
                           openInBrowser('https://patreon.com/lemmur'),
-                      child: Text('Patreon'),
+                      child: const Text('Patreon'),
                     ),
                     FlatButton(
                       onPressed: () =>
                           openInBrowser('https://buymeacoff.ee/lemmur'),
-                      child: Text('Buy Me a Coffee'),
+                      child: const Text('Buy Me a Coffee'),
                     ),
                   ],
                 ),

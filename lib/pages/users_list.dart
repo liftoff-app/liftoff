@@ -52,7 +52,7 @@ class UsersListPage extends StatelessWidget {
                     width: 50,
                     imageUrl: users[i].avatar,
                     errorWidget: (_, __, ___) =>
-                        SizedBox(height: 50, width: 50),
+                        const SizedBox(height: 50, width: 50),
                     imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -60,7 +60,7 @@ class UsersListPage extends StatelessWidget {
                                 fit: BoxFit.cover, image: imageProvider),
                           ),
                         ))
-                : SizedBox(width: 50),
+                : const SizedBox(width: 50),
           ),
           itemCount: users.length,
         ));

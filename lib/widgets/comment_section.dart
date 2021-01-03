@@ -63,7 +63,7 @@ class CommentSection extends HookWidget {
                                   leading: Icon(e.value[0]),
                                   title: Text(e.value[1]),
                                   trailing: sorting.value == e.key
-                                      ? Icon(Icons.check)
+                                      ? const Icon(Icons.check)
                                       : null,
                                   onTap: () {
                                     Navigator.of(context).pop();
@@ -80,17 +80,17 @@ class CommentSection extends HookWidget {
               child: Row(
                 children: [
                   Text(sortPairs[sorting.value][1]),
-                  Icon(Icons.arrow_drop_down),
+                  const Icon(Icons.arrow_drop_down),
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ),
       // sorting menu goes here
       if (comments.isEmpty)
-        Padding(
+        const Padding(
           padding: EdgeInsets.symmetric(vertical: 50),
           child: Text(
             'no comments yet',
@@ -105,7 +105,7 @@ class CommentSection extends HookWidget {
           )
       else
         for (final com in comments) Comment(com, postCreatorId: postCreatorId),
-      SizedBox(height: 50),
+      const SizedBox(height: 50),
     ]);
   }
 }

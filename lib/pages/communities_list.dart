@@ -35,7 +35,7 @@ class CommunitiesListPage extends StatelessWidget {
         fetcher: fetcher,
         builder: (community) => Column(
           children: [
-            Divider(),
+            const Divider(),
             ListTile(
               title: Text(community.name),
               subtitle: community.description != null
@@ -61,9 +61,9 @@ class CommunitiesListPage extends StatelessWidget {
                               fit: BoxFit.cover, image: imageProvider),
                         ),
                       ),
-                      errorWidget: (_, __, ___) => SizedBox(width: 50),
+                      errorWidget: (_, __, ___) => const SizedBox(width: 50),
                     )
-                  : SizedBox(width: 50),
+                  : const SizedBox(width: 50),
             ),
           ],
         ),

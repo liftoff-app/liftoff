@@ -26,7 +26,7 @@ class MarkdownText extends StatelessWidget {
               .catchError((e) => Scaffold.of(context).showSnackBar(SnackBar(
                     content: Row(
                       children: [
-                        Icon(Icons.warning),
+                        const Icon(Icons.warning),
                         Text("couldn't open link, ${e.toString()}"),
                       ],
                     ),
@@ -38,7 +38,7 @@ class MarkdownText extends StatelessWidget {
             imageUrl: uri.toString(),
             errorWidget: (context, url, error) => Row(
               children: [
-                Icon(Icons.warning),
+                const Icon(Icons.warning),
                 Text("couldn't load image, ${error.toString()}")
               ],
             ),

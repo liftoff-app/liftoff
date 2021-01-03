@@ -60,14 +60,14 @@ class PostListOptions extends HookWidget {
               children: <Widget>[
                 Text(sort.value.value),
                 const SizedBox(width: 8),
-                Icon(Icons.arrow_drop_down),
+                const Icon(Icons.arrow_drop_down),
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           if (styleButton)
             IconButton(
-              icon: Icon(Icons.view_stream),
+              icon: const Icon(Icons.view_stream),
               // TODO: create compact post and dropdown for selecting
               onPressed: () => print('TBD'),
             ),

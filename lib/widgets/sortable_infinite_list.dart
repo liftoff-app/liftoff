@@ -58,7 +58,7 @@ class InfinitePostList extends StatelessWidget {
         builder: (post) => Column(
           children: [
             Post(post),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
         fetcher: fetcher,

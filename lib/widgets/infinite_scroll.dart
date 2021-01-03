@@ -75,7 +75,7 @@ class InfiniteScroll<T> extends HookWidget {
         if (i == data.value.length) {
           // if there are no more, skip
           if (!hasMore.current) {
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }
 
           // if it's already fetching more, skip

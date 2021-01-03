@@ -77,9 +77,9 @@ class FullPostPage extends HookWidget {
 
     return Scaffold(
         appBar: AppBar(
-          leading: BackButton(),
+          leading: const BackButton(),
           actions: [
-            IconButton(icon: Icon(Icons.share), onPressed: sharePost),
+            IconButton(icon: const Icon(Icons.share), onPressed: sharePost),
             SavePostButton(post),
             IconButton(
                 icon: Icon(moreIcon),
@@ -88,7 +88,7 @@ class FullPostPage extends HookWidget {
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: loggedInAction((_) => comment()),
-            child: Icon(Icons.comment)),
+            child: const Icon(Icons.comment)),
         body: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
@@ -103,13 +103,13 @@ class FullPostPage extends HookWidget {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
                 child: Column(
                   children: [
-                    Icon(Icons.error),
+                    const Icon(Icons.error),
                     Text('Error: ${fullPostSnap.error}')
                   ],
                 ),
               )
             else
-              Container(
+              const Padding(
                 padding: EdgeInsets.only(top: 40),
                 child: Center(child: CircularProgressIndicator()),
               ),

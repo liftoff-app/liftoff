@@ -20,9 +20,9 @@ class UserProfileTab extends HookWidget {
 
     final actions = [
       IconButton(
-        icon: Icon(Icons.settings),
+        icon: const Icon(Icons.settings),
         onPressed: () {
-          goTo(context, (_) => SettingsPage());
+          goTo(context, (_) => const SettingsPage());
         },
       )
     ];
@@ -39,13 +39,13 @@ class UserProfileTab extends HookWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('No account was added.'),
+              const Text('No account was added.'),
               FlatButton.icon(
                 onPressed: () {
                   goTo(context, (_) => AccountsConfigPage());
                 },
-                icon: Icon(Icons.add),
-                label: Text('Add account'),
+                icon: const Icon(Icons.add),
+                label: const Text('Add account'),
               )
             ],
           ),

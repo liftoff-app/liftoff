@@ -13,6 +13,8 @@ import 'add_instance.dart';
 
 /// Page with a list of different settings sections
 class SettingsPage extends StatelessWidget {
+  const SettingsPage();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -29,17 +31,17 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Accounts'),
+            leading: const Icon(Icons.person),
+            title: const Text('Accounts'),
             onTap: () {
               goTo(context, (_) => AccountsConfigPage());
             },
           ),
           ListTile(
-            leading: Icon(Icons.color_lens),
-            title: Text('Appearance'),
+            leading: const Icon(Icons.color_lens),
+            title: const Text('Appearance'),
             onTap: () {
-              goTo(context, (_) => AppearanceConfigPage());
+              goTo(context, (_) => const AppearanceConfigPage());
             },
           ),
           AboutTile()
@@ -51,6 +53,8 @@ class SettingsPage extends StatelessWidget {
 
 /// Settings for theme color, AMOLED switch
 class AppearanceConfigPage extends HookWidget {
+  const AppearanceConfigPage();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -67,7 +71,7 @@ class AppearanceConfigPage extends HookWidget {
       ),
       body: ListView(
         children: [
-          _SectionHeading('Theme'),
+          const _SectionHeading('Theme'),
           for (final theme in ThemeMode.values)
             RadioListTile<ThemeMode>(
               value: theme,
@@ -78,7 +82,7 @@ class AppearanceConfigPage extends HookWidget {
               },
             ),
           SwitchListTile(
-              title: Text('AMOLED dark mode'),
+              title: const Text('AMOLED dark mode'),
               value: configStore.amoledDarkMode,
               onChanged: (checked) {
                 configStore.amoledDarkMode = checked;
@@ -102,16 +106,16 @@ class AccountsConfigPage extends HookWidget {
       if (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Remove instance?'),
+              title: const Text('Remove instance?'),
               content: Text('Are you sure you want to remove $instanceHost?'),
               actions: [
                 FlatButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('no'),
+                  child: const Text('no'),
                 ),
                 FlatButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text('yes'),
+                  child: const Text('yes'),
                 ),
               ],
             ),
@@ -125,17 +129,17 @@ class AccountsConfigPage extends HookWidget {
       if (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Remove user?'),
+              title: const Text('Remove user?'),
               content: Text(
                   'Are you sure you want to remove $username@$instanceHost?'),
               actions: [
                 FlatButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('no'),
+                  child: const Text('no'),
                 ),
                 FlatButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text('yes'),
+                  child: const Text('yes'),
                 ),
               ],
             ),
@@ -162,7 +166,7 @@ class AccountsConfigPage extends HookWidget {
         overlayColor: theme.canvasColor,
         children: [
           SpeedDialChild(
-            child: Icon(Icons.person_add),
+            child: const Icon(Icons.person_add),
             label: 'Add account',
             labelBackgroundColor: theme.canvasColor,
             onTap: () => showCupertinoModalPopup(
@@ -171,14 +175,14 @@ class AccountsConfigPage extends HookWidget {
                     AddAccountPage(instanceHost: accountsStore.instances.last)),
           ),
           SpeedDialChild(
-            child: Icon(Icons.dns),
+            child: const Icon(Icons.dns),
             labelBackgroundColor: theme.canvasColor,
             label: 'Add instance',
             onTap: () => showCupertinoModalPopup(
                 context: context, builder: (_) => AddInstancePage()),
           ),
         ],
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: ListView(
         children: [
@@ -196,15 +200,15 @@ class AccountsConfigPage extends HookWidget {
                             context: context,
                             builder: (_) => AddInstancePage(),
                           ),
-                      icon: Icon(Icons.add),
-                      label: Text('Add instance')),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add instance')),
                 ),
               ],
             ),
           for (final entry in accountsStore.tokens.entries) ...[
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             Slidable(
-              actionPane: SlidableBehindActionPane(),
+              actionPane: const SlidableBehindActionPane(),
               secondaryActions: [
                 IconSlideAction(
                   onTap: () => removeInstanceDialog(entry.key),
@@ -224,7 +228,7 @@ class AccountsConfigPage extends HookWidget {
             ),
             for (final username in entry.value.keys) ...[
               Slidable(
-                actionPane: SlidableBehindActionPane(),
+                actionPane: const SlidableBehindActionPane(),
                 key: Key('$username@${entry.key}'),
                 secondaryActions: [
                   IconSlideAction(
@@ -254,8 +258,8 @@ class AccountsConfigPage extends HookWidget {
             ],
             if (entry.value.keys.isEmpty)
               ListTile(
-                leading: Icon(Icons.add),
-                title: Text('Add account'),
+                leading: const Icon(Icons.add),
+                title: const Text('Add account'),
                 onTap: () {
                   showCupertinoModalPopup(
                       context: context,
@@ -278,7 +282,7 @@ class _SectionHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.only(left: 20),
       child: Text(text.toUpperCase(),
           style: theme.textTheme.subtitle2.copyWith(color: theme.accentColor)),
     );
