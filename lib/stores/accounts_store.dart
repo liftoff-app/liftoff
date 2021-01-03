@@ -47,11 +47,13 @@ class AccountsStore extends ChangeNotifier {
         );
 
     // set saved settings or create defaults
-    _tokens = nestedMapsCast((json) => Jwt(json['raw']));
+    _tokens = nestedMapsCast((json) => Jwt(json['raw'] as String));
     _defaultAccount = prefs.getString(SharedPrefKeys.defaultAccount);
     _defaultAccounts = HashMap.of(Map.castFrom(
-        jsonDecode(prefs.getString(SharedPrefKeys.defaultAccounts) ?? 'null') ??
-            {}));
+      jsonDecode(prefs.getString(SharedPrefKeys.defaultAccounts) ?? 'null')
+              as Map<dynamic, dynamic> ??
+          {},
+    ));
 
     notifyListeners();
   }

@@ -138,7 +138,7 @@ class CommunitiesTab extends HookWidget {
       ),
       body: ListView(
         children: [
-          for (final i in Iterable.generate(amountOfDisplayInstances))
+          for (var i = 0; i < amountOfDisplayInstances; i++)
             Column(
               children: [
                 ListTile(

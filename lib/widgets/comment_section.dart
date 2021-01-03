@@ -60,8 +60,8 @@ class CommentSection extends HookWidget {
                             children: [
                               for (final e in sortPairs.entries)
                                 ListTile(
-                                  leading: Icon(e.value[0]),
-                                  title: Text(e.value[1]),
+                                  leading: Icon(e.value[0] as IconData),
+                                  title: Text(e.value[1] as String),
                                   trailing: sorting.value == e.key
                                       ? const Icon(Icons.check)
                                       : null,
@@ -79,7 +79,7 @@ class CommentSection extends HookWidget {
               ),
               child: Row(
                 children: [
-                  Text(sortPairs[sorting.value][1]),
+                  Text(sortPairs[sorting.value][1] as String),
                   const Icon(Icons.arrow_drop_down),
                 ],
               ),

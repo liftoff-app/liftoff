@@ -33,15 +33,13 @@ class HomeTab extends HookWidget {
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
     final instancesIcons = useMemoFuture(() async {
-      final map = <String, String>{};
       final instances = accStore.instances.toList(growable: false);
       final sites = await Future.wait(instances
           .map((e) => LemmyApi(e).v1.getSite().catchError((e) => null)));
-      for (final i in Iterable.generate(sites.length)) {
-        map[instances[i]] = sites[i].site.icon;
-      }
 
-      return map;
+      return {
+        for (var i = 0; i < sites.length; i++) instances[i]: sites[i].site.icon
+      };
     });
 
     handleListChange() async {
@@ -268,14 +266,16 @@ class InfiniteHomeList extends HookWidget {
               ));
       final posts = await Future.wait(futures);
       final newPosts = <PostView>[];
-      for (final i
-          in Iterable.generate(posts.map((e) => e.length).reduce(max))) {
+      final longest = posts.map((e) => e.length).reduce(max);
+
+      for (var i = 0; i < longest; i++) {
         for (final el in posts) {
           if (el.elementAt(i) != null) {
             newPosts.add(el[i]);
           }
         }
       }
+
       return newPosts;
     }
 
