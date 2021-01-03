@@ -19,7 +19,7 @@ class FullPostPage extends HookWidget {
   final String instanceHost;
   final PostView post;
 
-  FullPostPage({@required this.id, @required this.instanceHost})
+  const FullPostPage({@required this.id, @required this.instanceHost})
       : assert(id != null),
         assert(instanceHost != null),
         post = null;

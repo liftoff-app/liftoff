@@ -159,7 +159,7 @@ class HomeTab extends HookWidget {
       return Scaffold(
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Center(child: Text('there needs to be at least one instance')),
           ],
         ),
@@ -217,7 +217,8 @@ class InfiniteHomeList extends HookWidget {
   final Function onStyleChange;
   final InfiniteScrollController controller;
   final _SelectedList selectedList;
-  InfiniteHomeList({
+
+  const InfiniteHomeList({
     @required this.selectedList,
     this.onStyleChange,
     this.controller,

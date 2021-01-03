@@ -5,7 +5,7 @@ class Badge extends StatelessWidget {
   final Widget child;
   final BorderRadiusGeometry borderRadius;
 
-  Badge({
+  const Badge({
     @required this.child,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   });

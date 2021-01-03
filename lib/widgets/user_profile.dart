@@ -66,7 +66,7 @@ class UserProfile extends HookWidget {
                 FlexibleSpaceBar(background: _UserOverview(userView)),
             bottom: TabBar(
               labelColor: theme.textTheme.bodyText1.color,
-              tabs: [
+              tabs: const [
                 Tab(text: 'Posts'),
                 Tab(text: 'Comments'),
                 Tab(text: 'About'),

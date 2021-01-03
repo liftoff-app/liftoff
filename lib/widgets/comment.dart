@@ -395,7 +395,7 @@ class Comment extends HookWidget {
 class _SaveComment extends HookWidget {
   final CommentView comment;
 
-  _SaveComment(this.comment);
+  const _SaveComment(this.comment);
 
   @override
   Widget build(BuildContext context) {

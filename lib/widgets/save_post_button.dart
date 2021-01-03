@@ -10,7 +10,7 @@ import '../hooks/logged_in_action.dart';
 class SavePostButton extends HookWidget {
   final PostView post;
 
-  SavePostButton(this.post);
+  const SavePostButton(this.post);
 
   @override
   Widget build(BuildContext context) {

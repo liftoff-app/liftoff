@@ -143,7 +143,7 @@ class InstancePage extends HookWidget {
                 TabBar(
                   labelColor: theme.textTheme.bodyText1.color,
                   unselectedLabelColor: Colors.grey,
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'Posts'),
                     Tab(text: 'Comments'),
                     Tab(text: 'About'),
@@ -382,7 +382,7 @@ class _AboutTab extends HookWidget {
 class _Badge extends StatelessWidget {
   final String text;
 
-  _Badge(this.text);
+  const _Badge(this.text);
 
   @override
   Widget build(BuildContext context) {

@@ -50,9 +50,9 @@ linter:
     # always_declare_return_types: true
     sort_child_properties_last: true
     # prefer_const_constructors: true
-    # prefer_const_declarations: true
-    # prefer_const_literals_to_create_immutables: true
-    # prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_const_constructors_in_immutables: true
 
 analyzer:
   exclude:

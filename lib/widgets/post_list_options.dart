@@ -11,7 +11,7 @@ class PostListOptions extends HookWidget {
   final SortType defaultSort;
   final bool styleButton;
 
-  PostListOptions({
+  const PostListOptions({
     @required this.onChange,
     this.styleButton = true,
     this.defaultSort = SortType.active,

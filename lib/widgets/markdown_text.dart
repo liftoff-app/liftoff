@@ -12,7 +12,7 @@ class MarkdownText extends StatelessWidget {
   final String text;
   final bool selectable;
 
-  MarkdownText(this.text,
+  const MarkdownText(this.text,
       {@required this.instanceHost, this.selectable = false})
       : assert(instanceHost != null);
 

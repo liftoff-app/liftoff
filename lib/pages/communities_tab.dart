@@ -16,7 +16,7 @@ import '../util/text_color.dart';
 
 /// List of subscribed communities per instance
 class CommunitiesTab extends HookWidget {
-  CommunitiesTab();
+  const CommunitiesTab();
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +229,7 @@ class _CommunitySubscribeToggle extends HookWidget {
   final int communityId;
   final String instanceHost;
 
-  _CommunitySubscribeToggle(
+  const _CommunitySubscribeToggle(
       {@required this.instanceHost, @required this.communityId})
       : assert(instanceHost != null),
         assert(communityId != null);

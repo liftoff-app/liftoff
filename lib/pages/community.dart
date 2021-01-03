@@ -29,14 +29,14 @@ class CommunityPage extends HookWidget {
   final String communityName;
   final int communityId;
 
-  CommunityPage.fromName({
+  const CommunityPage.fromName({
     @required this.communityName,
     @required this.instanceHost,
   })  : assert(communityName != null),
         assert(instanceHost != null),
         communityId = null,
         _community = null;
-  CommunityPage.fromId({
+  const CommunityPage.fromId({
     @required this.communityId,
     @required this.instanceHost,
   })  : assert(communityId != null),
@@ -176,7 +176,7 @@ class CommunityPage extends HookWidget {
                 TabBar(
                   labelColor: theme.textTheme.bodyText1.color,
                   unselectedLabelColor: Colors.grey,
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'Posts'),
                     Tab(text: 'Comments'),
                     Tab(text: 'About'),
@@ -226,7 +226,7 @@ class _CommunityOverview extends StatelessWidget {
   final CommunityView community;
   final String instanceHost;
 
-  _CommunityOverview(
+  const _CommunityOverview(
     this.community, {
     @required this.instanceHost,
   })  : assert(instanceHost != null),
@@ -489,7 +489,7 @@ class _Badge extends StatelessWidget {
   final String text;
   final bool noPad;
 
-  _Badge(this.text, {this.noPad = false});
+  const _Badge(this.text, {this.noPad = false});
 
   @override
   Widget build(BuildContext context) {
@@ -519,7 +519,7 @@ class _Divider extends StatelessWidget {
 class _FollowButton extends HookWidget {
   final CommunityView community;
 
-  _FollowButton(this.community);
+  const _FollowButton(this.community);
 
   @override
   Widget build(BuildContext context) {

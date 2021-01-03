@@ -5,7 +5,7 @@ class BottomModal extends StatelessWidget {
   final Widget child;
   final String title;
 
-  BottomModal({@required this.child, this.title});
+  const BottomModal({@required this.child, this.title});
 
   @override
   Widget build(BuildContext context) {

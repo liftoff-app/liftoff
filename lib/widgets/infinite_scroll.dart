@@ -28,7 +28,7 @@ class InfiniteScroll<T> extends HookWidget {
   final Widget prepend;
   final EdgeInsetsGeometry padding;
 
-  InfiniteScroll({
+  const InfiniteScroll({
     this.batchSize = 10,
     this.prepend = const SizedBox.shrink(),
     this.padding,
