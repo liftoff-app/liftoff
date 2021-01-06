@@ -257,7 +257,7 @@ class AccountsConfigPage extends HookWidget {
                     onTap: () {
                       goTo(
                           context,
-                          (_) => ManageAccount(
+                          (_) => ManageAccountPage(
                                 instanceHost: instance,
                                 username: username,
                               ));
