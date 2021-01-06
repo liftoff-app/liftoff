@@ -42,7 +42,7 @@ class ManageAccountPage extends HookWidget {
         shadowColor: Colors.transparent,
         iconTheme: theme.iconTheme,
         title:
-            Text('$instanceHost@$username', style: theme.textTheme.headline6),
+            Text('@$instanceHost@$username', style: theme.textTheme.headline6),
         centerTitle: true,
       ),
       body: FutureBuilder<User>(
@@ -71,9 +71,10 @@ class _ManageAccount extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accountStore = useAccountsStore();
+    final accountsStore = useAccountsStore();
     final theme = Theme.of(context);
-    final delayedLoading = useDelayedLoading();
+    final saveDelayedLoading = useDelayedLoading();
+    final deleteDelayedLoading = useDelayedLoading();
 
     final displayNameController =
         useTextEditingController(text: user.preferredUsername);
@@ -82,10 +83,12 @@ class _ManageAccount extends HookWidget {
     final avatar = useRef(user.avatar);
     final banner = useRef(user.banner);
 
-    final token = accountStore.tokens[user.instanceHost][user.name];
+    final deleteAccountPasswordController = useTextEditingController();
+
+    final token = accountsStore.tokens[user.instanceHost][user.name];
 
     handleSubmit() async {
-      delayedLoading.start();
+      saveDelayedLoading.start();
 
       try {
         await LemmyApi(user.instanceHost).v1.saveUserSettings(
@@ -105,13 +108,72 @@ class _ManageAccount extends HookWidget {
               bio: bioController.text.isEmpty ? null : bioController.text,
               email: emailController.text.isEmpty ? null : emailController.text,
             );
+        Scaffold.of(context).showSnackBar(const SnackBar(
+          content: Text('User settings saved'),
+        ));
       } on Exception catch (err) {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
       }
 
-      delayedLoading.cancel();
+      saveDelayedLoading.cancel();
+    }
+
+    deleteAccountDialog() async {
+      final confirmDelete = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Remove account?'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '''Are you sure you want to remove @${user.instanceHost}@${user.name}? '''
+                    '''WARNING: this removes your account COMPLETELY, not from lemmur only''',
+                  ),
+                  TextField(
+                    controller: deleteAccountPasswordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(hintText: 'Password'),
+                  )
+                ],
+              ),
+              actions: [
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('no'),
+                ),
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('yes'),
+                ),
+              ],
+            ),
+          ) ??
+          false;
+
+      if (confirmDelete) {
+        deleteDelayedLoading.start();
+
+        try {
+          await LemmyApi(user.instanceHost).v1.deleteAccount(
+                password: deleteAccountPasswordController.text,
+                auth: token.raw,
+              );
+
+          accountsStore.removeAccount(user.instanceHost, user.name);
+          Navigator.of(context).pop();
+        } on Exception catch (err) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(err.toString()),
+          ));
+        }
+
+        deleteDelayedLoading.cancel();
+      } else {
+        deleteAccountPasswordController.clear();
+      }
     }
 
     return ListView(
@@ -172,7 +234,7 @@ class _ManageAccount extends HookWidget {
         ),
         const SizedBox(height: 8),
         ElevatedButton(
-          onPressed: delayedLoading.loading ? null : handleSubmit,
+          onPressed: saveDelayedLoading.loading ? null : handleSubmit,
           style: ElevatedButton.styleFrom(
             // primary: Colors.red,
             visualDensity: VisualDensity.comfortable,
@@ -180,7 +242,7 @@ class _ManageAccount extends HookWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          child: delayedLoading.loading
+          child: saveDelayedLoading.loading
               ? const SizedBox(
                   width: 20,
                   height: 20,
@@ -190,7 +252,7 @@ class _ManageAccount extends HookWidget {
         ),
         const SizedBox(height: 8),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: deleteAccountDialog,
           style: ElevatedButton.styleFrom(
             primary: Colors.red,
             visualDensity: VisualDensity.comfortable,
