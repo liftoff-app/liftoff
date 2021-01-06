@@ -236,7 +236,6 @@ class _ManageAccount extends HookWidget {
         ElevatedButton(
           onPressed: saveDelayedLoading.loading ? null : handleSubmit,
           style: ElevatedButton.styleFrom(
-            // primary: Colors.red,
             visualDensity: VisualDensity.comfortable,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
