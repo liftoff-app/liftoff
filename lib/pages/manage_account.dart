@@ -83,6 +83,9 @@ class _ManageAccount extends HookWidget {
     final avatar = useRef(user.avatar);
     final banner = useRef(user.banner);
 
+    final informAccpetedAvatarRef = useRef<VoidCallback>(null);
+    final informAccpetedBannerRef = useRef<VoidCallback>(null);
+
     final deleteAccountPasswordController = useTextEditingController();
 
     final token = accountsStore.tokens[user.instanceHost][user.name];
@@ -108,6 +111,10 @@ class _ManageAccount extends HookWidget {
               bio: bioController.text.isEmpty ? null : bioController.text,
               email: emailController.text.isEmpty ? null : emailController.text,
             );
+
+        informAccpetedAvatarRef.current();
+        informAccpetedBannerRef.current();
+
         Scaffold.of(context).showSnackBar(const SnackBar(
           content: Text('User settings saved'),
         ));
@@ -184,6 +191,7 @@ class _ManageAccount extends HookWidget {
           name: 'Avatar',
           initialUrl: avatar.current,
           onChange: (value) => avatar.current = value,
+          informAcceptedRef: informAccpetedAvatarRef,
         ),
         const SizedBox(height: 8),
         _ImagePicker(
@@ -191,6 +199,7 @@ class _ManageAccount extends HookWidget {
           name: 'Banner',
           initialUrl: banner.current,
           onChange: (value) => banner.current = value,
+          informAcceptedRef: informAccpetedBannerRef,
         ),
         const SizedBox(height: 8),
         Text('Display Name', style: theme.textTheme.headline6),
@@ -273,12 +282,18 @@ class _ImagePicker extends HookWidget {
   final User user;
   final ValueChanged<String> onChange;
 
+  /// _ImagePicker will set the ref to a callback that can inform _ImagePicker
+  /// that the current picture is accepted
+  /// and should not no longer allow for deletion of it
+  final Ref<VoidCallback> informAcceptedRef;
+
   const _ImagePicker({
     Key key,
     @required this.initialUrl,
     @required this.name,
     @required this.user,
     @required this.onChange,
+    @required this.informAcceptedRef,
   })  : assert(name != null),
         assert(user != null),
         super(key: key);
@@ -287,9 +302,9 @@ class _ImagePicker extends HookWidget {
   Widget build(BuildContext context) {
     // this is in case the passed initialUrl is changed,
     // basically saves the very first initialUrl
-    final initialUrl = useMemoized(() => this.initialUrl);
+    final initialUrl = useRef(this.initialUrl);
     final theme = Theme.of(context);
-    final url = useState(initialUrl);
+    final url = useState(initialUrl.current);
     final pictrsDeleteToken = useState<PictrsUploadFile>(null);
 
     final imagePicker = useImagePicker();
@@ -329,18 +344,24 @@ class _ImagePicker extends HookWidget {
 
       if (updateState) {
         pictrsDeleteToken.value = null;
-        url.value = initialUrl;
+        url.value = initialUrl.current;
         onChange?.call(url.value);
       }
     }
 
-    useEffect(
-      () => () {
+    useEffect(() {
+      informAcceptedRef.current = () {
+        pictrsDeleteToken.value = null;
+        initialUrl.current = url.value;
+      };
+
+      return () {
         // remove picture from pictrs when exiting
-        if (pictrsDeleteToken.value != null) removePicture(updateState: false);
-      },
-      [],
-    );
+        if (pictrsDeleteToken.value != null) {
+          removePicture(updateState: false);
+        }
+      };
+    }, []);
 
     return Column(
       children: [
