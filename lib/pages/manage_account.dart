@@ -286,18 +286,24 @@ class _ImagePicker extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    // this is in case the passed initialUrl is changed,
+    // basically saves the very first initialUrl
+    final initialUrl = useMemoized(() => this.initialUrl);
     final theme = Theme.of(context);
     final url = useState(initialUrl);
     final pictrsDeleteToken = useState<PictrsUploadFile>(null);
 
     final imagePicker = useImagePicker();
     final accountsStore = useAccountsStore();
+    final delayedLoading = useDelayedLoading();
 
     uploadImage() async {
       try {
         final pic = await imagePicker.getImage(source: ImageSource.gallery);
         // pic is null when the picker was cancelled
         if (pic != null) {
+          delayedLoading.start();
+
           final upload = await LemmyApi(user.instanceHost).pictrs.upload(
                 filePath: pic.path,
                 auth: accountsStore.tokens[user.instanceHost][user.name].raw,
@@ -312,6 +318,8 @@ class _ImagePicker extends HookWidget {
         Scaffold.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to upload image')));
       }
+
+      delayedLoading.cancel();
     }
 
     removePicture({bool updateState = true}) {
@@ -323,6 +331,7 @@ class _ImagePicker extends HookWidget {
       if (updateState) {
         pictrsDeleteToken.value = null;
         url.value = initialUrl;
+        onChange?.call(url.value);
       }
     }
 
@@ -342,16 +351,21 @@ class _ImagePicker extends HookWidget {
             Text(name, style: theme.textTheme.headline6),
             if (pictrsDeleteToken.value == null)
               ElevatedButton(
-                onPressed: uploadImage,
+                onPressed: delayedLoading.loading ? null : uploadImage,
                 style: ElevatedButton.styleFrom(
                   visualDensity: VisualDensity.comfortable,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Row(
-                  children: const [Text('upload'), Icon(Icons.publish)],
-                ),
+                child: delayedLoading.loading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator())
+                    : Row(
+                        children: const [Text('upload'), Icon(Icons.publish)],
+                      ),
               )
             else
               IconButton(
