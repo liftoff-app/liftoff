@@ -11,6 +11,7 @@ import 'pages/communities_tab.dart';
 import 'pages/create_post.dart';
 import 'pages/home_tab.dart';
 import 'pages/profile_tab.dart';
+import 'pages/search_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
@@ -95,7 +96,7 @@ class MyHomePage extends HookWidget {
   static const List<Widget> pages = [
     HomeTab(),
     CommunitiesTab(),
-    TemporarySearchTab(), // TODO: search tab
+    SearchTab(),
     UserProfileTab(),
   ];
 
