@@ -83,8 +83,8 @@ class _ManageAccount extends HookWidget {
     final avatar = useRef(user.avatar);
     final banner = useRef(user.banner);
 
-    final informAccpetedAvatarRef = useRef<VoidCallback>(null);
-    final informAccpetedBannerRef = useRef<VoidCallback>(null);
+    final informAcceptedAvatarRef = useRef<VoidCallback>(null);
+    final informAcceptedBannerRef = useRef<VoidCallback>(null);
 
     final deleteAccountPasswordController = useTextEditingController();
 
@@ -112,8 +112,8 @@ class _ManageAccount extends HookWidget {
               email: emailController.text.isEmpty ? null : emailController.text,
             );
 
-        informAccpetedAvatarRef.current();
-        informAccpetedBannerRef.current();
+        informAcceptedAvatarRef.current();
+        informAcceptedBannerRef.current();
 
         Scaffold.of(context).showSnackBar(const SnackBar(
           content: Text('User settings saved'),
@@ -191,7 +191,7 @@ class _ManageAccount extends HookWidget {
           name: 'Avatar',
           initialUrl: avatar.current,
           onChange: (value) => avatar.current = value,
-          informAcceptedRef: informAccpetedAvatarRef,
+          informAcceptedRef: informAcceptedAvatarRef,
         ),
         const SizedBox(height: 8),
         _ImagePicker(
@@ -199,7 +199,7 @@ class _ManageAccount extends HookWidget {
           name: 'Banner',
           initialUrl: banner.current,
           onChange: (value) => banner.current = value,
-          informAcceptedRef: informAccpetedBannerRef,
+          informAcceptedRef: informAcceptedBannerRef,
         ),
         const SizedBox(height: 8),
         Text('Display Name', style: theme.textTheme.headline6),
@@ -284,7 +284,7 @@ class _ImagePicker extends HookWidget {
 
   /// _ImagePicker will set the ref to a callback that can inform _ImagePicker
   /// that the current picture is accepted
-  /// and should not no longer allow for deletion of it
+  /// and should no longer allow for deletion of it
   final Ref<VoidCallback> informAcceptedRef;
 
   const _ImagePicker({
