@@ -75,7 +75,7 @@ class _SearchResultsList extends HookWidget {
     final acs = useAccountsStore();
 
     return SortableInfiniteList(
-      fetcher: (data, page, sort) async {
+      fetcher: (page, batchSize, sort) async {
         final s = await LemmyApi(instance).v1.search(
               q: query,
               sort: sort,
@@ -83,7 +83,7 @@ class _SearchResultsList extends HookWidget {
               auth: acs.defaultTokenFor(instance)?.raw,
               page: page,
             );
-        print(s.users.length.toString());
+
         switch (s.type) {
           case SearchType.comments:
             return s.comments;
