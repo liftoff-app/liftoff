@@ -23,54 +23,57 @@ class SearchTab extends HookWidget {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        children: [
-          TextField(
-            controller: searchInputController,
-            autofocus: true,
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              fillColor: Colors.grey,
-              isDense: true,
-              // border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              hintText: 'search',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Text('instance:',
-                    style: Theme.of(context).textTheme.subtitle1),
-              ),
-              Expanded(
-                child: SelectInstanceButton(
-                  initial: instance.value,
-                  onChange: (s) => instance.value = s,
+      body: GestureDetector(
+        onTapDown: (_) => primaryFocus.unfocus(),
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          children: [
+            TextField(
+              controller: searchInputController,
+              autofocus: true,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                fillColor: Colors.grey,
+                isDense: true,
+                // border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                hintText: 'search',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-            ],
-          ),
-          if (searchInputController.text.isNotEmpty)
-            ElevatedButton(
-              onPressed: searchInputController.text.isEmpty
-                  ? null
-                  : () => goTo(
-                      context,
-                      (c) => SearchResultsPage(
-                            instance: instance.value,
-                            query: searchInputController.text,
-                          )),
-              child: const Text('search'),
-            )
-        ],
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text('instance:',
+                      style: Theme.of(context).textTheme.subtitle1),
+                ),
+                Expanded(
+                  child: SelectInstanceButton(
+                    initial: instance.value,
+                    onChange: (s) => instance.value = s,
+                  ),
+                ),
+              ],
+            ),
+            if (searchInputController.text.isNotEmpty)
+              ElevatedButton(
+                onPressed: searchInputController.text.isEmpty
+                    ? null
+                    : () => goTo(
+                        context,
+                        (c) => SearchResultsPage(
+                              instance: instance.value,
+                              query: searchInputController.text,
+                            )),
+                child: const Text('search'),
+              )
+          ],
+        ),
       ),
     );
   }
