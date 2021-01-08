@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
+import '../util/goto.dart';
 import '../widgets/markdown_text.dart';
 
 /// Infinite list of Users fetched by the given fetcher
@@ -31,38 +32,47 @@ class UsersListPage extends StatelessWidget {
           iconTheme: theme.iconTheme,
         ),
         body: ListView.builder(
-          itemBuilder: (context, i) => ListTile(
-            title: Text((users[i].preferredUsername == null ||
-                    users[i].preferredUsername.isEmpty)
-                ? '@${users[i].name}'
-                : users[i].preferredUsername),
-            subtitle: users[i].bio != null
-                ? Opacity(
-                    opacity: 0.5,
-                    child: MarkdownText(
-                      users[i].bio,
-                      instanceHost: users[i].instanceHost,
-                    ),
-                  )
-                : null,
-            onTap: () => goToUser(context, users[i].id),
-            leading: users[i].avatar != null
-                ? CachedNetworkImage(
-                    height: 50,
-                    width: 50,
-                    imageUrl: users[i].avatar,
-                    errorWidget: (_, __, ___) =>
-                        const SizedBox(height: 50, width: 50),
-                    imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover, image: imageProvider),
-                          ),
-                        ))
-                : const SizedBox(width: 50),
-          ),
+          itemBuilder: (context, i) => UsersListItem(user: users[i]),
           itemCount: users.length,
         ));
   }
+}
+
+class UsersListItem extends StatelessWidget {
+  final UserView user;
+
+  const UsersListItem({Key key, this.user}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        title: Text(
+            (user.preferredUsername == null || user.preferredUsername.isEmpty)
+                ? '@${user.name}'
+                : user.preferredUsername),
+        subtitle: user.bio != null
+            ? Opacity(
+                opacity: 0.5,
+                child: MarkdownText(
+                  user.bio,
+                  instanceHost: user.instanceHost,
+                ),
+              )
+            : null,
+        onTap: () => goToUser.byId(context, user.instanceHost, user.id),
+        leading: user.avatar != null
+            ? CachedNetworkImage(
+                height: 50,
+                width: 50,
+                imageUrl: user.avatar,
+                errorWidget: (_, __, ___) =>
+                    const SizedBox(height: 50, width: 50),
+                imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.cover, image: imageProvider),
+                      ),
+                    ))
+            : const SizedBox(width: 50),
+      );
 }

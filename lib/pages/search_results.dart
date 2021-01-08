@@ -4,11 +4,11 @@ import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../comment_tree.dart';
 import '../hooks/stores.dart';
-import '../util/goto.dart';
 import '../widgets/comment.dart';
 import '../widgets/post.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'communities_list.dart';
+import 'users_list.dart';
 
 class SearchResultsPage extends HookWidget {
   final String instance;
@@ -113,11 +113,7 @@ class _SearchResultsList extends HookWidget {
               child: Post(data as PostView),
             );
           case SearchType.users:
-            // TODO: extract to universal widget
-            return ListTile(
-                title: Text((data as UserView).name),
-                onTap: () =>
-                    goToUser.byId(context, instance, (data as UserView).id));
+            return UsersListItem(user: data as UserView);
           default:
             throw Error();
         }
