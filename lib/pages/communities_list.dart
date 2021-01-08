@@ -36,38 +36,49 @@ class CommunitiesListPage extends StatelessWidget {
         builder: (community) => Column(
           children: [
             const Divider(),
-            ListTile(
-              title: Text(community.name),
-              subtitle: community.description != null
-                  ? Opacity(
-                      opacity: 0.5,
-                      child: MarkdownText(
-                        community.description,
-                        instanceHost: community.instanceHost,
-                      ),
-                    )
-                  : null,
-              onTap: () => goToCommunity.byId(
-                  context, community.instanceHost, community.id),
-              leading: community.icon != null
-                  ? CachedNetworkImage(
-                      height: 50,
-                      width: 50,
-                      imageUrl: community.icon,
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover, image: imageProvider),
-                        ),
-                      ),
-                      errorWidget: (_, __, ___) => const SizedBox(width: 50),
-                    )
-                  : const SizedBox(width: 50),
-            ),
+            CommunitiesListItem(
+              community: community,
+            )
           ],
         ),
       ),
     );
   }
+}
+
+class CommunitiesListItem extends StatelessWidget {
+  final CommunityView community;
+
+  const CommunitiesListItem({Key key, this.community}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        title: Text(community.name),
+        subtitle: community.description != null
+            ? Opacity(
+                opacity: 0.7,
+                child: MarkdownText(
+                  community.description,
+                  instanceHost: community.instanceHost,
+                ),
+              )
+            : null,
+        onTap: () =>
+            goToCommunity.byId(context, community.instanceHost, community.id),
+        leading: community.icon != null
+            ? CachedNetworkImage(
+                height: 50,
+                width: 50,
+                imageUrl: community.icon,
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        fit: BoxFit.cover, image: imageProvider),
+                  ),
+                ),
+                errorWidget: (_, __, ___) => const SizedBox(width: 50),
+              )
+            : const SizedBox(width: 50),
+      );
 }

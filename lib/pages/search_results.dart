@@ -8,6 +8,7 @@ import '../util/goto.dart';
 import '../widgets/comment.dart';
 import '../widgets/post.dart';
 import '../widgets/sortable_infinite_list.dart';
+import 'communities_list.dart';
 
 class SearchResultsPage extends HookWidget {
   final String instance;
@@ -105,14 +106,7 @@ class _SearchResultsList extends HookWidget {
               postCreatorId: null,
             );
           case SearchType.communities:
-            // TODO: extract to universal widget
-            return ListTile(
-                title: Text((data as CommunityView).name),
-                onTap: () => goToCommunity.byId(
-                      context,
-                      instance,
-                      (data as CommunityView).id,
-                    ));
+            return CommunitiesListItem(community: data as CommunityView);
           case SearchType.posts:
             return Padding(
               padding: const EdgeInsets.only(bottom: 20),
