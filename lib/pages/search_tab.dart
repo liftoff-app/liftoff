@@ -30,7 +30,6 @@ class SearchTab extends HookWidget {
           children: [
             TextField(
               controller: searchInputController,
-              autofocus: true,
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 fillColor: Colors.grey,
