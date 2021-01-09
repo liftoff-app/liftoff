@@ -84,6 +84,7 @@ class _SearchResultsList extends HookWidget {
               type: type,
               auth: acs.defaultTokenFor(instanceHost)?.raw,
               page: page,
+              limit: batchSize,
             );
 
         switch (s.type) {
