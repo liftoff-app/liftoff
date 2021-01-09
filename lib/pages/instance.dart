@@ -216,10 +216,6 @@ class _AboutTab extends HookWidget {
       : assert(communitiesFuture != null),
         assert(instanceHost != null);
 
-  void goToUser(int id) {
-    print('GO TO USER $id');
-  }
-
   void goToModLog() {
     print('GO TO MODLOG');
   }
