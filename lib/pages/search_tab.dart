@@ -34,7 +34,6 @@ class SearchTab extends HookWidget {
               decoration: InputDecoration(
                 fillColor: Colors.grey,
                 isDense: true,
-                // border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 hintText: 'search',
                 border: OutlineInputBorder(
@@ -45,7 +44,6 @@ class SearchTab extends HookWidget {
             const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Text('instance:',

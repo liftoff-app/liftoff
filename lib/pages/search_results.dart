@@ -55,7 +55,6 @@ class SearchResultsPage extends HookWidget {
           ),
         ),
       );
-  //
 }
 
 class _SearchResultsList extends HookWidget {
