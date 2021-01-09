@@ -75,7 +75,7 @@ class SearchTab extends HookWidget {
 }
 
 class SelectInstanceButton extends HookWidget {
-  final void Function(String) onChange;
+  final ValueChanged<String> onChange;
   final String instance;
   const SelectInstanceButton(
       {@required this.onChange, @required this.instance});
