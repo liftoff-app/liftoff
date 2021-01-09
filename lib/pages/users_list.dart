@@ -14,11 +14,6 @@ class UsersListPage extends StatelessWidget {
       : assert(users != null),
         super(key: key);
 
-  // TODO: go to user
-  void goToUser(BuildContext context, int id) {
-    print('GO TO USER $id');
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -41,9 +36,7 @@ class UsersListPage extends StatelessWidget {
 class UsersListItem extends StatelessWidget {
   final UserView user;
 
-  const UsersListItem({Key key, @required this.user})
-      : assert(user != null),
-        super(key: key);
+  const UsersListItem({Key key, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => ListTile(
