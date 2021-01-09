@@ -53,7 +53,7 @@ class SearchTab extends HookWidget {
                 ),
                 Expanded(
                   child: SelectInstanceButton(
-                    initial: instance.value,
+                    instance: instance.value,
                     onChange: (s) => instance.value = s,
                   ),
                 ),
@@ -78,14 +78,14 @@ class SearchTab extends HookWidget {
 
 class SelectInstanceButton extends HookWidget {
   final void Function(String) onChange;
-  final String initial;
-  const SelectInstanceButton({@required this.onChange, @required this.initial});
+  final String instance;
+  const SelectInstanceButton(
+      {@required this.onChange, @required this.instance});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accStore = useAccountsStore();
-    final instance = useState(initial);
     return OutlinedButton(
       onPressed: () async {
         final val = await showModalBottomSheet<String>(
@@ -97,7 +97,7 @@ class SelectInstanceButton extends HookWidget {
                     children: [
                       for (final inst in accStore.instances)
                         ListTile(
-                          leading: inst == instance.value
+                          leading: inst == instance
                               ? Icon(
                                   Icons.radio_button_on,
                                   color: theme.accentColor,
@@ -110,7 +110,6 @@ class SelectInstanceButton extends HookWidget {
                   ),
                 ));
         if (val != null) {
-          instance.value = val;
           onChange(val);
         }
       },
@@ -123,7 +122,7 @@ class SelectInstanceButton extends HookWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(instance.value),
+          Text(instance),
           const Icon(Icons.arrow_drop_down),
         ],
       ),
