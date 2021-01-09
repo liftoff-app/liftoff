@@ -74,7 +74,7 @@ class _SearchResultsList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final acs = useAccountsStore();
+    final accStore = useAccountsStore();
 
     return SortableInfiniteList(
       fetcher: (page, batchSize, sort) async {
@@ -82,7 +82,7 @@ class _SearchResultsList extends HookWidget {
               q: query,
               sort: sort,
               type: type,
-              auth: acs.defaultTokenFor(instanceHost)?.raw,
+              auth: accStore.defaultTokenFor(instanceHost)?.raw,
               page: page,
               limit: batchSize,
             );
