@@ -29,8 +29,7 @@ class CommunitiesTab extends HookWidget {
         useMemoized(() => accountsStore.loggedInInstances.length);
     final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
-    // TODO: rebuild when instances/accounts change
-    final instancesSnap = useMemoFuture(() {
+    getInstances() {
       final futures = accountsStore.loggedInInstances
           .map(
             (instanceHost) =>
@@ -39,8 +38,9 @@ class CommunitiesTab extends HookWidget {
           .toList();
 
       return Future.wait(futures);
-    });
-    final communitiesSnap = useMemoFuture(() {
+    }
+
+    getCommunities() {
       final futures = accountsStore.loggedInInstances
           .map(
             (instanceHost) => LemmyApi(instanceHost)
@@ -56,7 +56,15 @@ class CommunitiesTab extends HookWidget {
           .toList();
 
       return Future.wait(futures);
-    });
+    }
+
+    // TODO: rebuild when instances/accounts change
+    final instancesSnap = useMemoFuture(getInstances);
+    final communitiesSnap = useMemoFuture(getCommunities);
+
+    final updatedCommunities =
+        useState<List<List<CommunityFollowerView>>>(null);
+    final updatedInstances = useState<List<SiteView>>(null);
 
     if (communitiesSnap.hasError || instancesSnap.hasError) {
       return Scaffold(
@@ -85,8 +93,22 @@ class CommunitiesTab extends HookWidget {
       );
     }
 
-    final instances = instancesSnap.data;
-    final communities = communitiesSnap.data
+    refresh() async {
+      try {
+        final i = getInstances();
+        final c = getCommunities();
+        await Future.wait([i, c]);
+        updatedInstances.value = await i;
+        updatedCommunities.value = await c;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+
+    final instances = updatedInstances.value ?? instancesSnap.data;
+    final communities = updatedCommunities.value ?? communitiesSnap.data
       ..forEach(
           (e) => e.sort((a, b) => a.communityName.compareTo(b.communityName)));
 
@@ -136,91 +158,94 @@ class CommunitiesTab extends HookWidget {
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          for (var i = 0; i < amountOfDisplayInstances; i++)
-            Column(
-              children: [
-                ListTile(
-                  onTap: () => goToInstance(
-                      context, accountsStore.loggedInInstances.elementAt(i)),
-                  onLongPress: () => toggleCollapse(i),
-                  leading: instances[i].icon != null
-                      ? CachedNetworkImage(
-                          height: 50,
-                          width: 50,
-                          imageUrl: instances[i].icon,
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.cover, image: imageProvider),
+      body: RefreshIndicator(
+        onRefresh: refresh,
+        child: ListView(
+          children: [
+            for (var i = 0; i < amountOfDisplayInstances; i++)
+              Column(
+                children: [
+                  ListTile(
+                    onTap: () => goToInstance(
+                        context, accountsStore.loggedInInstances.elementAt(i)),
+                    onLongPress: () => toggleCollapse(i),
+                    leading: instances[i].icon != null
+                        ? CachedNetworkImage(
+                            height: 50,
+                            width: 50,
+                            imageUrl: instances[i].icon,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover, image: imageProvider),
+                              ),
                             ),
+                            errorWidget: (_, __, ___) =>
+                                const SizedBox(width: 50),
+                          )
+                        : const SizedBox(width: 50),
+                    title: Text(
+                      instances[i].name,
+                      style: theme.textTheme.headline6,
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(isCollapsed.value[i]
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down),
+                      onPressed: () => toggleCollapse(i),
+                    ),
+                  ),
+                  if (!isCollapsed.value[i])
+                    for (final comm in filterCommunities(communities[i]))
+                      Padding(
+                        padding: const EdgeInsets.only(left: 17),
+                        child: ListTile(
+                          onTap: () => goToCommunity.byId(
+                              context,
+                              accountsStore.loggedInInstances.elementAt(i),
+                              comm.communityId),
+                          dense: true,
+                          leading: VerticalDivider(
+                            color: theme.hintColor,
                           ),
-                          errorWidget: (_, __, ___) =>
-                              const SizedBox(width: 50),
-                        )
-                      : const SizedBox(width: 50),
-                  title: Text(
-                    instances[i].name,
-                    style: theme.textTheme.headline6,
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(isCollapsed.value[i]
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down),
-                    onPressed: () => toggleCollapse(i),
-                  ),
-                ),
-                if (!isCollapsed.value[i])
-                  for (final comm in filterCommunities(communities[i]))
-                    Padding(
-                      padding: const EdgeInsets.only(left: 17),
-                      child: ListTile(
-                        onTap: () => goToCommunity.byId(
-                            context,
-                            accountsStore.loggedInInstances.elementAt(i),
-                            comm.communityId),
-                        dense: true,
-                        leading: VerticalDivider(
-                          color: theme.hintColor,
-                        ),
-                        title: Row(
-                          children: [
-                            if (comm.communityIcon != null)
-                              CachedNetworkImage(
-                                height: 30,
-                                width: 30,
-                                imageUrl: comm.communityIcon,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: imageProvider),
+                          title: Row(
+                            children: [
+                              if (comm.communityIcon != null)
+                                CachedNetworkImage(
+                                  height: 30,
+                                  width: 30,
+                                  imageUrl: comm.communityIcon,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: imageProvider),
+                                    ),
                                   ),
-                                ),
-                                errorWidget: (_, __, ___) =>
-                                    const SizedBox(width: 30),
-                              )
-                            else
-                              const SizedBox(width: 30),
-                            const SizedBox(width: 10),
-                            Text(
-                              '''!${comm.communityName}${comm.isLocal ? '' : '@${comm.originInstanceHost}'}''',
-                            ),
-                          ],
+                                  errorWidget: (_, __, ___) =>
+                                      const SizedBox(width: 30),
+                                )
+                              else
+                                const SizedBox(width: 30),
+                              const SizedBox(width: 10),
+                              Text(
+                                '''!${comm.communityName}${comm.isLocal ? '' : '@${comm.originInstanceHost}'}''',
+                              ),
+                            ],
+                          ),
+                          trailing: _CommunitySubscribeToggle(
+                            instanceHost: comm.instanceHost,
+                            communityId: comm.communityId,
+                          ),
                         ),
-                        trailing: _CommunitySubscribeToggle(
-                          instanceHost: comm.instanceHost,
-                          communityId: comm.communityId,
-                        ),
-                      ),
-                    )
-              ],
-            ),
-        ],
+                      )
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
