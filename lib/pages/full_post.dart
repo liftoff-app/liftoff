@@ -1,6 +1,7 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
@@ -18,8 +19,10 @@ class FullPostPage extends HookWidget {
   final int id;
   final String instanceHost;
   final PostView post;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
-  const FullPostPage({@required this.id, @required this.instanceHost})
+  FullPostPage({@required this.id, @required this.instanceHost})
       : assert(id != null),
         assert(instanceHost != null),
         post = null;
@@ -35,7 +38,7 @@ class FullPostPage extends HookWidget {
         .getPost(id: id, auth: accStore.defaultTokenFor(instanceHost)?.raw));
     final loggedInAction = useLoggedInAction(instanceHost);
     final newComments = useState(const <CommentView>[]);
-
+    final updatedPost = useState<FullPostView>(null);
     // FALLBACK VIEW
 
     if (!fullPostSnap.hasData && this.post == null) {
@@ -63,6 +66,21 @@ class FullPostPage extends HookWidget {
 
     // FUNCTIONS
 
+    refresh() async {
+      await HapticFeedback.mediumImpact();
+
+      try {
+        return await LemmyApi(instanceHost)
+            .v1
+            .getPost(id: id, auth: accStore.defaultTokenFor(instanceHost)?.raw);
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(e.toString()),
+        ));
+      }
+    }
+
     sharePost() => Share.text('Share post', post.apId, 'text/plain');
 
     comment() async {
@@ -89,31 +107,35 @@ class FullPostPage extends HookWidget {
         floatingActionButton: FloatingActionButton(
             onPressed: loggedInAction((_) => comment()),
             child: const Icon(Icons.comment)),
-        body: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            Post(post, fullPost: true),
-            if (fullPostSnap.hasData)
-              CommentSection(
-                  newComments.value.followedBy(fullPost.comments).toList(),
-                  postCreatorId: fullPost.post.creatorId)
-            else if (fullPostSnap.hasError)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-                child: Column(
-                  children: [
-                    const Icon(Icons.error),
-                    Text('Error: ${fullPostSnap.error}')
-                  ],
+        body: RefreshIndicator(
+          onRefresh: refresh,
+          key: _refreshIndicatorKey,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              Post(post, fullPost: true),
+              if (fullPostSnap.hasData)
+                CommentSection(
+                    newComments.value.followedBy(fullPost.comments).toList(),
+                    postCreatorId: fullPost.post.creatorId)
+              else if (fullPostSnap.hasError)
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.error),
+                      Text('Error: ${fullPostSnap.error}')
+                    ],
+                  ),
+                )
+              else
+                const Padding(
+                  padding: EdgeInsets.only(top: 40),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
-              )
-            else
-              const Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-          ],
+            ],
+          ),
         ));
   }
 }
