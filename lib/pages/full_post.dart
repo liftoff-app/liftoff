@@ -60,9 +60,10 @@ class FullPostPage extends HookWidget {
 
     // VARIABLES
 
-    final post = fullPostSnap.hasData ? fullPostSnap.data.post : this.post;
+    final post = updatedPost.value?.post ??
+        (fullPostSnap.hasData ? fullPostSnap.data.post : this.post);
 
-    final fullPost = fullPostSnap.data;
+    final fullPost = updatedPost.value ?? fullPostSnap.data;
 
     // FUNCTIONS
 
