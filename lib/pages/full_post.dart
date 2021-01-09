@@ -1,11 +1,12 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/logged_in_action.dart';
-import '../hooks/memo_future.dart';
+import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
 import '../util/more_icon.dart';
 import '../widgets/comment_section.dart';
@@ -30,23 +31,22 @@ class FullPostPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
-    final fullPostSnap = useMemoFuture(() => LemmyApi(instanceHost)
+    final fullPostRefreshable = useRefreshable(() => LemmyApi(instanceHost)
         .v1
         .getPost(id: id, auth: accStore.defaultTokenFor(instanceHost)?.raw));
     final loggedInAction = useLoggedInAction(instanceHost);
     final newComments = useState(const <CommentView>[]);
 
     // FALLBACK VIEW
-
-    if (!fullPostSnap.hasData && this.post == null) {
+    if (!fullPostRefreshable.snapshot.hasData && this.post == null) {
       return Scaffold(
         appBar: AppBar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (fullPostSnap.hasError)
-                Text(fullPostSnap.error.toString())
+              if (fullPostRefreshable.snapshot.hasError)
+                Text(fullPostRefreshable.snapshot.error.toString())
               else
                 const CircularProgressIndicator(),
             ],
@@ -57,11 +57,26 @@ class FullPostPage extends HookWidget {
 
     // VARIABLES
 
-    final post = fullPostSnap.hasData ? fullPostSnap.data.post : this.post;
+    final post = fullPostRefreshable.snapshot.hasData
+        ? fullPostRefreshable.snapshot.data.post
+        : this.post;
 
-    final fullPost = fullPostSnap.data;
+    final fullPost = fullPostRefreshable.snapshot.data;
 
     // FUNCTIONS
+
+    refresh() async {
+      await HapticFeedback.mediumImpact();
+
+      try {
+        await fullPostRefreshable.refresh();
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(e.toString()),
+        ));
+      }
+    }
 
     sharePost() => Share.text('Share post', post.apId, 'text/plain');
 
@@ -89,31 +104,34 @@ class FullPostPage extends HookWidget {
         floatingActionButton: FloatingActionButton(
             onPressed: loggedInAction((_) => comment()),
             child: const Icon(Icons.comment)),
-        body: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            Post(post, fullPost: true),
-            if (fullPostSnap.hasData)
-              CommentSection(
-                  newComments.value.followedBy(fullPost.comments).toList(),
-                  postCreatorId: fullPost.post.creatorId)
-            else if (fullPostSnap.hasError)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-                child: Column(
-                  children: [
-                    const Icon(Icons.error),
-                    Text('Error: ${fullPostSnap.error}')
-                  ],
+        body: RefreshIndicator(
+          onRefresh: refresh,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              Post(post, fullPost: true),
+              if (fullPostRefreshable.snapshot.hasData)
+                CommentSection(
+                    newComments.value.followedBy(fullPost.comments).toList(),
+                    postCreatorId: fullPost.post.creatorId)
+              else if (fullPostRefreshable.snapshot.hasError)
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.error),
+                      Text('Error: ${fullPostRefreshable.snapshot.error}')
+                    ],
+                  ),
+                )
+              else
+                const Padding(
+                  padding: EdgeInsets.only(top: 40),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
-              )
-            else
-              const Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-          ],
+            ],
+          ),
         ));
   }
 }

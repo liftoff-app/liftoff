@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fuzzy/fuzzy.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
-import '../hooks/memo_future.dart';
+import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/iterators.dart';
@@ -29,8 +30,7 @@ class CommunitiesTab extends HookWidget {
         useMemoized(() => accountsStore.loggedInInstances.length);
     final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
 
-    // TODO: rebuild when instances/accounts change
-    final instancesSnap = useMemoFuture(() {
+    getInstances() {
       final futures = accountsStore.loggedInInstances
           .map(
             (instanceHost) =>
@@ -39,8 +39,9 @@ class CommunitiesTab extends HookWidget {
           .toList();
 
       return Future.wait(futures);
-    });
-    final communitiesSnap = useMemoFuture(() {
+    }
+
+    getCommunities() {
       final futures = accountsStore.loggedInInstances
           .map(
             (instanceHost) => LemmyApi(instanceHost)
@@ -56,9 +57,14 @@ class CommunitiesTab extends HookWidget {
           .toList();
 
       return Future.wait(futures);
-    });
+    }
 
-    if (communitiesSnap.hasError || instancesSnap.hasError) {
+    // TODO: rebuild when instances/accounts change
+    final instancesRefreshable = useRefreshable(getInstances);
+    final communitiesRefreshable = useRefreshable(getCommunities);
+
+    if (communitiesRefreshable.snapshot.hasError ||
+        instancesRefreshable.snapshot.hasError) {
       return Scaffold(
         appBar: AppBar(),
         body: Center(
@@ -68,15 +74,16 @@ class CommunitiesTab extends HookWidget {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
-                  communitiesSnap.error?.toString() ??
-                      instancesSnap.error?.toString(),
+                  communitiesRefreshable.snapshot.error?.toString() ??
+                      instancesRefreshable.snapshot.error?.toString(),
                 ),
               )
             ],
           ),
         ),
       );
-    } else if (!communitiesSnap.hasData || !instancesSnap.hasData) {
+    } else if (!communitiesRefreshable.snapshot.hasData ||
+        !instancesRefreshable.snapshot.hasData) {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(
@@ -85,8 +92,22 @@ class CommunitiesTab extends HookWidget {
       );
     }
 
-    final instances = instancesSnap.data;
-    final communities = communitiesSnap.data
+    refresh() async {
+      await HapticFeedback.mediumImpact();
+      try {
+        await Future.wait([
+          instancesRefreshable.refresh(),
+          communitiesRefreshable.refresh(),
+        ]);
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+
+    final instances = instancesRefreshable.snapshot.data;
+    final communities = communitiesRefreshable.snapshot.data
       ..forEach(
           (e) => e.sort((a, b) => a.communityName.compareTo(b.communityName)));
 
@@ -136,91 +157,95 @@ class CommunitiesTab extends HookWidget {
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          for (var i = 0; i < amountOfDisplayInstances; i++)
-            Column(
-              children: [
-                ListTile(
-                  onTap: () => goToInstance(
-                      context, accountsStore.loggedInInstances.elementAt(i)),
-                  onLongPress: () => toggleCollapse(i),
-                  leading: instances[i].icon != null
-                      ? CachedNetworkImage(
-                          height: 50,
-                          width: 50,
-                          imageUrl: instances[i].icon,
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.cover, image: imageProvider),
+      body: RefreshIndicator(
+        onRefresh: refresh,
+        child: ListView(
+          children: [
+            for (var i = 0; i < amountOfDisplayInstances; i++)
+              Column(
+                children: [
+                  ListTile(
+                    onTap: () => goToInstance(
+                        context, accountsStore.loggedInInstances.elementAt(i)),
+                    onLongPress: () => toggleCollapse(i),
+                    leading: instances[i].icon != null
+                        ? CachedNetworkImage(
+                            height: 50,
+                            width: 50,
+                            imageUrl: instances[i].icon,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover, image: imageProvider),
+                              ),
                             ),
+                            errorWidget: (_, __, ___) =>
+                                const SizedBox(width: 50),
+                          )
+                        : const SizedBox(width: 50),
+                    title: Text(
+                      instances[i].name,
+                      style: theme.textTheme.headline6,
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(isCollapsed.value[i]
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down),
+                      onPressed: () => toggleCollapse(i),
+                    ),
+                  ),
+                  if (!isCollapsed.value[i])
+                    for (final comm in filterCommunities(communities[i]))
+                      Padding(
+                        padding: const EdgeInsets.only(left: 17),
+                        child: ListTile(
+                          onTap: () => goToCommunity.byId(
+                              context,
+                              accountsStore.loggedInInstances.elementAt(i),
+                              comm.communityId),
+                          dense: true,
+                          leading: VerticalDivider(
+                            color: theme.hintColor,
                           ),
-                          errorWidget: (_, __, ___) =>
-                              const SizedBox(width: 50),
-                        )
-                      : const SizedBox(width: 50),
-                  title: Text(
-                    instances[i].name,
-                    style: theme.textTheme.headline6,
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(isCollapsed.value[i]
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down),
-                    onPressed: () => toggleCollapse(i),
-                  ),
-                ),
-                if (!isCollapsed.value[i])
-                  for (final comm in filterCommunities(communities[i]))
-                    Padding(
-                      padding: const EdgeInsets.only(left: 17),
-                      child: ListTile(
-                        onTap: () => goToCommunity.byId(
-                            context,
-                            accountsStore.loggedInInstances.elementAt(i),
-                            comm.communityId),
-                        dense: true,
-                        leading: VerticalDivider(
-                          color: theme.hintColor,
-                        ),
-                        title: Row(
-                          children: [
-                            if (comm.communityIcon != null)
-                              CachedNetworkImage(
-                                height: 30,
-                                width: 30,
-                                imageUrl: comm.communityIcon,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: imageProvider),
+                          title: Row(
+                            children: [
+                              if (comm.communityIcon != null)
+                                CachedNetworkImage(
+                                  height: 30,
+                                  width: 30,
+                                  imageUrl: comm.communityIcon,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: imageProvider),
+                                    ),
                                   ),
-                                ),
-                                errorWidget: (_, __, ___) =>
-                                    const SizedBox(width: 30),
-                              )
-                            else
-                              const SizedBox(width: 30),
-                            const SizedBox(width: 10),
-                            Text(
-                              '''!${comm.communityName}${comm.isLocal ? '' : '@${comm.originInstanceHost}'}''',
-                            ),
-                          ],
+                                  errorWidget: (_, __, ___) =>
+                                      const SizedBox(width: 30),
+                                )
+                              else
+                                const SizedBox(width: 30),
+                              const SizedBox(width: 10),
+                              Text(
+                                '''!${comm.communityName}${comm.isLocal ? '' : '@${comm.originInstanceHost}'}''',
+                              ),
+                            ],
+                          ),
+                          trailing: _CommunitySubscribeToggle(
+                            key: ValueKey(comm.communityId),
+                            instanceHost: comm.instanceHost,
+                            communityId: comm.communityId,
+                          ),
                         ),
-                        trailing: _CommunitySubscribeToggle(
-                          instanceHost: comm.instanceHost,
-                          communityId: comm.communityId,
-                        ),
-                      ),
-                    )
-              ],
-            ),
-        ],
+                      )
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -231,9 +256,10 @@ class _CommunitySubscribeToggle extends HookWidget {
   final String instanceHost;
 
   const _CommunitySubscribeToggle(
-      {@required this.instanceHost, @required this.communityId})
+      {@required this.instanceHost, @required this.communityId, Key key})
       : assert(instanceHost != null),
-        assert(communityId != null);
+        assert(communityId != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
