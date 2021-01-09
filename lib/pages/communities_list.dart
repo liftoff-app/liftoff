@@ -49,7 +49,9 @@ class CommunitiesListPage extends StatelessWidget {
 class CommunitiesListItem extends StatelessWidget {
   final CommunityView community;
 
-  const CommunitiesListItem({Key key, this.community}) : super(key: key);
+  const CommunitiesListItem({Key key, @required this.community})
+      : assert(community != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) => ListTile(
