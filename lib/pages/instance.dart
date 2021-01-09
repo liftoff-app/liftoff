@@ -117,16 +117,18 @@ class InstancePage extends HookWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 40),
-                            child: FullscreenableImage(
-                              url: site.site.icon,
-                              child: CachedNetworkImage(
-                                width: 100,
-                                height: 100,
-                                imageUrl: site.site.icon,
-                                errorWidget: (_, __, ___) =>
-                                    const Icon(Icons.warning),
-                              ),
-                            ),
+                            child: site.site.icon == null
+                                ? const SizedBox(height: 100, width: 100)
+                                : FullscreenableImage(
+                                    url: site.site.icon,
+                                    child: CachedNetworkImage(
+                                      width: 100,
+                                      height: 100,
+                                      imageUrl: site.site.icon,
+                                      errorWidget: (_, __, ___) =>
+                                          const Icon(Icons.warning),
+                                    ),
+                                  ),
                           ),
                           Text(site.site.name,
                               style: theme.textTheme.headline6),
