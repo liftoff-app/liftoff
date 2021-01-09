@@ -28,10 +28,8 @@ class InfiniteScroll<T> extends HookWidget {
   final InfiniteScrollController controller;
   final Widget prepend;
   final EdgeInsetsGeometry padding;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
 
-  InfiniteScroll({
+  const InfiniteScroll({
     this.batchSize = 10,
     this.prepend = const SizedBox.shrink(),
     this.padding,
@@ -65,7 +63,6 @@ class InfiniteScroll<T> extends HookWidget {
     final page = data.value.length ~/ batchSize + 1;
 
     return RefreshIndicator(
-      key: _refreshIndicatorKey,
       onRefresh: () async {
         controller.clear();
         await HapticFeedback.mediumImpact();

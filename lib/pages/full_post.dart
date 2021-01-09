@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/logged_in_action.dart';
-import '../hooks/memo_future.dart';
+import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
 import '../util/more_icon.dart';
 import '../widgets/comment_section.dart';
@@ -19,10 +19,8 @@ class FullPostPage extends HookWidget {
   final int id;
   final String instanceHost;
   final PostView post;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
 
-  FullPostPage({@required this.id, @required this.instanceHost})
+  const FullPostPage({@required this.id, @required this.instanceHost})
       : assert(id != null),
         assert(instanceHost != null),
         post = null;
@@ -33,23 +31,22 @@ class FullPostPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
-    final fullPostSnap = useMemoFuture(() => LemmyApi(instanceHost)
+    final fullPostRefreshable = useRefreshable(() => LemmyApi(instanceHost)
         .v1
         .getPost(id: id, auth: accStore.defaultTokenFor(instanceHost)?.raw));
     final loggedInAction = useLoggedInAction(instanceHost);
     final newComments = useState(const <CommentView>[]);
-    final updatedPost = useState<FullPostView>(null);
-    // FALLBACK VIEW
 
-    if (!fullPostSnap.hasData && this.post == null) {
+    // FALLBACK VIEW
+    if (!fullPostRefreshable.snapshot.hasData && this.post == null) {
       return Scaffold(
         appBar: AppBar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (fullPostSnap.hasError)
-                Text(fullPostSnap.error.toString())
+              if (fullPostRefreshable.snapshot.hasError)
+                Text(fullPostRefreshable.snapshot.error.toString())
               else
                 const CircularProgressIndicator(),
             ],
@@ -60,10 +57,11 @@ class FullPostPage extends HookWidget {
 
     // VARIABLES
 
-    final post = updatedPost.value?.post ??
-        (fullPostSnap.hasData ? fullPostSnap.data.post : this.post);
+    final post = fullPostRefreshable.snapshot.hasData
+        ? fullPostRefreshable.snapshot.data.post
+        : this.post;
 
-    final fullPost = updatedPost.value ?? fullPostSnap.data;
+    final fullPost = fullPostRefreshable.snapshot.data;
 
     // FUNCTIONS
 
@@ -71,9 +69,7 @@ class FullPostPage extends HookWidget {
       await HapticFeedback.mediumImpact();
 
       try {
-        return await LemmyApi(instanceHost)
-            .v1
-            .getPost(id: id, auth: accStore.defaultTokenFor(instanceHost)?.raw);
+        await fullPostRefreshable.refresh();
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context).showSnackBar(SnackBar(
@@ -110,23 +106,22 @@ class FullPostPage extends HookWidget {
             child: const Icon(Icons.comment)),
         body: RefreshIndicator(
           onRefresh: refresh,
-          key: _refreshIndicatorKey,
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
               Post(post, fullPost: true),
-              if (fullPostSnap.hasData)
+              if (fullPostRefreshable.snapshot.hasData)
                 CommentSection(
                     newComments.value.followedBy(fullPost.comments).toList(),
                     postCreatorId: fullPost.post.creatorId)
-              else if (fullPostSnap.hasError)
+              else if (fullPostRefreshable.snapshot.hasError)
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
                   child: Column(
                     children: [
                       const Icon(Icons.error),
-                      Text('Error: ${fullPostSnap.error}')
+                      Text('Error: ${fullPostRefreshable.snapshot.error}')
                     ],
                   ),
                 )

@@ -8,7 +8,7 @@ import 'package:fuzzy/fuzzy.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
 
 import '../hooks/delayed_loading.dart';
-import '../hooks/memo_future.dart';
+import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/iterators.dart';
@@ -60,14 +60,11 @@ class CommunitiesTab extends HookWidget {
     }
 
     // TODO: rebuild when instances/accounts change
-    final instancesSnap = useMemoFuture(getInstances);
-    final communitiesSnap = useMemoFuture(getCommunities);
+    final instancesRefreshable = useRefreshable(getInstances);
+    final communitiesRefreshable = useRefreshable(getCommunities);
 
-    final updatedCommunities =
-        useState<List<List<CommunityFollowerView>>>(null);
-    final updatedInstances = useState<List<SiteView>>(null);
-
-    if (communitiesSnap.hasError || instancesSnap.hasError) {
+    if (communitiesRefreshable.snapshot.hasError ||
+        instancesRefreshable.snapshot.hasError) {
       return Scaffold(
         appBar: AppBar(),
         body: Center(
@@ -77,15 +74,16 @@ class CommunitiesTab extends HookWidget {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
-                  communitiesSnap.error?.toString() ??
-                      instancesSnap.error?.toString(),
+                  communitiesRefreshable.snapshot.error?.toString() ??
+                      instancesRefreshable.snapshot.error?.toString(),
                 ),
               )
             ],
           ),
         ),
       );
-    } else if (!communitiesSnap.hasData || !instancesSnap.hasData) {
+    } else if (!communitiesRefreshable.snapshot.hasData ||
+        !instancesRefreshable.snapshot.hasData) {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(
@@ -97,11 +95,10 @@ class CommunitiesTab extends HookWidget {
     refresh() async {
       await HapticFeedback.mediumImpact();
       try {
-        final i = getInstances();
-        final c = getCommunities();
-        await Future.wait([i, c]);
-        updatedInstances.value = await i;
-        updatedCommunities.value = await c;
+        await Future.wait([
+          instancesRefreshable.refresh(),
+          communitiesRefreshable.refresh(),
+        ]);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
@@ -109,8 +106,8 @@ class CommunitiesTab extends HookWidget {
       }
     }
 
-    final instances = updatedInstances.value ?? instancesSnap.data;
-    final communities = updatedCommunities.value ?? communitiesSnap.data
+    final instances = instancesRefreshable.snapshot.data;
+    final communities = communitiesRefreshable.snapshot.data
       ..forEach(
           (e) => e.sort((a, b) => a.communityName.compareTo(b.communityName)));
 
@@ -239,6 +236,7 @@ class CommunitiesTab extends HookWidget {
                             ],
                           ),
                           trailing: _CommunitySubscribeToggle(
+                            key: ValueKey(comm.communityId),
                             instanceHost: comm.instanceHost,
                             communityId: comm.communityId,
                           ),
@@ -258,9 +256,10 @@ class _CommunitySubscribeToggle extends HookWidget {
   final String instanceHost;
 
   const _CommunitySubscribeToggle(
-      {@required this.instanceHost, @required this.communityId})
+      {@required this.instanceHost, @required this.communityId, Key key})
       : assert(instanceHost != null),
-        assert(communityId != null);
+        assert(communityId != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
