@@ -61,14 +61,12 @@ class SearchTab extends HookWidget {
             ),
             if (searchInputController.text.isNotEmpty)
               ElevatedButton(
-                onPressed: searchInputController.text.isEmpty
-                    ? null
-                    : () => goTo(
-                        context,
-                        (c) => SearchResultsPage(
-                              instance: instance.value,
-                              query: searchInputController.text,
-                            )),
+                onPressed: () => goTo(
+                    context,
+                    (c) => SearchResultsPage(
+                          instance: instance.value,
+                          query: searchInputController.text,
+                        )),
                 child: const Text('search'),
               )
           ],
