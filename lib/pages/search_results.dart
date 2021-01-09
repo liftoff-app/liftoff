@@ -42,13 +42,15 @@ class SearchResultsPage extends HookWidget {
           body: TabBarView(
             children: [
               _SearchResultsList(
-                  instance: instance, query: query, type: SearchType.posts),
+                  instanceHost: instance, query: query, type: SearchType.posts),
               _SearchResultsList(
-                  instance: instance, query: query, type: SearchType.comments),
+                  instanceHost: instance,
+                  query: query,
+                  type: SearchType.comments),
               _SearchResultsList(
-                  instance: instance, query: query, type: SearchType.users),
+                  instanceHost: instance, query: query, type: SearchType.users),
               _SearchResultsList(
-                  instance: instance,
+                  instanceHost: instance,
                   query: query,
                   type: SearchType.communities),
             ],
@@ -60,15 +62,15 @@ class SearchResultsPage extends HookWidget {
 class _SearchResultsList extends HookWidget {
   final SearchType type;
   final String query;
-  final String instance;
+  final String instanceHost;
 
   const _SearchResultsList({
     @required this.type,
     @required this.query,
-    @required this.instance,
+    @required this.instanceHost,
   })  : assert(type != null),
         assert(query != null),
-        assert(instance != null);
+        assert(instanceHost != null);
 
   @override
   Widget build(BuildContext context) {
@@ -76,11 +78,11 @@ class _SearchResultsList extends HookWidget {
 
     return SortableInfiniteList(
       fetcher: (page, batchSize, sort) async {
-        final s = await LemmyApi(instance).v1.search(
+        final s = await LemmyApi(instanceHost).v1.search(
               q: query,
               sort: sort,
               type: type,
-              auth: acs.defaultTokenFor(instance)?.raw,
+              auth: acs.defaultTokenFor(instanceHost)?.raw,
               page: page,
             );
 
