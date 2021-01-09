@@ -110,7 +110,7 @@ class SelectInstanceButton extends HookWidget {
                   ),
                 ));
         if (val != null) {
-          onChange(val);
+          onChange?.call(val);
         }
       },
       style: OutlinedButton.styleFrom(
