@@ -13,6 +13,13 @@ class Refreshable<T> {
   final AsyncCallback refresh;
 }
 
+/// Similar to [useMemoFuture] but adds a `.refresh` method which
+/// allows to re-run the fetcher. Calling `.refresh` will not
+/// turn AsyncSnapshot into a loading state. Instead it will
+/// replace the ready state with the new data when available
+///
+/// `keys` will re-run the initial fetching thus yielding a
+/// loading state in the AsyncSnapshot
 Refreshable<T> useRefreshable<T>(AsyncValueGetter<T> fetcher,
     [List<Object> keys = const <dynamic>[]]) {
   final newData = useState<T>(null);
