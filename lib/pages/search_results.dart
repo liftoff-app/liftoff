@@ -96,7 +96,7 @@ class _SearchResultsList extends HookWidget {
           case SearchType.users:
             return s.users;
           default:
-            throw Error();
+            throw UnimplementedError();
         }
       },
       builder: (data) {
@@ -116,7 +116,7 @@ class _SearchResultsList extends HookWidget {
           case SearchType.users:
             return UsersListItem(user: data as UserView);
           default:
-            throw Error();
+            throw UnimplementedError();
         }
       },
     );
