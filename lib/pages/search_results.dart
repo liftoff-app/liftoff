@@ -11,15 +11,15 @@ import 'communities_list.dart';
 import 'users_list.dart';
 
 class SearchResultsPage extends HookWidget {
-  final String instance;
+  final String instanceHost;
   final String query;
 
   SearchResultsPage({
-    @required this.instance,
+    @required this.instanceHost,
     @required this.query,
-  })  : assert(instance != null),
+  })  : assert(instanceHost != null),
         assert(query != null),
-        assert(instance.isNotEmpty),
+        assert(instanceHost.isNotEmpty),
         assert(query.isNotEmpty);
 
   @override
@@ -42,15 +42,19 @@ class SearchResultsPage extends HookWidget {
           body: TabBarView(
             children: [
               _SearchResultsList(
-                  instanceHost: instance, query: query, type: SearchType.posts),
+                  instanceHost: instanceHost,
+                  query: query,
+                  type: SearchType.posts),
               _SearchResultsList(
-                  instanceHost: instance,
+                  instanceHost: instanceHost,
                   query: query,
                   type: SearchType.comments),
               _SearchResultsList(
-                  instanceHost: instance, query: query, type: SearchType.users),
+                  instanceHost: instanceHost,
+                  query: query,
+                  type: SearchType.users),
               _SearchResultsList(
-                  instanceHost: instance,
+                  instanceHost: instanceHost,
                   query: query,
                   type: SearchType.communities),
             ],

@@ -15,7 +15,7 @@ class SearchTab extends HookWidget {
     final searchInputController = useTextEditingController();
 
     final accStore = useAccountsStore();
-    final instance = useState(accStore.instances.first);
+    final instanceHost = useState(accStore.instances.first);
     useValueListenable(searchInputController);
 
     return Scaffold(
@@ -51,8 +51,8 @@ class SearchTab extends HookWidget {
                 ),
                 Expanded(
                   child: SelectInstanceButton(
-                    instance: instance.value,
-                    onChange: (s) => instance.value = s,
+                    instanceHost: instanceHost.value,
+                    onChange: (s) => instanceHost.value = s,
                   ),
                 ),
               ],
@@ -62,7 +62,7 @@ class SearchTab extends HookWidget {
                 onPressed: () => goTo(
                     context,
                     (c) => SearchResultsPage(
-                          instance: instance.value,
+                          instanceHost: instanceHost.value,
                           query: searchInputController.text,
                         )),
                 child: const Text('search'),
@@ -76,9 +76,9 @@ class SearchTab extends HookWidget {
 
 class SelectInstanceButton extends HookWidget {
   final ValueChanged<String> onChange;
-  final String instance;
+  final String instanceHost;
   const SelectInstanceButton(
-      {@required this.onChange, @required this.instance});
+      {@required this.onChange, @required this.instanceHost});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class SelectInstanceButton extends HookWidget {
                     children: [
                       for (final inst in accStore.instances)
                         ListTile(
-                          leading: inst == instance
+                          leading: inst == instanceHost
                               ? Icon(
                                   Icons.radio_button_on,
                                   color: theme.accentColor,
@@ -120,7 +120,7 @@ class SelectInstanceButton extends HookWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(instance),
+          Text(instanceHost),
           const Icon(Icons.arrow_drop_down),
         ],
       ),
