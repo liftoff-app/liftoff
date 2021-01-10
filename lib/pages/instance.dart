@@ -218,10 +218,6 @@ class _AboutTab extends HookWidget {
       : assert(communitiesFuture != null),
         assert(instanceHost != null);
 
-  void goToUser(int id) {
-    print('GO TO USER $id');
-  }
-
   void goToModLog() {
     print('GO TO MODLOG');
   }
@@ -347,7 +343,7 @@ class _AboutTab extends HookWidget {
                   subtitle: e.bio != null
                       ? MarkdownText(e.bio, instanceHost: instanceHost)
                       : null,
-                  onTap: () => goToUser(e.id),
+                  onTap: () => goToUser.byId(context, instanceHost, e.id),
                   leading: e.avatar != null
                       ? CachedNetworkImage(
                           height: 50,
