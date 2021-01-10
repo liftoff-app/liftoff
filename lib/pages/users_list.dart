@@ -36,7 +36,9 @@ class UsersListPage extends StatelessWidget {
 class UsersListItem extends StatelessWidget {
   final UserView user;
 
-  const UsersListItem({Key key, this.user}) : super(key: key);
+  const UsersListItem({Key key, @required this.user})
+      : assert(user != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) => ListTile(
