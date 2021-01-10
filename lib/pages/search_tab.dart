@@ -78,7 +78,8 @@ class SelectInstanceButton extends HookWidget {
   final ValueChanged<String> onChange;
   final String instanceHost;
   const SelectInstanceButton(
-      {@required this.onChange, @required this.instanceHost});
+      {@required this.onChange, @required this.instanceHost})
+      : assert(instanceHost != null);
 
   @override
   Widget build(BuildContext context) {
