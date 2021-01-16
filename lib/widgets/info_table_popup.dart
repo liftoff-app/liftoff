@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 void showInfoTablePopup(BuildContext context, Map<String, dynamic> table) {
   showDialog(
     context: context,
-    child: SimpleDialog(
+    builder: (c) => SimpleDialog(
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 15,
