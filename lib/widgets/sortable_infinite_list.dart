@@ -75,7 +75,7 @@ class InfiniteCommentList extends StatelessWidget {
         builder: (comment) => Comment(
           CommentTree(comment),
           postCreatorId: null,
-          detatched: true,
+          detached: true,
         ),
         fetcher: fetcher,
       );
