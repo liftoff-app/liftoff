@@ -68,6 +68,12 @@ class HomeTab extends HookWidget {
                       listingType: PostListingType.subscribed)),
                 ),
                 ListTile(
+                  title: const Text('Local'),
+                  leading: const SizedBox(width: 20, height: 20),
+                  onTap: () => pop(
+                      const _SelectedList(listingType: PostListingType.local)),
+                ),
+                ListTile(
                   title: const Text('All'),
                   leading: const SizedBox(width: 20, height: 20),
                   onTap: () => pop(
@@ -126,6 +132,14 @@ class HomeTab extends HookWidget {
                     leading: const SizedBox(width: 20),
                   ),
                   ListTile(
+                    title: const Text('Local'),
+                    onTap: () => pop(_SelectedList(
+                      listingType: PostListingType.local,
+                      instanceHost: instance,
+                    )),
+                    leading: const SizedBox(width: 20),
+                  ),
+                  ListTile(
                     title: const Text('All'),
                     onTap: () => pop(_SelectedList(
                       listingType: PostListingType.all,
@@ -146,9 +160,18 @@ class HomeTab extends HookWidget {
     }
 
     final title = () {
-      final first = selectedList.value.listingType == PostListingType.subscribed
-          ? 'Subscribed'
-          : 'All';
+      final first = () {
+        switch (selectedList.value.listingType) {
+          case PostListingType.all:
+            return 'All';
+          case PostListingType.local:
+            return 'Local';
+          case PostListingType.subscribed:
+            return 'Subscribed';
+          default:
+            throw 'ERROR';
+        }
+      }();
       final last = selectedList.value.instanceHost == null
           ? ''
           : '@${selectedList.value.instanceHost}';
