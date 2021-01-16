@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../util/text_color.dart';
 import '../widgets/badge.dart';
+import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
@@ -68,15 +70,40 @@ class InstancePage extends HookWidget {
     final site = siteSnap.data;
 
     void _openMoreMenu(BuildContext c) {
-      showInfoTablePopup(context, {
-        'url': instanceHost,
-        'creator': '@${site.site.creatorName}',
-        'version': site.version,
-        'enableDownvotes': site.site.enableDownvotes,
-        'enableNsfw': site.site.enableNsfw,
-        'published': site.site.published,
-        'updated': site.site.updated,
-      });
+      showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) => BottomModal(
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.open_in_browser),
+                title: const Text('Open in browser'),
+                onTap: () async => await ul
+                        .canLaunch('https://${site.site.instanceHost}')
+                    ? ul.launch('https://${site.site.instanceHost}')
+                    : Scaffold.of(context).showSnackBar(
+                        const SnackBar(content: Text("can't open in browser"))),
+              ),
+              ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: const Text('Nerd stuff'),
+                onTap: () {
+                  showInfoTablePopup(context, {
+                    'url': instanceHost,
+                    'creator': '@${site.site.creatorName}',
+                    'version': site.version,
+                    'enableDownvotes': site.site.enableDownvotes,
+                    'enableNsfw': site.site.enableNsfw,
+                    'published': site.site.published,
+                    'updated': site.site.updated,
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     return Scaffold(
