@@ -61,24 +61,16 @@ class HomeTab extends HookWidget {
                       VisualDensity(vertical: VisualDensity.minimumDensity),
                   leading: SizedBox.shrink(),
                 ),
-                ListTile(
-                  title: const Text('Subscribed'),
-                  leading: const SizedBox(width: 20, height: 20),
-                  onTap: () => pop(const _SelectedList(
-                      listingType: PostListingType.subscribed)),
-                ),
-                ListTile(
-                  title: const Text('Local'),
-                  leading: const SizedBox(width: 20, height: 20),
-                  onTap: () => pop(
-                      const _SelectedList(listingType: PostListingType.local)),
-                ),
-                ListTile(
-                  title: const Text('All'),
-                  leading: const SizedBox(width: 20, height: 20),
-                  onTap: () => pop(
-                      const _SelectedList(listingType: PostListingType.all)),
-                ),
+                for (final listingType in [
+                  PostListingType.subscribed,
+                  PostListingType.local,
+                  PostListingType.all,
+                ])
+                  ListTile(
+                    title: Text(listingType.value),
+                    leading: const SizedBox(width: 20, height: 20),
+                    onTap: () => pop(_SelectedList(listingType: listingType)),
+                  ),
                 for (final instance in accStore.instances) ...[
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
