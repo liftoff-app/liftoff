@@ -47,7 +47,25 @@ class Comment extends HookWidget {
     final com = commentTree.comment;
     showInfoTablePopup(context, {
       'id': com.id,
+      'creatorId': com.creatorId,
+      'postId': com.postId,
+      'postName': com.postName,
+      'parentId': com.parentId,
+      'removed': com.removed,
+      'read': com.read,
+      'published': com.published,
+      'updated': com.updated,
+      'deleted': com.deleted,
       'apId': com.apId,
+      'local': com.local,
+      'communityId': com.communityId,
+      'communityActorId': com.communityActorId,
+      'communityLocal': com.communityLocal,
+      'communityName': com.communityName,
+      'communityIcon': com.communityIcon,
+      'banned': com.banned,
+      'bannedFromCommunity': com.bannedFromCommunity,
+      'creatorActirId': com.creatorActorId,
       'userId': com.userId,
       'upvotes': com.upvotes,
       'downvotes': com.downvotes,
@@ -55,8 +73,6 @@ class Comment extends HookWidget {
       '% of upvotes': '${100 * (com.upvotes / (com.upvotes + com.downvotes))}%',
       'hotRank': com.hotRank,
       'hotRankActive': com.hotRankActive,
-      'published': com.published,
-      'updated': com.updated,
     });
   }
 
