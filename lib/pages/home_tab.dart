@@ -160,18 +160,8 @@ class HomeTab extends HookWidget {
     }
 
     final title = () {
-      final first = () {
-        switch (selectedList.value.listingType) {
-          case PostListingType.all:
-            return 'All';
-          case PostListingType.local:
-            return 'Local';
-          case PostListingType.subscribed:
-            return 'Subscribed';
-          default:
-            throw 'ERROR';
-        }
-      }();
+      final first = selectedList.value.listingType.value;
+
       final last = selectedList.value.instanceHost == null
           ? ''
           : '@${selectedList.value.instanceHost}';
