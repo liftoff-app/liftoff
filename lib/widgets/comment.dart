@@ -25,6 +25,7 @@ class Comment extends HookWidget {
   final int indent;
   final int postCreatorId;
   final CommentTree commentTree;
+  final bool detached;
 
   final bool wasVoted;
 
@@ -40,6 +41,7 @@ class Comment extends HookWidget {
     this.commentTree, {
     this.indent = 0,
     @required this.postCreatorId,
+    this.detached = false,
   }) : wasVoted =
             (commentTree.comment.myVote ?? VoteType.none) != VoteType.none;
 
@@ -47,7 +49,25 @@ class Comment extends HookWidget {
     final com = commentTree.comment;
     showInfoTablePopup(context, {
       'id': com.id,
+      'creatorId': com.creatorId,
+      'postId': com.postId,
+      'postName': com.postName,
+      'parentId': com.parentId,
+      'removed': com.removed,
+      'read': com.read,
+      'published': com.published,
+      'updated': com.updated,
+      'deleted': com.deleted,
       'apId': com.apId,
+      'local': com.local,
+      'communityId': com.communityId,
+      'communityActorId': com.communityActorId,
+      'communityLocal': com.communityLocal,
+      'communityName': com.communityName,
+      'communityIcon': com.communityIcon,
+      'banned': com.banned,
+      'bannedFromCommunity': com.bannedFromCommunity,
+      'creatorActirId': com.creatorActorId,
       'userId': com.userId,
       'upvotes': com.upvotes,
       'downvotes': com.downvotes,
@@ -55,8 +75,6 @@ class Comment extends HookWidget {
       '% of upvotes': '${100 * (com.upvotes / (com.upvotes + com.downvotes))}%',
       'hotRank': com.hotRank,
       'hotRankActive': com.hotRankActive,
-      'published': com.published,
-      'updated': com.updated,
     });
   }
 
@@ -263,6 +281,13 @@ class Comment extends HookWidget {
                                 content: Text('comment copied to clipboard'))));
                   }),
             const Spacer(),
+            if (detached)
+              _CommentAction(
+                icon: Icons.link,
+                onPressed: () =>
+                    goToPost(context, comment.instanceHost, comment.postId),
+                tooltip: 'go to post',
+              ),
             _CommentAction(
               icon: Icons.more_horiz,
               onPressed: () => _openMoreMenu(context),
