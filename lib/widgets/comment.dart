@@ -25,6 +25,7 @@ class Comment extends HookWidget {
   final int indent;
   final int postCreatorId;
   final CommentTree commentTree;
+  final bool detatched;
 
   final bool wasVoted;
 
@@ -40,6 +41,7 @@ class Comment extends HookWidget {
     this.commentTree, {
     this.indent = 0,
     @required this.postCreatorId,
+    this.detatched = false,
   }) : wasVoted =
             (commentTree.comment.myVote ?? VoteType.none) != VoteType.none;
 
@@ -279,6 +281,14 @@ class Comment extends HookWidget {
                                 content: Text('comment copied to clipboard'))));
                   }),
             const Spacer(),
+            if (detatched)
+              _CommentAction(
+                icon: Icons.link,
+                // onPressed: () {},
+                onPressed: () =>
+                    goToPost(context, comment.instanceHost, comment.postId),
+                tooltip: 'go to post',
+              ),
             _CommentAction(
               icon: Icons.more_horiz,
               onPressed: () => _openMoreMenu(context),
