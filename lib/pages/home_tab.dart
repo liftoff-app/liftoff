@@ -61,18 +61,16 @@ class HomeTab extends HookWidget {
                       VisualDensity(vertical: VisualDensity.minimumDensity),
                   leading: SizedBox.shrink(),
                 ),
-                ListTile(
-                  title: const Text('Subscribed'),
-                  leading: const SizedBox(width: 20, height: 20),
-                  onTap: () => pop(const _SelectedList(
-                      listingType: PostListingType.subscribed)),
-                ),
-                ListTile(
-                  title: const Text('All'),
-                  leading: const SizedBox(width: 20, height: 20),
-                  onTap: () => pop(
-                      const _SelectedList(listingType: PostListingType.all)),
-                ),
+                for (final listingType in [
+                  PostListingType.subscribed,
+                  PostListingType.local,
+                  PostListingType.all,
+                ])
+                  ListTile(
+                    title: Text(listingType.value),
+                    leading: const SizedBox(width: 20, height: 20),
+                    onTap: () => pop(_SelectedList(listingType: listingType)),
+                  ),
                 for (final instance in accStore.instances) ...[
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -126,6 +124,14 @@ class HomeTab extends HookWidget {
                     leading: const SizedBox(width: 20),
                   ),
                   ListTile(
+                    title: const Text('Local'),
+                    onTap: () => pop(_SelectedList(
+                      listingType: PostListingType.local,
+                      instanceHost: instance,
+                    )),
+                    leading: const SizedBox(width: 20),
+                  ),
+                  ListTile(
                     title: const Text('All'),
                     onTap: () => pop(_SelectedList(
                       listingType: PostListingType.all,
@@ -146,9 +152,8 @@ class HomeTab extends HookWidget {
     }
 
     final title = () {
-      final first = selectedList.value.listingType == PostListingType.subscribed
-          ? 'Subscribed'
-          : 'All';
+      final first = selectedList.value.listingType.value;
+
       final last = selectedList.value.instanceHost == null
           ? ''
           : '@${selectedList.value.instanceHost}';
