@@ -206,7 +206,7 @@ class _ManageAccount extends HookWidget {
     }
 
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       children: [
         _ImagePicker(
           user: user,
