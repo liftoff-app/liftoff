@@ -80,8 +80,18 @@ class _ManageAccount extends HookWidget {
         useTextEditingController(text: user.preferredUsername);
     final bioController = useTextEditingController(text: user.bio);
     final emailController = useTextEditingController(text: user.email);
+    final matrixUserController =
+        useTextEditingController(text: user.matrixUserId);
     final avatar = useRef(user.avatar);
     final banner = useRef(user.banner);
+    final showAvatars = useState(user.showAvatars);
+    final showNsfw = useState(user.showNsfw);
+    final sendNotificationsToEmail = useState(user.sendNotificationsToEmail);
+    final defaultListingType = useState(user.defaultListingType);
+    final defaultSortType = useState(user.defaultSortType);
+    final newPasswordController = useTextEditingController();
+    final newPasswordVerifyController = useTextEditingController();
+    final oldPasswordController = useTextEditingController();
 
     final informAcceptedAvatarRef = useRef<VoidCallback>(null);
     final informAcceptedBannerRef = useRef<VoidCallback>(null);
@@ -95,16 +105,28 @@ class _ManageAccount extends HookWidget {
 
       try {
         await LemmyApi(user.instanceHost).v1.saveUserSettings(
-              showNsfw: user.showNsfw,
+              showNsfw: showNsfw.value,
               theme: user.theme,
-              defaultSortType: user.defaultSortType,
-              defaultListingType: user.defaultListingType,
+              defaultSortType: defaultSortType.value,
+              defaultListingType: defaultListingType.value,
               lang: user.lang,
-              showAvatars: user.showAvatars,
-              sendNotificationsToEmail: user.sendNotificationsToEmail,
+              showAvatars: showAvatars.value,
+              sendNotificationsToEmail: sendNotificationsToEmail.value,
               auth: token.raw,
               avatar: avatar.current,
               banner: banner.current,
+              newPassword: newPasswordController.text.isEmpty
+                  ? null
+                  : newPasswordController.text,
+              newPasswordVerify: newPasswordVerifyController.text.isEmpty
+                  ? null
+                  : newPasswordVerifyController.text,
+              oldPassword: oldPasswordController.text.isEmpty
+                  ? null
+                  : oldPasswordController.text,
+              matrixUserId: matrixUserController.text.isEmpty
+                  ? null
+                  : matrixUserController.text,
               preferredUsername: displayNameController.text.isEmpty
                   ? null
                   : displayNameController.text,
@@ -122,9 +144,9 @@ class _ManageAccount extends HookWidget {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
+      } finally {
+        saveDelayedLoading.cancel();
       }
-
-      saveDelayedLoading.cancel();
     }
 
     deleteAccountDialog() async {
@@ -184,7 +206,7 @@ class _ManageAccount extends HookWidget {
     }
 
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
       children: [
         _ImagePicker(
           user: user,
@@ -240,6 +262,144 @@ class _ManageAccount extends HookWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
+        ),
+        const SizedBox(height: 8),
+        Text('Matrix User', style: theme.textTheme.headline6),
+        TextField(
+          controller: matrixUserController,
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text('New password', style: theme.textTheme.headline6),
+        TextField(
+          controller: newPasswordController,
+          obscureText: true,
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text('Verify password', style: theme.textTheme.headline6),
+        TextField(
+          controller: newPasswordVerifyController,
+          obscureText: true,
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text('Old password', style: theme.textTheme.headline6),
+        TextField(
+          controller: oldPasswordController,
+          obscureText: true,
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text('Sort type'),
+                Text(
+                  'This has currently no effect on lemmur',
+                  style: TextStyle(fontSize: 10),
+                )
+              ],
+            ),
+            DropdownButton<PostListingType>(
+              items: [
+                for (final postListingType in [
+                  PostListingType.all,
+                  PostListingType.local,
+                  PostListingType.subscribed,
+                ])
+                  DropdownMenuItem(
+                    value: postListingType,
+                    child: Text(postListingType.value),
+                  )
+              ],
+              onChanged: (value) => defaultListingType.value = value,
+              value: defaultListingType.value,
+              isDense: true,
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text('Type'),
+                Text(
+                  'This has currently no effect on lemmur',
+                  style: TextStyle(fontSize: 10),
+                )
+              ],
+            ),
+            DropdownButton<SortType>(
+              items: [
+                for (final defaultSortType in SortType.values)
+                  DropdownMenuItem(
+                    value: defaultSortType,
+                    child: Text(defaultSortType.value),
+                  )
+              ],
+              onChanged: (value) => defaultSortType.value = value,
+              value: defaultSortType.value,
+              isDense: true,
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        CheckboxListTile(
+          value: showAvatars.value,
+          onChanged: (checked) => showAvatars.value = checked,
+          title: const Text('Show avatars'),
+          subtitle: const Text('This has currently no effect on lemmur'),
+          dense: true,
+        ),
+        const SizedBox(height: 8),
+        CheckboxListTile(
+          value: showNsfw.value,
+          onChanged: (checked) => showNsfw.value = checked,
+          title: const Text('Show NSFW content'),
+          subtitle: const Text('This has currently no effect on lemmur'),
+          dense: true,
+        ),
+        const SizedBox(height: 8),
+        CheckboxListTile(
+          value: sendNotificationsToEmail.value,
+          onChanged: (checked) => sendNotificationsToEmail.value = checked,
+          title: const Text('Send notifications to Email'),
+          dense: true,
         ),
         const SizedBox(height: 8),
         ElevatedButton(
