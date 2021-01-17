@@ -187,7 +187,7 @@ class AccountsConfigPage extends HookWidget {
       ),
       body: ListView(
         children: [
-          if (accountsStore.tokens.isEmpty)
+          if (accountsStore.instances.isEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -228,7 +228,7 @@ class AccountsConfigPage extends HookWidget {
                 ),
               ),
             ),
-            for (final username in accountsStore.tokens[instance].keys) ...[
+            for (final username in accountsStore.usernamesFor(instance)) ...[
               Slidable(
                 actionPane: const SlidableBehindActionPane(),
                 key: Key('$username@$instance'),
@@ -266,7 +266,7 @@ class AccountsConfigPage extends HookWidget {
                 ),
               ),
             ],
-            if (accountsStore.tokens[instance].keys.isEmpty)
+            if (accountsStore.usernamesFor(instance).isEmpty)
               ListTile(
                 leading: const Icon(Icons.add),
                 title: const Text('Add account'),

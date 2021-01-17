@@ -330,7 +330,7 @@ class _AboutTab extends HookWidget {
     final accStore = useAccountsStore();
 
     final isOwnedAccount = accStore.loggedInInstances.contains(instanceHost) &&
-        accStore.tokens[instanceHost].containsKey(userDetails.user.name);
+        accStore.usernamesFor(instanceHost).contains(userDetails.user.name);
 
     const wallPadding = EdgeInsets.symmetric(horizontal: 15);
 

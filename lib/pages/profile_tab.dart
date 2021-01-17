@@ -67,13 +67,12 @@ class UserProfileTab extends HookWidget {
               context: context,
               backgroundColor: Colors.transparent,
               builder: (ctx) {
-                final userTags = <String>[];
-
-                accountsStore.tokens.forEach((instanceHost, value) {
-                  value.forEach((username, _) {
-                    userTags.add('$username@$instanceHost');
-                  });
-                });
+                final userTags = <String>[
+                  for (final instanceHost in accountsStore.loggedInInstances)
+                    for (final username
+                        in accountsStore.usernamesFor(instanceHost))
+                      '$username@$instanceHost'
+                ];
 
                 return BottomModal(
                   title: 'account',

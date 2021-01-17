@@ -30,7 +30,7 @@ class ManageAccountPage extends HookWidget {
     final userFuture = useMemoized(() async {
       final site = await LemmyApi(instanceHost)
           .v1
-          .getSite(auth: accountStore.tokens[instanceHost][username].raw);
+          .getSite(auth: accountStore.tokenFor(instanceHost, username).raw);
 
       return site.myUser;
     });
@@ -98,7 +98,7 @@ class _ManageAccount extends HookWidget {
 
     final deleteAccountPasswordController = useTextEditingController();
 
-    final token = accountsStore.tokens[user.instanceHost][user.name];
+    final token = accountsStore.tokenFor(user.instanceHost, user.name);
 
     handleSubmit() async {
       saveDelayedLoading.start();
@@ -480,7 +480,7 @@ class _ImagePicker extends HookWidget {
 
           final upload = await LemmyApi(user.instanceHost).pictrs.upload(
                 filePath: pic.path,
-                auth: accountsStore.tokens[user.instanceHost][user.name].raw,
+                auth: accountsStore.tokenFor(user.instanceHost, user.name).raw,
               );
           pictrsDeleteToken.value = upload.files[0];
           url.value =
