@@ -69,15 +69,18 @@ class AccountsStore extends ChangeNotifier {
   /// automatically sets default accounts
   void _assignDefaultAccounts() {
     // remove dangling defaults
-    _defaultAccounts.entries.map((dft) {
-      final instance = dft.key;
-      final username = dft.value;
-      // if instance or username doesn't exist, remove
-      if (!instances.contains(instance) ||
-          !usernamesFor(instance).contains(username)) {
-        return instance;
-      }
-    }).forEach(_defaultAccounts.remove);
+    _defaultAccounts.entries
+        .map((dft) {
+          final instance = dft.key;
+          final username = dft.value;
+          // if instance or username doesn't exist, remove
+          if (!instances.contains(instance) ||
+              !usernamesFor(instance).contains(username)) {
+            return instance;
+          }
+        })
+        .toList()
+        .forEach(_defaultAccounts.remove);
     if (_defaultAccount != null) {
       final instance = _defaultAccount.split('@')[1];
       final username = _defaultAccount.split('@')[0];
