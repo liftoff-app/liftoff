@@ -10,6 +10,7 @@ import '../util/goto.dart';
 import '../widgets/about_tile.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
+import 'manage_account.dart';
 
 /// Page with a list of different settings sections
 class SettingsPage extends StatelessWidget {
@@ -186,7 +187,7 @@ class AccountsConfigPage extends HookWidget {
       ),
       body: ListView(
         children: [
-          if (accountsStore.tokens.isEmpty)
+          if (accountsStore.instances.isEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -205,43 +206,45 @@ class AccountsConfigPage extends HookWidget {
                 ),
               ],
             ),
-          for (final entry in accountsStore.tokens.entries) ...[
+          for (final instance in accountsStore.instances) ...[
             const SizedBox(height: 40),
             Slidable(
               actionPane: const SlidableBehindActionPane(),
               secondaryActions: [
                 IconSlideAction(
-                  onTap: () => removeInstanceDialog(entry.key),
+                  onTap: () => removeInstanceDialog(instance),
                   icon: Icons.delete_sweep,
                   color: Colors.red,
                 ),
               ],
-              key: Key(entry.key),
+              key: Key(instance),
+              // TODO: missing ripple effect
               child: Container(
-                color: theme.canvasColor,
+                color: theme.scaffoldBackgroundColor,
                 child: ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
-                  title: _SectionHeading(entry.key),
+                  title: _SectionHeading(instance),
                 ),
               ),
             ),
-            for (final username in entry.value.keys) ...[
+            for (final username in accountsStore.usernamesFor(instance)) ...[
               Slidable(
                 actionPane: const SlidableBehindActionPane(),
-                key: Key('$username@${entry.key}'),
+                key: Key('$username@$instance'),
                 secondaryActions: [
                   IconSlideAction(
-                    onTap: () => removeUserDialog(entry.key, username),
+                    onTap: () => removeUserDialog(instance, username),
                     icon: Icons.delete_sweep,
                     color: Colors.red,
                   ),
                 ],
+                // TODO: missing ripple effect
                 child: Container(
-                  decoration: BoxDecoration(color: theme.canvasColor),
+                  color: theme.scaffoldBackgroundColor,
                   child: ListTile(
                     trailing:
-                        username == accountsStore.defaultUsernameFor(entry.key)
+                        username == accountsStore.defaultUsernameFor(instance)
                             ? Icon(
                                 Icons.check_circle_outline,
                                 color: theme.accentColor,
@@ -249,21 +252,28 @@ class AccountsConfigPage extends HookWidget {
                             : null,
                     title: Text(username),
                     onLongPress: () {
-                      accountsStore.setDefaultAccountFor(entry.key, username);
+                      accountsStore.setDefaultAccountFor(instance, username);
                     },
-                    onTap: () {}, // TODO: go to managing account
+                    onTap: () {
+                      goTo(
+                          context,
+                          (_) => ManageAccountPage(
+                                instanceHost: instance,
+                                username: username,
+                              ));
+                    },
                   ),
                 ),
               ),
             ],
-            if (entry.value.keys.isEmpty)
+            if (accountsStore.usernamesFor(instance).isEmpty)
               ListTile(
                 leading: const Icon(Icons.add),
                 title: const Text('Add account'),
                 onTap: () {
                   showCupertinoModalPopup(
                       context: context,
-                      builder: (_) => AddAccountPage(instanceHost: entry.key));
+                      builder: (_) => AddAccountPage(instanceHost: instance));
                 },
               ),
           ]

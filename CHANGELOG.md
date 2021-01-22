@@ -4,12 +4,21 @@ First release of Lemmur the Lemmy mobile client!
 
 Features include:
 
-- Add multiple accounts/instances
-- Show instance
-- Show community
-- Show post
-- Show user profile
+- Manage multiple accounts/instances
+- Instance view
+- Community view
+- Post view
+- User profile view
+- Home tab
+- Communities tab
 - Comment
-- Comment/post actions: save/upvote/downvote
+  - create
+  - upvote/downvote
+  - save
+  - delete
+- Post
+  - create
+  - upvote/downvote
+  - save
 - Light/dark/AMOLED themes
 - Follow/Unfollow communities
