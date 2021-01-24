@@ -430,6 +430,7 @@ class _ManageAccount extends HookWidget {
           ),
           child: const Text('DELETE ACCOUNT'),
         ),
+        const SafeArea(child: SizedBox.shrink()),
       ],
     );
   }

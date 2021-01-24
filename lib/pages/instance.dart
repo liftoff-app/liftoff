@@ -396,7 +396,7 @@ class _AboutTab extends HookWidget {
               title: const Center(child: Text('Modlog')),
               onTap: goToModLog,
             ),
-            const SizedBox(height: 20),
+            const SafeArea(child: SizedBox.shrink()),
           ],
         ),
       ),
