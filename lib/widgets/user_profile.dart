@@ -220,10 +220,10 @@ class _UserOverview extends HookWidget {
                       style: theme.textTheme.caption,
                     ),
                     InkWell(
-                      onTap: () =>
-                          goToInstance(context, userView.originInstanceHost),
+                      onTap: () => goToInstance(
+                          context, userView.user.originInstanceHost),
                       child: Text(
-                        userView.originInstanceHost,
+                        userView.user.originInstanceHost,
                         style: theme.textTheme.caption,
                       ),
                     )

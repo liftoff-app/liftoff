@@ -222,20 +222,7 @@ class CommentWidget extends HookWidget {
     }
 
     // decide which username to use
-    final username = () {
-      final name = () {
-        if (comment.creator.preferredUsername != null &&
-            comment.creator.preferredUsername != '') {
-          return comment.creator.preferredUsername;
-        } else {
-          return '@${comment.creator.name}';
-        }
-      }();
-
-      if (!comment.comment.local) return '$name@${comment.originInstanceHost}';
-
-      return name;
-    }();
+    final username = comment.creator.properName;
 
     final body = () {
       if (isDeleted.value) {

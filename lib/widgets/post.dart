@@ -173,12 +173,12 @@ class PostWidget extends HookWidget {
                               text: '@',
                               style: TextStyle(fontWeight: FontWeight.w300)),
                           TextSpan(
-                              text: post.originInstanceHost,
+                              text: post.post.originInstanceHost,
                               style:
                                   const TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => goToInstance(
-                                    context, post.originInstanceHost)),
+                                    context, post.post.originInstanceHost)),
                         ],
                       ),
                     )
@@ -195,8 +195,7 @@ class PostWidget extends HookWidget {
                                 text: 'by',
                                 style: TextStyle(fontWeight: FontWeight.w300)),
                             TextSpan(
-                              text:
-                                  ''' ${post.creator.preferredUsername ?? post.creator.name}''',
+                              text: ' ${post.creator.properName}',
                               style:
                                   const TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()

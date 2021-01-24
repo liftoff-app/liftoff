@@ -10,30 +10,41 @@ import '../cleanup_url.dart';
 
 // [.isLocal] is true iff `.originInstanceHost == .instanceHost`
 
-extension GetInstanceCommunityView on CommunityView {
-  String get originInstanceHost => _extract(community.actorId);
+extension GetInstanceCommunitySafe on CommunitySafe {
+  String get originInstanceHost => _extract(actorId);
   // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceUserView on UserViewSafe {
-  String get originInstanceHost => _extract(user.actorId);
+extension GetInstanceUserSafe on UserSafe {
+  String get originInstanceHost => _extract(actorId);
   // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceCommunityFollowerView on CommunityFollowerView {
-  String get originInstanceHost => _extract(community.actorId);
+extension GetInstancePostView on Post {
+  String get originInstanceHost => _extract(apId);
   // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstancePostView on PostView {
-  String get originInstanceHost => _extract(post.apId);
-  // bool get isLocal => originInstanceHost == instanceHost;
-}
-
-extension GetInstanceCommentView on CommentView {
-  String get originInstanceHost => _extract(comment.apId);
+extension GetInstanceCommentView on Comment {
+  String get originInstanceHost => _extract(apId);
   // bool get isLocal => originInstanceHost == instanceHost;
 }
 
 // TODO: change it to something more robust? regex?
 String _extract(String s) => cleanUpUrl(s.split('/')[2]);
+
+extension ProperName on UserSafe {
+  String get properName {
+    final name = () {
+      if (preferredUsername != null && preferredUsername != '') {
+        return preferredUsername;
+      } else {
+        return '@${this.name}';
+      }
+    }();
+
+    if (!local) return '$name@$originInstanceHost';
+
+    return name;
+  }
+}

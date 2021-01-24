@@ -310,11 +310,11 @@ class _CommunityOverview extends StatelessWidget {
                           text: '@',
                           style: TextStyle(fontWeight: FontWeight.w200)),
                       TextSpan(
-                        text: community.originInstanceHost,
+                        text: community.community.originInstanceHost,
                         style: const TextStyle(fontWeight: FontWeight.w600),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => goToInstance(
-                              context, community.originInstanceHost),
+                              context, community.community.originInstanceHost),
                       ),
                     ],
                   ),
