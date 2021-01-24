@@ -69,10 +69,10 @@ CreateComment(
         final res = await api.run(CreateComment(
           content: controller.text,
           postId: post?.post?.id ?? comment.post.id,
-          parentId: comment?.comment?.id,
+          parentId: comment?.recipient?.id,
           auth: token.raw,
         ));
-        Navigator.of(context).pop(res);
+        Navigator.of(context).pop(res.commentView);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         print(e);
