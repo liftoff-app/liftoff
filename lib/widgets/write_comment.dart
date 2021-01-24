@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
@@ -32,7 +32,7 @@ class WriteComment extends HookWidget {
 
     final preview = () {
       final body = MarkdownText(
-        comment?.content ?? post.body ?? '',
+        comment?.comment?.content ?? post.post.body ?? '',
         instanceHost: instanceHost,
       );
 
@@ -40,7 +40,7 @@ class WriteComment extends HookWidget {
         return Column(
           children: [
             Text(
-              post.name,
+              post.post.name,
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
@@ -53,17 +53,25 @@ class WriteComment extends HookWidget {
     }();
 
     handleSubmit() async {
-      final api = LemmyApi(instanceHost).v1;
+      final api = LemmyApiV2(instanceHost);
 
       final token = accStore.defaultTokenFor(instanceHost);
 
       delayed.start();
       try {
-        final res = await api.createComment(
-            content: controller.text,
-            postId: post?.id ?? comment.postId,
-            parentId: comment?.id,
-            auth: token.raw);
+        print('''
+CreateComment(
+  content: ${controller.text},
+  postId: ${post?.post?.id ?? comment.post.id},
+  parentId: ${comment?.comment?.id},
+  auth: ${token.raw},
+)''');
+        final res = await api.run(CreateComment(
+          content: controller.text,
+          postId: post?.post?.id ?? comment.post.id,
+          parentId: comment?.comment?.id,
+          auth: token.raw,
+        ));
         Navigator.of(context).pop(res);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {

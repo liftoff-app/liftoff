@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/infinite_scroll.dart';
 import '../hooks/memo_future.dart';
@@ -35,10 +35,11 @@ class HomeTab extends HookWidget {
     final instancesIcons = useMemoFuture(() async {
       final instances = accStore.instances.toList(growable: false);
       final sites = await Future.wait(instances
-          .map((e) => LemmyApi(e).v1.getSite().catchError((e) => null)));
+          .map((e) => LemmyApiV2(e).run(GetSite()).catchError((e) => null)));
 
       return {
-        for (var i = 0; i < sites.length; i++) instances[i]: sites[i].site.icon
+        for (var i = 0; i < sites.length; i++)
+          instances[i]: sites[i].siteView.site.icon
       };
     });
 
@@ -262,13 +263,13 @@ class InfiniteHomeList extends HookWidget {
       }();
 
       final futures =
-          instances.map((instanceHost) => LemmyApi(instanceHost).v1.getPosts(
+          instances.map((instanceHost) => LemmyApiV2(instanceHost).run(GetPosts(
                 type: listingType,
                 sort: sort,
                 page: page,
                 limit: limit,
                 auth: accStore.defaultTokenFor(instanceHost)?.raw,
-              ));
+              )));
       final posts = await Future.wait(futures);
       final newPosts = <PostView>[];
       final longest = posts.map((e) => e.length).reduce(max);
@@ -286,13 +287,13 @@ class InfiniteHomeList extends HookWidget {
 
     Future<List<PostView>> Function(int, int) fetcherFromInstance(
             String instanceHost, PostListingType listingType, SortType sort) =>
-        (page, batchSize) => LemmyApi(instanceHost).v1.getPosts(
+        (page, batchSize) => LemmyApiV2(instanceHost).run(GetPosts(
               type: listingType,
               sort: sort,
               page: page,
               limit: batchSize,
               auth: accStore.defaultTokenFor(instanceHost)?.raw,
-            );
+            ));
 
     return InfiniteScroll<PostView>(
       prepend: Column(
@@ -305,7 +306,7 @@ class InfiniteHomeList extends HookWidget {
       ),
       builder: (post) => Column(
         children: [
-          Post(post),
+          PostWidget(post),
           const SizedBox(height: 20),
         ],
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../comment_tree.dart';
 import '../hooks/stores.dart';
@@ -82,14 +82,14 @@ class _SearchResultsList extends HookWidget {
 
     return SortableInfiniteList(
       fetcher: (page, batchSize, sort) async {
-        final s = await LemmyApi(instanceHost).v1.search(
-              q: query,
-              sort: sort,
-              type: type,
-              auth: accStore.defaultTokenFor(instanceHost)?.raw,
-              page: page,
-              limit: batchSize,
-            );
+        final s = await LemmyApiV2(instanceHost).run(Search(
+          q: query,
+          sort: sort,
+          type: type,
+          auth: accStore.defaultTokenFor(instanceHost)?.raw,
+          page: page,
+          limit: batchSize,
+        ));
 
         switch (s.type) {
           case SearchType.comments:
@@ -107,7 +107,7 @@ class _SearchResultsList extends HookWidget {
       builder: (data) {
         switch (type) {
           case SearchType.comments:
-            return Comment(
+            return CommentWidget(
               CommentTree(data as CommentView),
               postCreatorId: null,
             );
@@ -116,10 +116,10 @@ class _SearchResultsList extends HookWidget {
           case SearchType.posts:
             return Padding(
               padding: const EdgeInsets.only(bottom: 20),
-              child: Post(data as PostView),
+              child: PostWidget(data as PostView),
             );
           case SearchType.users:
-            return UsersListItem(user: data as UserView);
+            return UsersListItem(user: data as UserViewSafe);
           default:
             throw UnimplementedError();
         }

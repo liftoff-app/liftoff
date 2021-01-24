@@ -1,7 +1,7 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../widgets/user_profile.dart';
 
@@ -9,20 +9,20 @@ import '../widgets/user_profile.dart';
 class UserPage extends HookWidget {
   final int userId;
   final String instanceHost;
-  final Future<UserDetails> _userDetails;
+  final Future<FullUserView> _userDetails;
 
   UserPage({@required this.userId, @required this.instanceHost})
       : assert(userId != null),
         assert(instanceHost != null),
-        _userDetails = LemmyApi(instanceHost).v1.getUserDetails(
-            userId: userId, savedOnly: true, sort: SortType.active);
+        _userDetails = LemmyApiV2(instanceHost).run(GetUserDetails(
+            userId: userId, savedOnly: true, sort: SortType.active));
 
   UserPage.fromName({@required this.instanceHost, @required String username})
       : assert(instanceHost != null),
         assert(username != null),
         userId = null,
-        _userDetails = LemmyApi(instanceHost).v1.getUserDetails(
-            username: username, savedOnly: true, sort: SortType.active);
+        _userDetails = LemmyApiV2(instanceHost).run(GetUserDetails(
+            username: username, savedOnly: true, sort: SortType.active));
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class UserPage extends HookWidget {
             IconButton(
               icon: const Icon(Icons.share),
               onPressed: () => Share.text('Share user',
-                  userDetailsSnap.data.user.actorId, 'text/plain'),
+                  userDetailsSnap.data.userView.user.actorId, 'text/plain'),
             )
           ]
         ],

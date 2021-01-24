@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
@@ -47,12 +47,13 @@ MediaType whatType(String url) {
 }
 
 /// A post overview card
-class Post extends HookWidget {
+class PostWidget extends HookWidget {
   final PostView post;
   final String instanceHost;
   final bool fullPost;
 
-  Post(this.post, {this.fullPost = false}) : instanceHost = post.instanceHost;
+  PostWidget(this.post, {this.fullPost = false})
+      : instanceHost = post.instanceHost;
 
   // == ACTIONS ==
 
@@ -66,8 +67,8 @@ class Post extends HookWidget {
             ListTile(
               leading: const Icon(Icons.open_in_browser),
               title: const Text('Open in browser'),
-              onTap: () async => await ul.canLaunch(post.apId)
-                  ? ul.launch(post.apId)
+              onTap: () async => await ul.canLaunch(post.post.apId)
+                  ? ul.launch(post.post.apId)
                   : Scaffold.of(context).showSnackBar(
                       const SnackBar(content: Text("can't open in browser"))),
             ),
@@ -76,19 +77,16 @@ class Post extends HookWidget {
               title: const Text('Nerd stuff'),
               onTap: () {
                 showInfoTablePopup(context, {
-                  'id': post.id,
-                  'apId': post.apId,
-                  'upvotes': post.upvotes,
-                  'downvotes': post.downvotes,
-                  'score': post.score,
+                  'id': post.post.id,
+                  'apId': post.post.apId,
+                  'upvotes': post.counts.upvotes,
+                  'downvotes': post.counts.downvotes,
+                  'score': post.counts.score,
                   '% of upvotes':
-                      '''${(100 * (post.upvotes / (post.upvotes + post.downvotes))).toInt()}%''',
-                  'hotRank': post.hotRank,
-                  'hotRank active': post.hotRankActive,
-                  'local': post.local,
-                  'published': post.published,
-                  'updated': post.updated ?? 'never',
-                  'newestActivityTime': post.newestActivityTime,
+                      '''${(100 * (post.counts.upvotes / (post.counts.upvotes + post.counts.downvotes))).toInt()}%''',
+                  'local': post.post.local,
+                  'published': post.post.published,
+                  'updated': post.post.updated ?? 'never',
                 });
               },
             ),
@@ -104,12 +102,12 @@ class Post extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     void _openLink() => linkLauncher(
-        context: context, url: post.url, instanceHost: instanceHost);
+        context: context, url: post.post.url, instanceHost: instanceHost);
 
     final urlDomain = () {
-      if (whatType(post.url) == MediaType.none) return null;
+      if (whatType(post.post.url) == MediaType.none) return null;
 
-      final url = post.url.split('/')[2];
+      final url = post.post.url.split('/')[2]; // TODO: change to Url(str).host
       if (url.startsWith('www.')) return url.substring(4);
       return url;
     }();
@@ -122,12 +120,12 @@ class Post extends HookWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (post.communityIcon != null)
+                  if (post.community.icon != null)
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: InkWell(
                         onTap: () => goToCommunity.byId(
-                            context, instanceHost, post.communityId),
+                            context, instanceHost, post.community.id),
                         child: SizedBox(
                           height: 40,
                           width: 40,
@@ -141,7 +139,7 @@ class Post extends HookWidget {
                                 ),
                               ),
                             ),
-                            imageUrl: post.communityIcon,
+                            imageUrl: post.community.icon,
                             errorWidget: (context, url, error) =>
                                 Text(error.toString()),
                           ),
@@ -165,12 +163,12 @@ class Post extends HookWidget {
                               text: '!',
                               style: TextStyle(fontWeight: FontWeight.w300)),
                           TextSpan(
-                              text: post.communityName,
+                              text: post.community.name,
                               style:
                                   const TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => goToCommunity.byId(
-                                    context, instanceHost, post.communityId)),
+                                    context, instanceHost, post.community.id)),
                           const TextSpan(
                               text: '@',
                               style: TextStyle(fontWeight: FontWeight.w300)),
@@ -198,28 +196,32 @@ class Post extends HookWidget {
                                 style: TextStyle(fontWeight: FontWeight.w300)),
                             TextSpan(
                               text:
-                                  ''' ${post.creatorPreferredUsername ?? post.creatorName}''',
+                                  ''' ${post.creator.preferredUsername ?? post.creator.name}''',
                               style:
                                   const TextStyle(fontWeight: FontWeight.w600),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => goToUser.byId(
-                                    context, post.instanceHost, post.creatorId),
+                                      context,
+                                      post.instanceHost,
+                                      post.creator.id,
+                                    ),
                             ),
                             TextSpan(
                                 text:
-                                    ''' · ${timeago.format(post.published, locale: 'en_short')}'''),
-                            if (post.locked) const TextSpan(text: ' · 🔒'),
-                            if (post.stickied) const TextSpan(text: ' · 📌'),
-                            if (post.nsfw) const TextSpan(text: ' · '),
-                            if (post.nsfw)
+                                    ''' · ${timeago.format(post.post.published, locale: 'en_short')}'''),
+                            if (post.post.locked) const TextSpan(text: ' · 🔒'),
+                            if (post.post.stickied)
+                              const TextSpan(text: ' · 📌'),
+                            if (post.post.nsfw) const TextSpan(text: ' · '),
+                            if (post.post.nsfw)
                               const TextSpan(
                                   text: 'NSFW',
                                   style: TextStyle(color: Colors.red)),
                             if (urlDomain != null)
                               TextSpan(text: ' · $urlDomain'),
-                            if (post.removed)
+                            if (post.post.removed)
                               const TextSpan(text: ' · REMOVED'),
-                            if (post.deleted)
+                            if (post.post.deleted)
                               const TextSpan(text: ' · DELETED'),
                           ],
                         ))
@@ -250,15 +252,15 @@ class Post extends HookWidget {
               Expanded(
                 flex: 100,
                 child: Text(
-                  post.name,
+                  post.post.name,
                   textAlign: TextAlign.left,
                   softWrap: true,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
-              if (whatType(post.url) == MediaType.other &&
-                  post.thumbnailUrl != null) ...[
+              if (whatType(post.post.url) == MediaType.other &&
+                  post.post.thumbnailUrl != null) ...[
                 const Spacer(),
                 InkWell(
                   onTap: _openLink,
@@ -266,7 +268,7 @@ class Post extends HookWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: CachedNetworkImage(
-                        imageUrl: post.thumbnailUrl,
+                        imageUrl: post.post.thumbnailUrl,
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
@@ -291,7 +293,7 @@ class Post extends HookWidget {
 
     /// assemble link preview
     Widget linkPreview() {
-      assert(post.url != null);
+      assert(post.post.url != null);
 
       return Padding(
         padding: const EdgeInsets.all(10),
@@ -315,14 +317,14 @@ class Post extends HookWidget {
                   ]),
                   Row(children: [
                     Flexible(
-                        child: Text(post.embedTitle ?? '',
+                        child: Text(post.post.embedTitle ?? '',
                             style: theme.textTheme.subtitle1
                                 .apply(fontWeightDelta: 2)))
                   ]),
-                  if (post.embedDescription != null &&
-                      post.embedDescription.isNotEmpty)
+                  if (post.post.embedDescription != null &&
+                      post.post.embedDescription.isNotEmpty)
                     Row(children: [
-                      Flexible(child: Text(post.embedDescription))
+                      Flexible(child: Text(post.post.embedDescription))
                     ]),
                 ],
               ),
@@ -334,12 +336,12 @@ class Post extends HookWidget {
 
     /// assemble image
     Widget postImage() {
-      assert(post.url != null);
+      assert(post.post.url != null);
 
       return FullscreenableImage(
-        url: post.url,
+        url: post.post.url,
         child: CachedNetworkImage(
-          imageUrl: post.url,
+          imageUrl: post.post.url,
           errorWidget: (_, __, ___) => const Icon(Icons.warning),
           progressIndicatorBuilder: (context, url, progress) =>
               CircularProgressIndicator(value: progress.progress),
@@ -356,7 +358,8 @@ class Post extends HookWidget {
               Expanded(
                 flex: 999,
                 child: Text(
-                  '''  ${NumberFormat.compact().format(post.numberOfComments)} comment${post.numberOfComments == 1 ? '' : 's'}''',
+                  '  ${NumberFormat.compact().format(post.counts.comments)}'
+                  ' comment${post.counts.comments == 1 ? '' : 's'}',
                   overflow: TextOverflow.fade,
                   softWrap: false,
                 ),
@@ -365,7 +368,9 @@ class Post extends HookWidget {
               if (!fullPost)
                 IconButton(
                     icon: const Icon(Icons.share),
-                    onPressed: () => Share.text('Share post url', post.apId,
+                    onPressed: () => Share.text(
+                        'Share post url',
+                        post.post.apId,
                         'text/plain')), // TODO: find a way to mark it as url
               if (!fullPost) SavePostButton(post),
               _Voting(post),
@@ -387,16 +392,17 @@ class Post extends HookWidget {
           children: [
             info(),
             title(),
-            if (whatType(post.url) != MediaType.other &&
-                whatType(post.url) != MediaType.none)
+            if (whatType(post.post.url) != MediaType.other &&
+                whatType(post.post.url) != MediaType.none)
               postImage()
-            else if (post.url != null && post.url.isNotEmpty)
+            else if (post.post.url != null && post.post.url.isNotEmpty)
               linkPreview(),
-            if (post.body != null)
+            if (post.post.body != null)
               // TODO: trim content
               Padding(
                   padding: const EdgeInsets.all(10),
-                  child: MarkdownText(post.body, instanceHost: instanceHost)),
+                  child:
+                      MarkdownText(post.post.body, instanceHost: instanceHost)),
             actions(),
           ],
         ),
@@ -421,12 +427,12 @@ class _Voting extends HookWidget {
     final loggedInAction = useLoggedInAction(post.instanceHost);
 
     vote(VoteType vote, Jwt token) async {
-      final api = LemmyApi(post.instanceHost).v1;
+      final api = LemmyApiV2(post.instanceHost);
 
       loading.start();
       try {
-        final res = await api.createPostLike(
-            postId: post.id, score: vote, auth: token.raw);
+        final res = await api.run(
+            CreatePostLike(postId: post.post.id, score: vote, auth: token.raw));
         myVote.value = res.myVote;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
@@ -455,7 +461,7 @@ class _Voting extends HookWidget {
               width: 20, height: 20, child: CircularProgressIndicator())
         else
           Text(NumberFormat.compact()
-              .format(post.score + (wasVoted ? 0 : myVote.value.value))),
+              .format(post.counts.score + (wasVoted ? 0 : myVote.value.value))),
         IconButton(
             icon: Icon(
               Icons.arrow_downward,

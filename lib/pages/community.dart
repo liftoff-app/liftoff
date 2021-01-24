@@ -3,7 +3,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
@@ -45,8 +45,8 @@ class CommunityPage extends HookWidget {
         _community = null;
   CommunityPage.fromCommunityView(this._community)
       : instanceHost = _community.instanceHost,
-        communityId = _community.id,
-        communityName = _community.name;
+        communityId = _community.community.id,
+        communityName = _community.community.name;
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +57,15 @@ class CommunityPage extends HookWidget {
       final token = accountsStore.defaultTokenFor(instanceHost);
 
       if (communityId != null) {
-        return LemmyApi(instanceHost).v1.getCommunity(
-              id: communityId,
-              auth: token?.raw,
-            );
+        return LemmyApiV2(instanceHost).run(GetCommunity(
+          id: communityId,
+          auth: token?.raw,
+        ));
       } else {
-        return LemmyApi(instanceHost).v1.getCommunity(
-              name: communityName,
-              auth: token?.raw,
-            );
+        return LemmyApiV2(instanceHost).run(GetCommunity(
+          name: communityName,
+          auth: token?.raw,
+        ));
       }
     });
 
@@ -73,7 +73,7 @@ class CommunityPage extends HookWidget {
 
     final community = () {
       if (fullCommunitySnap.hasData) {
-        return fullCommunitySnap.data.community;
+        return fullCommunitySnap.data.communityView;
       } else if (_community != null) {
         return _community;
       } else {
@@ -111,7 +111,7 @@ class CommunityPage extends HookWidget {
 
     // FUNCTIONS
     void _share() =>
-        Share.text('Share instance', community.actorId, 'text/plain');
+        Share.text('Share instance', community.community.actorId, 'text/plain');
 
     void _openMoreMenu() {
       showModalBottomSheet(
@@ -123,8 +123,9 @@ class CommunityPage extends HookWidget {
               ListTile(
                 leading: const Icon(Icons.open_in_browser),
                 title: const Text('Open in browser'),
-                onTap: () async => await ul.canLaunch(community.actorId)
-                    ? ul.launch(community.actorId)
+                onTap: () async => await ul
+                        .canLaunch(community.community.actorId)
+                    ? ul.launch(community.community.actorId)
                     : Scaffold.of(context).showSnackBar(
                         const SnackBar(content: Text("can't open in browser"))),
               ),
@@ -133,11 +134,10 @@ class CommunityPage extends HookWidget {
                 title: const Text('Nerd stuff'),
                 onTap: () {
                   showInfoTablePopup(context, {
-                    'id': community.id,
-                    'actorId': community.actorId,
-                    'created by': '@${community.creatorName}',
-                    'hot rank': community.hotRank,
-                    'published': community.published,
+                    'id': community.community.id,
+                    'actorId': community.community.actorId,
+                    'created by': '@${community.creator.name}',
+                    'published': community.community.published,
                   });
                 },
               ),
@@ -160,7 +160,7 @@ class CommunityPage extends HookWidget {
               backgroundColor: theme.cardColor,
               brightness: theme.brightness,
               iconTheme: theme.iconTheme,
-              title: Text('!${community.name}',
+              title: Text('!${community.community.name}',
                   style: TextStyle(color: colorOnCard)),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: _share),
@@ -190,26 +190,26 @@ class CommunityPage extends HookWidget {
             children: [
               InfinitePostList(
                 fetcher: (page, batchSize, sort) =>
-                    LemmyApi(community.instanceHost).v1.getPosts(
-                          type: PostListingType.community,
-                          sort: sort,
-                          communityId: community.id,
-                          page: page,
-                          limit: batchSize,
-                        ),
+                    LemmyApiV2(community.instanceHost).run(GetPosts(
+                  type: PostListingType.community,
+                  sort: sort,
+                  communityId: community.community.id,
+                  page: page,
+                  limit: batchSize,
+                )),
               ),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sortType) =>
-                      LemmyApi(community.instanceHost).v1.getComments(
-                            communityId: community.id,
-                            auth: accountsStore
-                                .defaultTokenFor(community.instanceHost)
-                                ?.raw,
-                            type: CommentListingType.community,
-                            sort: sortType,
-                            limit: batchSize,
-                            page: page,
-                          )),
+                      LemmyApiV2(community.instanceHost).run(GetComments(
+                        communityId: community.community.id,
+                        auth: accountsStore
+                            .defaultTokenFor(community.instanceHost)
+                            ?.raw,
+                        type: CommentListingType.community,
+                        sort: sortType,
+                        limit: batchSize,
+                        page: page,
+                      ))),
               _AboutTab(
                 community: community,
                 moderators: fullCommunitySnap.data?.moderators,
@@ -237,7 +237,7 @@ class _CommunityOverview extends StatelessWidget {
     final theme = Theme.of(context);
     final shadow = BoxShadow(color: theme.canvasColor, blurRadius: 5);
 
-    final icon = community.icon != null
+    final icon = community.community.icon != null
         ? Stack(
             alignment: Alignment.center,
             children: [
@@ -256,9 +256,9 @@ class _CommunityOverview extends StatelessWidget {
                 width: 83,
                 height: 83,
                 child: FullscreenableImage(
-                  url: community.icon,
+                  url: community.community.icon,
                   child: CachedNetworkImage(
-                    imageUrl: community.icon,
+                    imageUrl: community.community.icon,
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -277,11 +277,11 @@ class _CommunityOverview extends StatelessWidget {
         : null;
 
     return Stack(children: [
-      if (community.banner != null)
+      if (community.community.banner != null)
         FullscreenableImage(
-          url: community.banner,
+          url: community.community.banner,
           child: CachedNetworkImage(
-            imageUrl: community.banner,
+            imageUrl: community.community.banner,
             errorWidget: (_, __, ___) => const SizedBox.shrink(),
           ),
         ),
@@ -289,7 +289,7 @@ class _CommunityOverview extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 45),
           child: Column(children: [
-            if (community.icon != null) icon,
+            if (community.community.icon != null) icon,
             // NAME
             Center(
               child: Padding(
@@ -304,7 +304,7 @@ class _CommunityOverview extends StatelessWidget {
                           text: '!',
                           style: TextStyle(fontWeight: FontWeight.w200)),
                       TextSpan(
-                          text: community.name,
+                          text: community.community.name,
                           style: const TextStyle(fontWeight: FontWeight.w600)),
                       const TextSpan(
                           text: '@',
@@ -326,7 +326,7 @@ class _CommunityOverview extends StatelessWidget {
                 child: Padding(
               padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
               child: Text(
-                community.title,
+                community.community.title,
                 textAlign: TextAlign.center,
                 style:
                     TextStyle(fontWeight: FontWeight.w300, shadows: [shadow]),
@@ -346,7 +346,7 @@ class _CommunityOverview extends StatelessWidget {
                           padding: EdgeInsets.only(right: 3),
                           child: Icon(Icons.people, size: 20),
                         ),
-                        Text(compactNumber(community.numberOfSubscribers)),
+                        Text(compactNumber(community.counts.subscribers)),
                         const Spacer(
                           flex: 4,
                         ),
@@ -416,10 +416,10 @@ class _AboutTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.only(top: 20),
       children: [
-        if (community.description != null) ...[
+        if (community.community.description != null) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: MarkdownText(community.description,
+            child: MarkdownText(community.community.description,
                 instanceHost: community.instanceHost),
           ),
           const _Divider(),
@@ -435,13 +435,13 @@ class _AboutTab extends StatelessWidget {
                 child: _Badge('X users online'),
               ),
               _Badge(
-                  '''${community.numberOfSubscribers} subscriber${pluralS(community.numberOfSubscribers)}'''),
+                  '''${community.counts.subscribers} subscriber${pluralS(community.counts.subscribers)}'''),
               _Badge(
-                  '''${community.numberOfPosts} post${pluralS(community.numberOfPosts)}'''),
+                  '''${community.counts.posts} post${pluralS(community.counts.posts)}'''),
               Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: _Badge(
-                    '''${community.numberOfComments} comment${pluralS(community.numberOfComments)}'''),
+                    '''${community.counts.comments} comment${pluralS(community.counts.comments)}'''),
               ),
             ],
           ),
@@ -454,7 +454,7 @@ class _AboutTab extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             onPressed: goToCategories,
-            child: Text(community.categoryName),
+            child: Text(community.category.name),
           ),
         ),
         const _Divider(),
@@ -475,9 +475,12 @@ class _AboutTab extends StatelessWidget {
             child: Text('Mods:', style: theme.textTheme.subtitle2),
           ),
           for (final mod in moderators)
+            // TODO: add user picture, maybe make it into reusable component
             ListTile(
-              title: Text(mod.userPreferredUsername ?? '@${mod.userName}'),
-              onTap: () => goToUser.byId(context, mod.instanceHost, mod.userId),
+              title: Text(
+                  mod.moderator.preferredUsername ?? '@${mod.moderator.name}'),
+              onTap: () =>
+                  goToUser.byId(context, mod.instanceHost, mod.moderator.id),
             ),
         ]
       ],
@@ -536,10 +539,10 @@ class _FollowButton extends HookWidget {
     subscribe(Jwt token) async {
       delayed.start();
       try {
-        await LemmyApi(community.instanceHost).v1.followCommunity(
-            communityId: community.id,
+        await LemmyApiV2(community.instanceHost).run(FollowCommunity(
+            communityId: community.community.id,
             follow: !isSubbed.value,
-            auth: token.raw);
+            auth: token.raw));
         isSubbed.value = !isSubbed.value;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {

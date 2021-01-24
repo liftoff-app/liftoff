@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../comment_tree.dart';
 import 'bottom_modal.dart';
@@ -29,7 +29,7 @@ class CommentSection extends HookWidget {
   })  : comments =
             CommentTree.sortList(sortType, CommentTree.fromList(rawComments)),
         rawComments = rawComments
-          ..sort((b, a) => a.published.compareTo(b.published)),
+          ..sort((b, a) => a.comment.published.compareTo(b.comment.published)),
         assert(postCreatorId != null);
 
   @override
@@ -99,12 +99,13 @@ class CommentSection extends HookWidget {
         )
       else if (sorting.value == CommentSortType.chat)
         for (final com in rawComments)
-          Comment(
+          CommentWidget(
             CommentTree(com),
             postCreatorId: postCreatorId,
           )
       else
-        for (final com in comments) Comment(com, postCreatorId: postCreatorId),
+        for (final com in comments)
+          CommentWidget(com, postCreatorId: postCreatorId),
       const SizedBox(height: 50),
     ]);
   }

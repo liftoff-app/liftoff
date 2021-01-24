@@ -1,6 +1,6 @@
 import 'dart:math' show log, max, pow, ln10;
 
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 /// Calculates hot rank
 /// because API always claims it's `0`
@@ -17,5 +17,6 @@ double _calculateHotRank(int score, DateTime time) {
 }
 
 extension CommentHotRank on CommentView {
-  double get computedHotRank => _calculateHotRank(score, published);
+  double get computedHotRank =>
+      _calculateHotRank(counts.score, comment.published);
 }

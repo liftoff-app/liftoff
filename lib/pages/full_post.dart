@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/logged_in_action.dart';
 import '../hooks/refreshable.dart';
@@ -25,15 +25,17 @@ class FullPostPage extends HookWidget {
         assert(instanceHost != null),
         post = null;
   FullPostPage.fromPostView(this.post)
-      : id = post.id,
+      : id = post.post.id,
         instanceHost = post.instanceHost;
 
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
-    final fullPostRefreshable = useRefreshable(() => LemmyApi(instanceHost)
-        .v1
-        .getPost(id: id, auth: accStore.defaultTokenFor(instanceHost)?.raw));
+    final fullPostRefreshable =
+        useRefreshable(() => LemmyApiV2(instanceHost).run(GetPost(
+              id: id,
+              auth: accStore.defaultTokenFor(instanceHost)?.raw,
+            )));
     final loggedInAction = useLoggedInAction(instanceHost);
     final newComments = useState(const <CommentView>[]);
 
@@ -58,7 +60,7 @@ class FullPostPage extends HookWidget {
     // VARIABLES
 
     final post = fullPostRefreshable.snapshot.hasData
-        ? fullPostRefreshable.snapshot.data.post
+        ? fullPostRefreshable.snapshot.data.postView
         : this.post;
 
     final fullPost = fullPostRefreshable.snapshot.data;
@@ -78,7 +80,7 @@ class FullPostPage extends HookWidget {
       }
     }
 
-    sharePost() => Share.text('Share post', post.apId, 'text/plain');
+    sharePost() => Share.text('Share post', post.post.apId, 'text/plain');
 
     comment() async {
       final newComment = await showCupertinoModalPopup<CommentView>(
@@ -98,7 +100,7 @@ class FullPostPage extends HookWidget {
             SavePostButton(post),
             IconButton(
                 icon: Icon(moreIcon),
-                onPressed: () => Post.showMoreMenu(context, post)),
+                onPressed: () => PostWidget.showMoreMenu(context, post)),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -109,11 +111,11 @@ class FullPostPage extends HookWidget {
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
-              Post(post, fullPost: true),
+              PostWidget(post, fullPost: true),
               if (fullPostRefreshable.snapshot.hasData)
                 CommentSection(
                     newComments.value.followedBy(fullPost.comments).toList(),
-                    postCreatorId: fullPost.post.creatorId)
+                    postCreatorId: fullPost.postView.creator.id)
               else if (fullPostRefreshable.snapshot.hasError)
                 Padding(
                   padding:

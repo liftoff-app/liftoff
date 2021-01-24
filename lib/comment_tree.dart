@@ -1,4 +1,4 @@
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import 'util/hot_rank.dart';
 
@@ -25,13 +25,16 @@ extension on CommentSortType {
             a.comment.computedHotRank.compareTo(b.comment.computedHotRank);
 
       case CommentSortType.new_:
-        return (b, a) => a.comment.published.compareTo(b.comment.published);
+        return (b, a) =>
+            a.comment.comment.published.compareTo(b.comment.comment.published);
 
       case CommentSortType.old:
-        return (b, a) => b.comment.published.compareTo(a.comment.published);
+        return (b, a) =>
+            b.comment.comment.published.compareTo(a.comment.comment.published);
 
       case CommentSortType.top:
-        return (b, a) => a.comment.score.compareTo(b.comment.score);
+        return (b, a) =>
+            a.comment.counts.score.compareTo(b.comment.counts.score);
     }
 
     throw Exception('unreachable');
@@ -50,15 +53,16 @@ class CommentTree {
   static List<CommentTree> fromList(List<CommentView> comments) {
     CommentTree gatherChildren(CommentTree parent) {
       for (final el in comments) {
-        if (el.parentId == parent.comment.id) {
+        if (el.comment.parentId == parent.comment.comment.id) {
           parent.children.add(gatherChildren(CommentTree(el)));
         }
       }
       return parent;
     }
 
-    final topLevelParents =
-        comments.where((e) => e.parentId == null).map((e) => CommentTree(e));
+    final topLevelParents = comments
+        .where((e) => e.comment.parentId == null)
+        .map((e) => CommentTree(e));
 
     final result = topLevelParents.map(gatherChildren).toList();
     return result;

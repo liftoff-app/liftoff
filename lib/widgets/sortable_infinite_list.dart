@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
@@ -57,7 +57,7 @@ class InfinitePostList extends StatelessWidget {
         onStyleChange: () {},
         builder: (post) => Column(
           children: [
-            Post(post),
+            PostWidget(post),
             const SizedBox(height: 20),
           ],
         ),
@@ -72,7 +72,7 @@ class InfiniteCommentList extends StatelessWidget {
   const InfiniteCommentList({@required this.fetcher}) : assert(fetcher != null);
 
   Widget build(BuildContext context) => SortableInfiniteList<CommentView>(
-        builder: (comment) => Comment(
+        builder: (comment) => CommentWidget(
           CommentTree(comment),
           postCreatorId: null,
           detached: true,
