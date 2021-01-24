@@ -4,13 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../comment_tree.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
+import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
@@ -21,7 +22,7 @@ import 'markdown_text.dart';
 import 'write_comment.dart';
 
 /// A single comment that renders its replies
-class Comment extends HookWidget {
+class CommentWidget extends HookWidget {
   final int indent;
   final int postCreatorId;
   final CommentTree commentTree;
@@ -37,7 +38,7 @@ class Comment extends HookWidget {
     Colors.indigo,
   ];
 
-  Comment(
+  CommentWidget(
     this.commentTree, {
     this.indent = 0,
     @required this.postCreatorId,
@@ -48,48 +49,58 @@ class Comment extends HookWidget {
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
     showInfoTablePopup(context, {
-      'id': com.id,
-      'creatorId': com.creatorId,
-      'postId': com.postId,
-      'postName': com.postName,
-      'parentId': com.parentId,
-      'removed': com.removed,
-      'read': com.read,
-      'published': com.published,
-      'updated': com.updated,
-      'deleted': com.deleted,
-      'apId': com.apId,
-      'local': com.local,
-      'communityId': com.communityId,
-      'communityActorId': com.communityActorId,
-      'communityLocal': com.communityLocal,
-      'communityName': com.communityName,
-      'communityIcon': com.communityIcon,
-      'banned': com.banned,
-      'bannedFromCommunity': com.bannedFromCommunity,
-      'creatorActirId': com.creatorActorId,
-      'userId': com.userId,
-      'upvotes': com.upvotes,
-      'downvotes': com.downvotes,
-      'score': com.score,
-      '% of upvotes': '${100 * (com.upvotes / (com.upvotes + com.downvotes))}%',
-      'hotRank': com.hotRank,
-      'hotRankActive': com.hotRankActive,
+      'id': com.comment.id,
+      'creatorId': com.comment.creatorId,
+      'postId': com.comment.postId,
+      'postName': com.post.name,
+      'parentId': com.comment.parentId,
+      'removed': com.comment.removed,
+      'read': com.comment.read,
+      'published': com.comment.published,
+      'updated': com.comment.updated,
+      'deleted': com.comment.deleted,
+      'apId': com.comment.apId,
+      'local': com.comment.local,
+      'communityId': com.community.id,
+      'communityActorId': com.community.actorId,
+      'communityLocal': com.community.local,
+      'communityName': com.community.name,
+      'communityIcon': com.community.icon,
+      'banned': com.creator.banned,
+      'bannedFromCommunity': com.creatorBannedFromCommunity,
+      'creatorActirId': com.creator.actorId,
+      'userId': com.creator.id,
+      'upvotes': com.counts.upvotes,
+      'downvotes': com.counts.downvotes,
+      'score': com.counts.score,
+      '% of upvotes':
+          '${100 * (com.counts.upvotes / (com.counts.upvotes + com.counts.downvotes))}%',
     });
   }
 
-  bool get isOP => commentTree.comment.creatorId == postCreatorId;
-  bool get isMine =>
-      commentTree.comment.creatorId == commentTree.comment.userId;
+  bool get isOP =>
+      commentTree.comment.comment.creatorId ==
+      commentTree.comment.post.creatorId;
+
+  // bool get isMine => commentTree.comment.comment.creatorId == ;
+
+  // commentTree.comment.comment.creatorId == commentTree.comment.
+  // commentTree.comment.userId; // FIXME: WHAT SHOULD REPLACE USER ID????
 
   @override
   Widget build(BuildContext context) {
+    print(commentTree.comment.comment.id);
     final theme = Theme.of(context);
+
+    final accStore = useAccountsStore();
+
+    final isMine = commentTree.comment.comment.creatorId ==
+        accStore.defaultTokenFor(commentTree.comment.instanceHost).payload.id;
     final selectable = useState(false);
     final showRaw = useState(false);
     final collapsed = useState(false);
     final myVote = useState(commentTree.comment.myVote ?? VoteType.none);
-    final isDeleted = useState(commentTree.comment.deleted);
+    final isDeleted = useState(commentTree.comment.comment.deleted);
     final delayedVoting = useDelayedLoading();
     final delayedDeletion = useDelayedLoading();
     final loggedInAction = useLoggedInAction(commentTree.comment.instanceHost);
@@ -98,14 +109,17 @@ class Comment extends HookWidget {
     final comment = commentTree.comment;
 
     handleDelete(Jwt token) async {
-      final api = LemmyApi(token.payload.iss).v1;
+      final api = LemmyApiV2(token.payload.iss);
 
       delayedDeletion.start();
       Navigator.of(context).pop();
       try {
-        final res = await api.deleteComment(
-            editId: comment.id, deleted: !isDeleted.value, auth: token.raw);
-        isDeleted.value = res.deleted;
+        final res = await api.run(DeleteComment(
+          commentId: comment.comment.id,
+          deleted: !isDeleted.value,
+          auth: token.raw,
+        ));
+        isDeleted.value = res.commentView.comment.deleted;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context).showSnackBar(
@@ -128,22 +142,22 @@ class Comment extends HookWidget {
               ListTile(
                 leading: const Icon(Icons.open_in_browser),
                 title: const Text('Open in browser'),
-                onTap: () async => await ul.canLaunch(com.apId)
-                    ? ul.launch(com.apId)
+                onTap: () async => await ul.canLaunch(com.comment.apId)
+                    ? ul.launch(com.comment.apId)
                     : Scaffold.of(context).showSnackBar(
                         const SnackBar(content: Text("can't open in browser"))),
               ),
               ListTile(
                 leading: const Icon(Icons.share),
                 title: const Text('Share url'),
-                onTap: () =>
-                    Share.text('Share comment url', com.apId, 'text/plain'),
+                onTap: () => Share.text(
+                    'Share comment url', com.comment.apId, 'text/plain'),
               ),
               ListTile(
                 leading: const Icon(Icons.share),
                 title: const Text('Share text'),
-                onTap: () =>
-                    Share.text('Share comment text', com.content, 'text/plain'),
+                onTap: () => Share.text(
+                    'Share comment text', com.comment.content, 'text/plain'),
               ),
               ListTile(
                 leading: Icon(
@@ -191,13 +205,13 @@ class Comment extends HookWidget {
     }
 
     vote(VoteType vote, Jwt token) async {
-      final api = LemmyApi(token.payload.iss).v1;
+      final api = LemmyApiV2(token.payload.iss);
 
       delayedVoting.start();
       try {
-        final res = await api.createCommentLike(
-            commentId: comment.id, score: vote, auth: token.raw);
-        myVote.value = res.myVote;
+        final res = await api.run(CreateCommentLike(
+            commentId: comment.comment.id, score: vote, auth: token.raw));
+        myVote.value = res.commentView.myVote;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
@@ -210,15 +224,15 @@ class Comment extends HookWidget {
     // decide which username to use
     final username = () {
       final name = () {
-        if (comment.creatorPreferredUsername != null &&
-            comment.creatorPreferredUsername != '') {
-          return comment.creatorPreferredUsername;
+        if (comment.creator.preferredUsername != null &&
+            comment.creator.preferredUsername != '') {
+          return comment.creator.preferredUsername;
         } else {
-          return '@${comment.creatorName}';
+          return '@${comment.creator.name}';
         }
       }();
 
-      if (!comment.isLocal) return '$name@${comment.originInstanceHost}';
+      if (!comment.comment.local) return '$name@${comment.originInstanceHost}';
 
       return name;
     }();
@@ -231,7 +245,7 @@ class Comment extends HookWidget {
             style: TextStyle(fontStyle: FontStyle.italic),
           ),
         );
-      } else if (comment.removed) {
+      } else if (comment.comment.removed) {
         return const Flexible(
           child: Text(
             'comment deleted by moderator',
@@ -243,7 +257,7 @@ class Comment extends HookWidget {
           child: Opacity(
             opacity: 0.3,
             child: Text(
-              commentTree.comment.content,
+              commentTree.comment.comment.content,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -256,10 +270,10 @@ class Comment extends HookWidget {
         return Flexible(
             child: showRaw.value
                 ? selectable.value
-                    ? SelectableText(commentTree.comment.content)
-                    : Text(commentTree.comment.content)
+                    ? SelectableText(commentTree.comment.comment.content)
+                    : Text(commentTree.comment.comment.content)
                 : MarkdownText(
-                    commentTree.comment.content,
+                    commentTree.comment.comment.content,
                     instanceHost: commentTree.comment.instanceHost,
                     selectable: selectable.value,
                   ));
@@ -269,13 +283,15 @@ class Comment extends HookWidget {
     final actions = collapsed.value
         ? const SizedBox.shrink()
         : Row(children: [
-            if (selectable.value && !isDeleted.value && !comment.removed)
+            if (selectable.value &&
+                !isDeleted.value &&
+                !comment.comment.removed)
               _CommentAction(
                   icon: Icons.content_copy,
                   tooltip: 'copy',
                   onPressed: () {
-                    Clipboard.setData(
-                            ClipboardData(text: commentTree.comment.content))
+                    Clipboard.setData(ClipboardData(
+                            text: commentTree.comment.comment.content))
                         .then((_) => Scaffold.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('comment copied to clipboard'))));
@@ -285,7 +301,7 @@ class Comment extends HookWidget {
               _CommentAction(
                 icon: Icons.link,
                 onPressed: () =>
-                    goToPost(context, comment.instanceHost, comment.postId),
+                    goToPost(context, comment.instanceHost, comment.post.id),
                 tooltip: 'go to post',
               ),
             _CommentAction(
@@ -295,7 +311,7 @@ class Comment extends HookWidget {
               tooltip: 'more',
             ),
             _SaveComment(commentTree.comment),
-            if (!isDeleted.value && !comment.removed)
+            if (!isDeleted.value && !comment.comment.removed)
               _CommentAction(
                 icon: Icons.reply,
                 onPressed: loggedInAction((_) => reply()),
@@ -340,14 +356,14 @@ class Comment extends HookWidget {
             child: Column(
               children: [
                 Row(children: [
-                  if (comment.creatorAvatar != null)
+                  if (comment.creator.avatar != null)
                     Padding(
                       padding: const EdgeInsets.only(right: 5),
                       child: InkWell(
                         onTap: () => goToUser.byId(
-                            context, comment.instanceHost, comment.creatorId),
+                            context, comment.instanceHost, comment.creator.id),
                         child: CachedNetworkImage(
-                          imageUrl: comment.creatorAvatar,
+                          imageUrl: comment.creator.avatar,
                           height: 20,
                           width: 20,
                           imageBuilder: (context, imageProvider) => Container(
@@ -365,15 +381,16 @@ class Comment extends HookWidget {
                     ),
                   InkWell(
                     onTap: () => goToUser.byId(
-                        context, comment.instanceHost, comment.creatorId),
+                        context, comment.instanceHost, comment.creator.id),
                     child: Text(username,
                         style: TextStyle(
                           color: Theme.of(context).accentColor,
                         )),
                   ),
                   if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
-                  if (comment.banned) const _CommentTag('BANNED', Colors.red),
-                  if (comment.bannedFromCommunity)
+                  if (comment.creator.banned)
+                    const _CommentTag('BANNED', Colors.red),
+                  if (comment.creatorBannedFromCommunity)
                     const _CommentTag('BANNED FROM COMMUNITY', Colors.red),
                   const Spacer(),
                   if (collapsed.value && commentTree.children.length > 0) ...[
@@ -390,10 +407,10 @@ class Comment extends HookWidget {
                               size: const Size.square(16),
                               child: const CircularProgressIndicator())
                         else
-                          Text(compactNumber(comment.score +
+                          Text(compactNumber(comment.counts.score +
                               (wasVoted ? 0 : myVote.value.value))),
                         const Text(' · '),
-                        Text(timeago.format(comment.published)),
+                        Text(timeago.format(comment.comment.published)),
                       ],
                     ),
                   )
@@ -407,7 +424,7 @@ class Comment extends HookWidget {
           ),
           if (!collapsed.value)
             for (final c in newReplies.value.followedBy(commentTree.children))
-              Comment(
+              CommentWidget(
                 c,
                 indent: indent + 1,
                 postCreatorId: postCreatorId,
@@ -430,13 +447,16 @@ class _SaveComment extends HookWidget {
     final delayed = useDelayedLoading();
 
     handleSave(Jwt token) async {
-      final api = LemmyApi(comment.instanceHost).v1;
+      final api = LemmyApiV2(comment.instanceHost);
 
       delayed.start();
       try {
-        final res = await api.saveComment(
-            commentId: comment.id, save: !isSaved.value, auth: token.raw);
-        isSaved.value = res.saved;
+        final res = await api.run(SaveComment(
+          commentId: comment.comment.id,
+          save: !isSaved.value,
+          auth: token.raw,
+        ));
+        isSaved.value = res.commentView.saved;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
