@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 0.1.0
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
   # widgets
@@ -32,7 +32,7 @@ dependencies:
   # native
   esys_flutter_share: ^1.0.2
   url_launcher: ^5.5.1
-  shared_preferences: ">=0.5.0 <2.0.0"
+  shared_preferences: '>=0.5.0 <2.0.0'
   package_info: ^0.4.3
   image_picker: ^0.6.7
 
@@ -43,7 +43,12 @@ dependencies:
   # utils
   timeago: ^2.0.27
   fuzzy: <1.0.0
-  lemmy_api_client: ^0.9.0
+  lemmy_api_client: ^0.10.0
+  # TEMPORARY IMPORT remove before pull request!
+  # lemmy_api_client:
+  #   git:
+  #     url: git://github.com/krawieck/lemmy_api_client.git
+  #     ref: v2
 
   flutter:
     sdk: flutter
@@ -62,7 +67,7 @@ flutter_icons:
   android: true
   ios: true
   image_path: assets/app_icon.png
-  adaptive_icon_background: "#ffffff"
+  adaptive_icon_background: '#ffffff'
   adaptive_icon_foreground: assets/adaptive_icon_fg.png
 
 # For information on the generic Dart part of this file, see the
