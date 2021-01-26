@@ -74,7 +74,7 @@ class CommentWidget extends HookWidget {
       'downvotes': com.counts.downvotes,
       'score': com.counts.score,
       '% of upvotes':
-          '${100 * (com.counts.upvotes / (com.counts.upvotes + com.counts.downvotes))}%',
+          '''${100 * (com.counts.upvotes / (com.counts.upvotes + com.counts.downvotes))}%''',
     });
   }
 

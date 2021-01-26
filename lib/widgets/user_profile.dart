@@ -268,7 +268,7 @@ class _UserOverview extends HookWidget {
                               padding: const EdgeInsets.only(left: 4),
                               child: Text(
                                 '${compactNumber(userView.counts.commentCount)}'
-                                ' Comment${pluralS(userView.counts.commentCount)}',
+                                ''' Comment${pluralS(userView.counts.commentCount)}''',
                                 style:
                                     TextStyle(color: colorOnTopOfAccentColor),
                               ),
