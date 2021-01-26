@@ -1,24 +1,51 @@
-## Unreleased
+## v0.2.0 - 2021-01-27
 
-First release of Lemmur the Lemmy mobile client!
+### Breaking changes
 
-Features include:
+- Lemmur now works exclusively with Lemmy API v2
 
-- Manage multiple accounts/instances
-- Instance view
-- Community view
-- Post view
-- User profile view
+### Added
+
+- You can now manage account-specific settings, such as username, avatar, etc.
+
+### Fixed
+
+- Fixed a bug where in some circumstances removal of an instance would fail
+
+## v0.1.1 - 2021-01-17
+
+### Added
+
+#### Pages
+
+- Instance page
+- Community page
+- Post page
+- User profile page
 - Home tab
 - Communities tab
-- Comment
-  - create
-  - upvote/downvote
-  - save
-  - delete
-- Post
-  - create
-  - upvote/downvote
-  - save
-- Light/dark/AMOLED themes
+- Search tab
+- Profile tab
+- Settings
+
+#### Actions
+
+- Create comment
+- Create post
+- Upvote/Downvote
+- Save comments/posts
 - Follow/Unfollow communities
+
+#### Other
+
+- Light/dark/AMOLED themes
+- Manage multiple accounts/instances
+
+### Notable things that don't work / are not implemented yet
+
+- No notifications page
+- No way to browse saved posts/comments
+- Themes are not yet finalized so they might not look great in some situations
+- Other than pictures, there is absolutely no caching
+
+Remember: there's always option to open instance/community/post/comment in web browser from the app if there is a missing feature
