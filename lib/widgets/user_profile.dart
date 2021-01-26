@@ -24,9 +24,9 @@ class UserProfile extends HookWidget {
       : _userDetails = LemmyApiV2(instanceHost).run(GetUserDetails(
             userId: userId, savedOnly: false, sort: SortType.active));
 
-  UserProfile.fromUserDetails(FullUserView userDetails)
-      : _userDetails = Future.value(userDetails),
-        instanceHost = userDetails.instanceHost;
+  UserProfile.fromFullUserView(FullUserView fullUserView)
+      : _userDetails = Future.value(fullUserView),
+        instanceHost = fullUserView.instanceHost;
 
   @override
   Widget build(BuildContext context) {
