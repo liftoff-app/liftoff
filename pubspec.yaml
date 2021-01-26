@@ -44,11 +44,6 @@ dependencies:
   timeago: ^2.0.27
   fuzzy: <1.0.0
   lemmy_api_client: ^0.10.0
-  # TEMPORARY IMPORT remove before pull request!
-  # lemmy_api_client:
-  #   git:
-  #     url: git://github.com/krawieck/lemmy_api_client.git
-  #     ref: v2
 
   flutter:
     sdk: flutter
