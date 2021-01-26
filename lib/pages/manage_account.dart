@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lemmur/widgets/bottom_safe.dart';
 import 'package:lemmy_api_client/pictrs.dart';
 import 'package:lemmy_api_client/v2.dart';
 
@@ -430,7 +431,7 @@ class _ManageAccount extends HookWidget {
           ),
           child: const Text('DELETE ACCOUNT'),
         ),
-        const SafeArea(top: false, child: SizedBox.shrink()),
+        const BottomSafe(),
       ],
     );
   }

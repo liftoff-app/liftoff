@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v2.dart';
 
 import '../comment_tree.dart';
 import 'bottom_modal.dart';
+import 'bottom_safe.dart';
 import 'comment.dart';
 
 /// Manages comments section, sorts them
@@ -106,7 +107,7 @@ class CommentSection extends HookWidget {
       else
         for (final com in comments)
           CommentWidget(com, postCreatorId: postCreatorId),
-      const SizedBox(height: 50),
+      const BottomSafe(50),
     ]);
   }
 }

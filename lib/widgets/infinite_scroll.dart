@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/ref.dart';
+import 'bottom_safe.dart';
 
 class InfiniteScrollController {
   VoidCallback clear;
@@ -82,7 +83,7 @@ class InfiniteScroll<T> extends HookWidget {
           if (i == data.value.length) {
             // if there are no more, skip
             if (!hasMore.current) {
-              return const SafeArea(child: SizedBox.shrink());
+              return const BottomSafe();
             }
 
             // if it's already fetching more, skip
@@ -99,6 +100,7 @@ class InfiniteScroll<T> extends HookWidget {
             }
 
             return SafeArea(
+              top: false,
               child: loadingWidget,
             );
           }
