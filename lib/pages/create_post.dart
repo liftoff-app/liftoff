@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/pictrs.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/image_picker.dart';
@@ -26,20 +27,20 @@ class CreatePostFab extends HookWidget {
 
     return FloatingActionButton(
       onPressed: loggedInAction((_) => showCupertinoModalPopup(
-          context: context, builder: (_) => CreatePost())),
+          context: context, builder: (_) => CreatePostPage())),
       child: const Icon(Icons.add),
     );
   }
 }
 
 /// Modal for creating a post to some community in some instance
-class CreatePost extends HookWidget {
+class CreatePostPage extends HookWidget {
   final CommunityView community;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  CreatePost() : community = null;
-  CreatePost.toCommunity(this.community);
+  CreatePostPage() : community = null;
+  CreatePostPage.toCommunity(this.community);
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +59,15 @@ class CreatePost extends HookWidget {
     final pictrsDeleteToken = useState<PictrsUploadFile>(null);
 
     final allCommunitiesSnap = useMemoFuture(
-      () => LemmyApi(selectedInstance.value)
-          .v1
-          .listCommunities(
-            sort: SortType.hot,
-            limit: 9999,
-            auth: accStore.defaultTokenFor(selectedInstance.value).raw,
-          )
+      () => LemmyApiV2(selectedInstance.value)
+          .run(ListCommunities(
+        sort: SortType.hot,
+        limit: 9999,
+        auth: accStore.defaultTokenFor(selectedInstance.value).raw,
+      ))
           .then(
         (value) {
-          value.sort((a, b) => a.name.compareTo(b.name));
+          value.sort((a, b) => a.community.name.compareTo(b.community.name));
           return value;
         },
       ),
@@ -82,7 +82,7 @@ class CreatePost extends HookWidget {
           imageUploadLoading.value = true;
 
           final token = accStore.defaultTokenFor(selectedInstance.value);
-          final pictrs = LemmyApi(selectedInstance.value).pictrs;
+          final pictrs = PictrsApi(selectedInstance.value);
           final upload =
               await pictrs.upload(filePath: pic.path, auth: token.raw);
           pictrsDeleteToken.value = upload.files[0];
@@ -100,8 +100,7 @@ class CreatePost extends HookWidget {
     }
 
     removePicture() {
-      LemmyApi(selectedInstance.value)
-          .pictrs
+      PictrsApi(selectedInstance.value)
           .delete(pictrsDeleteToken.value)
           .catchError((_) {});
 
@@ -135,15 +134,16 @@ class CreatePost extends HookWidget {
           border: OutlineInputBorder()),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: selectedCommunity.value?.name,
+          value: selectedCommunity.value?.community?.name,
           hint: const Text('Community'),
-          onChanged: (val) => selectedCommunity.value =
-              allCommunitiesSnap.data.firstWhere((e) => e.name == val),
+          onChanged: (val) => selectedCommunity.value = allCommunitiesSnap.data
+              .firstWhere((e) => e.community.name == val),
           items: allCommunitiesSnap.hasData
               ? allCommunitiesSnap.data
+                  // FIXME: use id instead of name cuz it breaks with federation
                   .map((e) => DropdownMenuItem(
-                        value: e.name,
-                        child: Text(e.name),
+                        value: e.community.name,
+                        child: Text(e.community.name),
                       ))
                   .toList()
               : const [
@@ -219,19 +219,20 @@ class CreatePost extends HookWidget {
         return;
       }
 
-      final api = LemmyApi(selectedInstance.value).v1;
+      final api = LemmyApiV2(selectedInstance.value);
 
       final token = accStore.defaultTokenFor(selectedInstance.value);
 
       delayed.start();
       try {
-        final res = await api.createPost(
-            url: urlController.text.isEmpty ? null : urlController.text,
-            body: bodyController.text.isEmpty ? null : bodyController.text,
-            nsfw: nsfw.value,
-            name: titleController.text,
-            communityId: selectedCommunity.value.id,
-            auth: token.raw);
+        final res = await api.run(CreatePost(
+          url: urlController.text.isEmpty ? null : urlController.text,
+          body: bodyController.text.isEmpty ? null : bodyController.text,
+          nsfw: nsfw.value,
+          name: titleController.text,
+          communityId: selectedCommunity.value.community.id,
+          auth: token.raw,
+        ));
         unawaited(goToReplace(context, (_) => FullPostPage.fromPostView(res)));
         return;
         // ignore: avoid_catches_without_on_clauses

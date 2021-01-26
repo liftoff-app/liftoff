@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/debounce.dart';
 import '../hooks/stores.dart';
@@ -33,7 +33,7 @@ class AddInstancePage extends HookWidget {
         return;
       }
       try {
-        icon.value = (await LemmyApi(inst).v1.getSite()).site.icon;
+        icon.value = (await LemmyApiV2(inst).run(GetSite())).siteView.site.icon;
         isSite.value = true;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
@@ -75,7 +75,7 @@ class AddInstancePage extends HookWidget {
       ),
       body: ListView(
         children: [
-          if (isSite.value == true)
+          if (isSite.value == true && icon.value != null)
             SizedBox(
                 height: 150,
                 child: FullscreenableImage(

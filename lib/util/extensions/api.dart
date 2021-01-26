@@ -1,4 +1,4 @@
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../cleanup_url.dart';
 
@@ -10,30 +10,41 @@ import '../cleanup_url.dart';
 
 // [.isLocal] is true iff `.originInstanceHost == .instanceHost`
 
-extension GetInstanceCommunityView on CommunityView {
+extension GetInstanceCommunitySafe on CommunitySafe {
   String get originInstanceHost => _extract(actorId);
-  bool get isLocal => originInstanceHost == instanceHost;
+  // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceUserView on UserView {
+extension GetInstanceUserSafe on UserSafe {
   String get originInstanceHost => _extract(actorId);
-  bool get isLocal => originInstanceHost == instanceHost;
+  // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceCommunityFollowerView on CommunityFollowerView {
-  String get originInstanceHost => _extract(communityActorId);
-  bool get isLocal => originInstanceHost == instanceHost;
-}
-
-extension GetInstancePostView on PostView {
+extension GetInstancePostView on Post {
   String get originInstanceHost => _extract(apId);
-  bool get isLocal => originInstanceHost == instanceHost;
+  // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceCommentView on CommentView {
+extension GetInstanceCommentView on Comment {
   String get originInstanceHost => _extract(apId);
-  bool get isLocal => originInstanceHost == instanceHost;
+  // bool get isLocal => originInstanceHost == instanceHost;
 }
 
 // TODO: change it to something more robust? regex?
 String _extract(String s) => cleanUpUrl(s.split('/')[2]);
+
+extension DisplayName on UserSafe {
+  String get displayName {
+    final name = () {
+      if (preferredUsername != null && preferredUsername != '') {
+        return preferredUsername;
+      } else {
+        return '@${this.name}';
+      }
+    }();
+
+    if (!local) return '$name@$originInstanceHost';
+
+    return name;
+  }
+}

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fuzzy/fuzzy.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/refreshable.dart';
@@ -33,8 +33,9 @@ class CommunitiesTab extends HookWidget {
     getInstances() {
       final futures = accountsStore.loggedInInstances
           .map(
-            (instanceHost) =>
-                LemmyApi(instanceHost).v1.getSite().then((e) => e.site),
+            (instanceHost) => LemmyApiV2(instanceHost)
+                .run(GetSite())
+                .then((e) => e.siteView.site),
           )
           .toList();
 
@@ -44,14 +45,13 @@ class CommunitiesTab extends HookWidget {
     getCommunities() {
       final futures = accountsStore.loggedInInstances
           .map(
-            (instanceHost) => LemmyApi(instanceHost)
-                .v1
-                .getUserDetails(
+            (instanceHost) => LemmyApiV2(instanceHost)
+                .run(GetUserDetails(
                   sort: SortType.active,
                   savedOnly: false,
                   userId:
                       accountsStore.defaultTokenFor(instanceHost).payload.id,
-                )
+                ))
                 .then((e) => e.follows),
           )
           .toList();
@@ -108,8 +108,8 @@ class CommunitiesTab extends HookWidget {
 
     final instances = instancesRefreshable.snapshot.data;
     final communities = communitiesRefreshable.snapshot.data
-      ..forEach(
-          (e) => e.sort((a, b) => a.communityName.compareTo(b.communityName)));
+      ..forEach((e) =>
+          e.sort((a, b) => a.community.name.compareTo(b.community.name)));
 
     final filterIcon = () {
       if (filterController.text.isEmpty) {
@@ -127,12 +127,12 @@ class CommunitiesTab extends HookWidget {
 
     filterCommunities(List<CommunityFollowerView> comm) {
       final matches = Fuzzy(
-        comm.map((e) => e.communityName).toList(),
+        comm.map((e) => e.community.name).toList(),
         options: FuzzyOptions(threshold: 0.5),
       ).search(filterController.text).map((e) => e.item);
 
       return matches
-          .map((match) => comm.firstWhere((e) => e.communityName == match));
+          .map((match) => comm.firstWhere((e) => e.community.name == match));
     }
 
     toggleCollapse(int i) => isCollapsed.value =
@@ -203,18 +203,18 @@ class CommunitiesTab extends HookWidget {
                           onTap: () => goToCommunity.byId(
                               context,
                               accountsStore.loggedInInstances.elementAt(i),
-                              comm.communityId),
+                              comm.community.id),
                           dense: true,
                           leading: VerticalDivider(
                             color: theme.hintColor,
                           ),
                           title: Row(
                             children: [
-                              if (comm.communityIcon != null)
+                              if (comm.community.icon != null)
                                 CachedNetworkImage(
                                   height: 30,
                                   width: 30,
-                                  imageUrl: comm.communityIcon,
+                                  imageUrl: comm.community.icon,
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     decoration: BoxDecoration(
@@ -231,14 +231,14 @@ class CommunitiesTab extends HookWidget {
                                 const SizedBox(width: 30),
                               const SizedBox(width: 10),
                               Text(
-                                '''!${comm.communityName}${comm.isLocal ? '' : '@${comm.originInstanceHost}'}''',
+                                '''!${comm.community.name}${comm.community.local ? '' : '@${comm.community.originInstanceHost}'}''',
                               ),
                             ],
                           ),
                           trailing: _CommunitySubscribeToggle(
-                            key: ValueKey(comm.communityId),
+                            key: ValueKey(comm.community.id),
                             instanceHost: comm.instanceHost,
-                            communityId: comm.communityId,
+                            communityId: comm.community.id,
                           ),
                         ),
                       )
@@ -272,11 +272,11 @@ class _CommunitySubscribeToggle extends HookWidget {
       delayed.start();
 
       try {
-        await LemmyApi(instanceHost).v1.followCommunity(
-              communityId: communityId,
-              follow: !subbed.value,
-              auth: accountsStore.defaultTokenFor(instanceHost).raw,
-            );
+        await LemmyApiV2(instanceHost).run(FollowCommunity(
+          communityId: communityId,
+          follow: !subbed.value,
+          auth: accountsStore.defaultTokenFor(instanceHost).raw,
+        ));
         subbed.value = !subbed.value;
       } on Exception catch (err) {
         Scaffold.of(context).showSnackBar(SnackBar(

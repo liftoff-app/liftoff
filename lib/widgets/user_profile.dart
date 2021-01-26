@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../hooks/stores.dart';
@@ -17,16 +17,16 @@ import 'sortable_infinite_list.dart';
 
 /// Shared widget of UserPage and ProfileTab
 class UserProfile extends HookWidget {
-  final Future<UserDetails> _userDetails;
+  final Future<FullUserView> _userDetails;
   final String instanceHost;
 
   UserProfile({@required int userId, @required this.instanceHost})
-      : _userDetails = LemmyApi(instanceHost).v1.getUserDetails(
-            userId: userId, savedOnly: false, sort: SortType.active);
+      : _userDetails = LemmyApiV2(instanceHost).run(GetUserDetails(
+            userId: userId, savedOnly: false, sort: SortType.active));
 
-  UserProfile.fromUserDetails(UserDetails userDetails)
-      : _userDetails = Future.value(userDetails),
-        instanceHost = userDetails.user.instanceHost;
+  UserProfile.fromFullUserView(FullUserView fullUserView)
+      : _userDetails = Future.value(fullUserView),
+        instanceHost = fullUserView.instanceHost;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class UserProfile extends HookWidget {
       );
     }
 
-    final userView = userDetailsSnap.data.user;
+    final userView = userDetailsSnap.data.userView;
 
     return DefaultTabController(
       length: 3,
@@ -78,27 +78,25 @@ class UserProfile extends HookWidget {
           // TODO: first batch is already fetched on render
           // TODO: comment and post come from the same endpoint, could be shared
           InfinitePostList(
-            fetcher: (page, batchSize, sort) => LemmyApi(instanceHost)
-                .v1
-                .getUserDetails(
-                  userId: userView.id,
+            fetcher: (page, batchSize, sort) => LemmyApiV2(instanceHost)
+                .run(GetUserDetails(
+                  userId: userView.user.id,
                   savedOnly: false,
                   sort: SortType.active,
                   page: page,
                   limit: batchSize,
-                )
+                ))
                 .then((val) => val.posts),
           ),
           InfiniteCommentList(
-            fetcher: (page, batchSize, sort) => LemmyApi(instanceHost)
-                .v1
-                .getUserDetails(
-                  userId: userView.id,
+            fetcher: (page, batchSize, sort) => LemmyApiV2(instanceHost)
+                .run(GetUserDetails(
+                  userId: userView.user.id,
                   savedOnly: false,
                   sort: SortType.active,
                   page: page,
                   limit: batchSize,
-                )
+                ))
                 .then((val) => val.comments),
           ),
           _AboutTab(userDetailsSnap.data),
@@ -113,7 +111,7 @@ class UserProfile extends HookWidget {
 /// Such as his nickname, no. of posts, no. of posts,
 /// banner, avatar etc.
 class _UserOverview extends HookWidget {
-  final UserView userView;
+  final UserViewSafe userView;
 
   const _UserOverview(this.userView);
 
@@ -125,12 +123,12 @@ class _UserOverview extends HookWidget {
 
     return Stack(
       children: [
-        if (userView.banner != null)
+        if (userView.user.banner != null)
           // TODO: for some reason doesnt react to presses
           FullscreenableImage(
-            url: userView.banner,
+            url: userView.user.banner,
             child: CachedNetworkImage(
-              imageUrl: userView.banner,
+              imageUrl: userView.user.banner,
               errorWidget: (_, __, ___) => const SizedBox.shrink(),
             ),
           )
@@ -174,7 +172,7 @@ class _UserOverview extends HookWidget {
         SafeArea(
           child: Column(
             children: [
-              if (userView.avatar != null)
+              if (userView.user.avatar != null)
                 SizedBox(
                   width: 80,
                   height: 80,
@@ -190,9 +188,9 @@ class _UserOverview extends HookWidget {
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(12)),
                       child: FullscreenableImage(
-                        url: userView.avatar,
+                        url: userView.user.avatar,
                         child: CachedNetworkImage(
-                          imageUrl: userView.avatar,
+                          imageUrl: userView.user.avatar,
                           errorWidget: (_, __, ___) => const SizedBox.shrink(),
                         ),
                       ),
@@ -200,14 +198,14 @@ class _UserOverview extends HookWidget {
                   ),
                 ),
               Padding(
-                padding: userView.avatar != null
+                padding: userView.user.avatar != null
                     ? const EdgeInsets.only(top: 8)
                     : const EdgeInsets.only(top: 70),
                 child: Padding(
-                  padding:
-                      EdgeInsets.only(top: userView.avatar == null ? 10 : 0),
+                  padding: EdgeInsets.only(
+                      top: userView.user.avatar == null ? 10 : 0),
                   child: Text(
-                    userView.preferredUsername ?? userView.name,
+                    userView.user.preferredUsername ?? userView.user.name,
                     style: theme.textTheme.headline6,
                   ),
                 ),
@@ -218,14 +216,14 @@ class _UserOverview extends HookWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '@${userView.name}@',
+                      '@${userView.user.name}@',
                       style: theme.textTheme.caption,
                     ),
                     InkWell(
-                      onTap: () =>
-                          goToInstance(context, userView.originInstanceHost),
+                      onTap: () => goToInstance(
+                          context, userView.user.originInstanceHost),
                       child: Text(
-                        userView.originInstanceHost,
+                        userView.user.originInstanceHost,
                         style: theme.textTheme.caption,
                       ),
                     )
@@ -248,8 +246,8 @@ class _UserOverview extends HookWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 4),
                             child: Text(
-                              '${compactNumber(userView.numberOfPosts)}'
-                              ' Post${pluralS(userView.numberOfPosts)}',
+                              '${compactNumber(userView.counts.postCount)}'
+                              ' Post${pluralS(userView.counts.postCount)}',
                               style: TextStyle(color: colorOnTopOfAccentColor),
                             ),
                           ),
@@ -269,8 +267,8 @@ class _UserOverview extends HookWidget {
                             Padding(
                               padding: const EdgeInsets.only(left: 4),
                               child: Text(
-                                '${compactNumber(userView.numberOfComments)}'
-                                ' Comment${pluralS(userView.numberOfComments)}',
+                                '${compactNumber(userView.counts.commentCount)}'
+                                ''' Comment${pluralS(userView.counts.commentCount)}''',
                                 style:
                                     TextStyle(color: colorOnTopOfAccentColor),
                               ),
@@ -285,7 +283,7 @@ class _UserOverview extends HookWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Text(
-                  'Joined ${timeago.format(userView.published)}',
+                  'Joined ${timeago.format(userView.user.published)}',
                   style: theme.textTheme.bodyText1,
                 ),
               ),
@@ -301,7 +299,8 @@ class _UserOverview extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 4),
                       child: Text(
-                        DateFormat('MMM dd, yyyy').format(userView.published),
+                        DateFormat('MMM dd, yyyy')
+                            .format(userView.user.published),
                         style: theme.textTheme.bodyText1,
                       ),
                     ),
@@ -318,19 +317,21 @@ class _UserOverview extends HookWidget {
 }
 
 class _AboutTab extends HookWidget {
-  final UserDetails userDetails;
+  final FullUserView userDetails;
 
   const _AboutTab(this.userDetails);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final instanceHost = userDetails.user.instanceHost;
+    final instanceHost = userDetails.userView.user.instanceHost;
 
     final accStore = useAccountsStore();
 
     final isOwnedAccount = accStore.loggedInInstances.contains(instanceHost) &&
-        accStore.usernamesFor(instanceHost).contains(userDetails.user.name);
+        accStore
+            .usernamesFor(instanceHost)
+            .contains(userDetails.userView.user.name);
 
     const wallPadding = EdgeInsets.symmetric(horizontal: 15);
 
@@ -378,10 +379,10 @@ class _AboutTab extends HookWidget {
             ),
             onTap: () {}, // TODO: go to account editing
           ),
-        if (userDetails.user.bio != null) ...[
+        if (userDetails.userView.user.bio != null) ...[
           Padding(
               padding: wallPadding,
-              child: MarkdownText(userDetails.user.bio,
+              child: MarkdownText(userDetails.userView.user.bio,
                   instanceHost: instanceHost)),
           divider,
         ],
@@ -396,9 +397,9 @@ class _AboutTab extends HookWidget {
           ),
           for (final comm
               in userDetails.moderates
-                ..sort((a, b) => a.communityName.compareTo(b.communityName)))
+                ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
-                comm.communityName, comm.communityIcon, comm.communityId),
+                comm.community.name, comm.community.icon, comm.community.id),
           divider
         ],
         ListTile(
@@ -412,9 +413,9 @@ class _AboutTab extends HookWidget {
         if (userDetails.follows.isNotEmpty)
           for (final comm
               in userDetails.follows
-                ..sort((a, b) => a.communityName.compareTo(b.communityName)))
+                ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
-                comm.communityName, comm.communityIcon, comm.communityId)
+                comm.community.name, comm.community.icon, comm.community.id)
         else
           const Padding(
             padding: EdgeInsets.only(top: 8),

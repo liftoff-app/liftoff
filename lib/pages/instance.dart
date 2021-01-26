@@ -3,7 +3,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
@@ -30,9 +30,9 @@ class InstancePage extends HookWidget {
 
   InstancePage({@required this.instanceHost})
       : assert(instanceHost != null),
-        siteFuture = LemmyApi(instanceHost).v1.getSite(),
+        siteFuture = LemmyApiV2(instanceHost).run(GetSite()),
         communitiesFuture =
-            LemmyApi(instanceHost).v1.listCommunities(sort: SortType.hot);
+            LemmyApiV2(instanceHost).run(ListCommunities(sort: SortType.hot));
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +80,8 @@ class InstancePage extends HookWidget {
                 leading: const Icon(Icons.open_in_browser),
                 title: const Text('Open in browser'),
                 onTap: () async => await ul
-                        .canLaunch('https://${site.site.instanceHost}')
-                    ? ul.launch('https://${site.site.instanceHost}')
+                        .canLaunch('https://${site.instanceHost}')
+                    ? ul.launch('https://${site.instanceHost}')
                     : Scaffold.of(context).showSnackBar(
                         const SnackBar(content: Text("can't open in browser"))),
               ),
@@ -91,12 +91,12 @@ class InstancePage extends HookWidget {
                 onTap: () {
                   showInfoTablePopup(context, {
                     'url': instanceHost,
-                    'creator': '@${site.site.creatorName}',
+                    'creator': '@${site.siteView.creator.name}',
                     'version': site.version,
-                    'enableDownvotes': site.site.enableDownvotes,
-                    'enableNsfw': site.site.enableNsfw,
-                    'published': site.site.published,
-                    'updated': site.site.updated,
+                    'enableDownvotes': site.siteView.site.enableDownvotes,
+                    'enableNsfw': site.siteView.site.enableNsfw,
+                    'published': site.siteView.site.published,
+                    'updated': site.siteView.site.updated,
                   });
                 },
               ),
@@ -119,7 +119,7 @@ class InstancePage extends HookWidget {
               backgroundColor: theme.cardColor,
               iconTheme: theme.iconTheme,
               title: Text(
-                site.site.name,
+                site.siteView.site.name,
                 style: TextStyle(color: colorOnCard),
               ),
               actions: [
@@ -130,11 +130,11 @@ class InstancePage extends HookWidget {
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(children: [
-                  if (site.site.banner != null)
+                  if (site.siteView.site.banner != null)
                     FullscreenableImage(
-                      url: site.site.banner,
+                      url: site.siteView.site.banner,
                       child: CachedNetworkImage(
-                        imageUrl: site.site.banner,
+                        imageUrl: site.siteView.site.banner,
                         errorWidget: (_, __, ___) => const SizedBox.shrink(),
                       ),
                     ),
@@ -144,20 +144,20 @@ class InstancePage extends HookWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 40),
-                            child: site.site.icon == null
+                            child: site.siteView.site.icon == null
                                 ? const SizedBox(height: 100, width: 100)
                                 : FullscreenableImage(
-                                    url: site.site.icon,
+                                    url: site.siteView.site.icon,
                                     child: CachedNetworkImage(
                                       width: 100,
                                       height: 100,
-                                      imageUrl: site.site.icon,
+                                      imageUrl: site.siteView.site.icon,
                                       errorWidget: (_, __, ___) =>
                                           const Icon(Icons.warning),
                                     ),
                                   ),
                           ),
-                          Text(site.site.name,
+                          Text(site.siteView.site.name,
                               style: theme.textTheme.headline6),
                           Text(instanceHost, style: theme.textTheme.caption)
                         ],
@@ -186,23 +186,23 @@ class InstancePage extends HookWidget {
             children: [
               InfinitePostList(
                   fetcher: (page, batchSize, sort) =>
-                      LemmyApi(instanceHost).v1.getPosts(
-                            // TODO: switch between all and subscribed
-                            type: PostListingType.all,
-                            sort: sort,
-                            limit: batchSize,
-                            page: page,
-                            auth: accStore.defaultTokenFor(instanceHost)?.raw,
-                          )),
+                      LemmyApiV2(instanceHost).run(GetPosts(
+                        // TODO: switch between all and subscribed
+                        type: PostListingType.all,
+                        sort: sort,
+                        limit: batchSize,
+                        page: page,
+                        auth: accStore.defaultTokenFor(instanceHost)?.raw,
+                      ))),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sort) =>
-                      LemmyApi(instanceHost).v1.getComments(
-                            type: CommentListingType.all,
-                            sort: sort,
-                            limit: batchSize,
-                            page: page,
-                            auth: accStore.defaultTokenFor(instanceHost)?.raw,
-                          )),
+                      LemmyApiV2(instanceHost).run(GetComments(
+                        type: CommentListingType.all,
+                        sort: sort,
+                        limit: batchSize,
+                        page: page,
+                        auth: accStore.defaultTokenFor(instanceHost)?.raw,
+                      ))),
               _AboutTab(site,
                   communitiesFuture: communitiesFuture,
                   instanceHost: instanceHost),
@@ -268,13 +268,13 @@ class _AboutTab extends HookWidget {
         context,
         (_) => CommunitiesListPage(
           fetcher: (page, batchSize, sortType) =>
-              LemmyApi(instanceHost).v1.listCommunities(
-                    sort: sortType,
-                    limit: batchSize,
-                    page: page,
-                    auth: accStore.defaultTokenFor(instanceHost)?.raw,
-                  ),
-          title: 'Communities of ${site.site.name}',
+              LemmyApiV2(instanceHost).run(ListCommunities(
+            sort: sortType,
+            limit: batchSize,
+            page: page,
+            auth: accStore.defaultTokenFor(instanceHost)?.raw,
+          )),
+          title: 'Communities of ${site.siteView.site.name}',
         ),
       );
     }
@@ -287,7 +287,7 @@ class _AboutTab extends HookWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: MarkdownText(
-                site.site.description,
+                site.siteView.site.description,
                 instanceHost: instanceHost,
               ),
             ),
@@ -299,10 +299,10 @@ class _AboutTab extends HookWidget {
                 children: [
                   const SizedBox(width: 7),
                   const _Badge('X users online'),
-                  _Badge('${site.site.numberOfUsers} users'),
-                  _Badge('${site.site.numberOfCommunities} communities'),
-                  _Badge('${site.site.numberOfPosts} posts'),
-                  _Badge('${site.site.numberOfComments} comments'),
+                  _Badge('${site.siteView.counts.users} users'),
+                  _Badge('${site.siteView.counts.communities} communities'),
+                  _Badge('${site.siteView.counts.posts} posts'),
+                  _Badge('${site.siteView.counts.comments} comments'),
                   const SizedBox(width: 15),
                 ],
               ),
@@ -317,15 +317,15 @@ class _AboutTab extends HookWidget {
               ),
             ),
             if (commSnap.hasData)
-              ...commSnap.data.take(6).map((e) => ListTile(
-                    onTap: () =>
-                        goToCommunity.byId(context, e.instanceHost, e.id),
-                    title: Text(e.name),
-                    leading: e.icon != null
+              ...commSnap.data.take(6).map((c) => ListTile(
+                    onTap: () => goToCommunity.byId(
+                        context, c.instanceHost, c.community.id),
+                    title: Text(c.community.name),
+                    leading: c.community.icon != null
                         ? CachedNetworkImage(
                             height: 50,
                             width: 50,
-                            imageUrl: e.icon,
+                            imageUrl: c.community.icon,
                             errorWidget: (_, __, ___) =>
                                 const SizedBox(width: 50, height: 50),
                             imageBuilder: (context, imageProvider) => Container(
@@ -362,20 +362,20 @@ class _AboutTab extends HookWidget {
                 ),
               ),
             ),
-            ...site.admins.map((e) => ListTile(
-                  title: Text((e.preferredUsername == null ||
-                          e.preferredUsername.isEmpty)
-                      ? '@${e.name}'
-                      : e.preferredUsername),
-                  subtitle: e.bio != null
-                      ? MarkdownText(e.bio, instanceHost: instanceHost)
+            ...site.admins.map((u) => ListTile(
+                  title: Text((u.user.preferredUsername == null ||
+                          u.user.preferredUsername.isEmpty)
+                      ? '@${u.user.name}'
+                      : u.user.preferredUsername),
+                  subtitle: u.user.bio != null
+                      ? MarkdownText(u.user.bio, instanceHost: instanceHost)
                       : null,
-                  onTap: () => goToUser.byId(context, instanceHost, e.id),
-                  leading: e.avatar != null
+                  onTap: () => goToUser.byId(context, instanceHost, u.user.id),
+                  leading: u.user.avatar != null
                       ? CachedNetworkImage(
                           height: 50,
                           width: 50,
-                          imageUrl: e.avatar,
+                          imageUrl: u.user.avatar,
                           errorWidget: (_, __, ___) =>
                               const SizedBox(width: 50, height: 50),
                           imageBuilder: (context, imageProvider) => Container(
@@ -396,7 +396,6 @@ class _AboutTab extends HookWidget {
               title: const Center(child: Text('Modlog')),
               onTap: goToModLog,
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),

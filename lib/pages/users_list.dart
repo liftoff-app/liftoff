@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../util/goto.dart';
 import '../widgets/markdown_text.dart';
@@ -8,7 +8,7 @@ import '../widgets/markdown_text.dart';
 /// Infinite list of Users fetched by the given fetcher
 class UsersListPage extends StatelessWidget {
   final String title;
-  final List<UserView> users;
+  final List<UserViewSafe> users;
 
   const UsersListPage({Key key, @required this.users, this.title})
       : assert(users != null),
@@ -34,7 +34,7 @@ class UsersListPage extends StatelessWidget {
 }
 
 class UsersListItem extends StatelessWidget {
-  final UserView user;
+  final UserViewSafe user;
 
   const UsersListItem({Key key, @required this.user})
       : assert(user != null),
@@ -42,25 +42,25 @@ class UsersListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        title: Text(
-            (user.preferredUsername == null || user.preferredUsername.isEmpty)
-                ? '@${user.name}'
-                : user.preferredUsername),
-        subtitle: user.bio != null
+        title: Text((user.user.preferredUsername == null ||
+                user.user.preferredUsername.isEmpty)
+            ? '@${user.user.name}'
+            : user.user.preferredUsername),
+        subtitle: user.user.bio != null
             ? Opacity(
                 opacity: 0.5,
                 child: MarkdownText(
-                  user.bio,
+                  user.user.bio,
                   instanceHost: user.instanceHost,
                 ),
               )
             : null,
-        onTap: () => goToUser.byId(context, user.instanceHost, user.id),
-        leading: user.avatar != null
+        onTap: () => goToUser.byId(context, user.instanceHost, user.user.id),
+        leading: user.user.avatar != null
             ? CachedNetworkImage(
                 height: 50,
                 width: 50,
-                imageUrl: user.avatar,
+                imageUrl: user.user.avatar,
                 errorWidget: (_, __, ___) =>
                     const SizedBox(height: 50, width: 50),
                 imageBuilder: (context, imageProvider) => Container(

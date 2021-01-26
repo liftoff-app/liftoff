@@ -2,13 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/pictrs.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/image_picker.dart';
 import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../util/pictrs.dart';
+import '../widgets/bottom_safe.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
@@ -28,9 +30,8 @@ class ManageAccountPage extends HookWidget {
     final theme = Theme.of(context);
 
     final userFuture = useMemoized(() async {
-      final site = await LemmyApi(instanceHost)
-          .v1
-          .getSite(auth: accountStore.tokenFor(instanceHost, username).raw);
+      final site = await LemmyApiV2(instanceHost).run(
+          GetSite(auth: accountStore.tokenFor(instanceHost, username).raw));
 
       return site.myUser;
     });
@@ -45,7 +46,7 @@ class ManageAccountPage extends HookWidget {
             Text('@$instanceHost@$username', style: theme.textTheme.headline6),
         centerTitle: true,
       ),
-      body: FutureBuilder<User>(
+      body: FutureBuilder<UserSafeSettings>(
         future: userFuture,
         builder: (_, userSnap) {
           if (userSnap.hasError) {
@@ -67,7 +68,7 @@ class _ManageAccount extends HookWidget {
       : assert(user != null),
         super(key: key);
 
-  final User user;
+  final UserSafeSettings user;
 
   @override
   Widget build(BuildContext context) {
@@ -104,35 +105,35 @@ class _ManageAccount extends HookWidget {
       saveDelayedLoading.start();
 
       try {
-        await LemmyApi(user.instanceHost).v1.saveUserSettings(
-              showNsfw: showNsfw.value,
-              theme: user.theme,
-              defaultSortType: defaultSortType.value,
-              defaultListingType: defaultListingType.value,
-              lang: user.lang,
-              showAvatars: showAvatars.value,
-              sendNotificationsToEmail: sendNotificationsToEmail.value,
-              auth: token.raw,
-              avatar: avatar.current,
-              banner: banner.current,
-              newPassword: newPasswordController.text.isEmpty
-                  ? null
-                  : newPasswordController.text,
-              newPasswordVerify: newPasswordVerifyController.text.isEmpty
-                  ? null
-                  : newPasswordVerifyController.text,
-              oldPassword: oldPasswordController.text.isEmpty
-                  ? null
-                  : oldPasswordController.text,
-              matrixUserId: matrixUserController.text.isEmpty
-                  ? null
-                  : matrixUserController.text,
-              preferredUsername: displayNameController.text.isEmpty
-                  ? null
-                  : displayNameController.text,
-              bio: bioController.text.isEmpty ? null : bioController.text,
-              email: emailController.text.isEmpty ? null : emailController.text,
-            );
+        await LemmyApiV2(user.instanceHost).run(SaveUserSettings(
+          showNsfw: showNsfw.value,
+          theme: user.theme,
+          defaultSortType: defaultSortType.value,
+          defaultListingType: defaultListingType.value,
+          lang: user.lang,
+          showAvatars: showAvatars.value,
+          sendNotificationsToEmail: sendNotificationsToEmail.value,
+          auth: token.raw,
+          avatar: avatar.current,
+          banner: banner.current,
+          newPassword: newPasswordController.text.isEmpty
+              ? null
+              : newPasswordController.text,
+          newPasswordVerify: newPasswordVerifyController.text.isEmpty
+              ? null
+              : newPasswordVerifyController.text,
+          oldPassword: oldPasswordController.text.isEmpty
+              ? null
+              : oldPasswordController.text,
+          matrixUserId: matrixUserController.text.isEmpty
+              ? null
+              : matrixUserController.text,
+          preferredUsername: displayNameController.text.isEmpty
+              ? null
+              : displayNameController.text,
+          bio: bioController.text.isEmpty ? null : bioController.text,
+          email: emailController.text.isEmpty ? null : emailController.text,
+        ));
 
         informAcceptedAvatarRef.current();
         informAcceptedBannerRef.current();
@@ -186,10 +187,10 @@ class _ManageAccount extends HookWidget {
         deleteDelayedLoading.start();
 
         try {
-          await LemmyApi(user.instanceHost).v1.deleteAccount(
-                password: deleteAccountPasswordController.text,
-                auth: token.raw,
-              );
+          await LemmyApiV2(user.instanceHost).run(DeleteAccount(
+            password: deleteAccountPasswordController.text,
+            auth: token.raw,
+          ));
 
           accountsStore.removeAccount(user.instanceHost, user.name);
           Navigator.of(context).pop();
@@ -430,6 +431,7 @@ class _ManageAccount extends HookWidget {
           ),
           child: const Text('DELETE ACCOUNT'),
         ),
+        const BottomSafe(),
       ],
     );
   }
@@ -439,7 +441,7 @@ class _ManageAccount extends HookWidget {
 class _ImagePicker extends HookWidget {
   final String name;
   final String initialUrl;
-  final User user;
+  final UserSafeSettings user;
   final ValueChanged<String> onChange;
 
   /// _ImagePicker will set the ref to a callback that can inform _ImagePicker
@@ -478,10 +480,10 @@ class _ImagePicker extends HookWidget {
         if (pic != null) {
           delayedLoading.start();
 
-          final upload = await LemmyApi(user.instanceHost).pictrs.upload(
-                filePath: pic.path,
-                auth: accountsStore.tokenFor(user.instanceHost, user.name).raw,
-              );
+          final upload = await PictrsApi(user.instanceHost).upload(
+            filePath: pic.path,
+            auth: accountsStore.tokenFor(user.instanceHost, user.name).raw,
+          );
           pictrsDeleteToken.value = upload.files[0];
           url.value =
               pathToPictrs(user.instanceHost, pictrsDeleteToken.value.file);
@@ -497,8 +499,7 @@ class _ImagePicker extends HookWidget {
     }
 
     removePicture({bool updateState = true}) {
-      LemmyApi(user.instanceHost)
-          .pictrs
+      PictrsApi(user.instanceHost)
           .delete(pictrsDeleteToken.value)
           .catchError((_) {});
 

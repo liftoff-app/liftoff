@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/lemmy_api_client.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
@@ -20,12 +20,12 @@ class SavePostButton extends HookWidget {
     final loggedInAction = useLoggedInAction(post.instanceHost);
 
     savePost(Jwt token) async {
-      final api = LemmyApi(post.instanceHost).v1;
+      final api = LemmyApiV2(post.instanceHost);
 
       loading.start();
       try {
-        final res = await api.savePost(
-            postId: post.id, save: !isSaved.value, auth: token.raw);
+        final res = await api.run(SavePost(
+            postId: post.post.id, save: !isSaved.value, auth: token.raw));
         isSaved.value = res.saved;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
