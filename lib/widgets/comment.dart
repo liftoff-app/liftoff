@@ -82,14 +82,8 @@ class CommentWidget extends HookWidget {
       commentTree.comment.comment.creatorId ==
       commentTree.comment.post.creatorId;
 
-  // bool get isMine => commentTree.comment.comment.creatorId == ;
-
-  // commentTree.comment.comment.creatorId == commentTree.comment.
-  // commentTree.comment.userId; // FIXME: WHAT SHOULD REPLACE USER ID????
-
   @override
   Widget build(BuildContext context) {
-    print(commentTree.comment.comment.id);
     final theme = Theme.of(context);
 
     final accStore = useAccountsStore();

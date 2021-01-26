@@ -32,7 +32,6 @@ class AddAccountPage extends HookWidget {
     final selectedInstance = useState(instanceHost);
     final icon = useState<String>(null);
     useEffect(() {
-      // LemmyApi(selectedInstance.value).v2.run(GetPost(id: ));
       LemmyApiV2(selectedInstance.value)
           .run(GetSite())
           .then((site) => icon.value = site.siteView.site.icon);

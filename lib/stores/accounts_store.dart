@@ -220,10 +220,8 @@ class AccountsStore extends ChangeNotifier {
       usernameOrEmail: usernameOrEmail,
       password: password,
     ));
-    // lemmy.login();
-    final userData = await lemmy
-        .run(GetSite(auth: token.raw))
-        .then((value) => value.myUser); // TODO: change Mser to User
+    final userData =
+        await lemmy.run(GetSite(auth: token.raw)).then((value) => value.myUser);
 
     _tokens[instanceHost][userData.name] = token;
 

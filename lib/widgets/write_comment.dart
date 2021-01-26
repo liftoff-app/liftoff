@@ -59,13 +59,6 @@ class WriteComment extends HookWidget {
 
       delayed.start();
       try {
-        print('''
-CreateComment(
-  content: ${controller.text},
-  postId: ${post?.post?.id ?? comment.post.id},
-  parentId: ${comment?.comment?.id},
-  auth: ${token.raw},
-)''');
         final res = await api.run(CreateComment(
           content: controller.text,
           postId: post?.post?.id ?? comment.post.id,
