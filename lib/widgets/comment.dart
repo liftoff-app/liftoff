@@ -216,7 +216,7 @@ class CommentWidget extends HookWidget {
     }
 
     // decide which username to use
-    final username = comment.creator.properName;
+    final username = comment.creator.displayName;
 
     final body = () {
       if (isDeleted.value) {

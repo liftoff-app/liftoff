@@ -33,8 +33,8 @@ extension GetInstanceCommentView on Comment {
 // TODO: change it to something more robust? regex?
 String _extract(String s) => cleanUpUrl(s.split('/')[2]);
 
-extension ProperName on UserSafe {
-  String get properName {
+extension DisplayName on UserSafe {
+  String get displayName {
     final name = () {
       if (preferredUsername != null && preferredUsername != '') {
         return preferredUsername;
