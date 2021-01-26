@@ -210,11 +210,9 @@ class HomeTab extends HookWidget {
           ),
         ),
       ),
-      body: SafeArea(
-        child: InfiniteHomeList(
-          controller: isc,
-          selectedList: selectedList.value,
-        ),
+      body: InfiniteHomeList(
+        controller: isc,
+        selectedList: selectedList.value,
       ),
     );
   }
