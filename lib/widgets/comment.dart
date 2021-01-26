@@ -374,7 +374,7 @@ class CommentWidget extends HookWidget {
                   if (comment.creatorBannedFromCommunity)
                     const _CommentTag('BANNED FROM COMMUNITY', Colors.red),
                   const Spacer(),
-                  if (collapsed.value && commentTree.children.length > 0) ...[
+                  if (collapsed.value && commentTree.children.isNotEmpty) ...[
                     _CommentTag('+${commentTree.children.length}',
                         Theme.of(context).accentColor),
                     const SizedBox(width: 7),

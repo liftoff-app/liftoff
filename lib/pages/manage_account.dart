@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lemmur/widgets/bottom_safe.dart';
 import 'package:lemmy_api_client/pictrs.dart';
 import 'package:lemmy_api_client/v2.dart';
 
@@ -11,6 +10,7 @@ import '../hooks/image_picker.dart';
 import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../util/pictrs.dart';
+import '../widgets/bottom_safe.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
