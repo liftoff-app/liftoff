@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v2.dart';
 
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/markdown_text.dart';
 
@@ -42,10 +43,7 @@ class UsersListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        title: Text((user.user.preferredUsername == null ||
-                user.user.preferredUsername.isEmpty)
-            ? '@${user.user.name}'
-            : user.user.preferredUsername),
+        title: Text(user.user.displayName),
         subtitle: user.user.bio != null
             ? Opacity(
                 opacity: 0.5,

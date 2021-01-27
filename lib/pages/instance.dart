@@ -7,6 +7,7 @@ import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../util/text_color.dart';
@@ -363,10 +364,7 @@ class _AboutTab extends HookWidget {
               ),
             ),
             ...site.admins.map((u) => ListTile(
-                  title: Text((u.user.preferredUsername == null ||
-                          u.user.preferredUsername.isEmpty)
-                      ? '@${u.user.name}'
-                      : u.user.preferredUsername),
+                  title: Text(u.user.displayName),
                   subtitle: u.user.bio != null
                       ? MarkdownText(u.user.bio, instanceHost: instanceHost)
                       : null,
