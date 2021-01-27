@@ -215,9 +215,6 @@ class CommentWidget extends HookWidget {
       delayedVoting.cancel();
     }
 
-    // decide which username to use
-    final username = comment.creator.displayName;
-
     final body = () {
       if (isDeleted.value) {
         return const Flexible(
@@ -363,7 +360,7 @@ class CommentWidget extends HookWidget {
                   InkWell(
                     onTap: () => goToUser.byId(
                         context, comment.instanceHost, comment.creator.id),
-                    child: Text(username,
+                    child: Text(comment.creator.originDisplayName,
                         style: TextStyle(
                           color: Theme.of(context).accentColor,
                         )),

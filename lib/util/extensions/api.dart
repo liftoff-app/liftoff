@@ -26,18 +26,18 @@ extension GetOriginInstanceCommentView on Comment {
 
 String _extract(String url) => urlHost(url);
 
-extension DisplayName on UserSafe {
+extension DisplayNames on UserSafe {
   String get displayName {
-    final name = () {
-      if (preferredUsername != null && preferredUsername != '') {
-        return preferredUsername;
-      } else {
-        return '@${this.name}';
-      }
-    }();
+    if (preferredUsername != null && preferredUsername != '') {
+      return preferredUsername;
+    }
 
-    if (!local) return '$name@$originInstanceHost';
+    return '@$name';
+  }
 
-    return name;
+  String get originDisplayName {
+    if (!local) return '$displayName@$originInstanceHost';
+
+    return displayName;
   }
 }

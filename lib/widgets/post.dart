@@ -206,7 +206,7 @@ class PostWidget extends HookWidget {
                                     style:
                                         TextStyle(fontWeight: FontWeight.w300)),
                                 TextSpan(
-                                  text: ' ${post.creator.displayName}',
+                                  text: ' ${post.creator.originDisplayName}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600),
                                   recognizer: TapGestureRecognizer()

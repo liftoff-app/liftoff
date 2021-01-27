@@ -205,7 +205,7 @@ class _UserOverview extends HookWidget {
                   padding: EdgeInsets.only(
                       top: userView.user.avatar == null ? 10 : 0),
                   child: Text(
-                    userView.user.preferredUsername ?? userView.user.name,
+                    userView.user.displayName,
                     style: theme.textTheme.headline6,
                   ),
                 ),
