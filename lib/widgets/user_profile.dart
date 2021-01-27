@@ -239,7 +239,7 @@ class _UserOverview extends HookWidget {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.comment, // TODO: should be article icon
+                            Icons.article,
                             size: 15,
                             color: colorOnTopOfAccentColor,
                           ),
