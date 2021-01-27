@@ -13,6 +13,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../pages/full_post.dart';
 import '../url_launcher.dart';
+import '../util/cleanup_url.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
@@ -107,141 +108,156 @@ class PostWidget extends HookWidget {
     final urlDomain = () {
       if (whatType(post.post.url) == MediaType.none) return null;
 
-      final url = post.post.url.split('/')[2]; // TODO: change to Url(str).host
-      if (url.startsWith('www.')) return url.substring(4);
-      return url;
+      return urlHost(post.post.url);
     }();
 
     /// assemble info section
-    Widget info() => Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
+    Widget info() => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
                 children: [
-                  if (post.community.icon != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: InkWell(
-                        onTap: () => goToCommunity.byId(
-                            context, instanceHost, post.community.id),
-                        child: SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: CachedNetworkImage(
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: imageProvider,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (post.community.icon != null)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: InkWell(
+                            onTap: () => goToCommunity.byId(
+                                context, instanceHost, post.community.id),
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CachedNetworkImage(
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: imageProvider,
+                                    ),
+                                  ),
                                 ),
+                                imageUrl: post.community.icon,
+                                errorWidget: (context, url, error) =>
+                                    Text(error.toString()),
                               ),
                             ),
-                            imageUrl: post.community.icon,
-                            errorWidget: (context, url, error) =>
-                                Text(error.toString()),
                           ),
                         ),
-                      ),
-                    ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
-                    RichText(
-                      overflow: TextOverflow.ellipsis, // TODO: fix overflowing
-                      text: TextSpan(
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: theme.textTheme.bodyText1.color),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          const TextSpan(
-                              text: '!',
-                              style: TextStyle(fontWeight: FontWeight.w300)),
-                          TextSpan(
-                              text: post.community.name,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => goToCommunity.byId(
-                                    context, instanceHost, post.community.id)),
-                          const TextSpan(
-                              text: '@',
-                              style: TextStyle(fontWeight: FontWeight.w300)),
-                          TextSpan(
-                              text: post.post.originInstanceHost,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => goToInstance(
-                                    context, post.post.originInstanceHost)),
+                          RichText(
+                            overflow:
+                                TextOverflow.ellipsis, // TODO: fix overflowing
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: theme.textTheme.bodyText1.color),
+                              children: [
+                                const TextSpan(
+                                    text: '!',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w300)),
+                                TextSpan(
+                                    text: post.community.name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => goToCommunity.byId(
+                                          context,
+                                          instanceHost,
+                                          post.community.id)),
+                                const TextSpan(
+                                    text: '@',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w300)),
+                                TextSpan(
+                                    text: post.post.originInstanceHost,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => goToInstance(context,
+                                          post.post.originInstanceHost)),
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                    )
-                  ]),
-                  Row(children: [
-                    RichText(
-                        overflow: TextOverflow.ellipsis,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: theme.textTheme.bodyText1.color),
-                          children: [
-                            const TextSpan(
-                                text: 'by',
-                                style: TextStyle(fontWeight: FontWeight.w300)),
-                            TextSpan(
-                              text: ' ${post.creator.displayName}',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => goToUser.byId(
-                                      context,
-                                      post.instanceHost,
-                                      post.creator.id,
-                                    ),
+                      Row(
+                        children: [
+                          RichText(
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: theme.textTheme.bodyText1.color),
+                              children: [
+                                const TextSpan(
+                                    text: 'by',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w300)),
+                                TextSpan(
+                                  text: ' ${post.creator.displayName}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => goToUser.byId(
+                                          context,
+                                          post.instanceHost,
+                                          post.creator.id,
+                                        ),
+                                ),
+                                TextSpan(
+                                    text:
+                                        ''' · ${timeago.format(post.post.published, locale: 'en_short')}'''),
+                                if (post.post.locked)
+                                  const TextSpan(text: ' · 🔒'),
+                                if (post.post.stickied)
+                                  const TextSpan(text: ' · 📌'),
+                                if (post.post.nsfw) const TextSpan(text: ' · '),
+                                if (post.post.nsfw)
+                                  const TextSpan(
+                                      text: 'NSFW',
+                                      style: TextStyle(color: Colors.red)),
+                                if (urlDomain != null)
+                                  TextSpan(text: ' · $urlDomain'),
+                                if (post.post.removed)
+                                  const TextSpan(text: ' · REMOVED'),
+                                if (post.post.deleted)
+                                  const TextSpan(text: ' · DELETED'),
+                              ],
                             ),
-                            TextSpan(
-                                text:
-                                    ''' · ${timeago.format(post.post.published, locale: 'en_short')}'''),
-                            if (post.post.locked) const TextSpan(text: ' · 🔒'),
-                            if (post.post.stickied)
-                              const TextSpan(text: ' · 📌'),
-                            if (post.post.nsfw) const TextSpan(text: ' · '),
-                            if (post.post.nsfw)
-                              const TextSpan(
-                                  text: 'NSFW',
-                                  style: TextStyle(color: Colors.red)),
-                            if (urlDomain != null)
-                              TextSpan(text: ' · $urlDomain'),
-                            if (post.post.removed)
-                              const TextSpan(text: ' · REMOVED'),
-                            if (post.post.deleted)
-                              const TextSpan(text: ' · DELETED'),
-                          ],
-                        ))
-                  ]),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  if (!fullPost)
+                    Column(
+                      children: [
+                        IconButton(
+                          onPressed: () => showMoreMenu(context, post),
+                          icon: Icon(moreIcon),
+                          padding: const EdgeInsets.all(0),
+                          visualDensity: VisualDensity.compact,
+                        )
+                      ],
+                    )
                 ],
               ),
-              const Spacer(),
-              if (!fullPost)
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: () => showMoreMenu(context, post),
-                      icon: Icon(moreIcon),
-                      padding: const EdgeInsets.all(0),
-                      visualDensity: VisualDensity.compact,
-                    )
-                  ],
-                )
-            ]),
-          ),
-        ]);
+            ),
+          ],
+        );
 
     /// assemble title section
     Widget title() => Padding(
@@ -263,27 +279,29 @@ class PostWidget extends HookWidget {
                 const Spacer(),
                 InkWell(
                   onTap: _openLink,
-                  child: Stack(children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: CachedNetworkImage(
-                        imageUrl: post.post.thumbnailUrl,
-                        width: 70,
-                        height: 70,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) =>
-                            Text(error.toString()),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: CachedNetworkImage(
+                          imageUrl: post.post.thumbnailUrl,
+                          width: 70,
+                          height: 70,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) =>
+                              Text(error.toString()),
+                        ),
                       ),
-                    ),
-                    const Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Icon(
-                        Icons.launch,
-                        size: 20,
-                      ),
-                    )
-                  ]),
+                      const Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Icon(
+                          Icons.launch,
+                          size: 20,
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ]
             ],
@@ -307,24 +325,30 @@ class PostWidget extends HookWidget {
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  Row(children: [
-                    const Spacer(),
-                    Text('$urlDomain ',
-                        style: theme.textTheme.caption
-                            .apply(fontStyle: FontStyle.italic)),
-                    const Icon(Icons.launch, size: 12),
-                  ]),
-                  Row(children: [
-                    Flexible(
-                        child: Text(post.post.embedTitle ?? '',
-                            style: theme.textTheme.subtitle1
-                                .apply(fontWeightDelta: 2)))
-                  ]),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      Text('$urlDomain ',
+                          style: theme.textTheme.caption
+                              .apply(fontStyle: FontStyle.italic)),
+                      const Icon(Icons.launch, size: 12),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                          child: Text(post.post.embedTitle ?? '',
+                              style: theme.textTheme.subtitle1
+                                  .apply(fontWeightDelta: 2)))
+                    ],
+                  ),
                   if (post.post.embedDescription != null &&
                       post.post.embedDescription.isNotEmpty)
-                    Row(children: [
-                      Flexible(child: Text(post.post.embedDescription))
-                    ]),
+                    Row(
+                      children: [
+                        Flexible(child: Text(post.post.embedDescription))
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -462,16 +486,17 @@ class _Voting extends HookWidget {
           Text(NumberFormat.compact()
               .format(post.counts.score + (wasVoted ? 0 : myVote.value.value))),
         IconButton(
-            icon: Icon(
-              Icons.arrow_downward,
-              color: myVote.value == VoteType.down ? Colors.red : null,
+          icon: Icon(
+            Icons.arrow_downward,
+            color: myVote.value == VoteType.down ? Colors.red : null,
+          ),
+          onPressed: loggedInAction(
+            (token) => vote(
+              myVote.value == VoteType.down ? VoteType.none : VoteType.down,
+              token,
             ),
-            onPressed: loggedInAction(
-              (token) => vote(
-                myVote.value == VoteType.down ? VoteType.none : VoteType.down,
-                token,
-              ),
-            )),
+          ),
+        ),
       ],
     );
   }

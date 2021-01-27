@@ -8,30 +8,23 @@ import '../cleanup_url.dart';
 // `post.instanceHost == 'lemmy.ml'
 // && post.originInstanceHost == 'lemmygrad.ml``
 
-// [.isLocal] is true iff `.originInstanceHost == .instanceHost`
-
-extension GetInstanceCommunitySafe on CommunitySafe {
+extension GetOriginInstanceCommunitySafe on CommunitySafe {
   String get originInstanceHost => _extract(actorId);
-  // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceUserSafe on UserSafe {
+extension GetOriginInstanceUserSafe on UserSafe {
   String get originInstanceHost => _extract(actorId);
-  // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstancePostView on Post {
+extension GetOriginInstancePostView on Post {
   String get originInstanceHost => _extract(apId);
-  // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-extension GetInstanceCommentView on Comment {
+extension GetOriginInstanceCommentView on Comment {
   String get originInstanceHost => _extract(apId);
-  // bool get isLocal => originInstanceHost == instanceHost;
 }
 
-// TODO: change it to something more robust? regex?
-String _extract(String s) => cleanUpUrl(s.split('/')[2]);
+String _extract(String url) => urlHost(url);
 
 extension DisplayName on UserSafe {
   String get displayName {
