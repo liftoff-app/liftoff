@@ -24,7 +24,6 @@ class HomeTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: needs to be an observer? for accounts changes
     final accStore = useAccountsStore();
     final selectedList = useState(_SelectedList(
         listingType: accStore.hasNoAccount
@@ -34,14 +33,39 @@ class HomeTab extends HookWidget {
     final theme = Theme.of(context);
     final instancesIcons = useMemoFuture(() async {
       final instances = accStore.instances.toList(growable: false);
-      final sites = await Future.wait(instances
-          .map((e) => LemmyApiV2(e).run(GetSite()).catchError((e) => null)));
+      final sites = await Future.wait(
+        instances
+            .map((e) => LemmyApiV2(e).run(GetSite()).catchError((e) => null)),
+      );
 
       return {
         for (var i = 0; i < sites.length; i++)
           instances[i]: sites[i].siteView.site.icon
       };
     });
+
+    // if the current SelectedList points to something that no longer exists
+    // switch it to something else
+    // cases include:
+    // - listingType == subscribed on an instance that has no longer a logged in account
+    // - instanceHost of a removed instance
+    useEffect(() {
+      if (accStore.isAnonymousFor(selectedList.value.instanceHost) &&
+              selectedList.value.listingType == PostListingType.subscribed ||
+          !accStore.instances.contains(selectedList.value.instanceHost)) {
+        selectedList.value = _SelectedList(
+          listingType: accStore.hasNoAccount
+              ? PostListingType.all
+              : PostListingType.subscribed,
+        );
+      }
+
+      return null;
+    }, [
+      accStore.isAnonymousFor(selectedList.value.instanceHost),
+      accStore.hasNoAccount,
+      accStore.instances.length,
+    ]);
 
     handleListChange() async {
       final val = await showModalBottomSheet<_SelectedList>(
@@ -50,6 +74,7 @@ class HomeTab extends HookWidget {
         context: context,
         builder: (context) {
           pop(_SelectedList thing) => Navigator.of(context).pop(thing);
+
           return BottomModal(
             child: Column(
               children: [
@@ -62,8 +87,25 @@ class HomeTab extends HookWidget {
                       VisualDensity(vertical: VisualDensity.minimumDensity),
                   leading: SizedBox.shrink(),
                 ),
+                ListTile(
+                  title: Text(
+                    'Subscribed',
+                    style: TextStyle(
+                      color: accStore.hasNoAccount
+                          ? theme.textTheme.bodyText1.color.withOpacity(0.4)
+                          : null,
+                    ),
+                  ),
+                  onTap: accStore.hasNoAccount
+                      ? null
+                      : () => pop(
+                            const _SelectedList(
+                              listingType: PostListingType.subscribed,
+                            ),
+                          ),
+                  leading: const SizedBox(width: 20),
+                ),
                 for (final listingType in [
-                  PostListingType.subscribed,
                   PostListingType.local,
                   PostListingType.all,
                 ])
@@ -326,14 +368,15 @@ class InfiniteHomeList extends HookWidget {
 }
 
 class _SelectedList {
+  /// when null it implies the 'EVERYTHING' mode
   final String instanceHost;
   final PostListingType listingType;
 
   const _SelectedList({
     @required this.listingType,
     this.instanceHost,
-  });
+  }) : assert(listingType != null);
 
   String toString() =>
-      'SelectedList({instanceHost: $instanceHost, listingType: $listingType})';
+      'SelectedList(instanceHost: $instanceHost, listingType: $listingType)';
 }
