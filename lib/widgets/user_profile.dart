@@ -2,11 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
-import 'package:lemmur/hooks/memo_future.dart';
 import 'package:lemmy_api_client/v2.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../pages/manage_account.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
@@ -394,7 +395,12 @@ class _AboutTab extends HookWidget {
                 Text('edit profile'),
               ],
             ),
-            onTap: () {}, // TODO: go to account editing
+            onTap: () => goTo(
+              context,
+              (_) => ManageAccountPage(
+                  instanceHost: userDetails.instanceHost,
+                  username: userDetails.userView.user.name),
+            ),
           ),
         if (userDetails.userView.user.bio != null) ...[
           Padding(

@@ -28,7 +28,6 @@ class AboutTile extends HookWidget {
     final packageInfo = packageInfoSnap.data;
     final changelog = changelogSnap.data;
 
-    // TODO: add app icon
     return AboutListTile(
       icon: const Icon(Icons.info),
       aboutBoxChildren: [
