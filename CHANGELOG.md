@@ -1,3 +1,10 @@
+## Unreleased
+
+### Fixed
+
+- Fixed a bug where replying to a comment would instead reply to the parent of that comment
+- Fixed a bug where comments would be displayed as a grey block
+
 ## v0.2.0 - 2021-01-27
 
 ### Breaking changes

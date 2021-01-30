@@ -62,7 +62,7 @@ class WriteComment extends HookWidget {
         final res = await api.run(CreateComment(
           content: controller.text,
           postId: post?.post?.id ?? comment.post.id,
-          parentId: comment?.recipient?.id,
+          parentId: comment?.comment?.id,
           auth: token.raw,
         ));
         Navigator.of(context).pop(res.commentView);
