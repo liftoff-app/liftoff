@@ -4,6 +4,8 @@
 
 - Fixed a bug where replying to a comment would instead reply to the parent of that comment
 - Fixed a bug where comments would be displayed as a grey block
+- Fixed a bug where adding/removing accounts could cause the home/communities/search tabs to crash
+- Fixed a bug where up/down voting twice cause the comment/post to crash
 
 ## v0.2.0 - 2021-01-27
 
