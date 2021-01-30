@@ -390,11 +390,10 @@ class PostWidget extends HookWidget {
               const Spacer(),
               if (!fullPost)
                 IconButton(
-                    icon: const Icon(Icons.share),
-                    onPressed: () => Share.text(
-                        'Share post url',
-                        post.post.apId,
-                        'text/plain')), // TODO: find a way to mark it as url
+                  icon: const Icon(Icons.share),
+                  onPressed: () => Share.text(
+                      'Share post url', post.post.apId, 'text/plain'),
+                ), // TODO: find a way to mark it as url
               if (!fullPost) SavePostButton(post),
               _Voting(post),
             ],
@@ -440,7 +439,8 @@ class _Voting extends HookWidget {
   final bool wasVoted;
 
   _Voting(this.post)
-      : wasVoted = (post.myVote ?? VoteType.none) != VoteType.none;
+      : assert(post != null),
+        wasVoted = (post.myVote ?? VoteType.none) != VoteType.none;
 
   @override
   Widget build(BuildContext context) {
@@ -456,7 +456,7 @@ class _Voting extends HookWidget {
       try {
         final res = await api.run(
             CreatePostLike(postId: post.post.id, score: vote, auth: token.raw));
-        myVote.value = res.myVote;
+        myVote.value = res.myVote ?? VoteType.none;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)

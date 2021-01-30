@@ -205,7 +205,7 @@ class CommentWidget extends HookWidget {
       try {
         final res = await api.run(CreateCommentLike(
             commentId: comment.comment.id, score: vote, auth: token.raw));
-        myVote.value = res.commentView.myVote;
+        myVote.value = res.commentView.myVote ?? VoteType.none;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
