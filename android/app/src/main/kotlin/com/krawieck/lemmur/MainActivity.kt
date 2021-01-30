@@ -1,4 +1,4 @@
-package com.example.lemmur
+package com.krawieck.lemmur
 
 import io.flutter.embedding.android.FlutterActivity
 

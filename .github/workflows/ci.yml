@@ -35,11 +35,26 @@ jobs:
       - name: Run lints
         run: flutter analyze
 
-      - name: Run dartfmt
-        run: dartfmt --dry-run --set-exit-if-changed .
+      - name: Check formatting
+        run: flutter format --dry-run --set-exit-if-changed .
 
       - name: Run tests
         run: flutter test
+
+      - name: Inject keystore
+        working-directory: android
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ALIAS: ${{ secrets.ALIAS }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        run: |
+          echo storePassword=$KEY_STORE_PASSWORD > key.properties
+          echo keyPassword=$KEY_PASSWORD >> key.properties
+          echo keyAlias=$ALIAS >> key.properties
+          echo storeFile=$HOME/key.jks >> key.properties
+
+          echo $SIGNING_KEY | base64 -d | tee ~/key.jks >/dev/null
 
       - name: Android build
         run: flutter build apk --split-per-abi
