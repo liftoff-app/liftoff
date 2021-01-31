@@ -10,6 +10,7 @@ import '../hooks/image_picker.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
@@ -61,7 +62,7 @@ class CreatePostPage extends HookWidget {
     final allCommunitiesSnap = useMemoFuture(
       () => LemmyApiV2(selectedInstance.value)
           .run(ListCommunities(
-        type: PostListingType.local,
+        type: PostListingType.all,
         sort: SortType.hot,
         limit: 9999,
         auth: accStore.defaultTokenFor(selectedInstance.value).raw,
@@ -134,22 +135,24 @@ class CreatePostPage extends HookWidget {
           contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
           border: OutlineInputBorder()),
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: selectedCommunity.value?.community?.name,
+        child: DropdownButton<int>(
+          value: selectedCommunity.value?.community?.id,
           hint: const Text('Community'),
-          onChanged: (val) => selectedCommunity.value = allCommunitiesSnap.data
-              .firstWhere((e) => e.community.name == val),
+          onChanged: (communityId) => selectedCommunity.value =
+              allCommunitiesSnap.data
+                  ?.firstWhere((e) => e.community.id == communityId),
           items: allCommunitiesSnap.hasData
               ? allCommunitiesSnap.data
-                  // FIXME: use id instead of name cuz it breaks with federation
                   .map((e) => DropdownMenuItem(
-                        value: e.community.name,
-                        child: Text(e.community.name),
+                        value: e.community.id,
+                        child: Text(e.community.local
+                            ? e.community.name
+                            : '${e.community.originInstanceHost}/${e.community.name}'),
                       ))
                   .toList()
               : const [
                   DropdownMenuItem(
-                    value: '',
+                    value: -1,
                     child: CircularProgressIndicator(),
                   )
                 ],
