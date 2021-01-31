@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- Online users count is now correctly displayed
+
 ### Fixed
 
 - Fixed a bug where replying to a comment would instead reply to the parent of that comment

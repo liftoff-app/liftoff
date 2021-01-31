@@ -301,7 +301,7 @@ class _AboutTab extends HookWidget {
                 scrollDirection: Axis.horizontal,
                 children: [
                   const SizedBox(width: 7),
-                  const _Badge('X users online'),
+                  _Badge('${site.online} users online'),
                   _Badge('${site.siteView.counts.users} users'),
                   _Badge('${site.siteView.counts.communities} communities'),
                   _Badge('${site.siteView.counts.posts} posts'),
