@@ -7,6 +7,7 @@ import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../util/text_color.dart';
@@ -31,8 +32,8 @@ class InstancePage extends HookWidget {
   InstancePage({@required this.instanceHost})
       : assert(instanceHost != null),
         siteFuture = LemmyApiV2(instanceHost).run(GetSite()),
-        communitiesFuture =
-            LemmyApiV2(instanceHost).run(ListCommunities(sort: SortType.hot));
+        communitiesFuture = LemmyApiV2(instanceHost).run(ListCommunities(
+            type: PostListingType.local, sort: SortType.hot, limit: 6));
 
   @override
   Widget build(BuildContext context) {
@@ -267,13 +268,15 @@ class _AboutTab extends HookWidget {
       goTo(
         context,
         (_) => CommunitiesListPage(
-          fetcher: (page, batchSize, sortType) =>
-              LemmyApiV2(instanceHost).run(ListCommunities(
-            sort: sortType,
-            limit: batchSize,
-            page: page,
-            auth: accStore.defaultTokenFor(instanceHost)?.raw,
-          )),
+          fetcher: (page, batchSize, sortType) => LemmyApiV2(instanceHost).run(
+            ListCommunities(
+              type: PostListingType.local,
+              sort: sortType,
+              limit: batchSize,
+              page: page,
+              auth: accStore.defaultTokenFor(instanceHost)?.raw,
+            ),
+          ),
           title: 'Communities of ${site.siteView.site.name}',
         ),
       );
@@ -298,7 +301,7 @@ class _AboutTab extends HookWidget {
                 scrollDirection: Axis.horizontal,
                 children: [
                   const SizedBox(width: 7),
-                  const _Badge('X users online'),
+                  _Badge('${site.online} users online'),
                   _Badge('${site.siteView.counts.users} users'),
                   _Badge('${site.siteView.counts.communities} communities'),
                   _Badge('${site.siteView.counts.posts} posts'),
@@ -317,28 +320,30 @@ class _AboutTab extends HookWidget {
               ),
             ),
             if (commSnap.hasData)
-              ...commSnap.data.take(6).map((c) => ListTile(
-                    onTap: () => goToCommunity.byId(
-                        context, c.instanceHost, c.community.id),
-                    title: Text(c.community.name),
-                    leading: c.community.icon != null
-                        ? CachedNetworkImage(
-                            height: 50,
-                            width: 50,
-                            imageUrl: c.community.icon,
-                            errorWidget: (_, __, ___) =>
-                                const SizedBox(width: 50, height: 50),
-                            imageBuilder: (context, imageProvider) => Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: imageProvider,
-                                    ),
-                                  ),
-                                ))
-                        : const SizedBox(width: 50),
-                  ))
+              for (final c in commSnap.data)
+                ListTile(
+                  onTap: () => goToCommunity.byId(
+                      context, c.instanceHost, c.community.id),
+                  title: Text(c.community.name),
+                  leading: c.community.icon != null
+                      ? CachedNetworkImage(
+                          height: 50,
+                          width: 50,
+                          imageUrl: c.community.icon,
+                          errorWidget: (_, __, ___) =>
+                              const SizedBox(width: 50, height: 50),
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageProvider,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(width: 50),
+                )
             else if (commSnap.hasError)
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -362,31 +367,30 @@ class _AboutTab extends HookWidget {
                 ),
               ),
             ),
-            ...site.admins.map((u) => ListTile(
-                  title: Text((u.user.preferredUsername == null ||
-                          u.user.preferredUsername.isEmpty)
-                      ? '@${u.user.name}'
-                      : u.user.preferredUsername),
-                  subtitle: u.user.bio != null
-                      ? MarkdownText(u.user.bio, instanceHost: instanceHost)
-                      : null,
-                  onTap: () => goToUser.byId(context, instanceHost, u.user.id),
-                  leading: u.user.avatar != null
-                      ? CachedNetworkImage(
-                          height: 50,
-                          width: 50,
-                          imageUrl: u.user.avatar,
-                          errorWidget: (_, __, ___) =>
-                              const SizedBox(width: 50, height: 50),
-                          imageBuilder: (context, imageProvider) => Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover, image: imageProvider),
-                                ),
-                              ))
-                      : const SizedBox(width: 50),
-                )),
+            for (final u in site.admins)
+              ListTile(
+                title: Text(u.user.originDisplayName),
+                subtitle: u.user.bio != null
+                    ? MarkdownText(u.user.bio, instanceHost: instanceHost)
+                    : null,
+                onTap: () => goToUser.byId(context, instanceHost, u.user.id),
+                leading: u.user.avatar != null
+                    ? CachedNetworkImage(
+                        height: 50,
+                        width: 50,
+                        imageUrl: u.user.avatar,
+                        errorWidget: (_, __, ___) =>
+                            const SizedBox(width: 50, height: 50),
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover, image: imageProvider),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(width: 50),
+              ),
             const _Divider(),
             ListTile(
               title: const Center(child: Text('Banned users')),

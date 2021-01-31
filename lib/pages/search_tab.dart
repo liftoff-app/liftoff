@@ -12,12 +12,25 @@ class SearchTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final searchInputController = useTextEditingController();
+    final searchInputController = useListenable(useTextEditingController());
 
     final accStore = useAccountsStore();
-    final instanceHost = useState(accStore.instances.first);
-    useValueListenable(searchInputController);
+    // null if there are no added instances
+    final instanceHost = useState(
+      accStore.instances.firstWhere((_) => true, orElse: () => null),
+    );
 
+    if (instanceHost.value == null) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+        ),
+        body: const Center(
+          child: Text('You do not have any instances added'),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

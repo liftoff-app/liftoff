@@ -205,7 +205,7 @@ class CommentWidget extends HookWidget {
       try {
         final res = await api.run(CreateCommentLike(
             commentId: comment.comment.id, score: vote, auth: token.raw));
-        myVote.value = res.commentView.myVote;
+        myVote.value = res.commentView.myVote ?? VoteType.none;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         Scaffold.of(context)
@@ -214,9 +214,6 @@ class CommentWidget extends HookWidget {
       }
       delayedVoting.cancel();
     }
-
-    // decide which username to use
-    final username = comment.creator.displayName;
 
     final body = () {
       if (isDeleted.value) {
@@ -363,7 +360,7 @@ class CommentWidget extends HookWidget {
                   InkWell(
                     onTap: () => goToUser.byId(
                         context, comment.instanceHost, comment.creator.id),
-                    child: Text(username,
+                    child: Text(comment.creator.originDisplayName,
                         style: TextStyle(
                           color: Theme.of(context).accentColor,
                         )),

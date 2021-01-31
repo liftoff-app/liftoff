@@ -3,6 +3,7 @@ include: package:effective_dart/analysis_options.yaml
 linter:
   rules:
     public_member_api_docs: false
+    lines_longer_than_80_chars: false
 
     prefer_single_quotes: true
     prefer_final_locals: true
@@ -56,5 +57,6 @@ linter:
 analyzer:
   exclude:
     - "**/*.g.dart"
+    - "lib/gen/assets.gen.dart"
   strong-mode:
     implicit-casts: false

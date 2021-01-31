@@ -14,3 +14,14 @@ String cleanUpUrl(String url) {
 
   return newUrl;
 }
+
+// Returns host of a url without a leading 'www.' if present
+String urlHost(String url) {
+  final host = Uri.parse(url).host;
+
+  if (host.startsWith('www.')) {
+    return host.substring(4);
+  }
+
+  return host;
+}

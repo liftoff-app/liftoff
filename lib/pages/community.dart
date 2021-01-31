@@ -167,8 +167,11 @@ class CommunityPage extends HookWidget {
                 IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(
-                background:
-                    _CommunityOverview(community, instanceHost: instanceHost),
+                background: _CommunityOverview(
+                  community: community,
+                  instanceHost: instanceHost,
+                  onlineUsers: fullCommunitySnap.data?.online,
+                ),
               ),
             ),
             SliverPersistentHeader(
@@ -213,6 +216,7 @@ class CommunityPage extends HookWidget {
               _AboutTab(
                 community: community,
                 moderators: fullCommunitySnap.data?.moderators,
+                onlineUsers: fullCommunitySnap.data?.online,
               ),
             ],
           ),
@@ -225,10 +229,12 @@ class CommunityPage extends HookWidget {
 class _CommunityOverview extends StatelessWidget {
   final CommunityView community;
   final String instanceHost;
+  final int onlineUsers;
 
-  const _CommunityOverview(
-    this.community, {
+  const _CommunityOverview({
+    @required this.community,
     @required this.instanceHost,
+    @required this.onlineUsers,
   })  : assert(instanceHost != null),
         assert(goToInstance != null);
 
@@ -354,7 +360,9 @@ class _CommunityOverview extends StatelessWidget {
                           padding: EdgeInsets.only(right: 3),
                           child: Icon(Icons.record_voice_over, size: 20),
                         ),
-                        const Text('xx'), // TODO: display online users
+                        Text(onlineUsers == null
+                            ? 'xx'
+                            : compactNumber(onlineUsers)),
                         const Spacer(),
                       ],
                     ),
@@ -394,11 +402,13 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class _AboutTab extends StatelessWidget {
   final CommunityView community;
   final List<CommunityModeratorView> moderators;
+  final int onlineUsers;
 
   const _AboutTab({
     Key key,
     @required this.community,
     @required this.moderators,
+    @required this.onlineUsers,
   }) : super(key: key);
 
   void goToModlog() {
@@ -430,9 +440,9 @@ class _AboutTab extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: [
               // TODO: consider using Chips
-              const Padding(
-                padding: EdgeInsets.only(left: 7),
-                child: _Badge('X users online'),
+              Padding(
+                padding: const EdgeInsets.only(left: 7),
+                child: _Badge('${onlineUsers ?? 'X'} users online'),
               ),
               _Badge(
                   '''${community.counts.subscribers} subscriber${pluralS(community.counts.subscribers)}'''),

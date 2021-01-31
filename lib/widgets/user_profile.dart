@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/v2.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../pages/manage_account.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
@@ -17,21 +19,35 @@ import 'sortable_infinite_list.dart';
 
 /// Shared widget of UserPage and ProfileTab
 class UserProfile extends HookWidget {
-  final Future<FullUserView> _userDetails;
   final String instanceHost;
+  final int userId;
 
-  UserProfile({@required int userId, @required this.instanceHost})
-      : _userDetails = LemmyApiV2(instanceHost).run(GetUserDetails(
-            userId: userId, savedOnly: false, sort: SortType.active));
+  final FullUserView _fullUserView;
 
-  UserProfile.fromFullUserView(FullUserView fullUserView)
-      : _userDetails = Future.value(fullUserView),
-        instanceHost = fullUserView.instanceHost;
+  const UserProfile({@required this.userId, @required this.instanceHost})
+      : assert(userId != null),
+        assert(instanceHost != null),
+        _fullUserView = null;
+
+  UserProfile.fromFullUserView(this._fullUserView)
+      : assert(_fullUserView != null),
+        userId = _fullUserView.userView.user.id,
+        instanceHost = _fullUserView.instanceHost;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final userDetailsSnap = useFuture(_userDetails, preserveState: false);
+    final accountsStore = useAccountsStore();
+    final userDetailsSnap = useMemoFuture(() async {
+      if (_fullUserView != null) return _fullUserView;
+
+      return await LemmyApiV2(instanceHost).run(GetUserDetails(
+        userId: userId,
+        savedOnly: false,
+        sort: SortType.active,
+        auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
+      ));
+    });
 
     if (!userDetailsSnap.hasData) {
       return const Center(child: CircularProgressIndicator());
@@ -85,6 +101,7 @@ class UserProfile extends HookWidget {
                   sort: SortType.active,
                   page: page,
                   limit: batchSize,
+                  auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
                 ))
                 .then((val) => val.posts),
           ),
@@ -96,6 +113,7 @@ class UserProfile extends HookWidget {
                   sort: SortType.active,
                   page: page,
                   limit: batchSize,
+                  auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
                 ))
                 .then((val) => val.comments),
           ),
@@ -205,7 +223,7 @@ class _UserOverview extends HookWidget {
                   padding: EdgeInsets.only(
                       top: userView.user.avatar == null ? 10 : 0),
                   child: Text(
-                    userView.user.preferredUsername ?? userView.user.name,
+                    userView.user.displayName,
                     style: theme.textTheme.headline6,
                   ),
                 ),
@@ -239,7 +257,7 @@ class _UserOverview extends HookWidget {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.comment, // TODO: should be article icon
+                            Icons.article,
                             size: 15,
                             color: colorOnTopOfAccentColor,
                           ),
@@ -377,7 +395,12 @@ class _AboutTab extends HookWidget {
                 Text('edit profile'),
               ],
             ),
-            onTap: () {}, // TODO: go to account editing
+            onTap: () => goTo(
+              context,
+              (_) => ManageAccountPage(
+                  instanceHost: userDetails.instanceHost,
+                  username: userDetails.userView.user.name),
+            ),
           ),
         if (userDetails.userView.user.bio != null) ...[
           Padding(

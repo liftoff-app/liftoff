@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:package_info/package_info.dart';
 
+import '../gen/assets.gen.dart';
 import '../hooks/memo_future.dart';
 import '../url_launcher.dart';
 import 'bottom_modal.dart';
@@ -26,7 +28,6 @@ class AboutTile extends HookWidget {
     final packageInfo = packageInfoSnap.data;
     final changelog = changelogSnap.data;
 
-    // TODO: add app icon
     return AboutListTile(
       icon: const Icon(Icons.info),
       aboutBoxChildren: [
@@ -74,10 +75,7 @@ class AboutTile extends HookWidget {
       ],
       applicationIcon: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Image.asset(
-          'assets/app_icon.png',
-          width: 54,
-        ),
+        child: Assets.appIcon.image(width: 54),
       ),
       applicationVersion: packageInfo.version,
     );

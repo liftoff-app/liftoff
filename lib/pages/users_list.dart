@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v2.dart';
 
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/markdown_text.dart';
 
@@ -20,16 +21,17 @@ class UsersListPage extends StatelessWidget {
 
     // TODO: change to infinite scroll
     return Scaffold(
-        appBar: AppBar(
-          title: Text(title ?? '', style: theme.textTheme.headline6),
-          centerTitle: true,
-          backgroundColor: theme.cardColor,
-          iconTheme: theme.iconTheme,
-        ),
-        body: ListView.builder(
-          itemBuilder: (context, i) => UsersListItem(user: users[i]),
-          itemCount: users.length,
-        ));
+      appBar: AppBar(
+        title: Text(title ?? '', style: theme.textTheme.headline6),
+        centerTitle: true,
+        backgroundColor: theme.cardColor,
+        iconTheme: theme.iconTheme,
+      ),
+      body: ListView.builder(
+        itemBuilder: (context, i) => UsersListItem(user: users[i]),
+        itemCount: users.length,
+      ),
+    );
   }
 }
 
@@ -42,10 +44,7 @@ class UsersListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        title: Text((user.user.preferredUsername == null ||
-                user.user.preferredUsername.isEmpty)
-            ? '@${user.user.name}'
-            : user.user.preferredUsername),
+        title: Text(user.user.originDisplayName),
         subtitle: user.user.bio != null
             ? Opacity(
                 opacity: 0.5,
@@ -64,12 +63,13 @@ class UsersListItem extends StatelessWidget {
                 errorWidget: (_, __, ___) =>
                     const SizedBox(height: 50, width: 50),
                 imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.cover, image: imageProvider),
-                      ),
-                    ))
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        fit: BoxFit.cover, image: imageProvider),
+                  ),
+                ),
+              )
             : const SizedBox(width: 50),
       );
 }

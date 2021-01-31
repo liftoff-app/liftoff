@@ -22,13 +22,15 @@ class CommunitiesTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final filterController = useTextEditingController();
-    useValueListenable(filterController);
+    final filterController = useListenable(useTextEditingController());
     final accountsStore = useAccountsStore();
 
-    final amountOfDisplayInstances =
-        useMemoized(() => accountsStore.loggedInInstances.length);
+    final amountOfDisplayInstances = accountsStore.loggedInInstances.length;
     final isCollapsed = useState(List.filled(amountOfDisplayInstances, false));
+
+    if (amountOfDisplayInstances != isCollapsed.value.length) {
+      isCollapsed.value = List.filled(amountOfDisplayInstances, false);
+    }
 
     getInstances() {
       final futures = accountsStore.loggedInInstances
@@ -59,9 +61,15 @@ class CommunitiesTab extends HookWidget {
       return Future.wait(futures);
     }
 
-    // TODO: rebuild when instances/accounts change
-    final instancesRefreshable = useRefreshable(getInstances);
-    final communitiesRefreshable = useRefreshable(getCommunities);
+    final _loggedInAccounts = accountsStore.loggedInInstances
+        .map((instanceHost) =>
+            '$instanceHost${accountsStore.defaultUsernameFor(instanceHost)}')
+        .toList();
+
+    final instancesRefreshable =
+        useRefreshable(getInstances, _loggedInAccounts);
+    final communitiesRefreshable =
+        useRefreshable(getCommunities, _loggedInAccounts);
 
     if (communitiesRefreshable.snapshot.hasError ||
         instancesRefreshable.snapshot.hasError) {
@@ -159,62 +167,24 @@ class CommunitiesTab extends HookWidget {
       ),
       body: RefreshIndicator(
         onRefresh: refresh,
-        child: ListView(
-          children: [
-            for (var i = 0; i < amountOfDisplayInstances; i++)
-              Column(
+        child: amountOfDisplayInstances == 0
+            ? const Center(
+                child: Text('You are not logged in to any instances'),
+              )
+            : ListView(
                 children: [
-                  ListTile(
-                    onTap: () => goToInstance(
-                        context, accountsStore.loggedInInstances.elementAt(i)),
-                    onLongPress: () => toggleCollapse(i),
-                    leading: instances[i].icon != null
-                        ? CachedNetworkImage(
-                            height: 50,
-                            width: 50,
-                            imageUrl: instances[i].icon,
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    fit: BoxFit.cover, image: imageProvider),
-                              ),
-                            ),
-                            errorWidget: (_, __, ___) =>
-                                const SizedBox(width: 50),
-                          )
-                        : const SizedBox(width: 50),
-                    title: Text(
-                      instances[i].name,
-                      style: theme.textTheme.headline6,
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(isCollapsed.value[i]
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down),
-                      onPressed: () => toggleCollapse(i),
-                    ),
-                  ),
-                  if (!isCollapsed.value[i])
-                    for (final comm in filterCommunities(communities[i]))
-                      Padding(
-                        padding: const EdgeInsets.only(left: 17),
-                        child: ListTile(
-                          onTap: () => goToCommunity.byId(
-                              context,
-                              accountsStore.loggedInInstances.elementAt(i),
-                              comm.community.id),
-                          dense: true,
-                          leading: VerticalDivider(
-                            color: theme.hintColor,
-                          ),
-                          title: Row(
-                            children: [
-                              if (comm.community.icon != null)
-                                CachedNetworkImage(
-                                  height: 30,
-                                  width: 30,
-                                  imageUrl: comm.community.icon,
+                  for (var i = 0; i < amountOfDisplayInstances; i++)
+                    Column(
+                      children: [
+                        ListTile(
+                          onTap: () => goToInstance(context,
+                              accountsStore.loggedInInstances.elementAt(i)),
+                          onLongPress: () => toggleCollapse(i),
+                          leading: instances[i].icon != null
+                              ? CachedNetworkImage(
+                                  height: 50,
+                                  width: 50,
+                                  imageUrl: instances[i].icon,
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     decoration: BoxDecoration(
@@ -225,27 +195,73 @@ class CommunitiesTab extends HookWidget {
                                     ),
                                   ),
                                   errorWidget: (_, __, ___) =>
-                                      const SizedBox(width: 30),
+                                      const SizedBox(width: 50),
                                 )
-                              else
-                                const SizedBox(width: 30),
-                              const SizedBox(width: 10),
-                              Text(
-                                '''!${comm.community.name}${comm.community.local ? '' : '@${comm.community.originInstanceHost}'}''',
-                              ),
-                            ],
+                              : const SizedBox(width: 50),
+                          title: Text(
+                            instances[i].name,
+                            style: theme.textTheme.headline6,
                           ),
-                          trailing: _CommunitySubscribeToggle(
-                            key: ValueKey(comm.community.id),
-                            instanceHost: comm.instanceHost,
-                            communityId: comm.community.id,
+                          trailing: IconButton(
+                            icon: Icon(isCollapsed.value[i]
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down),
+                            onPressed: () => toggleCollapse(i),
                           ),
                         ),
-                      )
+                        if (!isCollapsed.value[i])
+                          for (final comm in filterCommunities(communities[i]))
+                            Padding(
+                              padding: const EdgeInsets.only(left: 17),
+                              child: ListTile(
+                                onTap: () => goToCommunity.byId(
+                                    context,
+                                    accountsStore.loggedInInstances
+                                        .elementAt(i),
+                                    comm.community.id),
+                                dense: true,
+                                leading: VerticalDivider(
+                                  color: theme.hintColor,
+                                ),
+                                title: Row(
+                                  children: [
+                                    if (comm.community.icon != null)
+                                      CachedNetworkImage(
+                                        height: 30,
+                                        width: 30,
+                                        imageUrl: comm.community.icon,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: imageProvider),
+                                          ),
+                                        ),
+                                        errorWidget: (_, __, ___) =>
+                                            const SizedBox(width: 30),
+                                      )
+                                    else
+                                      const SizedBox(width: 30),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      '''!${comm.community.name}${comm.community.local ? '' : '@${comm.community.originInstanceHost}'}''',
+                                    ),
+                                  ],
+                                ),
+                                trailing: _CommunitySubscribeToggle(
+                                  key: ValueKey(comm.community.id),
+                                  instanceHost: comm.instanceHost,
+                                  communityId: comm.community.id,
+                                ),
+                              ),
+                            )
+                      ],
+                    ),
                 ],
               ),
-          ],
-        ),
       ),
     );
   }
