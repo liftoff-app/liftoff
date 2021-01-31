@@ -28,7 +28,7 @@ String _extract(String url) => urlHost(url);
 
 extension DisplayNames on UserSafe {
   String get displayName {
-    if (preferredUsername != null && preferredUsername != '') {
+    if (preferredUsername != null && preferredUsername.isNotEmpty) {
       return preferredUsername;
     }
 

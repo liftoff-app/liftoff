@@ -363,28 +363,30 @@ class _AboutTab extends HookWidget {
                 ),
               ),
             ),
-            ...site.admins.map((u) => ListTile(
-                  title: Text(u.user.displayName),
-                  subtitle: u.user.bio != null
-                      ? MarkdownText(u.user.bio, instanceHost: instanceHost)
-                      : null,
-                  onTap: () => goToUser.byId(context, instanceHost, u.user.id),
-                  leading: u.user.avatar != null
-                      ? CachedNetworkImage(
-                          height: 50,
-                          width: 50,
-                          imageUrl: u.user.avatar,
-                          errorWidget: (_, __, ___) =>
-                              const SizedBox(width: 50, height: 50),
-                          imageBuilder: (context, imageProvider) => Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover, image: imageProvider),
-                                ),
-                              ))
-                      : const SizedBox(width: 50),
-                )),
+            for (final u in site.admins)
+              ListTile(
+                title: Text(u.user.originDisplayName),
+                subtitle: u.user.bio != null
+                    ? MarkdownText(u.user.bio, instanceHost: instanceHost)
+                    : null,
+                onTap: () => goToUser.byId(context, instanceHost, u.user.id),
+                leading: u.user.avatar != null
+                    ? CachedNetworkImage(
+                        height: 50,
+                        width: 50,
+                        imageUrl: u.user.avatar,
+                        errorWidget: (_, __, ___) =>
+                            const SizedBox(width: 50, height: 50),
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover, image: imageProvider),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(width: 50),
+              ),
             const _Divider(),
             ListTile(
               title: const Center(child: Text('Banned users')),
