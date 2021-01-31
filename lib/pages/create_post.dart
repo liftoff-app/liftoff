@@ -61,6 +61,7 @@ class CreatePostPage extends HookWidget {
     final allCommunitiesSnap = useMemoFuture(
       () => LemmyApiV2(selectedInstance.value)
           .run(ListCommunities(
+        type: PostListingType.local,
         sort: SortType.hot,
         limit: 9999,
         auth: accStore.defaultTokenFor(selectedInstance.value).raw,

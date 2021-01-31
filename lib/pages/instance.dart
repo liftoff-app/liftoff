@@ -32,8 +32,8 @@ class InstancePage extends HookWidget {
   InstancePage({@required this.instanceHost})
       : assert(instanceHost != null),
         siteFuture = LemmyApiV2(instanceHost).run(GetSite()),
-        communitiesFuture =
-            LemmyApiV2(instanceHost).run(ListCommunities(sort: SortType.hot));
+        communitiesFuture = LemmyApiV2(instanceHost).run(ListCommunities(
+            type: PostListingType.local, sort: SortType.hot, limit: 6));
 
   @override
   Widget build(BuildContext context) {
@@ -268,13 +268,15 @@ class _AboutTab extends HookWidget {
       goTo(
         context,
         (_) => CommunitiesListPage(
-          fetcher: (page, batchSize, sortType) =>
-              LemmyApiV2(instanceHost).run(ListCommunities(
-            sort: sortType,
-            limit: batchSize,
-            page: page,
-            auth: accStore.defaultTokenFor(instanceHost)?.raw,
-          )),
+          fetcher: (page, batchSize, sortType) => LemmyApiV2(instanceHost).run(
+            ListCommunities(
+              type: PostListingType.local,
+              sort: sortType,
+              limit: batchSize,
+              page: page,
+              auth: accStore.defaultTokenFor(instanceHost)?.raw,
+            ),
+          ),
           title: 'Communities of ${site.siteView.site.name}',
         ),
       );
@@ -318,28 +320,30 @@ class _AboutTab extends HookWidget {
               ),
             ),
             if (commSnap.hasData)
-              ...commSnap.data.take(6).map((c) => ListTile(
-                    onTap: () => goToCommunity.byId(
-                        context, c.instanceHost, c.community.id),
-                    title: Text(c.community.name),
-                    leading: c.community.icon != null
-                        ? CachedNetworkImage(
-                            height: 50,
-                            width: 50,
-                            imageUrl: c.community.icon,
-                            errorWidget: (_, __, ___) =>
-                                const SizedBox(width: 50, height: 50),
-                            imageBuilder: (context, imageProvider) => Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: imageProvider,
-                                    ),
-                                  ),
-                                ))
-                        : const SizedBox(width: 50),
-                  ))
+              for (final c in commSnap.data)
+                ListTile(
+                  onTap: () => goToCommunity.byId(
+                      context, c.instanceHost, c.community.id),
+                  title: Text(c.community.name),
+                  leading: c.community.icon != null
+                      ? CachedNetworkImage(
+                          height: 50,
+                          width: 50,
+                          imageUrl: c.community.icon,
+                          errorWidget: (_, __, ___) =>
+                              const SizedBox(width: 50, height: 50),
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageProvider,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(width: 50),
+                )
             else if (commSnap.hasError)
               Padding(
                 padding: const EdgeInsets.all(8),
