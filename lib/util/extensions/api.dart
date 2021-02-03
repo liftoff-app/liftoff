@@ -41,3 +41,7 @@ extension DisplayNames on UserSafe {
     return displayName;
   }
 }
+
+extension CommentLink on Comment {
+  String get link => 'https://$instanceHost/post/$postId/comment/$id';
+}

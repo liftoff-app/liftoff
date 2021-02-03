@@ -136,8 +136,8 @@ class CommentWidget extends HookWidget {
               ListTile(
                 leading: const Icon(Icons.open_in_browser),
                 title: const Text('Open in browser'),
-                onTap: () async => await ul.canLaunch(com.comment.apId)
-                    ? ul.launch(com.comment.apId)
+                onTap: () async => await ul.canLaunch(com.comment.link)
+                    ? ul.launch(com.comment.link)
                     : Scaffold.of(context).showSnackBar(
                         const SnackBar(content: Text("can't open in browser"))),
               ),
@@ -145,7 +145,7 @@ class CommentWidget extends HookWidget {
                 leading: const Icon(Icons.share),
                 title: const Text('Share url'),
                 onTap: () => Share.text(
-                    'Share comment url', com.comment.apId, 'text/plain'),
+                    'Share comment url', com.comment.link, 'text/plain'),
               ),
               ListTile(
                 leading: const Icon(Icons.share),
