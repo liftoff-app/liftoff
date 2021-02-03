@@ -1,8 +1,11 @@
-## Unreleased
+## v0.2.2 - 2021-02-03
+
+Minimum Lemmy version supported: `v0.9.4`
 
 ### Added
 
 - Online users count is now correctly displayed
+- APKs are now signed
 
 ### Fixed
 
@@ -10,6 +13,10 @@
 - Fixed a bug where comments would be displayed as a grey block
 - Fixed a bug where adding/removing accounts could cause the home/communities/search tabs to crash
 - Fixed a bug where up/down voting twice cause the comment/post to crash
+
+## v0.2.1 - 2021-02-03
+
+[YANKED]
 
 ## v0.2.0 - 2021-01-27
 
