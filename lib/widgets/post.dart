@@ -128,6 +128,11 @@ class PostWidget extends HookWidget {
             MediaQuery.of(context).size,
             Directionality.of(context),
           );
+
+    final textPostLineHeight = textPostData.isNotEmpty
+        ? (textPostData.first as ui.LineMetrics).height
+        : 0.0;
+
     void _openLink() => linkLauncher(
         context: context, url: post.post.url, instanceHost: instanceHost);
 
@@ -446,24 +451,20 @@ class PostWidget extends HookWidget {
             else if (post.post.url != null && post.post.url.isNotEmpty)
               linkPreview(),
             if (post.post.body != null && fullPost)
-              // TODO: trim content
-              Padding(
-                  padding: const EdgeInsets.all(10),
-                  child:
-                      MarkdownText(post.post.body, instanceHost: instanceHost)),
-            if (post.post.body != null && !fullPost && textPostData.length < 20)
-              // TODO: trim content
               Padding(
                   padding: const EdgeInsets.all(10),
                   child:
                       MarkdownText(post.post.body, instanceHost: instanceHost)),
             if (post.post.body != null &&
                 !fullPost &&
-                textPostData.length >= 20)
+                textPostData.length <= 20)
+              Padding(
+                  padding: const EdgeInsets.all(10),
+                  child:
+                      MarkdownText(post.post.body, instanceHost: instanceHost)),
+            if (post.post.body != null && !fullPost && textPostData.length > 20)
               Container(
-                constraints: BoxConstraints(
-                    maxHeight:
-                        (textPostData.first as ui.LineMetrics).height * 20),
+                constraints: BoxConstraints(maxHeight: textPostLineHeight * 20),
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
@@ -478,13 +479,13 @@ class PostWidget extends HookWidget {
                       ),
                     ),
                     Container(
-                      height: (textPostData.first as ui.LineMetrics).height * 4,
+                      height: textPostLineHeight * 4,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.transparent,
+                            theme.cardColor.withAlpha(128),
                             theme.cardColor,
                           ],
                         ),
