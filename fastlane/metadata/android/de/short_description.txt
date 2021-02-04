@@ -1,0 +1,1 @@
+Ein mobiler Client für Lemmy - eine föderierte Reddit-Alternative

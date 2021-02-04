@@ -1,0 +1,3 @@
+Lemmur aims to provide a seamless experience when browsing different Lemmy instances.
+
+You can have multiple multiple instances added at the same time without having to awkwardly switch between them.
