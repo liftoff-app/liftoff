@@ -433,12 +433,12 @@ class PostWidget extends HookWidget {
                   );
                   final tp = TextPainter(
                     text: span,
-                    maxLines: 20,
+                    maxLines: 10,
                     textDirection: Directionality.of(context),
                   )..layout(maxWidth: constraints.maxWidth - 20);
 
                   if (tp.didExceedMaxLines) {
-                    return Container(
+                    return ConstrainedBox(
                       constraints: BoxConstraints(maxHeight: tp.height),
                       child: Stack(
                         alignment: Alignment.bottomCenter,
@@ -454,13 +454,13 @@ class PostWidget extends HookWidget {
                             ),
                           ),
                           Container(
-                            height: tp.preferredLineHeight * 4,
+                            height: tp.preferredLineHeight * 2.5,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                  theme.cardColor.withAlpha(128),
+                                  theme.cardColor.withAlpha(0),
                                   theme.cardColor,
                                 ],
                               ),
