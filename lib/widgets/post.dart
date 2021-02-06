@@ -102,6 +102,7 @@ class PostWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     void _openLink() => linkLauncher(
         context: context, url: post.post.url, instanceHost: instanceHost);
 
@@ -419,12 +420,63 @@ class PostWidget extends HookWidget {
               postImage()
             else if (post.post.url != null && post.post.url.isNotEmpty)
               linkPreview(),
-            if (post.post.body != null)
-              // TODO: trim content
+            if (post.post.body != null && fullPost)
               Padding(
                   padding: const EdgeInsets.all(10),
                   child:
                       MarkdownText(post.post.body, instanceHost: instanceHost)),
+            if (post.post.body != null && !fullPost)
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final span = TextSpan(
+                    text: post.post.body,
+                  );
+                  final tp = TextPainter(
+                    text: span,
+                    maxLines: 10,
+                    textDirection: Directionality.of(context),
+                  )..layout(maxWidth: constraints.maxWidth - 20);
+
+                  if (tp.didExceedMaxLines) {
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: tp.height),
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          ClipRect(
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              heightFactor: 0.8,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: MarkdownText(post.post.body,
+                                      instanceHost: instanceHost)),
+                            ),
+                          ),
+                          Container(
+                            height: tp.preferredLineHeight * 2.5,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  theme.cardColor.withAlpha(0),
+                                  theme.cardColor,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: MarkdownText(post.post.body,
+                            instanceHost: instanceHost));
+                  }
+                },
+              ),
             actions(),
           ],
         ),
