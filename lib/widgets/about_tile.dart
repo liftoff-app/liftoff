@@ -18,7 +18,7 @@ class AboutTile extends HookWidget {
   Widget build(BuildContext context) {
     final packageInfoSnap = useMemoFuture(
       () => PackageInfo.fromPlatform()
-          .onError((_, __) => PackageInfo(version: '')),
+          .then((e) => e, onError: (_, __) => PackageInfo(version: '')),
     );
     final assetBundle = DefaultAssetBundle.of(context);
     final changelogSnap =
