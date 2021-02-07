@@ -109,6 +109,7 @@ class MyHomePage extends HookWidget {
       Future.microtask(
         () => SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
           systemNavigationBarColor: theme.scaffoldBackgroundColor,
+          systemNavigationBarIconBrightness: theme.brightness,
         )),
       );
 
