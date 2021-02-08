@@ -282,6 +282,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10-nullsafety.1"
+  matrix4_transform:
+    dependency: "direct main"
+    description:
+      name: matrix4_transform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.7"
   meta:
     dependency: transitive
     description:

@@ -44,6 +44,8 @@ dependencies:
   timeago: ^2.0.27
   fuzzy: <1.0.0
   lemmy_api_client: ^0.10.2
+  matrix4_transform: ^1.1.7
+
 
   flutter:
     sdk: flutter
