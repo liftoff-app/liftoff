@@ -13,8 +13,8 @@ import 'pages/profile_tab.dart';
 import 'pages/search_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
-import 'util/extensions/brightness.dart';
 import 'theme.dart';
+import 'util/extensions/brightness.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
