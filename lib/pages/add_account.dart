@@ -7,8 +7,8 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
-import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
+import '../widgets/radio_picker.dart';
 import 'add_instance.dart';
 
 /// A modal where an account can be added for a given instance
@@ -22,61 +22,20 @@ class AddAccountPage extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final usernameController = useTextEditingController();
-    final passwordController = useTextEditingController();
-    useValueListenable(usernameController);
-    useValueListenable(passwordController);
+    final usernameController = useListenable(useTextEditingController());
+    final passwordController = useListenable(useTextEditingController());
     final accountsStore = useAccountsStore();
 
     final loading = useDelayedLoading();
     final selectedInstance = useState(instanceHost);
     final icon = useState<String>(null);
+
     useEffect(() {
       LemmyApiV2(selectedInstance.value)
           .run(GetSite())
           .then((site) => icon.value = site.siteView.site.icon);
       return null;
     }, [selectedInstance.value]);
-
-    /// show a modal with a list of instance checkboxes
-    selectInstance() async {
-      final val = await showModalBottomSheet<String>(
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        context: context,
-        builder: (context) => BottomModal(
-          title: 'select instance',
-          child: Column(children: [
-            for (final i in accountsStore.instances)
-              RadioListTile<String>(
-                value: i,
-                groupValue: selectedInstance.value,
-                onChanged: (val) {
-                  Navigator.of(context).pop(val);
-                },
-                title: Text(i),
-              ),
-            ListTile(
-              leading: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.add),
-              ),
-              title: const Text('Add instance'),
-              onTap: () async {
-                final val = await showCupertinoModalPopup<String>(
-                  context: context,
-                  builder: (context) => AddInstancePage(),
-                );
-                Navigator.of(context).pop(val);
-              },
-            ),
-          ]),
-        ),
-      );
-      if (val != null) {
-        selectedInstance.value = val;
-      }
-    }
 
     handleOnAdd() async {
       try {
@@ -99,107 +58,91 @@ class AddAccountPage extends HookWidget {
       key: scaffoldKey,
       appBar: AppBar(
         leading: const CloseButton(),
-        actionsIconTheme: theme.iconTheme,
-        iconTheme: theme.iconTheme,
-        textTheme: theme.textTheme,
-        brightness: theme.brightness,
-        centerTitle: true,
         title: const Text('Add account'),
-        backgroundColor: theme.canvasColor,
-        shadowColor: Colors.transparent,
       ),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(15),
-        child: ListView(
-          children: [
-            if (icon.value == null)
-              const SizedBox(height: 150)
-            else
-              SizedBox(
-                height: 150,
-                child: FullscreenableImage(
-                  url: icon.value,
-                  child: CachedNetworkImage(
-                    imageUrl: icon.value,
-                    errorWidget: (_, __, ___) => const SizedBox.shrink(),
-                  ),
+        children: [
+          if (icon.value == null)
+            const SizedBox(height: 150)
+          else
+            SizedBox(
+              height: 150,
+              child: FullscreenableImage(
+                url: icon.value,
+                child: CachedNetworkImage(
+                  imageUrl: icon.value,
+                  errorWidget: (_, __, ___) => const SizedBox.shrink(),
                 ),
               ),
-            FlatButton(
-              onPressed: selectInstance,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+            ),
+          RadioPicker<String>(
+            title: 'select instance',
+            values: accountsStore.instances.toList(),
+            groupValue: selectedInstance.value,
+            onChanged: (value) => selectedInstance.value = value,
+            buttonBuilder: (context, displayValue, onPressed) => TextButton(
+              onPressed: onPressed,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(selectedInstance.value),
+                  Text(displayValue),
                   const Icon(Icons.arrow_drop_down),
                 ],
               ),
             ),
-            // TODO: add support for password managers
-            TextField(
-              autofocus: true,
-              controller: usernameController,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                labelText: 'Username or email',
+            trailing: ListTile(
+              leading: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.add),
               ),
-            ),
-            const SizedBox(height: 5),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                labelText: 'Password',
-              ),
-            ),
-            RaisedButton(
-              color: theme.accentColor,
-              padding: const EdgeInsets.all(0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              onPressed: usernameController.text.isEmpty ||
-                      passwordController.text.isEmpty
-                  ? null
-                  : loading.pending
-                      ? () {}
-                      : handleOnAdd,
-              child: !loading.loading
-                  ? const Text('Sign in')
-                  : SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(theme.canvasColor),
-                      ),
-                    ),
-            ),
-            FlatButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              onPressed: () {
-                ul.launch('https://${selectedInstance.value}/login');
+              title: const Text('Add instance'),
+              onTap: () async {
+                final value = await showCupertinoModalPopup<String>(
+                  context: context,
+                  builder: (context) => AddInstancePage(),
+                );
+                Navigator.of(context).pop(value);
               },
-              child: const Text('Register'),
             ),
-          ],
-        ),
+          ),
+          // TODO: add support for password managers
+          TextField(
+            autofocus: true,
+            controller: usernameController,
+            decoration: const InputDecoration(labelText: 'Username or email'),
+          ),
+          const SizedBox(height: 5),
+          TextField(
+            controller: passwordController,
+            obscureText: true,
+            decoration: const InputDecoration(labelText: 'Password'),
+          ),
+          ElevatedButton(
+            onPressed: usernameController.text.isEmpty ||
+                    passwordController.text.isEmpty
+                ? null
+                : loading.pending
+                    ? () {}
+                    : handleOnAdd,
+            child: !loading.loading
+                ? const Text('Sign in')
+                : SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(theme.canvasColor),
+                    ),
+                  ),
+          ),
+          TextButton(
+            onPressed: () {
+              ul.launch('https://${selectedInstance.value}/login');
+            },
+            child: const Text('Register'),
+          ),
+        ],
       ),
     );
   }

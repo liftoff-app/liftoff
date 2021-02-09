@@ -66,123 +66,119 @@ class HomeTab extends HookWidget {
     ]);
 
     handleListChange() async {
-      final val = await showModalBottomSheet<_SelectedList>(
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
+      final val = await showBottomModal<_SelectedList>(
         context: context,
         builder: (context) {
           pop(_SelectedList thing) => Navigator.of(context).pop(thing);
 
-          return BottomModal(
-            child: Column(
-              children: [
-                const SizedBox(height: 5),
-                const ListTile(
-                  title: Text('EVERYTHING'),
+          return Column(
+            children: [
+              const SizedBox(height: 5),
+              const ListTile(
+                title: Text('EVERYTHING'),
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                visualDensity:
+                    VisualDensity(vertical: VisualDensity.minimumDensity),
+                leading: SizedBox.shrink(),
+              ),
+              ListTile(
+                title: Text(
+                  'Subscribed',
+                  style: TextStyle(
+                    color: accStore.hasNoAccount
+                        ? theme.textTheme.bodyText1.color.withOpacity(0.4)
+                        : null,
+                  ),
+                ),
+                onTap: accStore.hasNoAccount
+                    ? null
+                    : () => pop(
+                          const _SelectedList(
+                            listingType: PostListingType.subscribed,
+                          ),
+                        ),
+                leading: const SizedBox(width: 20),
+              ),
+              for (final listingType in [
+                PostListingType.local,
+                PostListingType.all,
+              ])
+                ListTile(
+                  title: Text(listingType.value),
+                  leading: const SizedBox(width: 20, height: 20),
+                  onTap: () => pop(_SelectedList(listingType: listingType)),
+                ),
+              for (final instance in accStore.instances) ...[
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Divider(),
+                ),
+                ListTile(
+                  title: Text(
+                    instance.toUpperCase(),
+                    style: TextStyle(
+                        color:
+                            theme.textTheme.bodyText1.color.withOpacity(0.7)),
+                  ),
+                  onTap: () => goToInstance(context, instance),
                   dense: true,
                   contentPadding: EdgeInsets.zero,
-                  visualDensity:
-                      VisualDensity(vertical: VisualDensity.minimumDensity),
-                  leading: SizedBox.shrink(),
+                  visualDensity: const VisualDensity(
+                      vertical: VisualDensity.minimumDensity),
+                  leading: (instancesIcons.hasData &&
+                          instancesIcons.data[instance] != null)
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: SizedBox(
+                            width: 25,
+                            height: 25,
+                            child: CachedNetworkImage(
+                              imageUrl: instancesIcons.data[instance],
+                              height: 25,
+                              width: 25,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(width: 30),
                 ),
                 ListTile(
                   title: Text(
                     'Subscribed',
                     style: TextStyle(
-                      color: accStore.hasNoAccount
-                          ? theme.textTheme.bodyText1.color.withOpacity(0.4)
-                          : null,
-                    ),
+                        color: accStore.isAnonymousFor(instance)
+                            ? theme.textTheme.bodyText1.color.withOpacity(0.4)
+                            : null),
                   ),
-                  onTap: accStore.hasNoAccount
-                      ? null
-                      : () => pop(
-                            const _SelectedList(
-                              listingType: PostListingType.subscribed,
-                            ),
-                          ),
+                  onTap: accStore.isAnonymousFor(instance)
+                      ? () => showCupertinoModalPopup(
+                          context: context,
+                          builder: (_) =>
+                              AddAccountPage(instanceHost: instance))
+                      : () => pop(_SelectedList(
+                            listingType: PostListingType.subscribed,
+                            instanceHost: instance,
+                          )),
                   leading: const SizedBox(width: 20),
                 ),
-                for (final listingType in [
-                  PostListingType.local,
-                  PostListingType.all,
-                ])
-                  ListTile(
-                    title: Text(listingType.value),
-                    leading: const SizedBox(width: 20, height: 20),
-                    onTap: () => pop(_SelectedList(listingType: listingType)),
-                  ),
-                for (final instance in accStore.instances) ...[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Divider(),
-                  ),
-                  ListTile(
-                    title: Text(
-                      instance.toUpperCase(),
-                      style: TextStyle(
-                          color:
-                              theme.textTheme.bodyText1.color.withOpacity(0.7)),
-                    ),
-                    onTap: () => goToInstance(context, instance),
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    visualDensity: const VisualDensity(
-                        vertical: VisualDensity.minimumDensity),
-                    leading: (instancesIcons.hasData &&
-                            instancesIcons.data[instance] != null)
-                        ? Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: SizedBox(
-                              width: 25,
-                              height: 25,
-                              child: CachedNetworkImage(
-                                imageUrl: instancesIcons.data[instance],
-                                height: 25,
-                                width: 25,
-                              ),
-                            ),
-                          )
-                        : const SizedBox(width: 30),
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Subscribed',
-                      style: TextStyle(
-                          color: accStore.isAnonymousFor(instance)
-                              ? theme.textTheme.bodyText1.color.withOpacity(0.4)
-                              : null),
-                    ),
-                    onTap: accStore.isAnonymousFor(instance)
-                        ? () => showCupertinoModalPopup(
-                            context: context,
-                            builder: (_) =>
-                                AddAccountPage(instanceHost: instance))
-                        : () => pop(_SelectedList(
-                              listingType: PostListingType.subscribed,
-                              instanceHost: instance,
-                            )),
-                    leading: const SizedBox(width: 20),
-                  ),
-                  ListTile(
-                    title: const Text('Local'),
-                    onTap: () => pop(_SelectedList(
-                      listingType: PostListingType.local,
-                      instanceHost: instance,
-                    )),
-                    leading: const SizedBox(width: 20),
-                  ),
-                  ListTile(
-                    title: const Text('All'),
-                    onTap: () => pop(_SelectedList(
-                      listingType: PostListingType.all,
-                      instanceHost: instance,
-                    )),
-                    leading: const SizedBox(width: 20),
-                  ),
-                ]
+                ListTile(
+                  title: const Text('Local'),
+                  onTap: () => pop(_SelectedList(
+                    listingType: PostListingType.local,
+                    instanceHost: instance,
+                  )),
+                  leading: const SizedBox(width: 20),
+                ),
+                ListTile(
+                  title: const Text('All'),
+                  onTap: () => pop(_SelectedList(
+                    listingType: PostListingType.all,
+                    instanceHost: instance,
+                  )),
+                  leading: const SizedBox(width: 20),
+                ),
               ],
-            ),
+            ],
           );
         },
       );
@@ -221,14 +217,9 @@ class HomeTab extends HookWidget {
             onPressed: () => goTo(context, (_) => const InboxPage()),
           )
         ],
-        centerTitle: true,
         title: TextButton(
           style: TextButton.styleFrom(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))),
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            primary: theme.buttonColor,
-            textStyle: theme.primaryTextTheme.headline6,
           ),
           onPressed: handleListChange,
           child: Row(
@@ -238,14 +229,11 @@ class HomeTab extends HookWidget {
               Flexible(
                 child: Text(
                   title,
-                  style: theme.primaryTextTheme.headline6,
+                  style: theme.appBarTheme.textTheme.headline6,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: theme.primaryTextTheme.headline6.color,
-              ),
+              const Icon(Icons.arrow_drop_down),
             ],
           ),
         ),
@@ -339,7 +327,8 @@ class InfiniteHomeList extends HookWidget {
       prepend: Column(
         children: [
           PostListOptions(
-            onChange: changeSorting,
+            sortValue: sort.value,
+            onSortChanged: changeSorting,
             styleButton: onStyleChange != null,
           ),
         ],

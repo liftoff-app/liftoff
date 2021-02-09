@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-/// Should be spawned with a showModalBottomSheet, not routed to.
+/// Should be spawned with a [showBottomModal], not routed to.
 class BottomModal extends StatelessWidget {
-  final Widget child;
   final String title;
+  final EdgeInsets padding;
+  final Widget child;
 
-  const BottomModal({@required this.child, this.title});
+  const BottomModal({
+    this.title,
+    this.padding = EdgeInsets.zero,
+    @required this.child,
+  })  : assert(padding != null),
+        assert(child != null);
 
   @override
   Widget build(BuildContext context) {
@@ -14,36 +21,42 @@ class BottomModal extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: SingleChildScrollView(
-          child: Container(
-            padding: title != null ? const EdgeInsets.only(top: 10) : null,
-            decoration: BoxDecoration(
-                color: theme.scaffoldBackgroundColor,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                border: Border.all(
-                  color: Colors.grey.withOpacity(0.5),
-                  width: 0.2,
-                )),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (title != null) ...[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 70),
-                    child: Text(
-                      title,
-                      style: theme.textTheme.subtitle2,
-                      textAlign: TextAlign.left,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.withOpacity(0.5),
+              width: 0.2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Material(
+            clipBehavior: Clip.antiAlias,
+            borderRadius: BorderRadius.circular(10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (title != null) ...[
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 70),
+                      child: Text(
+                        title,
+                        style: theme.textTheme.subtitle2,
+                        textAlign: TextAlign.left,
+                      ),
                     ),
+                    const Divider(
+                      indent: 20,
+                      endIndent: 20,
+                    )
+                  ],
+                  Padding(
+                    padding: padding,
+                    child: child,
                   ),
-                  const Divider(
-                    indent: 20,
-                    endIndent: 20,
-                  )
                 ],
-                child,
-              ],
+              ),
             ),
           ),
         ),
@@ -51,3 +64,23 @@ class BottomModal extends StatelessWidget {
     );
   }
 }
+
+/// Helper function for showing a [BottomModal]
+Future<T> showBottomModal<T>({
+  @required BuildContext context,
+  @required WidgetBuilder builder,
+  String title,
+  EdgeInsets padding = EdgeInsets.zero,
+}) =>
+    showCustomModalBottomSheet<T>(
+      context: context,
+      animationCurve: Curves.easeInOutCubic,
+      duration: const Duration(milliseconds: 300),
+      backgroundColor: Colors.transparent,
+      builder: builder,
+      containerWidget: (context, animation, child) => BottomModal(
+        title: title,
+        padding: padding,
+        child: child,
+      ),
+    );

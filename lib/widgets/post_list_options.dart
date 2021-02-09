@@ -1,78 +1,41 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
-import 'bottom_modal.dart';
+import 'radio_picker.dart';
 
 /// Dropdown filters where you can change sorting or viewing type
-class PostListOptions extends HookWidget {
-  final void Function(SortType sort) onChange;
-  final SortType defaultSort;
+class PostListOptions extends StatelessWidget {
+  final ValueChanged<SortType> onSortChanged;
+  final SortType sortValue;
   final bool styleButton;
 
   const PostListOptions({
-    @required this.onChange,
+    @required this.onSortChanged,
+    @required this.sortValue,
     this.styleButton = true,
-    this.defaultSort = SortType.active,
-  });
+  }) : assert(sortValue != null);
 
   @override
-  Widget build(BuildContext context) {
-    final sort = useState(defaultSort);
-
-    void selectSortType(BuildContext context) {
-      showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        backgroundColor: Colors.transparent,
-        builder: (context) => BottomModal(
-            title: 'sort by',
-            child: Column(
-              children: [
-                for (final x in SortType.values)
-                  RadioListTile<SortType>(
-                    value: x,
-                    groupValue: sort.value,
-                    title: Text(x.value),
-                    onChanged: (val) {
-                      sort.value = val;
-                      onChange(val);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-              ],
-            )),
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: Row(
+          children: [
+            RadioPicker<SortType>(
+              title: 'sort by',
+              values: SortType.values,
+              groupValue: sortValue,
+              onChanged: onSortChanged,
+              mapValueToString: (value) => value.value,
+            ),
+            const Spacer(),
+            if (styleButton)
+              IconButton(
+                icon: const Icon(Icons.view_stream),
+                // TODO: create compact post and dropdown for selecting
+                onPressed: () => print('TBD'),
+              ),
+          ],
+        ),
       );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: Row(
-        children: [
-          OutlineButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            onPressed: () => selectSortType(context),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(sort.value.value),
-                const SizedBox(width: 8),
-                const Icon(Icons.arrow_drop_down),
-              ],
-            ),
-          ),
-          const Spacer(),
-          if (styleButton)
-            IconButton(
-              icon: const Icon(Icons.view_stream),
-              // TODO: create compact post and dropdown for selecting
-              onPressed: () => print('TBD'),
-            ),
-        ],
-      ),
-    );
-  }
 }

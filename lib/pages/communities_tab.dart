@@ -159,8 +159,6 @@ class CommunitiesTab extends HookWidget {
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             suffixIcon: filterIcon,
-            isDense: true,
-            border: const OutlineInputBorder(),
             hintText: 'Filter', // TODO: hint with an filter icon
           ),
         ),
@@ -247,7 +245,7 @@ class CommunitiesTab extends HookWidget {
                                       const SizedBox(width: 30),
                                     const SizedBox(width: 10),
                                     Text(
-                                      '''!${comm.community.name}${comm.community.local ? '' : '@${comm.community.originInstanceHost}'}''',
+                                      '!${comm.community.name}${comm.community.local ? '' : '@${comm.community.originInstanceHost}'}',
                                     ),
                                   ],
                                 ),

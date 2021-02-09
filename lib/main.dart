@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'hooks/stores.dart';
 import 'pages/communities_tab.dart';
@@ -14,6 +13,7 @@ import 'pages/profile_tab.dart';
 import 'pages/search_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
+import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,47 +45,13 @@ class MyApp extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final configStore = useConfigStore();
-    final maybeAmoledColor = configStore.amoledDarkMode ? Colors.black : null;
 
     return MaterialApp(
-      title: 'Lemmur',
+      title: 'lemmur',
       themeMode: configStore.theme,
-      darkTheme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: maybeAmoledColor,
-        backgroundColor: maybeAmoledColor,
-        canvasColor: maybeAmoledColor,
-        cardColor: maybeAmoledColor,
-        splashColor: maybeAmoledColor,
-      ),
-      theme: ThemeData(
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      darkTheme: configStore.amoledDarkMode ? amoledTheme : darkTheme,
+      theme: lightTheme,
       home: const MyHomePage(),
-    );
-  }
-}
-
-class TemporarySearchTab extends HookWidget {
-  const TemporarySearchTab();
-
-  @override
-  Widget build(BuildContext context) {
-    final accStore = useAccountsStore();
-    return ListView(
-      children: [
-        const ListTile(
-          title: Center(
-              child: Text('🚧 this tab is still under construction 🚧\n'
-                  'but you can open your instances in a browser '
-                  ' for missing functionality')),
-        ),
-        const Divider(),
-        for (final inst in accStore.instances)
-          ListTile(
-            title: Text(inst),
-            onTap: () => ul.launch('https://$inst/'),
-          )
-      ],
     );
   }
 }

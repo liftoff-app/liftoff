@@ -94,7 +94,6 @@ class FullPostPage extends HookWidget {
 
     return Scaffold(
         appBar: AppBar(
-          leading: const BackButton(),
           actions: [
             IconButton(icon: const Icon(Icons.share), onPressed: sharePost),
             SavePostButton(post),

@@ -16,6 +16,7 @@ import '../util/goto.dart';
 import '../util/pictrs.dart';
 import '../util/unawaited.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/radio_picker.dart';
 import 'full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
@@ -110,21 +111,18 @@ class CreatePostPage extends HookWidget {
       urlController.text = '';
     }
 
-    // TODO: use drop down from AddAccountPage
-    final instanceDropdown = InputDecorator(
-      decoration: const InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
-          border: OutlineInputBorder()),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: selectedInstance.value,
-          onChanged: (val) => selectedInstance.value = val,
-          items: accStore.loggedInInstances
-              .map((instance) => DropdownMenuItem(
-                    value: instance,
-                    child: Text(instance),
-                  ))
-              .toList(),
+    final instanceDropdown = RadioPicker<String>(
+      values: accStore.loggedInInstances.toList(),
+      groupValue: selectedInstance.value,
+      onChanged: (value) => selectedInstance.value = value,
+      buttonBuilder: (context, displayValue, onPressed) => TextButton(
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(displayValue),
+            const Icon(Icons.arrow_drop_down),
+          ],
         ),
       ),
     );
@@ -133,7 +131,8 @@ class CreatePostPage extends HookWidget {
     final communitiesDropdown = InputDecorator(
       decoration: const InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
-          border: OutlineInputBorder()),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)))),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: selectedCommunity.value?.community?.id,
@@ -166,9 +165,9 @@ class CreatePostPage extends HookWidget {
           enabled: pictrsDeleteToken.value == null,
           controller: urlController,
           decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'URL',
-              suffixIcon: Icon(Icons.link)),
+            labelText: 'URL',
+            suffixIcon: Icon(Icons.link),
+          ),
         ),
       ),
       const SizedBox(width: 5),
@@ -189,8 +188,7 @@ class CreatePostPage extends HookWidget {
       controller: titleController,
       minLines: 1,
       maxLines: 2,
-      decoration: const InputDecoration(
-          border: OutlineInputBorder(), labelText: 'Title'),
+      decoration: const InputDecoration(labelText: 'Title'),
     );
 
     final body = IndexedStack(
@@ -201,9 +199,7 @@ class CreatePostPage extends HookWidget {
           keyboardType: TextInputType.multiline,
           maxLines: null,
           minLines: 5,
-          textAlignVertical: TextAlignVertical.top,
-          decoration: const InputDecoration(
-              border: OutlineInputBorder(), labelText: 'Body'),
+          decoration: const InputDecoration(labelText: 'Body'),
         ),
         Padding(
           padding: const EdgeInsets.all(16),
@@ -250,10 +246,7 @@ class CreatePostPage extends HookWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: Navigator.of(context).pop,
-        ),
+        leading: const CloseButton(),
         actions: [
           IconButton(
             icon: Icon(showFancy.value ? Icons.build : Icons.brush),
@@ -285,7 +278,7 @@ class CreatePostPage extends HookWidget {
                     ],
                   ),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: delayed.pending ? () {} : handleSubmit,
                   child: delayed.loading
                       ? const CircularProgressIndicator()

@@ -27,7 +27,6 @@ class SearchResultsPage extends HookWidget {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            centerTitle: true,
             title: Text('Looking for "$query"'),
             bottom: const TabBar(
               isScrollable: true,

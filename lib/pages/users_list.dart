@@ -22,10 +22,8 @@ class UsersListPage extends StatelessWidget {
     // TODO: change to infinite scroll
     return Scaffold(
       appBar: AppBar(
-        title: Text(title ?? '', style: theme.textTheme.headline6),
-        centerTitle: true,
         backgroundColor: theme.cardColor,
-        iconTheme: theme.iconTheme,
+        title: Text(title ?? ''),
       ),
       body: ListView.builder(
         itemBuilder: (context, i) => UsersListItem(user: users[i]),

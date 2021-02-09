@@ -78,10 +78,7 @@ class WriteComment extends HookWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: Navigator.of(context).pop,
-        ),
+        leading: const CloseButton(),
         actions: [
           IconButton(
             icon: Icon(showFancy.value ? Icons.build : Icons.brush),
@@ -108,8 +105,6 @@ class WriteComment extends HookWidget {
                 autofocus: true,
                 minLines: 5,
                 maxLines: null,
-                textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -123,7 +118,7 @@ class WriteComment extends HookWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              FlatButton(
+              TextButton(
                 onPressed: delayed.pending ? () {} : handleSubmit,
                 child: delayed.loading
                     ? const CircularProgressIndicator()

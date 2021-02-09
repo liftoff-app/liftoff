@@ -28,6 +28,7 @@ dependencies:
   markdown: ^2.1.8
   flutter_markdown: ^0.4.3
   cached_network_image: ^2.2.0+1
+  modal_bottom_sheet: ^1.0.0+1
 
   # native
   esys_flutter_share: ^1.0.2
