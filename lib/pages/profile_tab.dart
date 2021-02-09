@@ -6,6 +6,7 @@ import '../hooks/stores.dart';
 import '../util/goto.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/user_profile.dart';
+import 'saved/saved_page.dart';
 import 'settings.dart';
 
 /// Profile page for a logged in user. The difference between this and
@@ -51,6 +52,10 @@ class UserProfileTab extends HookWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => goTo(context, (context) => SavedPage()),
+          icon: const Icon(Icons.bookmark),
+        ),
         title: RadioPicker<String>(
           title: 'account',
           values: accountsStore.loggedInInstances
