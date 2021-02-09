@@ -20,27 +20,45 @@ class InfiniteScrollController {
   }
 }
 
-/// `ListView.builder` with asynchronous data fetching
+/// `ListView.builder` with asynchronous data fetching and no `itemCount`
 class InfiniteScroll<T> extends HookWidget {
+  /// How many items should be fetched per call
   final int batchSize;
+
+  /// Widget displayed at the bottom when InfiniteScroll is fetching
   final Widget loadingWidget;
-  final Widget Function(T data) builder;
-  final Future<List<T>> Function(int page, int batchSize) fetchMore;
+
+  /// Builds your widget from the fetched data
+  final Widget Function(T data) itemBuilder;
+
+  /// Fetches data to be displayed. It is important to respect `batchSize`,
+  /// if the returned list has less than `batchSize` then the InfiniteScroll
+  /// is considered finished
+  final Future<List<T>> Function(int page, int batchSize) fetcher;
+
   final InfiniteScrollController controller;
-  final Widget prepend;
+
+  /// Widget to be added at the beginning of the list
+  final Widget leading;
+
+  /// Padding for the [ListView.builder]
   final EdgeInsetsGeometry padding;
+
+  /// Widget that will be displayed if there are no items
+  final Widget noItems;
 
   const InfiniteScroll({
     this.batchSize = 10,
-    this.prepend = const SizedBox.shrink(),
+    this.leading = const SizedBox.shrink(),
     this.padding,
     this.loadingWidget =
         const ListTile(title: Center(child: CircularProgressIndicator())),
-    @required this.builder,
-    @required this.fetchMore,
+    @required this.itemBuilder,
+    @required this.fetcher,
     this.controller,
-  })  : assert(builder != null),
-        assert(fetchMore != null),
+    this.noItems = const SizedBox.shrink(),
+  })  : assert(itemBuilder != null),
+        assert(fetcher != null),
         assert(batchSize > 0);
 
   @override
@@ -71,13 +89,18 @@ class InfiniteScroll<T> extends HookWidget {
       },
       child: ListView.builder(
         padding: padding,
-        // +2 for the loading widget and prepend widget
+        // +2 for the loading widget and leading widget
         itemCount: data.value.length + 2,
         itemBuilder: (_, i) {
           if (i == 0) {
-            return prepend;
+            return leading;
           }
           i -= 1;
+
+          // if we are done but we have no data it means the list is empty
+          if (!hasMore.current && data.value.isEmpty) {
+            return Center(child: noItems);
+          }
 
           // reached the bottom, fetch more
           if (i == data.value.length) {
@@ -89,7 +112,7 @@ class InfiniteScroll<T> extends HookWidget {
             // if it's already fetching more, skip
             if (!isFetching.current) {
               isFetching.current = true;
-              fetchMore(page, batchSize).then((newData) {
+              fetcher(page, batchSize).then((newData) {
                 // if got less than the batchSize, mark the list as done
                 if (newData.length < batchSize) {
                   hasMore.current = false;
@@ -106,7 +129,7 @@ class InfiniteScroll<T> extends HookWidget {
           }
 
           // not last element, render list item
-          return builder(data.value[i]);
+          return itemBuilder(data.value[i]);
         },
       ),
     );

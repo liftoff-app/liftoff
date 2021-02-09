@@ -9,23 +9,31 @@ import 'infinite_scroll.dart';
 import 'post.dart';
 import 'post_list_options.dart';
 
+typedef FetcherWithSorting<T> = Future<List<T>> Function(
+    int page, int batchSize, SortType sortType);
+
 /// Infinite list of posts
 class SortableInfiniteList<T> extends HookWidget {
-  final Future<List<T>> Function(int page, int batchSize, SortType sortType)
-      fetcher;
-  final Widget Function(T) builder;
+  final FetcherWithSorting<T> fetcher;
+  final Widget Function(T) itemBuilder;
+  final InfiniteScrollController controller;
   final Function onStyleChange;
+  final Widget noItems;
 
   const SortableInfiniteList({
     @required this.fetcher,
-    @required this.builder,
+    @required this.itemBuilder,
+    this.controller,
     this.onStyleChange,
+    this.noItems,
   })  : assert(fetcher != null),
-        assert(builder != null);
+        assert(itemBuilder != null);
 
   @override
   Widget build(BuildContext context) {
-    final isc = useInfiniteScrollController();
+    final defaultController = useInfiniteScrollController();
+    final isc = controller ?? defaultController;
+
     final sort = useState(SortType.active);
 
     void changeSorting(SortType newSort) {
@@ -34,50 +42,61 @@ class SortableInfiniteList<T> extends HookWidget {
     }
 
     return InfiniteScroll<T>(
-      prepend: PostListOptions(
+      leading: PostListOptions(
         sortValue: sort.value,
         onSortChanged: changeSorting,
         styleButton: onStyleChange != null,
       ),
-      builder: builder,
+      itemBuilder: itemBuilder,
       padding: EdgeInsets.zero,
-      fetchMore: (page, batchSize) => fetcher(page, batchSize, sort.value),
+      fetcher: (page, batchSize) => fetcher(page, batchSize, sort.value),
       controller: isc,
       batchSize: 20,
+      noItems: noItems,
     );
   }
 }
 
 class InfinitePostList extends StatelessWidget {
-  final Future<List<PostView>> Function(
-      int page, int batchSize, SortType sortType) fetcher;
+  final FetcherWithSorting<PostView> fetcher;
+  final InfiniteScrollController controller;
 
-  const InfinitePostList({@required this.fetcher}) : assert(fetcher != null);
+  const InfinitePostList({
+    @required this.fetcher,
+    this.controller,
+  }) : assert(fetcher != null);
 
   Widget build(BuildContext context) => SortableInfiniteList<PostView>(
         onStyleChange: () {},
-        builder: (post) => Column(
+        itemBuilder: (post) => Column(
           children: [
             PostWidget(post),
             const SizedBox(height: 20),
           ],
         ),
         fetcher: fetcher,
+        controller: controller,
+        noItems: const Text('there are no posts'),
       );
 }
 
 class InfiniteCommentList extends StatelessWidget {
-  final Future<List<CommentView>> Function(
-      int page, int batchSize, SortType sortType) fetcher;
+  final FetcherWithSorting<CommentView> fetcher;
+  final InfiniteScrollController controller;
 
-  const InfiniteCommentList({@required this.fetcher}) : assert(fetcher != null);
+  const InfiniteCommentList({
+    @required this.fetcher,
+    this.controller,
+  }) : assert(fetcher != null);
 
   Widget build(BuildContext context) => SortableInfiniteList<CommentView>(
-        builder: (comment) => CommentWidget(
+        itemBuilder: (comment) => CommentWidget(
           CommentTree(comment),
           postCreatorId: null,
           detached: true,
         ),
         fetcher: fetcher,
+        controller: controller,
+        noItems: const Text('there are no comments'),
       );
 }
