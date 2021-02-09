@@ -17,39 +17,30 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage();
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        brightness: theme.brightness,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        title: Text('Settings', style: theme.textTheme.headline6),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Accounts'),
-            onTap: () {
-              goTo(context, (_) => AccountsConfigPage());
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.color_lens),
-            title: const Text('Appearance'),
-            onTap: () {
-              goTo(context, (_) => const AppearanceConfigPage());
-            },
-          ),
-          const AboutTile()
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+        ),
+        body: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Accounts'),
+              onTap: () {
+                goTo(context, (_) => AccountsConfigPage());
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.color_lens),
+              title: const Text('Appearance'),
+              onTap: () {
+                goTo(context, (_) => const AppearanceConfigPage());
+              },
+            ),
+            const AboutTile()
+          ],
+        ),
+      );
 }
 
 /// Settings for theme color, AMOLED switch
@@ -58,17 +49,11 @@ class AppearanceConfigPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final configStore = useConfigStore();
 
     return Scaffold(
       appBar: AppBar(
-        brightness: theme.brightness,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        title: Text('Appearance', style: theme.textTheme.headline6),
-        centerTitle: true,
+        title: const Text('Appearance'),
       ),
       body: ListView(
         children: [
@@ -110,11 +95,11 @@ class AccountsConfigPage extends HookWidget {
               title: const Text('Remove instance?'),
               content: Text('Are you sure you want to remove $instanceHost?'),
               actions: [
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: const Text('no'),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: const Text('yes'),
                 ),
@@ -134,11 +119,11 @@ class AccountsConfigPage extends HookWidget {
               content: Text(
                   'Are you sure you want to remove $username@$instanceHost?'),
               actions: [
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: const Text('no'),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: const Text('yes'),
                 ),
@@ -153,12 +138,7 @@ class AccountsConfigPage extends HookWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        brightness: theme.brightness,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        title: Text('Accounts', style: theme.textTheme.headline6),
-        centerTitle: true,
+        title: const Text('Accounts'),
       ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x
@@ -193,16 +173,14 @@ class AccountsConfigPage extends HookWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 100),
-                  child: FlatButton.icon(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onPressed: () => showCupertinoModalPopup(
-                            context: context,
-                            builder: (_) => AddInstancePage(),
-                          ),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Add instance')),
+                  child: TextButton.icon(
+                    onPressed: () => showCupertinoModalPopup(
+                      context: context,
+                      builder: (_) => AddInstancePage(),
+                    ),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add instance'),
+                  ),
                 ),
               ],
             ),

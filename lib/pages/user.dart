@@ -41,8 +41,6 @@ class UserPage extends HookWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
         actions: [
           if (userDetailsSnap.hasData) ...[
             IconButton(

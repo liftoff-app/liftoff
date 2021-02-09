@@ -59,40 +59,37 @@ class PostWidget extends HookWidget {
   // == ACTIONS ==
 
   static void showMoreMenu(BuildContext context, PostView post) {
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+    showBottomModal(
       context: context,
-      builder: (context) => BottomModal(
-        child: Column(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.open_in_browser),
-              title: const Text('Open in browser'),
-              onTap: () async => await ul.canLaunch(post.post.apId)
-                  ? ul.launch(post.post.apId)
-                  : Scaffold.of(context).showSnackBar(
-                      const SnackBar(content: Text("can't open in browser"))),
-            ),
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: const Text('Nerd stuff'),
-              onTap: () {
-                showInfoTablePopup(context, {
-                  'id': post.post.id,
-                  'apId': post.post.apId,
-                  'upvotes': post.counts.upvotes,
-                  'downvotes': post.counts.downvotes,
-                  'score': post.counts.score,
-                  '% of upvotes':
-                      '''${(100 * (post.counts.upvotes / (post.counts.upvotes + post.counts.downvotes))).toInt()}%''',
-                  'local': post.post.local,
-                  'published': post.post.published,
-                  'updated': post.post.updated ?? 'never',
-                });
-              },
-            ),
-          ],
-        ),
+      builder: (context) => Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.open_in_browser),
+            title: const Text('Open in browser'),
+            onTap: () async => await ul.canLaunch(post.post.apId)
+                ? ul.launch(post.post.apId)
+                : Scaffold.of(context).showSnackBar(
+                    const SnackBar(content: Text("can't open in browser"))),
+          ),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('Nerd stuff'),
+            onTap: () {
+              showInfoTablePopup(context, {
+                'id': post.post.id,
+                'apId': post.post.apId,
+                'upvotes': post.counts.upvotes,
+                'downvotes': post.counts.downvotes,
+                'score': post.counts.score,
+                '% of upvotes':
+                    '${(100 * (post.counts.upvotes / (post.counts.upvotes + post.counts.downvotes))).toInt()}%',
+                'local': post.post.local,
+                'published': post.post.published,
+                'updated': post.post.updated ?? 'never',
+              });
+            },
+          ),
+        ],
       ),
     );
   }
@@ -219,7 +216,7 @@ class PostWidget extends HookWidget {
                                 ),
                                 TextSpan(
                                     text:
-                                        ''' · ${timeago.format(post.post.published, locale: 'en_short')}'''),
+                                        ' · ${timeago.format(post.post.published, locale: 'en_short')}'),
                                 if (post.post.locked)
                                   const TextSpan(text: ' · 🔒'),
                                 if (post.post.stickied)

@@ -74,7 +74,7 @@ class CommentWidget extends HookWidget {
       'downvotes': com.counts.downvotes,
       'score': com.counts.score,
       '% of upvotes':
-          '''${100 * (com.counts.upvotes / (com.counts.upvotes + com.counts.downvotes))}%''',
+          '${100 * (com.counts.upvotes / (com.counts.upvotes + com.counts.downvotes))}%',
     });
   }
 
@@ -127,63 +127,60 @@ class CommentWidget extends HookWidget {
       pop() => Navigator.of(context).pop();
 
       final com = commentTree.comment;
-      showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+      showBottomModal(
         context: context,
-        builder: (context) => BottomModal(
-          child: Column(
-            children: [
+        builder: (context) => Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.open_in_browser),
+              title: const Text('Open in browser'),
+              onTap: () async => await ul.canLaunch(com.comment.link)
+                  ? ul.launch(com.comment.link)
+                  : Scaffold.of(context).showSnackBar(
+                      const SnackBar(content: Text("can't open in browser"))),
+            ),
+            ListTile(
+              leading: const Icon(Icons.share),
+              title: const Text('Share url'),
+              onTap: () => Share.text(
+                  'Share comment url', com.comment.link, 'text/plain'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.share),
+              title: const Text('Share text'),
+              onTap: () => Share.text(
+                  'Share comment text', com.comment.content, 'text/plain'),
+            ),
+            ListTile(
+              leading:
+                  Icon(selectable.value ? Icons.assignment : Icons.content_cut),
+              title:
+                  Text('Make text ${selectable.value ? 'un' : ''}selectable'),
+              onTap: () {
+                selectable.value = !selectable.value;
+                pop();
+              },
+            ),
+            ListTile(
+              leading: Icon(showRaw.value ? Icons.brush : Icons.build),
+              title: Text('Show ${showRaw.value ? 'fancy' : 'raw'} text'),
+              onTap: () {
+                showRaw.value = !showRaw.value;
+                pop();
+              },
+            ),
+            if (isMine)
               ListTile(
-                leading: const Icon(Icons.open_in_browser),
-                title: const Text('Open in browser'),
-                onTap: () async => await ul.canLaunch(com.comment.link)
-                    ? ul.launch(com.comment.link)
-                    : Scaffold.of(context).showSnackBar(
-                        const SnackBar(content: Text("can't open in browser"))),
+                leading: Icon(isDeleted.value ? Icons.restore : Icons.delete),
+                title: Text(isDeleted.value ? 'Restore' : 'Delete'),
+                onTap: loggedInAction(handleDelete),
               ),
-              ListTile(
-                leading: const Icon(Icons.share),
-                title: const Text('Share url'),
-                onTap: () => Share.text(
-                    'Share comment url', com.comment.link, 'text/plain'),
-              ),
-              ListTile(
-                leading: const Icon(Icons.share),
-                title: const Text('Share text'),
-                onTap: () => Share.text(
-                    'Share comment text', com.comment.content, 'text/plain'),
-              ),
-              ListTile(
-                leading: Icon(
-                    selectable.value ? Icons.assignment : Icons.content_cut),
-                title:
-                    Text('Make text ${selectable.value ? 'un' : ''}selectable'),
-                onTap: () {
-                  selectable.value = !selectable.value;
-                  pop();
-                },
-              ),
-              ListTile(
-                leading: Icon(showRaw.value ? Icons.brush : Icons.build),
-                title: Text('Show ${showRaw.value ? 'fancy' : 'raw'} text'),
-                onTap: () {
-                  showRaw.value = !showRaw.value;
-                  pop();
-                },
-              ),
-              if (isMine)
-                ListTile(
-                  leading: Icon(isDeleted.value ? Icons.restore : Icons.delete),
-                  title: Text(isDeleted.value ? 'Restore' : 'Delete'),
-                  onTap: loggedInAction(handleDelete),
-                ),
-              ListTile(
-                leading: const Icon(Icons.info_outline),
-                title: const Text('Nerd stuff'),
-                onTap: () => _showCommentInfo(context),
-              ),
-            ],
-          ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Nerd stuff'),
+              onTap: () => _showCommentInfo(context),
+            ),
+          ],
         ),
       );
     }

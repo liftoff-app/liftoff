@@ -67,6 +67,7 @@ void goToMedia(BuildContext context, String url) => Navigator.push(
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => MediaViewPage(url),
         transitionDuration: const Duration(milliseconds: 300),
+        opaque: false,
         transitionsBuilder: (_, animation, __, child) =>
             FadeTransition(opacity: animation, child: child),
       ),

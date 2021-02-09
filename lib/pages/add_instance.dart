@@ -63,14 +63,7 @@ class AddInstancePage extends HookWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        brightness: theme.brightness,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        centerTitle: true,
         leading: const CloseButton(),
-        actionsIconTheme: theme.iconTheme,
-        textTheme: theme.textTheme,
         title: const Text('Add instance'),
       ),
       body: ListView(
@@ -107,13 +100,7 @@ class AddInstancePage extends HookWidget {
                 autofocus: true,
                 controller: instanceController,
                 autocorrect: false,
-                decoration: InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  labelText: 'instance url',
-                ),
+                decoration: const InputDecoration(labelText: 'instance url'),
               ),
             ),
           ),
@@ -122,11 +109,7 @@ class AddInstancePage extends HookWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: SizedBox(
               height: 40,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                color: theme.accentColor,
+              child: ElevatedButton(
                 onPressed: isSite.value == true ? handleOnAdd : null,
                 child: !debounce.loading
                     ? const Text('Add')

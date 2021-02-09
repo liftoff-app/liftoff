@@ -11,6 +11,7 @@ import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_safe.dart';
+import '../widgets/radio_picker.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
@@ -27,7 +28,6 @@ class ManageAccountPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accountStore = useAccountsStore();
-    final theme = Theme.of(context);
 
     final userFuture = useMemoized(() async {
       final site = await LemmyApiV2(instanceHost).run(
@@ -38,13 +38,7 @@ class ManageAccountPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        brightness: theme.brightness,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        title:
-            Text('@$instanceHost@$username', style: theme.textTheme.headline6),
-        centerTitle: true,
+        title: Text('@$instanceHost@$username'),
       ),
       body: FutureBuilder<UserSafeSettings>(
         future: userFuture,
@@ -159,8 +153,8 @@ class _ManageAccount extends HookWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '''Are you sure you want to remove @${user.instanceHost}@${user.name}? '''
-                    '''WARNING: this removes your account COMPLETELY, not from lemmur only''',
+                    'Are you sure you want to remove @${user.instanceHost}@${user.name}? '
+                    'WARNING: this removes your account COMPLETELY, not from lemmur only',
                   ),
                   TextField(
                     controller: deleteAccountPasswordController,
@@ -170,11 +164,11 @@ class _ManageAccount extends HookWidget {
                 ],
               ),
               actions: [
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: const Text('no'),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: const Text('yes'),
                 ),
@@ -226,98 +220,37 @@ class _ManageAccount extends HookWidget {
         ),
         const SizedBox(height: 8),
         Text('Display Name', style: theme.textTheme.headline6),
-        TextField(
-          controller: displayNameController,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
+        TextField(controller: displayNameController),
         const SizedBox(height: 8),
         Text('Bio', style: theme.textTheme.headline6),
         TextField(
           controller: bioController,
           minLines: 4,
           maxLines: 10,
-          decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
         ),
         const SizedBox(height: 8),
         Text('Email', style: theme.textTheme.headline6),
-        TextField(
-          controller: emailController,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
+        TextField(controller: emailController),
         const SizedBox(height: 8),
         Text('Matrix User', style: theme.textTheme.headline6),
-        TextField(
-          controller: matrixUserController,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
+        TextField(controller: matrixUserController),
         const SizedBox(height: 8),
         Text('New password', style: theme.textTheme.headline6),
         TextField(
           controller: newPasswordController,
           obscureText: true,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
         ),
         const SizedBox(height: 8),
         Text('Verify password', style: theme.textTheme.headline6),
         TextField(
           controller: newPasswordVerifyController,
           obscureText: true,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
         ),
         const SizedBox(height: 8),
         Text('Old password', style: theme.textTheme.headline6),
         TextField(
           controller: oldPasswordController,
           obscureText: true,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
         ),
         const SizedBox(height: 8),
         Row(
@@ -333,21 +266,15 @@ class _ManageAccount extends HookWidget {
                 )
               ],
             ),
-            DropdownButton<PostListingType>(
-              items: [
-                for (final postListingType in [
-                  PostListingType.all,
-                  PostListingType.local,
-                  PostListingType.subscribed,
-                ])
-                  DropdownMenuItem(
-                    value: postListingType,
-                    child: Text(postListingType.value),
-                  )
+            RadioPicker<PostListingType>(
+              values: const [
+                PostListingType.all,
+                PostListingType.local,
+                PostListingType.subscribed,
               ],
+              groupValue: defaultListingType.value,
               onChanged: (value) => defaultListingType.value = value,
-              value: defaultListingType.value,
-              isDense: true,
+              mapValueToString: (value) => value.value,
             ),
           ],
         ),
@@ -365,17 +292,11 @@ class _ManageAccount extends HookWidget {
                 )
               ],
             ),
-            DropdownButton<SortType>(
-              items: [
-                for (final defaultSortType in SortType.values)
-                  DropdownMenuItem(
-                    value: defaultSortType,
-                    child: Text(defaultSortType.value),
-                  )
-              ],
+            RadioPicker<SortType>(
+              values: SortType.values,
+              groupValue: defaultSortType.value,
               onChanged: (value) => defaultSortType.value = value,
-              value: defaultSortType.value,
-              isDense: true,
+              mapValueToString: (value) => value.value,
             ),
           ],
         ),
@@ -405,12 +326,6 @@ class _ManageAccount extends HookWidget {
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: saveDelayedLoading.loading ? null : handleSubmit,
-          style: ElevatedButton.styleFrom(
-            visualDensity: VisualDensity.comfortable,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
           child: saveDelayedLoading.loading
               ? const SizedBox(
                   width: 20,
@@ -424,10 +339,6 @@ class _ManageAccount extends HookWidget {
           onPressed: deleteAccountDialog,
           style: ElevatedButton.styleFrom(
             primary: Colors.red,
-            visualDensity: VisualDensity.comfortable,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
           ),
           child: const Text('DELETE ACCOUNT'),
         ),
@@ -533,12 +444,6 @@ class _ImagePicker extends HookWidget {
             if (pictrsDeleteToken.value == null)
               ElevatedButton(
                 onPressed: delayedLoading.loading ? null : uploadImage,
-                style: ElevatedButton.styleFrom(
-                  visualDensity: VisualDensity.comfortable,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
                 child: delayedLoading.loading
                     ? const SizedBox(
                         height: 20,

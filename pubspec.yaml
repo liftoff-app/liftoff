@@ -1,5 +1,5 @@
 name: lemmur
-description: A new Flutter project.
+description: A mobile client for Lemmy - a federated reddit alternative
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.2.2+10
+version: 0.2.3+11
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -28,6 +28,7 @@ dependencies:
   markdown: ^2.1.8
   flutter_markdown: ^0.4.3
   cached_network_image: ^2.2.0+1
+  modal_bottom_sheet: ^1.0.0+1
 
   # native
   esys_flutter_share: ^1.0.2
@@ -44,6 +45,7 @@ dependencies:
   timeago: ^2.0.27
   fuzzy: <1.0.0
   lemmy_api_client: ^0.10.2
+  matrix4_transform: ^1.1.7
 
   flutter:
     sdk: flutter

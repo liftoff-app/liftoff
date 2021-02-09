@@ -8,10 +8,10 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../util/text_color.dart';
-import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
@@ -44,12 +44,7 @@ class InstancePage extends HookWidget {
 
     if (!siteSnap.hasData) {
       return Scaffold(
-        appBar: AppBar(
-          iconTheme: theme.iconTheme,
-          brightness: theme.brightness,
-          backgroundColor: theme.cardColor,
-          elevation: 0,
-        ),
+        appBar: AppBar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -71,38 +66,35 @@ class InstancePage extends HookWidget {
     final site = siteSnap.data;
 
     void _openMoreMenu(BuildContext c) {
-      showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+      showBottomModal(
         context: context,
-        builder: (context) => BottomModal(
-          child: Column(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.open_in_browser),
-                title: const Text('Open in browser'),
-                onTap: () async => await ul
-                        .canLaunch('https://${site.instanceHost}')
-                    ? ul.launch('https://${site.instanceHost}')
-                    : Scaffold.of(context).showSnackBar(
-                        const SnackBar(content: Text("can't open in browser"))),
-              ),
-              ListTile(
-                leading: const Icon(Icons.info_outline),
-                title: const Text('Nerd stuff'),
-                onTap: () {
-                  showInfoTablePopup(context, {
-                    'url': instanceHost,
-                    'creator': '@${site.siteView.creator.name}',
-                    'version': site.version,
-                    'enableDownvotes': site.siteView.site.enableDownvotes,
-                    'enableNsfw': site.siteView.site.enableNsfw,
-                    'published': site.siteView.site.published,
-                    'updated': site.siteView.site.updated,
-                  });
-                },
-              ),
-            ],
-          ),
+        builder: (context) => Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.open_in_browser),
+              title: const Text('Open in browser'),
+              onTap: () async => await ul
+                      .canLaunch('https://${site.instanceHost}')
+                  ? ul.launch('https://${site.instanceHost}')
+                  : Scaffold.of(context).showSnackBar(
+                      const SnackBar(content: Text("can't open in browser"))),
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Nerd stuff'),
+              onTap: () {
+                showInfoTablePopup(context, {
+                  'url': instanceHost,
+                  'creator': '@${site.siteView.creator.name}',
+                  'version': site.version,
+                  'enableDownvotes': site.siteView.site.enableDownvotes,
+                  'enableNsfw': site.siteView.site.enableNsfw,
+                  'published': site.siteView.site.published,
+                  'updated': site.siteView.site.updated,
+                });
+              },
+            ),
+          ],
         ),
       );
     }
@@ -113,12 +105,9 @@ class InstancePage extends HookWidget {
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
             SliverAppBar(
-              brightness: theme.brightness,
-              expandedHeight: 200,
+              expandedHeight: 250,
               pinned: true,
-              elevation: 0,
               backgroundColor: theme.cardColor,
-              iconTheme: theme.iconTheme,
               title: Text(
                 site.siteView.site.name,
                 style: TextStyle(color: colorOnCard),
@@ -167,20 +156,19 @@ class InstancePage extends HookWidget {
                   ),
                 ]),
               ),
-            ),
-            SliverPersistentHeader(
-              delegate: _SliverAppBarDelegate(
-                TabBar(
-                  labelColor: theme.textTheme.bodyText1.color,
-                  unselectedLabelColor: Colors.grey,
-                  tabs: const [
-                    Tab(text: 'Posts'),
-                    Tab(text: 'Comments'),
-                    Tab(text: 'About'),
-                  ],
+              bottom: PreferredSize(
+                preferredSize: const TabBar(tabs: []).preferredSize,
+                child: Material(
+                  color: theme.cardColor,
+                  child: const TabBar(
+                    tabs: [
+                      Tab(text: 'Posts'),
+                      Tab(text: 'Comments'),
+                      Tab(text: 'About'),
+                    ],
+                  ),
                 ),
               ),
-              pinned: true,
             ),
           ],
           body: TabBarView(
@@ -213,27 +201,6 @@ class InstancePage extends HookWidget {
       ),
     );
   }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar _tabBar;
-
-  const _SliverAppBarDelegate(this._tabBar);
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final theme = Theme.of(context);
-    return Container(color: theme.cardColor, child: _tabBar);
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
 }
 
 class _AboutTab extends HookWidget {
@@ -296,18 +263,20 @@ class _AboutTab extends HookWidget {
             ),
             const _Divider(),
             SizedBox(
-              height: 25,
+              height: 32,
               child: ListView(
                 scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 children: [
-                  const SizedBox(width: 7),
-                  _Badge('${site.online} users online'),
-                  _Badge('${site.siteView.counts.users} users'),
-                  _Badge('${site.siteView.counts.communities} communities'),
-                  _Badge('${site.siteView.counts.posts} posts'),
-                  _Badge('${site.siteView.counts.comments} comments'),
-                  const SizedBox(width: 15),
-                ],
+                  Chip(label: Text('${site.online} users online')),
+                  Chip(label: Text('${site.siteView.counts.users} users')),
+                  Chip(
+                      label: Text(
+                          '${site.siteView.counts.communities} communities')),
+                  Chip(label: Text('${site.siteView.counts.posts} posts')),
+                  Chip(
+                      label: Text('${site.siteView.counts.comments} comments')),
+                ].spaced(8),
               ),
             ),
             const _Divider(),
@@ -401,28 +370,6 @@ class _AboutTab extends HookWidget {
               onTap: goToModLog,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  final String text;
-
-  const _Badge(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Badge(
-        child: Text(
-          text,
-          style:
-              TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
         ),
       ),
     );

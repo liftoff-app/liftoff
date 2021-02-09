@@ -12,7 +12,6 @@ import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
-import 'badge.dart';
 import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
 import 'sortable_infinite_list.dart';
@@ -71,22 +70,24 @@ class UserProfile extends HookWidget {
         headerSliverBuilder: (_, __) => [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 265,
+            expandedHeight: 300,
             toolbarHeight: 0,
             forceElevated: true,
-            elevation: 0,
             backgroundColor: theme.cardColor,
-            brightness: theme.brightness,
-            iconTheme: theme.iconTheme,
             flexibleSpace:
                 FlexibleSpaceBar(background: _UserOverview(userView)),
-            bottom: TabBar(
-              labelColor: theme.textTheme.bodyText1.color,
-              tabs: const [
-                Tab(text: 'Posts'),
-                Tab(text: 'Comments'),
-                Tab(text: 'About'),
-              ],
+            bottom: PreferredSize(
+              preferredSize: const TabBar(tabs: []).preferredSize,
+              child: Material(
+                color: theme.cardColor,
+                child: const TabBar(
+                  tabs: [
+                    Tab(text: 'Posts'),
+                    Tab(text: 'Comments'),
+                    Tab(text: 'About'),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -181,7 +182,7 @@ class _UserOverview extends HookWidget {
                     topRight: Radius.circular(40),
                     topLeft: Radius.circular(40),
                   ),
-                  color: theme.scaffoldBackgroundColor,
+                  color: theme.cardColor,
                 ),
               ),
             ),
@@ -195,7 +196,6 @@ class _UserOverview extends HookWidget {
                   width: 80,
                   height: 80,
                   child: Container(
-                    // clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       boxShadow: const [
                         BoxShadow(blurRadius: 6, color: Colors.black54)
@@ -215,117 +215,94 @@ class _UserOverview extends HookWidget {
                     ),
                   ),
                 ),
-              Padding(
-                padding: userView.user.avatar != null
-                    ? const EdgeInsets.only(top: 8)
-                    : const EdgeInsets.only(top: 70),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: userView.user.avatar == null ? 10 : 0),
-                  child: Text(
-                    userView.user.displayName,
-                    style: theme.textTheme.headline6,
-                  ),
-                ),
+              if (userView.user.avatar != null)
+                const SizedBox(height: 8)
+              else
+                const SizedBox(height: 80),
+              Text(
+                userView.user.displayName,
+                style: theme.textTheme.headline6,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '@${userView.user.name}@',
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '@${userView.user.name}@',
+                    style: theme.textTheme.caption,
+                  ),
+                  InkWell(
+                    onTap: () =>
+                        goToInstance(context, userView.user.originInstanceHost),
+                    child: Text(
+                      userView.user.originInstanceHost,
                       style: theme.textTheme.caption,
                     ),
-                    InkWell(
-                      onTap: () => goToInstance(
-                          context, userView.user.originInstanceHost),
-                      child: Text(
-                        userView.user.originInstanceHost,
-                        style: theme.textTheme.caption,
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Badge(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.article,
-                            size: 15,
-                            color: colorOnTopOfAccentColor,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4),
-                            child: Text(
-                              '${compactNumber(userView.counts.postCount)}'
-                              ' Post${pluralS(userView.counts.postCount)}',
-                              style: TextStyle(color: colorOnTopOfAccentColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: Badge(
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.comment,
-                              size: 15,
-                              color: colorOnTopOfAccentColor,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4),
-                              child: Text(
-                                '${compactNumber(userView.counts.commentCount)}'
-                                ''' Comment${pluralS(userView.counts.commentCount)}''',
-                                style:
-                                    TextStyle(color: colorOnTopOfAccentColor),
-                              ),
-                            ),
-                          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Chip(
+                    label: Row(
+                      children: [
+                        Icon(
+                          Icons.article,
+                          size: 15,
+                          color: colorOnTopOfAccentColor,
                         ),
-                      ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${compactNumber(userView.counts.postCount)}'
+                          ' Post${pluralS(userView.counts.postCount)}',
+                          style: TextStyle(color: colorOnTopOfAccentColor),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Text(
-                  'Joined ${timeago.format(userView.user.published)}',
-                  style: theme.textTheme.bodyText1,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.cake,
-                      size: 13,
+                  ),
+                  const SizedBox(width: 16),
+                  Chip(
+                    label: Row(
+                      children: [
+                        Icon(
+                          Icons.comment,
+                          size: 15,
+                          color: colorOnTopOfAccentColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${compactNumber(userView.counts.commentCount)} Comment${pluralS(userView.counts.commentCount)}',
+                          style: TextStyle(color: colorOnTopOfAccentColor),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Text(
-                        DateFormat('MMM dd, yyyy')
-                            .format(userView.user.published),
-                        style: theme.textTheme.bodyText1,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              // Expanded(child: tabs())
+              const SizedBox(height: 15),
+              Text(
+                'Joined ${timeago.format(userView.user.published)}',
+                style: theme.textTheme.bodyText1,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.cake,
+                    size: 13,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: Text(
+                      DateFormat('MMM dd, yyyy')
+                          .format(userView.user.published),
+                      style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
             ],
           ),
         ),

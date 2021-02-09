@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/stores.dart';
 import '../util/goto.dart';
-import '../widgets/bottom_modal.dart';
+import '../widgets/radio_picker.dart';
 import '../widgets/user_profile.dart';
 import 'settings.dart';
 
@@ -29,18 +29,13 @@ class UserProfileTab extends HookWidget {
 
     if (accountsStore.hasNoAccount) {
       return Scaffold(
-        appBar: AppBar(
-          actions: actions,
-          backgroundColor: Colors.transparent,
-          iconTheme: theme.iconTheme,
-          shadowColor: Colors.transparent,
-        ),
+        appBar: AppBar(actions: actions),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('No account was added.'),
-              FlatButton.icon(
+              TextButton.icon(
                 onPressed: () {
                   goTo(context, (_) => AccountsConfigPage());
                 },
@@ -55,63 +50,37 @@ class UserProfileTab extends HookWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // TODO: this is not visible in light mode when the sliver app bar
-      // in UserProfile is folded
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
-        title: FlatButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              builder: (ctx) {
-                final userTags = <String>[
-                  for (final instanceHost in accountsStore.loggedInInstances)
-                    for (final username
-                        in accountsStore.usernamesFor(instanceHost))
-                      '$username@$instanceHost'
-                ];
-
-                return BottomModal(
-                  title: 'account',
-                  child: Column(
-                    children: [
-                      for (final tag in userTags)
-                        RadioListTile<String>(
-                          value: tag,
-                          title: Text(tag),
-                          groupValue: '${accountsStore.defaultUsername}'
-                              '@${accountsStore.defaultInstanceHost}',
-                          onChanged: (selected) {
-                            final userTag = selected.split('@');
-                            accountsStore.setDefaultAccount(
-                                userTag[1], userTag[0]);
-                            Navigator.of(ctx).pop();
-                          },
-                        )
-                    ],
-                  ),
-                );
-              },
-            );
+        title: RadioPicker<String>(
+          title: 'account',
+          values: accountsStore.loggedInInstances
+              .expand(
+                (instanceHost) => accountsStore
+                    .usernamesFor(instanceHost)
+                    .map((username) => '$username@$instanceHost'),
+              )
+              .toList(),
+          groupValue:
+              '${accountsStore.defaultUsername}@${accountsStore.defaultInstanceHost}',
+          onChanged: (value) {
+            final userTag = value.split('@');
+            accountsStore.setDefaultAccount(userTag[1], userTag[0]);
           },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                // TODO: fix overflow issues
-                '@${accountsStore.defaultUsername}',
-                style: theme.primaryTextTheme.headline6,
-                overflow: TextOverflow.fade,
-              ),
-              Icon(
-                Icons.expand_more,
-                color: theme.primaryIconTheme.color,
-              ),
-            ],
+          buttonBuilder: (context, displayValue, onPressed) => TextButton(
+            onPressed: onPressed,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  // TODO: fix overflow issues
+                  displayValue,
+                  style: theme.appBarTheme.textTheme.headline6,
+                  overflow: TextOverflow.fade,
+                ),
+                const Icon(Icons.expand_more),
+              ],
+            ),
           ),
         ),
         actions: actions,

@@ -1,3 +1,17 @@
+## v0.2.3 - 2021-02-09
+
+Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid](https://f-droid.org/packages/com.krawieck.lemmur)
+
+### Changed
+
+- Posts with large amount of text are now truncated in infinite scroll views
+- Changed image viewer dismissal to be more fun. The image now also moves on the x axis, changes scale and rotates a bit for more user enjoyment
+
+### Fixed
+
+- Fixed issue where the "About lemmur" tile would not appear on Windows/Linux
+- Added a bigger bottom margin in the comment section to prevent the floating action button from covering the last comment
+
 ## v0.2.2 - 2021-02-03
 
 Minimum Lemmy version supported: `v0.9.4`
