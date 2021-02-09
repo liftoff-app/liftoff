@@ -13,6 +13,7 @@ import 'pages/profile_tab.dart';
 import 'pages/search_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
+import 'util/extensions/brightness.dart';
 import 'theme.dart';
 
 Future<void> main() async {
@@ -75,6 +76,7 @@ class MyHomePage extends HookWidget {
       Future.microtask(
         () => SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
           systemNavigationBarColor: theme.scaffoldBackgroundColor,
+          systemNavigationBarIconBrightness: theme.brightness.reverse,
         )),
       );
 
