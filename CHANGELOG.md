@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- Added page with saved posts/comments. It can be accessed from the profile tab under the bookmark icon
+
 ## v0.2.3 - 2021-02-09
 
 Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid](https://f-droid.org/packages/com.krawieck.lemmur)

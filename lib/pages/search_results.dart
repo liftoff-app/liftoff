@@ -103,7 +103,7 @@ class _SearchResultsList extends HookWidget {
             throw UnimplementedError();
         }
       },
-      builder: (data) {
+      itemBuilder: (data) {
         switch (type) {
           case SearchType.comments:
             return CommentWidget(

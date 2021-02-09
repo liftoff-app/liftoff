@@ -30,7 +30,7 @@ class CommunitiesListPage extends StatelessWidget {
       ),
       body: SortableInfiniteList<CommunityView>(
         fetcher: fetcher,
-        builder: (community) => Column(
+        itemBuilder: (community) => Column(
           children: [
             const Divider(),
             CommunitiesListItem(

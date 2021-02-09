@@ -12,8 +12,7 @@ import '../hooks/stores.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/infinite_scroll.dart';
-import '../widgets/post.dart';
-import '../widgets/post_list_options.dart';
+import '../widgets/sortable_infinite_list.dart';
 import 'add_account.dart';
 import 'inbox.dart';
 
@@ -262,13 +261,6 @@ class InfiniteHomeList extends HookWidget {
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
 
-    final sort = useState(SortType.active);
-
-    void changeSorting(SortType newSort) {
-      sort.value = newSort;
-      controller.clear();
-    }
-
     /// fetches post from many instances at once and combines them into a single
     /// list
     ///
@@ -313,9 +305,9 @@ class InfiniteHomeList extends HookWidget {
       return newPosts;
     }
 
-    Future<List<PostView>> Function(int, int) fetcherFromInstance(
-            String instanceHost, PostListingType listingType, SortType sort) =>
-        (page, batchSize) => LemmyApiV2(instanceHost).run(GetPosts(
+    FetcherWithSorting<PostView> fetcherFromInstance(
+            String instanceHost, PostListingType listingType) =>
+        (page, batchSize, sort) => LemmyApiV2(instanceHost).run(GetPosts(
               type: listingType,
               sort: sort,
               page: page,
@@ -323,33 +315,13 @@ class InfiniteHomeList extends HookWidget {
               auth: accStore.defaultTokenFor(instanceHost)?.raw,
             ));
 
-    return InfiniteScroll<PostView>(
-      prepend: Column(
-        children: [
-          PostListOptions(
-            sortValue: sort.value,
-            onSortChanged: changeSorting,
-            styleButton: onStyleChange != null,
-          ),
-        ],
-      ),
-      builder: (post) => Column(
-        children: [
-          PostWidget(post),
-          const SizedBox(height: 20),
-        ],
-      ),
-      padding: EdgeInsets.zero,
-      fetchMore: selectedList.instanceHost == null
-          ? (page, limit) =>
-              generalFetcher(page, limit, sort.value, selectedList.listingType)
+    return InfinitePostList(
+      fetcher: selectedList.instanceHost == null
+          ? (page, limit, sort) =>
+              generalFetcher(page, limit, sort, selectedList.listingType)
           : fetcherFromInstance(
-              selectedList.instanceHost,
-              selectedList.listingType,
-              sort.value,
-            ),
+              selectedList.instanceHost, selectedList.listingType),
       controller: controller,
-      batchSize: 20,
     );
   }
 }
