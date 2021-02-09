@@ -14,6 +14,7 @@ import 'pages/profile_tab.dart';
 import 'pages/search_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
+import 'util/extensions/brightness.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -109,7 +110,7 @@ class MyHomePage extends HookWidget {
       Future.microtask(
         () => SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
           systemNavigationBarColor: theme.scaffoldBackgroundColor,
-          systemNavigationBarIconBrightness: theme.brightness,
+          systemNavigationBarIconBrightness: theme.brightness.reverse,
         )),
       );
 
