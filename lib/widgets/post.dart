@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/v2.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
@@ -15,6 +14,7 @@ import '../pages/full_post.dart';
 import '../url_launcher.dart';
 import '../util/cleanup_url.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import 'bottom_modal.dart';
@@ -216,7 +216,7 @@ class PostWidget extends HookWidget {
                                 ),
                                 TextSpan(
                                     text:
-                                        ' · ${timeago.format(post.post.published, locale: 'en_short')}'),
+                                        ' · ${post.post.published.fancyShort}'),
                                 if (post.post.locked)
                                   const TextSpan(text: ' · 🔒'),
                                 if (post.post.stickied)

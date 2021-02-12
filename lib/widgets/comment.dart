@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../comment_tree.dart';
@@ -13,6 +12,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
@@ -385,7 +385,7 @@ class CommentWidget extends HookWidget {
                           Text(compactNumber(comment.counts.score +
                               (wasVoted ? 0 : myVote.value.value))),
                         const Text(' · '),
-                        Text(timeago.format(comment.comment.published)),
+                        Text(comment.comment.published.fancy),
                       ],
                     ),
                   )
