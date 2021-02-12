@@ -7,6 +7,7 @@
 ### Fixed
 
 - Time of posts is now displayed properly. Unless you live in UTC zone, then you won't notice a difference.
+- Fixed a bug where links would not work on Android 11
 
 ## v0.2.3 - 2021-02-09
 
