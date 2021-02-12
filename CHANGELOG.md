@@ -4,6 +4,10 @@
 
 - Added page with saved posts/comments. It can be accessed from the profile tab under the bookmark icon
 
+### Fixed
+
+- Time of posts is now displayed properly. Unless you live in UTC zone, then you won't notice a difference.
+
 ## v0.2.3 - 2021-02-09
 
 Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid](https://f-droid.org/packages/com.krawieck.lemmur)
