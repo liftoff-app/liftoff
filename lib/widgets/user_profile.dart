@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/v2.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../pages/manage_account.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
@@ -282,7 +282,7 @@ class _UserOverview extends HookWidget {
               ),
               const SizedBox(height: 15),
               Text(
-                'Joined ${timeago.format(userView.user.published)}',
+                'Joined ${userView.user.published.fancy}',
                 style: theme.textTheme.bodyText1,
               ),
               Row(
