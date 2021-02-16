@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmur/hooks/memo_future.dart';
 import 'package:lemmur/util/extensions/api.dart';
 import 'package:lemmur/util/extensions/datetime.dart';
 import 'package:lemmur/util/goto.dart';
@@ -29,15 +28,89 @@ class ModlogPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final page = useState(1);
+    // will be set true when a fetch returns 0 results
+    final isDone = useState(false);
+
+    final modlogFut = useMemoized(
+      () => LemmyApiV2(instanceHost).run(
+        GetModlog(
+          communityId: communityId,
+          page: page.value,
+        ),
+      ),
+      [page.value],
+    );
+
+    return Scaffold(
+      appBar: AppBar(title: Text("$name's modlog")),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            FutureBuilder<Modlog>(
+              key: ValueKey(modlogFut),
+              future: modlogFut,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: Text('Error: ${snapshot.error?.toString()}'));
+                }
+                final modlog = snapshot.data;
+
+                if (modlog.added.length +
+                        modlog.addedToCommunity.length +
+                        modlog.banned.length +
+                        modlog.bannedFromCommunity.length +
+                        modlog.lockedPosts.length +
+                        modlog.removedComments.length +
+                        modlog.removedCommunities.length +
+                        modlog.removedPosts.length +
+                        modlog.stickiedPosts.length ==
+                    0) {
+                  WidgetsBinding.instance
+                      .addPostFrameCallback((_) => isDone.value = true);
+
+                  return const Center(child: Text('no more logs to show'));
+                }
+
+                return _ModlogTable(modlog: modlog);
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton(
+                    onPressed: page.value != 1 ? () => page.value-- : null,
+                    child: Text('previous'),
+                  ),
+                  OutlinedButton(
+                    onPressed: isDone.value ? null : () => page.value++,
+                    child: Text('next'),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ModlogTable extends StatelessWidget {
+  const _ModlogTable({Key key, @required this.modlog})
+      : assert(modlog != null),
+        super(key: key);
+
+  final Modlog modlog;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final modlogSnap = useMemoFuture(() =>
-        LemmyApiV2(instanceHost).run(GetModlog(communityId: communityId)));
-
-    if (!modlogSnap.hasData) {
-      return Scaffold();
-    }
-
-    final modlog = modlogSnap.data;
 
     final modlogEntries = [
       for (final removedPost in modlog.removedPosts)
@@ -276,35 +349,27 @@ class ModlogPage extends HookWidget {
         ),
     ]..sort((a, b) => b.when.compareTo(a.when));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("$name's modlog"),
-      ),
-      body: SingleChildScrollView(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Table(
-            border: TableBorder.all(width: 1),
-            columnWidths: {
-              0: FixedColumnWidth(100),
-              1: FixedColumnWidth(150),
-              2: FixedColumnWidth(400),
-              3: FixedColumnWidth(200),
-            },
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Table(
+        border: TableBorder.all(width: 1),
+        columnWidths: {
+          0: FixedColumnWidth(100),
+          1: FixedColumnWidth(150),
+          2: FixedColumnWidth(400),
+          3: FixedColumnWidth(200),
+        },
+        children: [
+          TableRow(
             children: [
-              TableRow(
-                children: [
-                  Center(child: Text('when')),
-                  Center(child: Text('mod')),
-                  Center(child: Text('action')),
-                  Center(child: Text('reason')),
-                ],
-              ),
-              for (final modlogEntry in modlogEntries)
-                modlogEntry.build(context)
+              Center(child: Text('when')),
+              Center(child: Text('mod')),
+              Center(child: Text('action')),
+              Center(child: Text('reason')),
             ],
           ),
-        ),
+          for (final modlogEntry in modlogEntries) modlogEntry.build(context)
+        ],
       ),
     );
   }
