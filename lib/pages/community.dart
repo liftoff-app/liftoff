@@ -3,6 +3,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmur/pages/modlog_page.dart';
 import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
@@ -374,10 +375,6 @@ class _AboutTab extends StatelessWidget {
     @required this.onlineUsers,
   }) : super(key: key);
 
-  void goToModlog() {
-    print('GO TO MODLOG');
-  }
-
   void goToCategories() {
     print('GO TO CATEGORIES');
   }
@@ -428,7 +425,14 @@ class _AboutTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: OutlinedButton(
-            onPressed: goToModlog,
+            onPressed: () => goTo(
+              context,
+              (context) => ModlogPage.forCommunity(
+                instanceHost: community.instanceHost,
+                communityId: community.community.id,
+                communityName: community.community.name,
+              ),
+            ),
             child: const Text('Modlog'),
           ),
         ),

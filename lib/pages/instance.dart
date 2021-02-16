@@ -3,6 +3,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmur/pages/modlog_page.dart';
 import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
@@ -213,10 +214,6 @@ class _AboutTab extends HookWidget {
       : assert(communitiesFuture != null),
         assert(instanceHost != null);
 
-  void goToModLog() {
-    print('GO TO MODLOG');
-  }
-
   void goToBannedUsers(BuildContext c) {
     goTo(
       c,
@@ -367,7 +364,10 @@ class _AboutTab extends HookWidget {
             ),
             ListTile(
               title: const Center(child: Text('Modlog')),
-              onTap: goToModLog,
+              onTap: () => goTo(
+                context,
+                (context) => ModlogPage.forInstance(instanceHost: instanceHost),
+              ),
             ),
           ],
         ),
