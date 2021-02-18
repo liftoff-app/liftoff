@@ -360,7 +360,7 @@ class _ModlogTable extends StatelessWidget {
       child: SizedBox(
         width: 1000,
         child: Table(
-          border: TableBorder.all(),
+          border: TableBorder.all(color: theme.colorScheme.onSurface),
           columnWidths: const {
             0: FixedColumnWidth(80),
             1: FixedColumnWidth(200),
