@@ -506,10 +506,7 @@ class _ModlogEntry {
             ),
           ),
           action,
-          if (reason == null)
-            const Center(child: Text('-'))
-          else
-            Text(reason ?? '-'),
+          if (reason == null) const Center(child: Text('-')) else Text(reason),
         ]
             .map(
               (widget) => Padding(
