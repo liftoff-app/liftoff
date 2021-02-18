@@ -1,10 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmur/util/extensions/api.dart';
-import 'package:lemmur/util/extensions/datetime.dart';
-import 'package:lemmur/util/goto.dart';
 import 'package:lemmy_api_client/v2.dart';
+
+import '../util/extensions/api.dart';
+import '../util/extensions/datetime.dart';
+import '../util/goto.dart';
+import '../widgets/avatar.dart';
 
 class ModlogPage extends HookWidget {
   final String instanceHost;
@@ -85,11 +87,11 @@ class ModlogPage extends HookWidget {
                 children: [
                   OutlinedButton(
                     onPressed: page.value != 1 ? () => page.value-- : null,
-                    child: Text('previous'),
+                    child: const Icon(Icons.skip_previous),
                   ),
                   OutlinedButton(
                     onPressed: isDone.value ? null : () => page.value++,
-                    child: Text('next'),
+                    child: const Icon(Icons.skip_next),
                   ),
                 ],
               ),
@@ -111,6 +113,50 @@ class _ModlogTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    InlineSpan user(UserSafe user) => TextSpan(
+          children: [
+            WidgetSpan(
+              child: Avatar(
+                url: user.avatar,
+                noBlank: true,
+                radius: 10,
+              ),
+            ),
+            TextSpan(
+              text: ' ${user.displayName}',
+              style: TextStyle(color: theme.accentColor),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => goToUser.byId(
+                      context,
+                      user.instanceHost,
+                      user.id,
+                    ),
+            ),
+          ],
+        );
+
+    InlineSpan community(CommunitySafe community) => TextSpan(
+          children: [
+            WidgetSpan(
+              child: Avatar(
+                url: community.icon,
+                noBlank: true,
+                radius: 10,
+              ),
+            ),
+            TextSpan(
+              text: ' !${community.name}',
+              style: TextStyle(color: theme.accentColor),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => goToCommunity.byId(
+                      context,
+                      community.instanceHost,
+                      community.id,
+                    ),
+            ),
+          ],
+        );
 
     final modlogEntries = [
       for (final removedPost in modlog.removedPosts)
@@ -201,9 +247,10 @@ class _ModlogTable extends StatelessWidget {
                   const TextSpan(text: 'removed')
                 else
                   const TextSpan(text: 'restored'),
-                const TextSpan(text: ' comment on '),
+                const TextSpan(text: ' comment '),
                 TextSpan(
-                  text: '"${removedComment.post.name}"',
+                  text:
+                      '"${removedComment.comment.content.replaceAll('\n', ' ')}"',
                   style: TextStyle(color: theme.accentColor),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => goToPost(
@@ -212,6 +259,8 @@ class _ModlogTable extends StatelessWidget {
                           removedComment.post.id,
                         ),
                 ),
+                const TextSpan(text: ' by '),
+                user(removedComment.commenter),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -228,16 +277,7 @@ class _ModlogTable extends StatelessWidget {
                 else
                   const TextSpan(text: 'restored'),
                 const TextSpan(text: ' community '),
-                TextSpan(
-                  text: '"${removedCommunity.community.name}"',
-                  style: TextStyle(color: theme.accentColor),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => goToCommunity.byId(
-                          context,
-                          removedCommunity.instanceHost,
-                          removedCommunity.community.id,
-                        ),
-                ),
+                community(removedCommunity.community),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -250,20 +290,12 @@ class _ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (bannedFromCommunity.modBanFromCommunity.banned)
-                  const TextSpan(text: 'banned')
+                  const TextSpan(text: 'banned ')
                 else
-                  const TextSpan(text: 'unbanned'),
+                  const TextSpan(text: 'unbanned '),
+                user(bannedFromCommunity.bannedUser),
                 const TextSpan(text: ' from community '),
-                TextSpan(
-                  text: '"${bannedFromCommunity.community.name}"',
-                  style: TextStyle(color: theme.accentColor),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => goToCommunity.byId(
-                          context,
-                          bannedFromCommunity.instanceHost,
-                          bannedFromCommunity.community.id,
-                        ),
-                ),
+                community(bannedFromCommunity.community),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -276,20 +308,10 @@ class _ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (banned.modBan.banned)
-                  const TextSpan(text: 'banned')
+                  const TextSpan(text: 'banned ')
                 else
-                  const TextSpan(text: 'unbanned'),
-                const TextSpan(text: ' user '),
-                TextSpan(
-                  text: '"${banned.bannedUser.displayName}"',
-                  style: TextStyle(color: theme.accentColor),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => goToUser.byId(
-                          context,
-                          banned.instanceHost,
-                          banned.bannedUser.id,
-                        ),
-                ),
+                  const TextSpan(text: 'unbanned '),
+                user(banned.bannedUser),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -302,20 +324,12 @@ class _ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (addedToCommunity.modAddCommunity.removed)
-                  const TextSpan(text: 'removed')
+                  const TextSpan(text: 'removed ')
                 else
-                  const TextSpan(text: 'added'),
-                const TextSpan(text: ' as mod '),
-                TextSpan(
-                  text: '"${addedToCommunity.moddedUser.displayName}"',
-                  style: TextStyle(color: theme.accentColor),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => goToUser.byId(
-                          context,
-                          addedToCommunity.instanceHost,
-                          addedToCommunity.moddedUser.id,
-                        ),
-                ),
+                  const TextSpan(text: 'appointed '),
+                user(addedToCommunity.moddedUser),
+                const TextSpan(text: ' as mod of '),
+                community(addedToCommunity.community),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -328,20 +342,11 @@ class _ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (added.modAdd.removed)
-                  const TextSpan(text: 'removed')
+                  const TextSpan(text: 'removed ')
                 else
-                  const TextSpan(text: 'added'),
-                const TextSpan(text: ' as admin '),
-                TextSpan(
-                  text: '"${added.moddedUser.displayName}"',
-                  style: TextStyle(color: theme.accentColor),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => goToUser.byId(
-                          context,
-                          added.instanceHost,
-                          added.moddedUser.id,
-                        ),
-                ),
+                  const TextSpan(text: 'apointed '),
+                user(added.moddedUser),
+                const TextSpan(text: ' as admin'),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -352,15 +357,15 @@ class _ModlogTable extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Table(
-        border: TableBorder.all(width: 1),
-        columnWidths: {
+        border: TableBorder.all(),
+        columnWidths: const {
           0: FixedColumnWidth(100),
           1: FixedColumnWidth(150),
           2: FixedColumnWidth(400),
           3: FixedColumnWidth(200),
         },
         children: [
-          TableRow(
+          const TableRow(
             children: [
               Center(child: Text('when')),
               Center(child: Text('mod')),
@@ -484,7 +489,10 @@ class _ModlogEntry {
             child: Text(mod.displayName),
           ),
           action,
-          if (reason == null) Center(child: Text('-')) else Text(reason ?? '-'),
+          if (reason == null)
+            const Center(child: Text('-'))
+          else
+            Text(reason ?? '-'),
         ]
             .map(
               (widget) => Padding(
