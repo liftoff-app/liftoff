@@ -484,9 +484,22 @@ class _ModlogEntry {
   TableRow build(BuildContext context) => TableRow(
         children: [
           Center(child: Text(when.fancyShort)),
-          InkWell(
-            onTap: () => goToUser.byId(context, mod.instanceHost, mod.id),
-            child: Text(mod.displayName),
+          GestureDetector(
+            onTap: () => goToUser.byId(
+              context,
+              mod.instanceHost,
+              mod.id,
+            ),
+            child: Row(
+              children: [
+                Avatar(
+                  url: mod.avatar,
+                  noBlank: true,
+                  radius: 10,
+                ),
+                Text(' ${mod.displayName}'),
+              ],
+            ),
           ),
           action,
           if (reason == null)
