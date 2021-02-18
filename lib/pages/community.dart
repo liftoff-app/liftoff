@@ -3,7 +3,6 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmur/pages/modlog_page.dart';
 import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
@@ -16,11 +15,13 @@ import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/more_icon.dart';
+import '../widgets/avatar.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
+import 'modlog_page.dart';
 
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
@@ -244,24 +245,11 @@ class _CommunityOverview extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
-                width: 83,
-                height: 83,
-                child: FullscreenableImage(
+              FullscreenableImage(
+                url: community.community.icon,
+                child: Avatar(
                   url: community.community.icon,
-                  child: CachedNetworkImage(
-                    imageUrl: community.community.icon,
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: imageProvider,
-                        ),
-                      ),
-                    ),
-                    errorWidget: (_, __, ___) => const Icon(Icons.warning),
-                  ),
+                  radius: 83 / 2,
                 ),
               ),
             ],

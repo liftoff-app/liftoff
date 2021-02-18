@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v2.dart';
 
 import '../util/goto.dart';
+import '../widgets/avatar.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
 
@@ -64,20 +64,6 @@ class CommunitiesListItem extends StatelessWidget {
             : null,
         onTap: () => goToCommunity.byId(
             context, community.instanceHost, community.community.id),
-        leading: community.community.icon != null
-            ? CachedNetworkImage(
-                height: 50,
-                width: 50,
-                imageUrl: community.community.icon,
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.cover, image: imageProvider),
-                  ),
-                ),
-                errorWidget: (_, __, ___) => const SizedBox(width: 50),
-              )
-            : const SizedBox(width: 50),
+        leading: Avatar(url: community.community.icon),
       );
 }

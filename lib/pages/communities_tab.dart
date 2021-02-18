@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -14,6 +13,7 @@ import '../util/extensions/api.dart';
 import '../util/extensions/iterators.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
+import '../widgets/avatar.dart';
 
 /// List of subscribed communities per instance
 class CommunitiesTab extends HookWidget {
@@ -178,24 +178,7 @@ class CommunitiesTab extends HookWidget {
                           onTap: () => goToInstance(context,
                               accountsStore.loggedInInstances.elementAt(i)),
                           onLongPress: () => toggleCollapse(i),
-                          leading: instances[i].icon != null
-                              ? CachedNetworkImage(
-                                  height: 50,
-                                  width: 50,
-                                  imageUrl: instances[i].icon,
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: imageProvider),
-                                    ),
-                                  ),
-                                  errorWidget: (_, __, ___) =>
-                                      const SizedBox(width: 50),
-                                )
-                              : const SizedBox(width: 50),
+                          leading: Avatar(url: instances[i].icon),
                           title: Text(
                             instances[i].name,
                             style: theme.textTheme.headline6,
@@ -223,26 +206,10 @@ class CommunitiesTab extends HookWidget {
                                 ),
                                 title: Row(
                                   children: [
-                                    if (comm.community.icon != null)
-                                      CachedNetworkImage(
-                                        height: 30,
-                                        width: 30,
-                                        imageUrl: comm.community.icon,
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                Container(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: imageProvider),
-                                          ),
-                                        ),
-                                        errorWidget: (_, __, ___) =>
-                                            const SizedBox(width: 30),
-                                      )
-                                    else
-                                      const SizedBox(width: 30),
+                                    Avatar(
+                                      radius: 15,
+                                      url: comm.community.icon,
+                                    ),
                                     const SizedBox(width: 10),
                                     Text(
                                       '!${comm.community.name}${comm.community.local ? '' : '@${comm.community.originInstanceHost}'}',

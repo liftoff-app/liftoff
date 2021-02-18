@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v2.dart';
 
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../widgets/avatar.dart';
 import '../widgets/markdown_text.dart';
 
 /// Infinite list of Users fetched by the given fetcher
@@ -53,21 +53,6 @@ class UsersListItem extends StatelessWidget {
               )
             : null,
         onTap: () => goToUser.byId(context, user.instanceHost, user.user.id),
-        leading: user.user.avatar != null
-            ? CachedNetworkImage(
-                height: 50,
-                width: 50,
-                imageUrl: user.user.avatar,
-                errorWidget: (_, __, ___) =>
-                    const SizedBox(height: 50, width: 50),
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.cover, image: imageProvider),
-                  ),
-                ),
-              )
-            : const SizedBox(width: 50),
+        leading: Avatar(url: user.user.avatar),
       );
 }
