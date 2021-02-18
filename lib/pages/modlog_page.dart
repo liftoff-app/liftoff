@@ -85,11 +85,11 @@ class ModlogPage extends HookWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  OutlinedButton(
+                  TextButton(
                     onPressed: page.value != 1 ? () => page.value-- : null,
                     child: const Icon(Icons.skip_previous),
                   ),
-                  OutlinedButton(
+                  TextButton(
                     onPressed: isDone.value ? null : () => page.value++,
                     child: const Icon(Icons.skip_next),
                   ),
@@ -355,26 +355,30 @@ class _ModlogTable extends StatelessWidget {
     ]..sort((a, b) => b.when.compareTo(a.when));
 
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(8),
       scrollDirection: Axis.horizontal,
-      child: Table(
-        border: TableBorder.all(),
-        columnWidths: const {
-          0: FixedColumnWidth(100),
-          1: FixedColumnWidth(150),
-          2: FixedColumnWidth(400),
-          3: FixedColumnWidth(200),
-        },
-        children: [
-          const TableRow(
-            children: [
-              Center(child: Text('when')),
-              Center(child: Text('mod')),
-              Center(child: Text('action')),
-              Center(child: Text('reason')),
-            ],
-          ),
-          for (final modlogEntry in modlogEntries) modlogEntry.build(context)
-        ],
+      child: SizedBox(
+        width: 1000,
+        child: Table(
+          border: TableBorder.all(),
+          columnWidths: const {
+            0: FixedColumnWidth(80),
+            1: FixedColumnWidth(200),
+            2: FlexColumnWidth(),
+            3: FixedColumnWidth(200),
+          },
+          children: [
+            const TableRow(
+              children: [
+                Center(child: Text('when')),
+                Center(child: Text('mod')),
+                Center(child: Text('action')),
+                Center(child: Text('reason')),
+              ],
+            ),
+            for (final modlogEntry in modlogEntries) modlogEntry.build(context)
+          ],
+        ),
       ),
     );
   }
