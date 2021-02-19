@@ -22,6 +22,7 @@ import 'full_post.dart';
 /// Fab that triggers the [CreatePost] modal
 class CreatePostFab extends HookWidget {
   final CommunityView community;
+
   const CreatePostFab({this.community});
 
   @override
@@ -129,14 +130,13 @@ class CreatePostPage extends HookWidget {
       ),
     );
 
-    DropdownMenuItem<int> communityDropDownItem(CommunityView e) {
-      return DropdownMenuItem(
-        value: e.community.id,
-        child: Text(e.community.local
-            ? e.community.name
-            : '${e.community.originInstanceHost}/${e.community.name}'),
-      );
-    }
+    DropdownMenuItem<int> communityDropDownItem(CommunityView e) =>
+        DropdownMenuItem(
+          value: e.community.id,
+          child: Text(e.community.local
+              ? e.community.name
+              : '${e.community.originInstanceHost}/${e.community.name}'),
+        );
 
     List<DropdownMenuItem<int>> communitiesList() {
       if (allCommunitiesSnap.hasData) {
