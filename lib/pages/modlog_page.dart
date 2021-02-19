@@ -7,6 +7,7 @@ import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../widgets/avatar.dart';
+import '../widgets/bottom_safe.dart';
 
 class ModlogPage extends HookWidget {
   final String instanceHost;
@@ -54,7 +55,12 @@ class ModlogPage extends HookWidget {
               future: modlogFut,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text('Error: ${snapshot.error?.toString()}'));
@@ -95,7 +101,8 @@ class ModlogPage extends HookWidget {
                   ),
                 ],
               ),
-            )
+            ),
+            const BottomSafe(),
           ],
         ),
       ),
@@ -487,7 +494,23 @@ class _ModlogEntry {
 
   TableRow build(BuildContext context) => TableRow(
         children: [
-          Center(child: Text(when.fancyShort)),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Center(
+                      heightFactor: 1,
+                      child: Text(when.toString()),
+                    ),
+                  ),
+                ),
+              );
+            },
+            child: Center(child: Text(when.fancyShort)),
+          ),
           GestureDetector(
             onTap: () => goToUser.byId(
               context,
@@ -501,7 +524,10 @@ class _ModlogEntry {
                   noBlank: true,
                   radius: 10,
                 ),
-                Text(' ${mod.displayName}'),
+                Text(
+                  ' ${mod.displayName}',
+                  style: TextStyle(color: Theme.of(context).accentColor),
+                ),
               ],
             ),
           ),
