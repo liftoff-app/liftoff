@@ -6,6 +6,14 @@
 
 From issues to wikis: everything is on [GitHub](https://github.com/krawieck/lemmur)
 
+## Linting / Formatting
+
+Everything is formatted with `dartfmt` (no flags) and linted with `dartanalyzer` ([see rules](analysis_options.yaml)). Both are enforced by the CI.
+
+## Translations
+
+<!-- TODO -->
+
 ## Architecture
 
 Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/krawieck/lemmy_api_client) is used.
@@ -19,6 +27,7 @@ Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communic
 (relative to `lib/`)
 
 - `hooks/`: reusable state hooks
+- `l10n/`: files with localized strings and localizations tools
 - `pages/`: fullscreen pages that you navigate to
 - `stores/`: global stores
 - `util/`: utilities
@@ -30,6 +39,12 @@ Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communic
 - Be aware that Lemmur supports arbitrary Lemmy instances, don't hardcode instance urls
 - Remember that a user is not obligated to be logged in, contributed widgets should handle this case
 
-## Linting / Formatting
+### For React developers
 
-Everything is formatted with `dartfmt` (no flags) and linted with `dartanalyzer` ([see rules](analysis_options.yaml)). Both are enforced by the CI.
+If you come from a React background Flutter shouldn't be anything hard to grasp for you.
+
+- Components are called 'widgets' in flutter
+- `flutter_hooks` is a React hooks port to flutter. Though you will come to see that `flutter_hooks` are not as powerful
+- There is no CSS. You compose your layout with other widgets and style them by passing properties to them
+- There are no functional components, everything has to be a class
+- Creating wrapping widgets is not as nice as in React, there is no `{ ...props }`. In flutter you need to pass each argument one by one

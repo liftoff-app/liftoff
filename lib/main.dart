@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
@@ -42,8 +43,11 @@ class MyApp extends HookWidget {
 
     return MaterialApp(
       title: 'lemmur',
+      supportedLocales: L10n.supportedLocales,
+      localizationsDelegates: L10n.localizationsDelegates,
       themeMode: configStore.theme,
       darkTheme: configStore.amoledDarkMode ? amoledTheme : darkTheme,
+      locale: configStore.locale,
       theme: lightTheme,
       home: const MyHomePage(),
     );
