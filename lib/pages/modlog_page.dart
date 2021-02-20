@@ -47,63 +47,70 @@ class ModlogPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text("$name's modlog")),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            FutureBuilder<Modlog>(
-              key: ValueKey(modlogFut),
-              future: modlogFut,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 40),
-                    child: Center(
-                      child: CircularProgressIndicator(),
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox.shrink(),
+                FutureBuilder<Modlog>(
+                  key: ValueKey(modlogFut),
+                  future: modlogFut,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                          child: Text('Error: ${snapshot.error?.toString()}'));
+                    }
+                    final modlog = snapshot.data;
+
+                    if (modlog.added.length +
+                            modlog.addedToCommunity.length +
+                            modlog.banned.length +
+                            modlog.bannedFromCommunity.length +
+                            modlog.lockedPosts.length +
+                            modlog.removedComments.length +
+                            modlog.removedCommunities.length +
+                            modlog.removedPosts.length +
+                            modlog.stickiedPosts.length ==
+                        0) {
+                      WidgetsBinding.instance
+                          .addPostFrameCallback((_) => isDone.value = true);
+
+                      return const Center(child: Text('no more logs to show'));
+                    }
+
+                    return _ModlogTable(modlog: modlog);
+                  },
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed:
+                                page.value != 1 ? () => page.value-- : null,
+                            child: const Icon(Icons.skip_previous),
+                          ),
+                          TextButton(
+                            onPressed: isDone.value ? null : () => page.value++,
+                            child: const Icon(Icons.skip_next),
+                          ),
+                        ],
+                      ),
                     ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                      child: Text('Error: ${snapshot.error?.toString()}'));
-                }
-                final modlog = snapshot.data;
-
-                if (modlog.added.length +
-                        modlog.addedToCommunity.length +
-                        modlog.banned.length +
-                        modlog.bannedFromCommunity.length +
-                        modlog.lockedPosts.length +
-                        modlog.removedComments.length +
-                        modlog.removedCommunities.length +
-                        modlog.removedPosts.length +
-                        modlog.stickiedPosts.length ==
-                    0) {
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((_) => isDone.value = true);
-
-                  return const Center(child: Text('no more logs to show'));
-                }
-
-                return _ModlogTable(modlog: modlog);
-              },
+                    const BottomSafe(),
+                  ],
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: page.value != 1 ? () => page.value-- : null,
-                    child: const Icon(Icons.skip_previous),
-                  ),
-                  TextButton(
-                    onPressed: isDone.value ? null : () => page.value++,
-                    child: const Icon(Icons.skip_next),
-                  ),
-                ],
-              ),
-            ),
-            const BottomSafe(),
-          ],
+          ),
         ),
       ),
     );
