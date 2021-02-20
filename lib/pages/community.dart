@@ -22,6 +22,7 @@ import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'modlog_page.dart';
+import 'create_post.dart';
 
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
@@ -138,6 +139,7 @@ class CommunityPage extends HookWidget {
     }
 
     return Scaffold(
+      floatingActionButton: CreatePostFab(community: community),
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(

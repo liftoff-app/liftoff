@@ -21,7 +21,9 @@ import 'full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
 class CreatePostFab extends HookWidget {
-  const CreatePostFab();
+  final CommunityView community;
+
+  const CreatePostFab({this.community});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,8 @@ class CreatePostFab extends HookWidget {
 
     return FloatingActionButton(
       onPressed: loggedInAction((_) => showCupertinoModalPopup(
-          context: context, builder: (_) => CreatePostPage())),
+          context: context,
+          builder: (_) => CreatePostPage.toCommunity(community))),
       child: const Icon(Icons.add),
     );
   }
@@ -127,6 +130,31 @@ class CreatePostPage extends HookWidget {
       ),
     );
 
+    DropdownMenuItem<int> communityDropDownItem(CommunityView e) =>
+        DropdownMenuItem(
+          value: e.community.id,
+          child: Text(e.community.local
+              ? e.community.name
+              : '${e.community.originInstanceHost}/${e.community.name}'),
+        );
+
+    List<DropdownMenuItem<int>> communitiesList() {
+      if (allCommunitiesSnap.hasData) {
+        return allCommunitiesSnap.data.map(communityDropDownItem).toList();
+      } else {
+        if (selectedCommunity.value != null) {
+          return [communityDropDownItem(selectedCommunity.value)];
+        } else {
+          return const [
+            DropdownMenuItem(
+              value: -1,
+              child: CircularProgressIndicator(),
+            )
+          ];
+        }
+      }
+    }
+
     // TODO: use lazy autocomplete
     final communitiesDropdown = InputDecorator(
       decoration: const InputDecoration(
@@ -140,21 +168,7 @@ class CreatePostPage extends HookWidget {
           onChanged: (communityId) => selectedCommunity.value =
               allCommunitiesSnap.data
                   ?.firstWhere((e) => e.community.id == communityId),
-          items: allCommunitiesSnap.hasData
-              ? allCommunitiesSnap.data
-                  .map((e) => DropdownMenuItem(
-                        value: e.community.id,
-                        child: Text(e.community.local
-                            ? e.community.name
-                            : '${e.community.originInstanceHost}/${e.community.name}'),
-                      ))
-                  .toList()
-              : const [
-                  DropdownMenuItem(
-                    value: -1,
-                    child: CircularProgressIndicator(),
-                  )
-                ],
+          items: communitiesList(),
         ),
       ),
     );
