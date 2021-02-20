@@ -53,6 +53,7 @@ class CommunitiesTab extends HookWidget {
                   savedOnly: false,
                   userId:
                       accountsStore.defaultTokenFor(instanceHost).payload.id,
+                  auth: accountsStore.defaultTokenFor(instanceHost).raw,
                 ))
                 .then((e) => e.follows),
           )
