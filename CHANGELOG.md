@@ -20,6 +20,10 @@ WARNING: due to some internal changes your local settings will be reset (logged 
 - Time of posts is now displayed properly. Unless you live in UTC zone, then you won't notice a difference
 - Fixed a bug where links would not work on Android 11
 
+### Changed
+
+- Communities that a user follows will no longer appear on a user's profile in most scenarios
+
 ## v0.2.3 - 2021-02-09
 
 Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid](https://f-droid.org/packages/com.krawieck.lemmur)
