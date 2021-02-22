@@ -15,12 +15,14 @@ import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/more_icon.dart';
+import '../widgets/avatar.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'create_post.dart';
+import 'modlog_page.dart';
 
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
@@ -245,24 +247,11 @@ class _CommunityOverview extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
-                width: 83,
-                height: 83,
-                child: FullscreenableImage(
+              FullscreenableImage(
+                url: community.community.icon,
+                child: Avatar(
                   url: community.community.icon,
-                  child: CachedNetworkImage(
-                    imageUrl: community.community.icon,
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: imageProvider,
-                        ),
-                      ),
-                    ),
-                    errorWidget: (_, __, ___) => const Icon(Icons.warning),
-                  ),
+                  radius: 83 / 2,
                 ),
               ),
             ],
@@ -376,10 +365,6 @@ class _AboutTab extends StatelessWidget {
     @required this.onlineUsers,
   }) : super(key: key);
 
-  void goToModlog() {
-    print('GO TO MODLOG');
-  }
-
   void goToCategories() {
     print('GO TO CATEGORIES');
   }
@@ -430,7 +415,14 @@ class _AboutTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: OutlinedButton(
-            onPressed: goToModlog,
+            onPressed: () => goTo(
+              context,
+              (context) => ModlogPage.forCommunity(
+                instanceHost: community.instanceHost,
+                communityId: community.community.id,
+                communityName: community.community.name,
+              ),
+            ),
             child: const Text('Modlog'),
           ),
         ),

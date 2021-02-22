@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +15,7 @@ import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
+import 'avatar.dart';
 import 'bottom_modal.dart';
 import 'info_table_popup.dart';
 import 'markdown_text.dart';
@@ -337,20 +337,10 @@ class CommentWidget extends HookWidget {
                       child: InkWell(
                         onTap: () => goToUser.byId(
                             context, comment.instanceHost, comment.creator.id),
-                        child: CachedNetworkImage(
-                          imageUrl: comment.creator.avatar,
-                          height: 20,
-                          width: 20,
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: imageProvider,
-                              ),
-                            ),
-                          ),
-                          errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                        child: Avatar(
+                          url: comment.creator.avatar,
+                          radius: 10,
+                          noBlank: true,
                         ),
                       ),
                     ),

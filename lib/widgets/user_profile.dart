@@ -12,6 +12,7 @@ import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/text_color.dart';
+import 'avatar.dart';
 import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
 import 'sortable_infinite_list.dart';
@@ -340,23 +341,10 @@ class _AboutTab extends HookWidget {
           dense: true,
           onTap: () => goToCommunity.byId(context, instanceHost, id),
           title: Text('!$name'),
-          leading: icon != null
-              ? CachedNetworkImage(
-                  height: 40,
-                  width: 40,
-                  imageUrl: icon,
-                  errorWidget: (_, __, ___) =>
-                      const SizedBox(width: 40, height: 40),
-                  imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: imageProvider,
-                          ),
-                        ),
-                      ))
-              : const SizedBox(width: 40),
+          leading: Avatar(
+            url: icon,
+            radius: 20,
+          ),
         );
 
     return ListView(

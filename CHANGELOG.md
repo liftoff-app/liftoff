@@ -3,6 +3,7 @@
 ### Added
 
 - Added page with saved posts/comments. It can be accessed from the profile tab under the bookmark icon
+- Added modlog page. Can be visited in the context of an instance or community from the about tab
 
 ### Fixed
 

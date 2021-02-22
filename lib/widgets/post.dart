@@ -17,6 +17,7 @@ import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
+import 'avatar.dart';
 import 'bottom_modal.dart';
 import 'fullscreenable_image.dart';
 import 'info_table_popup.dart';
@@ -125,24 +126,10 @@ class PostWidget extends HookWidget {
                           child: InkWell(
                             onTap: () => goToCommunity.byId(
                                 context, instanceHost, post.community.id),
-                            child: SizedBox(
-                              height: 40,
-                              width: 40,
-                              child: CachedNetworkImage(
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: imageProvider,
-                                    ),
-                                  ),
-                                ),
-                                imageUrl: post.community.icon,
-                                errorWidget: (context, url, error) =>
-                                    Text(error.toString()),
-                              ),
+                            child: Avatar(
+                              url: post.community.icon,
+                              noBlank: true,
+                              radius: 20,
                             ),
                           ),
                         ),
