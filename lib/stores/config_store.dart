@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'shared_pref_keys.dart';
+part 'config_store.g.dart';
 
 /// Store managing user-level configuration such as theme or language
+@JsonSerializable()
 class ConfigStore extends ChangeNotifier {
+  static const prefsKey = 'v1:ConfigStore';
+  static final _prefs = SharedPreferences.getInstance();
+
   ThemeMode _theme;
+  @JsonKey(defaultValue: ThemeMode.system)
   ThemeMode get theme => _theme;
   set theme(ThemeMode theme) {
     _theme = theme;
@@ -15,6 +23,7 @@ class ConfigStore extends ChangeNotifier {
   }
 
   bool _amoledDarkMode;
+  @JsonKey(defaultValue: false)
   bool get amoledDarkMode => _amoledDarkMode;
   set amoledDarkMode(bool amoledDarkMode) {
     _amoledDarkMode = amoledDarkMode;
@@ -22,23 +31,17 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
-  Future<void> load() async {
-    final prefs = await SharedPreferences.getInstance();
-    // load saved settings or create defaults
-    theme =
-        _themeModeFromString(prefs.getString(SharedPrefKeys.theme) ?? 'system');
-    amoledDarkMode = prefs.getBool(SharedPrefKeys.amoledDarkMode) ?? false;
-    notifyListeners();
+  static Future<ConfigStore> load() async {
+    final prefs = await _prefs;
+
+    return _$ConfigStoreFromJson(
+      jsonDecode(prefs.getString(prefsKey) ?? '{}') as Map<String, dynamic>,
+    );
   }
 
   Future<void> save() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _prefs;
 
-    await prefs.setString(SharedPrefKeys.theme, describeEnum(theme));
-    await prefs.setBool(SharedPrefKeys.amoledDarkMode, amoledDarkMode);
+    await prefs.setString(prefsKey, jsonEncode(_$ConfigStoreToJson(this)));
   }
 }
-
-/// converts string to ThemeMode
-ThemeMode _themeModeFromString(String theme) =>
-    ThemeMode.values.firstWhere((e) => describeEnum(e) == theme);
