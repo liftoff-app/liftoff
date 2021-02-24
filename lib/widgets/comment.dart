@@ -29,7 +29,6 @@ class CommentWidget extends HookWidget {
   final int depth;
   final CommentTree commentTree;
   final bool detached;
-  final UserMentionView userMentionView;
   final bool wasVoted;
   final bool canBeMarkedAsRead;
   final bool hideOnRead;
@@ -48,9 +47,8 @@ class CommentWidget extends HookWidget {
     this.detached = false,
     this.canBeMarkedAsRead = false,
     this.hideOnRead = false,
-  })  : wasVoted =
-            (commentTree.comment.myVote ?? VoteType.none) != VoteType.none,
-        userMentionView = null;
+  }) : wasVoted =
+            (commentTree.comment.myVote ?? VoteType.none) != VoteType.none;
 
   CommentWidget.fromCommentView(
     CommentView cv, {
@@ -64,14 +62,13 @@ class CommentWidget extends HookWidget {
         );
 
   CommentWidget.fromUserMentionView(
-    this.userMentionView, {
-    this.hideOnRead = false,
-  })  : commentTree =
-            CommentTree(CommentView.fromJson(userMentionView.toJson())),
-        depth = 0,
-        wasVoted = (userMentionView.myVote ?? VoteType.none) != VoteType.none,
-        detached = true,
-        canBeMarkedAsRead = true;
+    UserMentionView userMentionView, {
+    bool hideOnRead = false,
+  }) : this.fromCommentView(
+          CommentView.fromJson(userMentionView.toJson()),
+          hideOnRead: hideOnRead,
+          canBeMarkedAsRead: true,
+        );
 
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
@@ -417,9 +414,7 @@ class _MarkAsRead extends HookWidget {
     final accStore = useAccountsStore();
 
     final comment = commentView.comment;
-    final recipient = commentView.recipient;
     final instanceHost = commentView.instanceHost;
-    final post = commentView.post;
 
     final isRead = useState(comment.read);
     final delayedRead = useDelayedLoading();
@@ -431,9 +426,7 @@ class _MarkAsRead extends HookWidget {
           query: MarkCommentAsRead(
             commentId: comment.id,
             read: !isRead.value,
-            auth: recipient != null
-                ? accStore.tokenFor(instanceHost, recipient.name)?.raw
-                : accStore.tokenForId(instanceHost, post.creatorId)?.raw,
+            auth: accStore.defaultTokenFor(instanceHost)?.raw,
           ),
           onSuccess: (val) {
             isRead.value = val.commentView.comment.read;
