@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lemmy_api_client/v2.dart';
 
 import '../pages/community.dart';
 import '../pages/full_post.dart';
@@ -57,6 +58,9 @@ abstract class goToUser {
   static void byName(
           BuildContext context, String instanceHost, String userName) =>
       throw UnimplementedError('need to create UserProfile constructor first');
+
+  static void fromUserSafe(BuildContext context, UserSafe userSafe) =>
+      goToUser.byId(context, userSafe.instanceHost, userSafe.id);
 }
 
 void goToPost(BuildContext context, String instanceHost, int postId) => goTo(

@@ -19,6 +19,7 @@ class SortableInfiniteList<T> extends HookWidget {
   final InfiniteScrollController controller;
   final Function onStyleChange;
   final Widget noItems;
+  final SortType defaultSort;
 
   const SortableInfiniteList({
     @required this.fetcher,
@@ -26,15 +27,17 @@ class SortableInfiniteList<T> extends HookWidget {
     this.controller,
     this.onStyleChange,
     this.noItems,
+    this.defaultSort = SortType.active,
   })  : assert(fetcher != null),
-        assert(itemBuilder != null);
+        assert(itemBuilder != null),
+        assert(defaultSort != null);
 
   @override
   Widget build(BuildContext context) {
     final defaultController = useInfiniteScrollController();
     final isc = controller ?? defaultController;
 
-    final sort = useState(SortType.active);
+    final sort = useState(defaultSort);
 
     void changeSorting(SortType newSort) {
       sort.value = newSort;
@@ -92,7 +95,6 @@ class InfiniteCommentList extends StatelessWidget {
   Widget build(BuildContext context) => SortableInfiniteList<CommentView>(
         itemBuilder: (comment) => CommentWidget(
           CommentTree(comment),
-          postCreatorId: null,
           detached: true,
         ),
         fetcher: fetcher,

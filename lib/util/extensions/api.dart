@@ -26,7 +26,13 @@ extension GetOriginInstanceCommentView on Comment {
 
 String _extract(String url) => urlHost(url);
 
-extension DisplayNames on UserSafe {
+extension CommunityDisplayNames on CommunitySafe {
+  String get displayName => '!$name';
+  String get originDisplayName =>
+      local ? displayName : '!$name@$originInstanceHost';
+}
+
+extension UserDisplayNames on UserSafe {
   String get displayName {
     if (preferredUsername != null && preferredUsername.isNotEmpty) {
       return preferredUsername;

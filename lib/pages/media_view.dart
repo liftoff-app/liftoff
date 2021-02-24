@@ -71,6 +71,8 @@ class MediaViewPage extends HookWidget {
           Colors.black.withOpacity(max(0, 1.0 - (offset.value.dy.abs() / 200))),
       appBar: showButtons.value
           ? AppBar(
+              brightness: Brightness.dark,
+              iconTheme: const IconThemeData(color: Colors.white),
               backgroundColor: Colors.black38,
               leading: const CloseButton(),
               actions: [

@@ -17,6 +17,7 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/reveal_after_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'communities_list.dart';
 import 'modlog_page.dart';
@@ -33,8 +34,8 @@ class InstancePage extends HookWidget {
 
   InstancePage({@required this.instanceHost})
       : assert(instanceHost != null),
-        siteFuture = LemmyApiV2(instanceHost).run(GetSite()),
-        communitiesFuture = LemmyApiV2(instanceHost).run(ListCommunities(
+        siteFuture = LemmyApiV2(instanceHost).run(const GetSite()),
+        communitiesFuture = LemmyApiV2(instanceHost).run(const ListCommunities(
             type: PostListingType.local, sort: SortType.hot, limit: 6));
 
   @override
@@ -43,6 +44,7 @@ class InstancePage extends HookWidget {
     final siteSnap = useFuture(siteFuture);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
     final accStore = useAccountsStore();
+    final scrollController = useScrollController();
 
     if (!siteSnap.hasData) {
       return Scaffold(
@@ -85,15 +87,7 @@ class InstancePage extends HookWidget {
               leading: const Icon(Icons.info_outline),
               title: const Text('Nerd stuff'),
               onTap: () {
-                showInfoTablePopup(context, {
-                  'url': instanceHost,
-                  'creator': '@${site.siteView.creator.name}',
-                  'version': site.version,
-                  'enableDownvotes': site.siteView.site.enableDownvotes,
-                  'enableNsfw': site.siteView.site.enableNsfw,
-                  'published': site.siteView.site.published,
-                  'updated': site.siteView.site.updated,
-                });
+                showInfoTablePopup(context: context, table: site.toJson());
               },
             ),
           ],
@@ -105,14 +99,20 @@ class InstancePage extends HookWidget {
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
+          controller: scrollController,
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
             SliverAppBar(
               expandedHeight: 250,
               pinned: true,
               backgroundColor: theme.cardColor,
-              title: Text(
-                site.siteView.site.name,
-                style: TextStyle(color: colorOnCard),
+              title: RevealAfterScroll(
+                after: 150,
+                fade: true,
+                scrollController: scrollController,
+                child: Text(
+                  site.siteView.site.name,
+                  style: TextStyle(color: colorOnCard),
+                ),
               ),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: _share),
@@ -323,7 +323,7 @@ class _AboutTab extends HookWidget {
                 subtitle: u.user.bio != null
                     ? MarkdownText(u.user.bio, instanceHost: instanceHost)
                     : null,
-                onTap: () => goToUser.byId(context, instanceHost, u.user.id),
+                onTap: () => goToUser.fromUserSafe(context, u.user),
                 leading: Avatar(url: u.user.avatar),
               ),
             const _Divider(),

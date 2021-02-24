@@ -20,6 +20,7 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/reveal_after_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'create_post.dart';
 import 'modlog_page.dart';
@@ -54,6 +55,7 @@ class CommunityPage extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
+    final scrollController = useScrollController();
 
     final fullCommunitySnap = useMemoFuture(() {
       final token = accountsStore.defaultTokenFor(instanceHost);
@@ -125,12 +127,7 @@ class CommunityPage extends HookWidget {
               leading: const Icon(Icons.info_outline),
               title: const Text('Nerd stuff'),
               onTap: () {
-                showInfoTablePopup(context, {
-                  'id': community.community.id,
-                  'actorId': community.community.actorId,
-                  'created by': '@${community.creator.name}',
-                  'published': community.community.published,
-                });
+                showInfoTablePopup(context: context, table: community.toJson());
               },
             ),
           ],
@@ -143,12 +140,22 @@ class CommunityPage extends HookWidget {
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
+          controller: scrollController,
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
             SliverAppBar(
               expandedHeight: community.community.icon == null ? 220 : 300,
               pinned: true,
               backgroundColor: theme.cardColor,
-              title: Text('!${community.community.name}'),
+              title: RevealAfterScroll(
+                scrollController: scrollController,
+                after: community.community.icon == null ? 110 : 190,
+                fade: true,
+                child: Text(
+                  community.community.displayName,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                ),
+              ),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: _share),
                 IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
@@ -437,8 +444,7 @@ class _AboutTab extends StatelessWidget {
             ListTile(
               title: Text(
                   mod.moderator.preferredUsername ?? '@${mod.moderator.name}'),
-              onTap: () =>
-                  goToUser.byId(context, mod.instanceHost, mod.moderator.id),
+              onTap: () => goToUser.fromUserSafe(context, mod.moderator),
             ),
         ]
       ],

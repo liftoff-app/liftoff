@@ -32,7 +32,7 @@ class AddAccountPage extends HookWidget {
 
     useEffect(() {
       LemmyApiV2(selectedInstance.value)
-          .run(GetSite())
+          .run(const GetSite())
           .then((site) => icon.value = site.siteView.site.icon);
       return null;
     }, [selectedInstance.value]);

@@ -36,7 +36,7 @@ class CommunitiesTab extends HookWidget {
       final futures = accountsStore.loggedInInstances
           .map(
             (instanceHost) => LemmyApiV2(instanceHost)
-                .run(GetSite())
+                .run(const GetSite())
                 .then((e) => e.siteView.site),
           )
           .toList();
@@ -211,9 +211,7 @@ class CommunitiesTab extends HookWidget {
                                       url: comm.community.icon,
                                     ),
                                     const SizedBox(width: 10),
-                                    Text(
-                                      '!${comm.community.name}${comm.community.local ? '' : '@${comm.community.originInstanceHost}'}',
-                                    ),
+                                    Text(comm.community.originDisplayName),
                                   ],
                                 ),
                                 trailing: _CommunitySubscribeToggle(

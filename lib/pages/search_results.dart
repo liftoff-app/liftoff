@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
-import '../comment_tree.dart';
 import '../hooks/stores.dart';
 import '../widgets/comment.dart';
 import '../widgets/post.dart';
@@ -106,10 +105,7 @@ class _SearchResultsList extends HookWidget {
       itemBuilder: (data) {
         switch (type) {
           case SearchType.comments:
-            return CommentWidget(
-              CommentTree(data as CommentView),
-              postCreatorId: null,
-            );
+            return CommentWidget.fromCommentView(data as CommentView);
           case SearchType.communities:
             return CommunitiesListItem(community: data as CommunityView);
           case SearchType.posts:

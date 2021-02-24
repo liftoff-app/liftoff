@@ -94,14 +94,9 @@ class CommentSection extends HookWidget {
           ),
         )
       else if (sorting.value == CommentSortType.chat)
-        for (final com in rawComments)
-          CommentWidget(
-            CommentTree(com),
-            postCreatorId: postCreatorId,
-          )
+        for (final com in rawComments) CommentWidget.fromCommentView(com)
       else
-        for (final com in comments)
-          CommentWidget(com, postCreatorId: postCreatorId),
+        for (final com in comments) CommentWidget(com),
       const BottomSafe(kMinInteractiveDimension + kFloatingActionButtonMargin),
     ]);
   }

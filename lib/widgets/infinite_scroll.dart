@@ -73,7 +73,6 @@ class InfiniteScroll<T> extends HookWidget {
           data.value = [];
           hasMore.current = true;
         };
-        return controller.dispose;
       }
 
       return null;

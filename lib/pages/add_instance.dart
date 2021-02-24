@@ -33,7 +33,8 @@ class AddInstancePage extends HookWidget {
         return;
       }
       try {
-        icon.value = (await LemmyApiV2(inst).run(GetSite())).siteView.site.icon;
+        icon.value =
+            (await LemmyApiV2(inst).run(const GetSite())).siteView.site.icon;
         isSite.value = true;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {

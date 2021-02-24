@@ -76,17 +76,10 @@ class PostWidget extends HookWidget {
             leading: const Icon(Icons.info_outline),
             title: const Text('Nerd stuff'),
             onTap: () {
-              showInfoTablePopup(context, {
-                'id': post.post.id,
-                'apId': post.post.apId,
-                'upvotes': post.counts.upvotes,
-                'downvotes': post.counts.downvotes,
-                'score': post.counts.score,
+              showInfoTablePopup(context: context, table: {
                 '% of upvotes':
                     '${(100 * (post.counts.upvotes / (post.counts.upvotes + post.counts.downvotes))).toInt()}%',
-                'local': post.post.local,
-                'published': post.post.published,
-                'updated': post.post.updated ?? 'never',
+                ...post.toJson(),
               });
             },
           ),
@@ -124,6 +117,7 @@ class PostWidget extends HookWidget {
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
                             onTap: () => goToCommunity.byId(
                                 context, instanceHost, post.community.id),
                             child: Avatar(
@@ -195,10 +189,9 @@ class PostWidget extends HookWidget {
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = () => goToUser.byId(
+                                    ..onTap = () => goToUser.fromUserSafe(
                                           context,
-                                          post.instanceHost,
-                                          post.creator.id,
+                                          post.creator,
                                         ),
                                 ),
                                 TextSpan(
@@ -263,6 +256,7 @@ class PostWidget extends HookWidget {
                   post.post.thumbnailUrl != null) ...[
                 const Spacer(),
                 InkWell(
+                  borderRadius: BorderRadius.circular(20),
                   onTap: _openLink,
                   child: Stack(
                     children: [
@@ -322,16 +316,27 @@ class PostWidget extends HookWidget {
                   Row(
                     children: [
                       Flexible(
-                          child: Text(post.post.embedTitle ?? '',
-                              style: theme.textTheme.subtitle1
-                                  .apply(fontWeightDelta: 2)))
+                        child: Text(
+                          post.post.embedTitle ?? '',
+                          style: theme.textTheme.subtitle1
+                              .apply(fontWeightDelta: 2),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
                     ],
                   ),
                   if (post.post.embedDescription != null &&
                       post.post.embedDescription.isNotEmpty)
                     Row(
                       children: [
-                        Flexible(child: Text(post.post.embedDescription))
+                        Flexible(
+                          child: Text(
+                            post.post.embedDescription,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
                       ],
                     ),
                 ],
@@ -387,82 +392,85 @@ class PostWidget extends HookWidget {
 
     return Container(
       decoration: BoxDecoration(
-        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black54)],
+        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black45)],
         color: theme.cardColor,
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
-      child: InkWell(
+      child: GestureDetector(
         onTap: fullPost
             ? null
             : () => goTo(context, (context) => FullPostPage.fromPostView(post)),
-        child: Column(
-          children: [
-            info(),
-            title(),
-            if (whatType(post.post.url) != MediaType.other &&
-                whatType(post.post.url) != MediaType.none)
-              postImage()
-            else if (post.post.url != null && post.post.url.isNotEmpty)
-              linkPreview(),
-            if (post.post.body != null && fullPost)
-              Padding(
-                  padding: const EdgeInsets.all(10),
-                  child:
-                      MarkdownText(post.post.body, instanceHost: instanceHost)),
-            if (post.post.body != null && !fullPost)
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final span = TextSpan(
-                    text: post.post.body,
-                  );
-                  final tp = TextPainter(
-                    text: span,
-                    maxLines: 10,
-                    textDirection: Directionality.of(context),
-                  )..layout(maxWidth: constraints.maxWidth - 20);
+        child: Material(
+          type: MaterialType.transparency,
+          child: Column(
+            children: [
+              info(),
+              title(),
+              if (whatType(post.post.url) != MediaType.other &&
+                  whatType(post.post.url) != MediaType.none)
+                postImage()
+              else if (post.post.url != null && post.post.url.isNotEmpty)
+                linkPreview(),
+              if (post.post.body != null && fullPost)
+                Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: MarkdownText(post.post.body,
+                        instanceHost: instanceHost)),
+              if (post.post.body != null && !fullPost)
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final span = TextSpan(
+                      text: post.post.body,
+                    );
+                    final tp = TextPainter(
+                      text: span,
+                      maxLines: 10,
+                      textDirection: Directionality.of(context),
+                    )..layout(maxWidth: constraints.maxWidth - 20);
 
-                  if (tp.didExceedMaxLines) {
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: tp.height),
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          ClipRect(
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              heightFactor: 0.8,
-                              child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: MarkdownText(post.post.body,
-                                      instanceHost: instanceHost)),
-                            ),
-                          ),
-                          Container(
-                            height: tp.preferredLineHeight * 2.5,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  theme.cardColor.withAlpha(0),
-                                  theme.cardColor,
-                                ],
+                    if (tp.didExceedMaxLines) {
+                      return ConstrainedBox(
+                        constraints: BoxConstraints(maxHeight: tp.height),
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            ClipRect(
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                heightFactor: 0.8,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: MarkdownText(post.post.body,
+                                        instanceHost: instanceHost)),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: MarkdownText(post.post.body,
-                            instanceHost: instanceHost));
-                  }
-                },
-              ),
-            actions(),
-          ],
+                            Container(
+                              height: tp.preferredLineHeight * 2.5,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    theme.cardColor.withAlpha(0),
+                                    theme.cardColor,
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: MarkdownText(post.post.body,
+                              instanceHost: instanceHost));
+                    }
+                  },
+                ),
+              actions(),
+            ],
+          ),
         ),
       ),
     );

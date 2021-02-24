@@ -24,8 +24,7 @@ class BottomModal extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.grey.withOpacity(0.5),
-              width: 0.2,
+              color: Colors.grey.withOpacity(0.3),
             ),
             borderRadius: BorderRadius.circular(10),
           ),

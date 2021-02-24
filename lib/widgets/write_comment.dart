@@ -4,24 +4,22 @@ import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
+import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
 
 /// Modal for writing a comment to a given post/comment (aka reply)
 /// on submit pops the navigator stack with a [CommentView]
 /// or `null` if cancelled
 class WriteComment extends HookWidget {
-  final PostView post;
-  final CommentView comment;
+  final Post post;
+  final Comment comment;
 
-  final String instanceHost;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  WriteComment.toPost(this.post)
-      : instanceHost = post.instanceHost,
-        comment = null;
-  WriteComment.toComment(this.comment)
-      : instanceHost = comment.instanceHost,
-        post = null;
+  WriteComment.toPost(this.post) : comment = null;
+  WriteComment.toComment({@required this.comment, @required this.post})
+      : assert(comment != null),
+        assert(post != null);
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +30,15 @@ class WriteComment extends HookWidget {
 
     final preview = () {
       final body = MarkdownText(
-        comment?.comment?.content ?? post.post.body ?? '',
-        instanceHost: instanceHost,
+        comment?.content ?? post.body,
+        instanceHost: post.instanceHost,
       );
 
       if (post != null) {
         return Column(
           children: [
             Text(
-              post.post.name,
+              post.name,
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
@@ -53,22 +51,21 @@ class WriteComment extends HookWidget {
     }();
 
     handleSubmit() async {
-      final api = LemmyApiV2(instanceHost);
+      final api = LemmyApiV2(post.instanceHost);
 
-      final token = accStore.defaultTokenFor(instanceHost);
+      final token = accStore.defaultTokenFor(post.instanceHost);
 
       delayed.start();
       try {
         final res = await api.run(CreateComment(
           content: controller.text,
-          postId: post?.post?.id ?? comment.post.id,
-          parentId: comment?.comment?.id,
+          postId: post.id,
+          parentId: comment?.id,
           auth: token.raw,
         ));
         Navigator.of(context).pop(res.commentView);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        print(e);
         scaffoldKey.currentState.showSnackBar(
             const SnackBar(content: Text('Failed to post comment')));
       }
@@ -81,7 +78,7 @@ class WriteComment extends HookWidget {
         leading: const CloseButton(),
         actions: [
           IconButton(
-            icon: Icon(showFancy.value ? Icons.build : Icons.brush),
+            icon: markdownModeIcon(fancy: showFancy.value),
             onPressed: () => showFancy.value = !showFancy.value,
           ),
         ],
@@ -110,7 +107,7 @@ class WriteComment extends HookWidget {
                 padding: const EdgeInsets.all(16),
                 child: MarkdownText(
                   controller.text,
-                  instanceHost: instanceHost,
+                  instanceHost: post.instanceHost,
                 ),
               )
             ],

@@ -4,6 +4,14 @@
 
 - Added page with saved posts/comments. It can be accessed from the profile tab under the bookmark icon
 - Added modlog page. Can be visited in the context of an instance or community from the about tab
+- Added inbox page, that can be accessed by tapping bell in the home tab
+- Added abillity to send private messages
+
+### Changed
+
+- Titles on some pages, have an appear affect when scrolling down
+- Long pressing comments now have a ripple effect
+
 
 ### Fixed
 

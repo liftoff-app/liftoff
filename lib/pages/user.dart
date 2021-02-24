@@ -1,9 +1,12 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
+import '../hooks/logged_in_action.dart';
 import '../widgets/user_profile.dart';
+import 'write_message.dart';
 
 /// Page showing posts, comments, and general info about a user.
 class UserPage extends HookWidget {
@@ -43,19 +46,37 @@ class UserPage extends HookWidget {
       appBar: AppBar(
         actions: [
           if (userDetailsSnap.hasData) ...[
-            IconButton(
-              icon: const Icon(Icons.email),
-              onPressed: () {}, // TODO: go to messaging page
-            ),
+            SendMessageButton(userDetailsSnap.data.userView.user),
             IconButton(
               icon: const Icon(Icons.share),
               onPressed: () => Share.text('Share user',
                   userDetailsSnap.data.userView.user.actorId, 'text/plain'),
-            )
+            ),
           ]
         ],
       ),
       body: body,
+    );
+  }
+}
+
+class SendMessageButton extends HookWidget {
+  final UserSafe user;
+
+  const SendMessageButton(this.user);
+
+  @override
+  Widget build(BuildContext context) {
+    final loggedInAction = useLoggedInAction(user.instanceHost);
+
+    return IconButton(
+      icon: const Icon(Icons.email),
+      onPressed: loggedInAction((token) => showCupertinoModalPopup(
+          context: context,
+          builder: (_) => WriteMessagePage.send(
+                instanceHost: user.instanceHost,
+                recipient: user,
+              ))),
     );
   }
 }

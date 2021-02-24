@@ -29,7 +29,7 @@ class AccountsStore extends ChangeNotifier {
 
     // I barely understand what I did. Long story short it casts a
     // raw json into a nested ObservableMap
-    nestedMapsCast<T>(T f(Map<String, dynamic> json)) => HashMap.of(
+    nestedMapsCast<T>(T f(String jwt)) => HashMap.of(
           (jsonDecode(prefs.getString(SharedPrefKeys.tokens) ??
                   '{"lemmy.ml":{}}') as Map<String, dynamic>)
               ?.map(
@@ -37,8 +37,7 @@ class AccountsStore extends ChangeNotifier {
               k,
               HashMap.of(
                 (e as Map<String, dynamic>)?.map(
-                  (k, e) => MapEntry(
-                      k, e == null ? null : f(e as Map<String, dynamic>)),
+                  (k, e) => MapEntry(k, e == null ? null : f(e as String)),
                 ),
               ),
             ),
@@ -46,7 +45,7 @@ class AccountsStore extends ChangeNotifier {
         );
 
     // set saved settings or create defaults
-    _tokens = nestedMapsCast((json) => Jwt(json['raw'] as String));
+    _tokens = nestedMapsCast((json) => Jwt(json));
     _defaultAccount = prefs.getString(SharedPrefKeys.defaultAccount);
     _defaultAccounts = HashMap.of(Map.castFrom(
       jsonDecode(prefs.getString(SharedPrefKeys.defaultAccounts) ?? 'null')
@@ -155,6 +154,14 @@ class AccountsStore extends ChangeNotifier {
     return _tokens[instanceHost][_defaultAccounts[instanceHost]];
   }
 
+  /// returns token for user of a certain id
+  Jwt tokenForId(String instanceHost, int userId) =>
+      _tokens.containsKey(instanceHost)
+          ? _tokens[instanceHost]
+              .values
+              .firstWhere((val) => val.payload.id == userId, orElse: () => null)
+          : null;
+
   Jwt tokenFor(String instanceHost, String username) {
     if (!usernamesFor(instanceHost).contains(username)) {
       return null;
@@ -243,7 +250,7 @@ class AccountsStore extends ChangeNotifier {
 
     if (!assumeValid) {
       try {
-        await LemmyApiV2(instanceHost).run(GetSite());
+        await LemmyApiV2(instanceHost).run(const GetSite());
         // ignore: avoid_catches_without_on_clauses
       } catch (_) {
         throw Exception('This instance seems to not exist');
