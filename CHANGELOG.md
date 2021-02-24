@@ -13,6 +13,7 @@ WARNING: due to some internal changes your local settings will be reset (logged 
 
 - Titles on some pages, have an appear affect when scrolling down
 - Long pressing comments now has a ripple effect
+- Nerd stuff now contains more nerd stuff
 
 ### Fixed
 
