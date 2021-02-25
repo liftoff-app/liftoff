@@ -29,10 +29,10 @@ class CommentWidget extends HookWidget {
   final int depth;
   final CommentTree commentTree;
   final bool detached;
-  final UserMentionView userMentionView;
   final bool wasVoted;
   final bool canBeMarkedAsRead;
   final bool hideOnRead;
+  final int userMentionId;
 
   static const colors = [
     Colors.pink,
@@ -48,9 +48,9 @@ class CommentWidget extends HookWidget {
     this.detached = false,
     this.canBeMarkedAsRead = false,
     this.hideOnRead = false,
-  })  : wasVoted =
-            (commentTree.comment.myVote ?? VoteType.none) != VoteType.none,
-        userMentionView = null;
+    this.userMentionId,
+  }) : wasVoted =
+            (commentTree.comment.myVote ?? VoteType.none) != VoteType.none;
 
   CommentWidget.fromCommentView(
     CommentView cv, {
@@ -64,14 +64,15 @@ class CommentWidget extends HookWidget {
         );
 
   CommentWidget.fromUserMentionView(
-    this.userMentionView, {
-    this.hideOnRead = false,
-  })  : commentTree =
-            CommentTree(CommentView.fromJson(userMentionView.toJson())),
-        depth = 0,
-        wasVoted = (userMentionView.myVote ?? VoteType.none) != VoteType.none,
-        detached = true,
-        canBeMarkedAsRead = true;
+    UserMentionView userMentionView, {
+    bool hideOnRead = false,
+  }) : this(
+          CommentTree(CommentView.fromJson(userMentionView.toJson())),
+          hideOnRead: hideOnRead,
+          canBeMarkedAsRead: true,
+          detached: true,
+          userMentionId: userMentionView.userMention.id,
+        );
 
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
@@ -278,6 +279,7 @@ class CommentWidget extends HookWidget {
               _MarkAsRead(
                 commentTree.comment,
                 onChanged: (val) => isRead.value = val,
+                userMentionId: userMentionId,
               ),
             if (detached)
               TileAction(
@@ -409,17 +411,20 @@ class CommentWidget extends HookWidget {
 class _MarkAsRead extends HookWidget {
   final CommentView commentView;
   final ValueChanged<bool> onChanged;
+  final int userMentionId;
 
-  const _MarkAsRead(this.commentView, {this.onChanged});
+  const _MarkAsRead(
+    this.commentView, {
+    @required this.onChanged,
+    @required this.userMentionId,
+  }) : assert(commentView != null);
 
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
 
     final comment = commentView.comment;
-    final recipient = commentView.recipient;
     final instanceHost = commentView.instanceHost;
-    final post = commentView.post;
 
     final isRead = useState(comment.read);
     final delayedRead = useDelayedLoading();
@@ -431,9 +436,7 @@ class _MarkAsRead extends HookWidget {
           query: MarkCommentAsRead(
             commentId: comment.id,
             read: !isRead.value,
-            auth: recipient != null
-                ? accStore.tokenFor(instanceHost, recipient.name)?.raw
-                : accStore.tokenForId(instanceHost, post.creatorId)?.raw,
+            auth: accStore.defaultTokenFor(instanceHost)?.raw,
           ),
           onSuccess: (val) {
             isRead.value = val.commentView.comment.read;
@@ -441,10 +444,26 @@ class _MarkAsRead extends HookWidget {
           },
         );
 
+    Future<void> handleMarkMentionAsSeen() => delayedAction<UserMentionView>(
+          context: context,
+          delayedLoading: delayedRead,
+          instanceHost: instanceHost,
+          query: MarkUserMentionAsRead(
+            userMentionId: userMentionId,
+            read: !isRead.value,
+            auth: accStore.defaultTokenFor(instanceHost)?.raw,
+          ),
+          onSuccess: (val) {
+            isRead.value = val.userMention.read;
+            onChanged?.call(isRead.value);
+          },
+        );
+
     return TileAction(
       icon: Icons.check,
       delayedLoading: delayedRead,
-      onPressed: handleMarkAsSeen,
+      onPressed:
+          userMentionId != null ? handleMarkMentionAsSeen : handleMarkAsSeen,
       iconColor: isRead.value ? Theme.of(context).accentColor : null,
       tooltip: 'mark as ${isRead.value ? 'un' : ''}read',
     );

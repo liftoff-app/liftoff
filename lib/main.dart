@@ -19,21 +19,14 @@ import 'util/extensions/brightness.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final configStore = ConfigStore();
-  await configStore.load();
-
-  final accountsStore = AccountsStore();
-  await accountsStore.load();
+  final configStore = await ConfigStore.load();
+  final accountsStore = await AccountsStore.load();
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: configStore,
-        ),
-        ChangeNotifierProvider.value(
-          value: accountsStore,
-        ),
+        ChangeNotifierProvider.value(value: configStore),
+        ChangeNotifierProvider.value(value: accountsStore),
       ],
       child: const MyApp(),
     ),
