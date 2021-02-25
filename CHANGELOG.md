@@ -12,7 +12,7 @@ WARNING: due to some internal changes your local settings will be reset (logged 
 
 ### Changed
 
-- Titles on some pages, have an appear affect when scrolling down
+- Titles on some pages, have an appear effect when scrolling down
 - Long pressing comments now has a ripple effect
 - Nerd stuff now contains more nerd stuff
 - Communities that a user follows will no longer appear on a user's profile in most scenarios
