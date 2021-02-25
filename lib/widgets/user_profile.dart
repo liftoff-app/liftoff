@@ -388,32 +388,23 @@ class _AboutTab extends HookWidget {
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
                 comm.community.name, comm.community.icon, comm.community.id),
-          divider
+          divider,
         ],
-        ListTile(
-          title: Center(
-            child: Text(
-              'Subscribed:',
-              style: theme.textTheme.headline6.copyWith(fontSize: 18),
+        if (userDetails.follows.isNotEmpty) ...[
+          ListTile(
+            title: Center(
+              child: Text(
+                'Subscribed:',
+                style: theme.textTheme.headline6.copyWith(fontSize: 18),
+              ),
             ),
           ),
-        ),
-        if (userDetails.follows.isNotEmpty)
           for (final comm
               in userDetails.follows
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
                 comm.community.name, comm.community.icon, comm.community.id)
-        else
-          const Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Center(
-              child: Text(
-                'this user does not subscribe to any community',
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          )
+        ]
       ],
     );
   }
