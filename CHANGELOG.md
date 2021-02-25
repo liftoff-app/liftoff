@@ -1,4 +1,4 @@
-## Unreleased
+## v0.3.0 - 2021-02-25
 
 WARNING: due to some internal changes your local settings will be reset (logged out of accounts, removed instances, theme back to default)
 
