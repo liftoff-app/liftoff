@@ -14,15 +14,12 @@ WARNING: due to some internal changes your local settings will be reset (logged 
 - Titles on some pages, have an appear affect when scrolling down
 - Long pressing comments now has a ripple effect
 - Nerd stuff now contains more nerd stuff
+- Communities that a user follows will no longer appear on a user's profile in most scenarios
 
 ### Fixed
 
 - Time of posts is now displayed properly. Unless you live in UTC zone, then you won't notice a difference
 - Fixed a bug where links would not work on Android 11
-
-### Changed
-
-- Communities that a user follows will no longer appear on a user's profile in most scenarios
 
 ## v0.2.3 - 2021-02-09
 
