@@ -373,7 +373,7 @@ class PrivateMessageTile extends HookWidget {
                   final val = await showCupertinoModalPopup<PrivateMessageView>(
                       context: context,
                       builder: (_) => WriteMessagePage.edit(pmv.value));
-                  if (pmv != null) pmv.value = val;
+                  if (val != null) pmv.value = val;
                 },
               ),
               TileAction(
