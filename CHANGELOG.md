@@ -8,6 +8,7 @@ WARNING: due to some internal changes your local settings will be reset (logged 
 - Added page with saved posts/comments. It can be accessed from the profile tab under the bookmark icon
 - Added ability to send private messages
 - Added modlog page. Can be visited in the context of an instance or community from the about tab
+- You can now create posts from the community page
 
 ### Changed
 
