@@ -31,6 +31,15 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
+  Locale _locale;
+  @JsonKey(defaultValue: Locale('en'))
+  Locale get locale => _locale;
+  set locale(Locale locale) {
+    _locale = locale;
+    notifyListeners();
+    save();
+  }
+
   static Future<ConfigStore> load() async {
     final prefs = await _prefs;
 

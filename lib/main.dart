@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 import 'hooks/stores.dart';
+import 'l10n/l10n.dart';
 import 'pages/communities_tab.dart';
 import 'pages/create_post.dart';
 import 'pages/home_tab.dart';
