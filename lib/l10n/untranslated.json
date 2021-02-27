@@ -1,5 +1,12 @@
 {
   "pl": [
-    "selectInstance"
+    "accounts",
+    "appearance",
+    "settings",
+    "add_instance",
+    "username_or_email",
+    "password",
+    "sign_in",
+    "register"
   ]
 }

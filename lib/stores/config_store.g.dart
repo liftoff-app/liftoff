@@ -10,13 +10,15 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) {
   return ConfigStore()
     ..theme = _$enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ??
         ThemeMode.system
-    ..amoledDarkMode = json['amoledDarkMode'] as bool ?? false;
+    ..amoledDarkMode = json['amoledDarkMode'] as bool ?? false
+    ..locale = LocaleSerde.fromJson(json['locale'] as String);
 }
 
 Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
     <String, dynamic>{
       'theme': _$ThemeModeEnumMap[instance.theme],
       'amoledDarkMode': instance.amoledDarkMode,
+      'locale': LocaleSerde.toJson(instance.locale),
     };
 
 T _$enumDecode<T>(

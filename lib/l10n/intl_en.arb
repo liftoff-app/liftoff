@@ -1,7 +1,23 @@
 {
   "@@locale": "en",
-  "addAccount": "Add account",
-  "@addAccount": {},
-  "selectInstance": "select instance",
-  "@selectInstance": {}
+  "add_account": "Add account",
+  "@add_account": {},
+  "select_instance": "select instance",
+  "@select_instance": {},
+  "accounts": "Accounts",
+  "@accounts": {},
+  "appearance": "Appearance",
+  "@appearance": {},
+  "settings": "Settings",
+  "@settings": {},
+  "add_instance": "Add instance",
+  "@add_instance": {},
+  "username_or_email": "Username or email",
+  "@username_or_email": {},
+  "password": "Password",
+  "@password": {},
+  "sign_in": "Sign in",
+  "@sign_in": {},
+  "register": "Register",
+  "@register": {}
 }

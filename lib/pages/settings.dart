@@ -6,6 +6,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/goto.dart';
 import '../widgets/about_tile.dart';
 import 'add_account.dart';
@@ -68,11 +69,24 @@ class AppearanceConfigPage extends HookWidget {
               },
             ),
           SwitchListTile(
-              title: const Text('AMOLED dark mode'),
-              value: configStore.amoledDarkMode,
-              onChanged: (checked) {
-                configStore.amoledDarkMode = checked;
-              })
+            title: const Text('AMOLED dark mode'),
+            value: configStore.amoledDarkMode,
+            onChanged: (checked) {
+              configStore.amoledDarkMode = checked;
+            },
+          ),
+          const SizedBox(height: 12),
+          const _SectionHeading('Language'),
+          for (final locale in L10n.supportedLocales)
+            RadioListTile<Locale>(
+              value: locale,
+              // TODO: add actual language names
+              title: Text(locale.languageCode),
+              groupValue: configStore.locale,
+              onChanged: (selected) {
+                configStore.locale = selected;
+              },
+            ),
         ],
       ),
     );

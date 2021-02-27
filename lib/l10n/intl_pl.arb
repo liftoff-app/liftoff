@@ -1,5 +1,5 @@
 {
   "@@locale": "pl",
-  "addAccount": "Dodaj konto",
-  "selectInstance": "Wybierz instancje"
+  "add_account": "Dodaj konto",
+  "select_instance": "Wybierz instancje"
 }

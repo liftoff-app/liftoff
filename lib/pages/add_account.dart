@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/radio_picker.dart';
 import 'add_instance.dart';
@@ -58,7 +59,7 @@ class AddAccountPage extends HookWidget {
       key: scaffoldKey,
       appBar: AppBar(
         leading: const CloseButton(),
-        title: const Text('Add account'),
+        title: Text(L10n.of(context).add_account),
       ),
       body: ListView(
         padding: const EdgeInsets.all(15),
@@ -77,7 +78,7 @@ class AddAccountPage extends HookWidget {
               ),
             ),
           RadioPicker<String>(
-            title: 'select instance',
+            title: L10n.of(context).select_instance,
             values: accountsStore.instances.toList(),
             groupValue: selectedInstance.value,
             onChanged: (value) => selectedInstance.value = value,
@@ -96,7 +97,7 @@ class AddAccountPage extends HookWidget {
                 padding: EdgeInsets.all(8),
                 child: Icon(Icons.add),
               ),
-              title: const Text('Add instance'),
+              title: Text(L10n.of(context).add_instance),
               onTap: () async {
                 final value = await showCupertinoModalPopup<String>(
                   context: context,
@@ -110,13 +111,14 @@ class AddAccountPage extends HookWidget {
           TextField(
             autofocus: true,
             controller: usernameController,
-            decoration: const InputDecoration(labelText: 'Username or email'),
+            decoration:
+                InputDecoration(labelText: L10n.of(context).username_or_email),
           ),
           const SizedBox(height: 5),
           TextField(
             controller: passwordController,
             obscureText: true,
-            decoration: const InputDecoration(labelText: 'Password'),
+            decoration: InputDecoration(labelText: L10n.of(context).password),
           ),
           ElevatedButton(
             onPressed: usernameController.text.isEmpty ||
@@ -126,7 +128,7 @@ class AddAccountPage extends HookWidget {
                     ? () {}
                     : handleOnAdd,
             child: !loading.loading
-                ? const Text('Sign in')
+                ? Text(L10n.of(context).sign_in)
                 : SizedBox(
                     width: 20,
                     height: 20,
@@ -138,9 +140,10 @@ class AddAccountPage extends HookWidget {
           ),
           TextButton(
             onPressed: () {
+              // TODO: extract to LemmyUrls or something
               ul.launch('https://${selectedInstance.value}/login');
             },
-            child: const Text('Register'),
+            child: Text(L10n.of(context).register),
           ),
         ],
       ),
