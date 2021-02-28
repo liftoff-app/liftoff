@@ -13,8 +13,10 @@ const repoName = 'lemmy-translations';
 const baseLanguage = 'en';
 const flutterIntlPrefix = 'intl_';
 
-main(List<String> args) async {
+Future<void> main(List<String> args) async {
   final force = args.contains('-f') || args.contains('--force');
+
+  final repoCleanup = await cloneLemmyTranslations();
 
   final lemmyTranslations = await loadLemmyStrings();
   final lemmurTranslations = await loadLemmurStrings();
@@ -23,6 +25,8 @@ main(List<String> args) async {
   await save(lemmurTranslations);
 
   await Process.run('flutter', ['gen-l10n']);
+
+  await repoCleanup();
 
   print("Don't forget to format the arb files!");
 }
