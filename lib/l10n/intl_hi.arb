@@ -12,5 +12,10 @@
   "avatar": "अवतार",
   "communities": "सामुदायिक",
   "users": "उपयोगकर्ता",
-  "admin": "प्रशासक"
+  "admin": "प्रशासक",
+  "couldnt_find_post": "पोस्ट नहीं ढूंढ़ पाएं |",
+  "locked": "बंद",
+  "couldnt_create_comment": "टिप्पणी (कमेंट) नहीं बना पाईं |",
+  "couldnt_find_community": "समुदायों नहीं ढूंढ़ पाएं |",
+  "community_already_exists": "यह समुदाय पहले स मौजूद है |"
 }

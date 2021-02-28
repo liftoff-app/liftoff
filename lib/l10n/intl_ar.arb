@@ -48,5 +48,15 @@
   "top": "المتداولة",
   "chat": "دردشة",
   "admin": "مدير",
-  "by": "مِن"
+  "by": "مِن",
+  "not_an_admin": "لستَ مديرا.",
+  "not_logged_in": "لستَ متصلا.",
+  "site_ban": "لقد تم طردك مِن هذا الموقع",
+  "community_ban": "لقد تم طردك مِن هذا المجتمع.",
+  "downvotes_disabled": "تم تعطيل التصويتات السلبية",
+  "locked": "محظور",
+  "couldnt_create_comment": "تعذّر إنشاءالتعليق.",
+  "password_incorrect": "الكلمة السرية خاطئة.",
+  "registration_closed": "إنشاء الحسابات معطل",
+  "passwords_dont_match": "الكلمات السرية غير متطابقة."
 }
