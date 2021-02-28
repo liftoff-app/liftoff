@@ -1,0 +1,30 @@
+/// creates a file with l10n translations from string
+import 'dart:convert';
+import 'dart:io';
+
+const baseFile = 'intl_en.arb';
+const autoGenHeader = '// FILE GENERATED AUTOMATICALLY, TO NOT EDIT BY HAND';
+
+Future<void> main(List<String> args) async {
+  final strings = jsonDecode(await File('lib/l10n/$baseFile').readAsString())
+      as Map<String, dynamic>;
+
+  final keys = strings.keys.where((key) => !key.startsWith('@')).toSet();
+
+  await File('lib/l10n/l10n_from_string.dart').writeAsString('''$autoGenHeader
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
+
+extension L10nFromString on String {
+  String tr(BuildContext context) {
+    switch (this) {
+${keys.map((key) => "      case '$key':\n        return L10n.of(context).$key;").join('\n')}
+
+      default:
+        return this;
+    }
+  }
+}
+''');
+}

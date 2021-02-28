@@ -1,0 +1,136 @@
+// FILE GENERATED AUTOMATICALLY, TO NOT EDIT BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
+
+extension L10nFromString on String {
+  String tr(BuildContext context) {
+    switch (this) {
+      case 'add_account':
+        return L10n.of(context).add_account;
+      case 'select_instance':
+        return L10n.of(context).select_instance;
+      case 'accounts':
+        return L10n.of(context).accounts;
+      case 'appearance':
+        return L10n.of(context).appearance;
+      case 'add_instance':
+        return L10n.of(context).add_instance;
+      case 'sign_in':
+        return L10n.of(context).sign_in;
+      case 'register':
+        return L10n.of(context).register;
+      case 'settings':
+        return L10n.of(context).settings;
+      case 'password':
+        return L10n.of(context).password;
+      case 'email_or_username':
+        return L10n.of(context).email_or_username;
+      case 'posts':
+        return L10n.of(context).posts;
+      case 'comments':
+        return L10n.of(context).comments;
+      case 'modlog':
+        return L10n.of(context).modlog;
+      case 'community':
+        return L10n.of(context).community;
+      case 'url':
+        return L10n.of(context).url;
+      case 'title':
+        return L10n.of(context).title;
+      case 'body':
+        return L10n.of(context).body;
+      case 'nsfw':
+        return L10n.of(context).nsfw;
+      case 'post':
+        return L10n.of(context).post;
+      case 'save':
+        return L10n.of(context).save;
+      case 'send_message':
+        return L10n.of(context).send_message;
+      case 'subscribed':
+        return L10n.of(context).subscribed;
+      case 'local':
+        return L10n.of(context).local;
+      case 'all':
+        return L10n.of(context).all;
+      case 'replies':
+        return L10n.of(context).replies;
+      case 'mentions':
+        return L10n.of(context).mentions;
+      case 'from':
+        return L10n.of(context).from;
+      case 'to':
+        return L10n.of(context).to;
+      case 'deleted_by_creator':
+        return L10n.of(context).deleted_by_creator;
+      case 'more':
+        return L10n.of(context).more;
+      case 'mark_as_read':
+        return L10n.of(context).mark_as_read;
+      case 'mark_as_unread':
+        return L10n.of(context).mark_as_unread;
+      case 'reply':
+        return L10n.of(context).reply;
+      case 'edit':
+        return L10n.of(context).edit;
+      case 'delete':
+        return L10n.of(context).delete;
+      case 'restore':
+        return L10n.of(context).restore;
+      case 'yes':
+        return L10n.of(context).yes;
+      case 'no':
+        return L10n.of(context).no;
+      case 'avatar':
+        return L10n.of(context).avatar;
+      case 'banner':
+        return L10n.of(context).banner;
+      case 'display_name':
+        return L10n.of(context).display_name;
+      case 'bio':
+        return L10n.of(context).bio;
+      case 'email':
+        return L10n.of(context).email;
+      case 'matrix_user':
+        return L10n.of(context).matrix_user;
+      case 'sort_type':
+        return L10n.of(context).sort_type;
+      case 'type':
+        return L10n.of(context).type;
+      case 'show_nsfw':
+        return L10n.of(context).show_nsfw;
+      case 'send_notifications_to_email':
+        return L10n.of(context).send_notifications_to_email;
+      case 'delete_account':
+        return L10n.of(context).delete_account;
+      case 'saved':
+        return L10n.of(context).saved;
+      case 'communities':
+        return L10n.of(context).communities;
+      case 'users':
+        return L10n.of(context).users;
+      case 'theme':
+        return L10n.of(context).theme;
+      case 'language':
+        return L10n.of(context).language;
+      case 'hot':
+        return L10n.of(context).hot;
+      case 'new_':
+        return L10n.of(context).new_;
+      case 'old':
+        return L10n.of(context).old;
+      case 'top':
+        return L10n.of(context).top;
+      case 'chat':
+        return L10n.of(context).chat;
+      case 'admin':
+        return L10n.of(context).admin;
+      case 'by':
+        return L10n.of(context).by;
+
+      default:
+        return this;
+    }
+  }
+}
