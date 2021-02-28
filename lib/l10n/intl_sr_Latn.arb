@@ -1,0 +1,20 @@
+{
+  "@@locale": "sr_Latn",
+  "password": "Lozinka",
+  "community": "Zajednica",
+  "url": "URL",
+  "body": "Sadržaj",
+  "nsfw": "NSFW",
+  "from": "od",
+  "to": "do",
+  "yes": "da",
+  "no": "ne",
+  "email": "Email",
+  "matrix_user": "Korisnik Matrixa",
+  "show_nsfw": "Prikaži NSFW sadržaj",
+  "send_notifications_to_email": "Primajte notifikacie na Vaš Email",
+  "theme": "Tema",
+  "language": "Jezik",
+  "chat": "Ćaskanje",
+  "by": "od"
+}
