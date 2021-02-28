@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "*.arb": "json"
+  },
+  "dart.showTodos": false
+}
