@@ -113,6 +113,22 @@ void portStrings(
 }
 
 Future<void> save(Map<String, Map<String, dynamic>> lemmurTranslations) async {
+  // remove null fields
+  // Vec<(language, key)>
+  final toRemove = <List<String>>[];
+  for (final translations in lemmurTranslations.entries) {
+    final language = translations.key;
+
+    for (final strings in translations.value.entries) {
+      if (strings.value == null) {
+        toRemove.add([language, strings.key]);
+      }
+    }
+  }
+  for (final rem in toRemove) {
+    lemmurTranslations[rem[0]].remove(rem[1]);
+  }
+
   for (final language in lemmurTranslations.keys) {
     await File('lib/l10n/$flutterIntlPrefix$language.arb')
         .writeAsString(jsonEncode(lemmurTranslations[language]));
