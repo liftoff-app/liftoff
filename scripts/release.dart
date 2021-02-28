@@ -1,4 +1,7 @@
+/// Used to create a new lemmur release. Bumps semver, build number, updates changelog, fastlane, pubspec, and finishes by adding a git tag
 import 'dart:io';
+
+import 'common.dart';
 
 Future<void> main(List<String> args) async {
   await assertNoStagedGit();
@@ -125,17 +128,4 @@ Future<void> runGitCommands(Version version) async {
   stdout.write('Running git tag... ');
   await Process.run('git', ['tag', 'v${version.toStringNoCode()}']);
   print('done');
-}
-
-void confirm(String message) {
-  stdout.write('$message [y/n] ');
-
-  switch (stdin.readLineSync()) {
-    case 'y':
-    case 'yes':
-      break;
-    default:
-      print('Exiting');
-      exit(1);
-  }
 }
