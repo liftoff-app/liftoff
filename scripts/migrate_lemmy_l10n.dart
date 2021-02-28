@@ -127,8 +127,6 @@ Future<void> main(List<String> args) async {
 
   await save(lemmurTranslations);
 
-  await Process.run('flutter', ['gen-l10n']);
-
   await repoCleanup();
 
   print("Don't forget to format the arb files!");
