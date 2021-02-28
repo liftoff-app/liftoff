@@ -112,7 +112,7 @@ class AddAccountPage extends HookWidget {
             autofocus: true,
             controller: usernameController,
             decoration:
-                InputDecoration(labelText: L10n.of(context).username_or_email),
+                InputDecoration(labelText: L10n.of(context).email_or_username),
           ),
           const SizedBox(height: 5),
           TextField(
