@@ -9,6 +9,7 @@ import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../util/goto.dart';
 import '../widgets/about_tile.dart';
+import '../widgets/radio_picker.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
 import 'manage_account.dart';
@@ -76,17 +77,22 @@ class AppearanceConfigPage extends HookWidget {
             },
           ),
           const SizedBox(height: 12),
-          const _SectionHeading('Language'),
-          for (final locale in L10n.supportedLocales)
-            RadioListTile<Locale>(
-              value: locale,
-              // TODO: add actual language names
-              title: Text(locale.languageCode),
-              groupValue: configStore.locale,
-              onChanged: (selected) {
-                configStore.locale = selected;
-              },
+          const _SectionHeading('General'),
+          ListTile(
+            title: const Text('Language'),
+            trailing: SizedBox(
+              width: 120,
+              child: RadioPicker<Locale>(
+                title: 'Choose language',
+                groupValue: configStore.locale,
+                values: L10n.supportedLocales,
+                // TODO: add actual language names
+                onChanged: (selected) {
+                  configStore.locale = selected;
+                },
+              ),
             ),
+          ),
         ],
       ),
     );
