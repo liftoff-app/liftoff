@@ -101,5 +101,8 @@
   "couldnt_update_private_message": "Impossible de modifier le message privé.",
   "couldnt_update_post": "Impossible de mettre à jour la publication",
   "couldnt_create_private_message": "Impossible de créer un message privé.",
-  "no_private_message_edit_allowed": "Pas autorisé à modifier un message privé."
+  "no_private_message_edit_allowed": "Pas autorisé à modifier un message privé.",
+  "post_title_too_long": "Le titre de la publication est trop long.",
+  "email_already_exists": "L’email existe déjà.",
+  "user_already_exists": "L’utilisateur·rice existe déjà."
 }

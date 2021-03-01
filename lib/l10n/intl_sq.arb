@@ -88,5 +88,8 @@
   "couldnt_update_private_message": "Nuk mundëm të përditësonim mesazhin privat.",
   "couldnt_update_post": "Postimi nuk mundi të përditësohej",
   "couldnt_create_private_message": "Nuk mund të krijohej mesazhi privat.",
-  "no_private_message_edit_allowed": "Nuk lejohet redaktimi i mesazhit privat."
+  "no_private_message_edit_allowed": "Nuk lejohet redaktimi i mesazhit privat.",
+  "post_title_too_long": "Titulli i postimit ishte shumë i gjatë.",
+  "email_already_exists": "Email-i tashmë ekziston.",
+  "user_already_exists": "Përdoruesi tashmë ekziston."
 }

@@ -102,5 +102,8 @@
   "couldnt_update_private_message": "Αδυναμία ενημέρωσης προσωπικού μηνύματος.",
   "couldnt_update_post": "Αδυναμία ενημέρωσης δημοσιεύσης",
   "couldnt_create_private_message": "Αδυναμία δημιουργίας προσωπικού μηνύματος.",
-  "no_private_message_edit_allowed": "Δεν επιτρέπεται η επεξεργασία του προσωπικού μηνύματος."
+  "no_private_message_edit_allowed": "Δεν επιτρέπεται η επεξεργασία του προσωπικού μηνύματος.",
+  "post_title_too_long": "Η επικεφαλίδα της δημοσίευσης είναι υπερβολικά μεγάλη.",
+  "email_already_exists": "Η διεύθυνση ηλεκτρονικού ταχυδρομείου υπάρχει ήδη.",
+  "user_already_exists": "Ο χρήστης υπάρχει ήδη."
 }

@@ -98,5 +98,8 @@
   "couldnt_update_private_message": "Konnte Privatnachricht nicht aktualisieren.",
   "couldnt_update_post": "Konnte Beitrag nicht aktualisieren",
   "couldnt_create_private_message": "Konnte Privatnachricht nicht erstelllen.",
-  "no_private_message_edit_allowed": "Editieren der Privatnachricht nicht erlaubt."
+  "no_private_message_edit_allowed": "Editieren der Privatnachricht nicht erlaubt.",
+  "post_title_too_long": "Posttitel zu lang.",
+  "email_already_exists": "Email existiert bereits.",
+  "user_already_exists": "Nutzer existiert bereits."
 }

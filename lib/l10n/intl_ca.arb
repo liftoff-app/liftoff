@@ -91,5 +91,8 @@
   "couldnt_update_private_message": "No s’ha pogut actualitzar el missatge privat.",
   "couldnt_update_post": "No s’ha pogut actualitzar l’apunt",
   "couldnt_create_private_message": "No s’ha pogut crear el missatge privat.",
-  "no_private_message_edit_allowed": "No teniu permisos per a editar el missatge privat."
+  "no_private_message_edit_allowed": "No teniu permisos per a editar el missatge privat.",
+  "post_title_too_long": "El títol de l’apunt és massa llarg.",
+  "email_already_exists": "L’adreça ja és en ús.",
+  "user_already_exists": "L’usuari ja existeix."
 }

@@ -102,5 +102,8 @@
   "couldnt_update_private_message": "Не удалось обновить личное сообщение.",
   "couldnt_update_post": "Не получилось обновить запись",
   "couldnt_create_private_message": "Не удалось создать личное сообщение.",
-  "no_private_message_edit_allowed": "Не разрешается редактировать личное сообщение."
+  "no_private_message_edit_allowed": "Не разрешается редактировать личное сообщение.",
+  "post_title_too_long": "Длина названия записи превышает допустимый лимит.",
+  "email_already_exists": "E-mail уже существует.",
+  "user_already_exists": "Пользователь уже существует."
 }

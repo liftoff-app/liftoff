@@ -102,5 +102,8 @@
   "couldnt_update_private_message": "No se pudo actualizar el mensaje privado.",
   "couldnt_update_post": "No se pudo actualizar la publicación",
   "couldnt_create_private_message": "No se pudo crear el mensaje privado.",
-  "no_private_message_edit_allowed": "Sin permisos para editar el mensaje privado."
+  "no_private_message_edit_allowed": "Sin permisos para editar el mensaje privado.",
+  "post_title_too_long": "El título de la publicación es muy largo.",
+  "email_already_exists": "El correo ya está en uso.",
+  "user_already_exists": "El usuario ya existe."
 }

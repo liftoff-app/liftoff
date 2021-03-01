@@ -88,5 +88,8 @@
   "couldnt_update_private_message": "Şahsa özel mesaj güncellenemedi.",
   "couldnt_update_post": "Paylaşım güncellenemedi",
   "couldnt_create_private_message": "Şahsa özel mesaj yaratılamadı.",
-  "no_private_message_edit_allowed": "Şahsa özel mesajı düzenlemek mümkün değil."
+  "no_private_message_edit_allowed": "Şahsa özel mesajı düzenlemek mümkün değil.",
+  "post_title_too_long": "Paylaşım başlığı çok uzun.",
+  "email_already_exists": "Böyle bir e-mail adresi zaten var.",
+  "user_already_exists": "Böyle bir kullanıcı zaten var."
 }

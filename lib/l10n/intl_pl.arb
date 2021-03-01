@@ -104,5 +104,8 @@
   "couldnt_update_private_message": "Nie udało się zaktualizować prywatnej wiadomości.",
   "couldnt_update_post": "Nie udało się zaktualizować postów",
   "couldnt_create_private_message": "Nie udało się stworzyć prywatnej wiadomości.",
-  "no_private_message_edit_allowed": "Brak uprawnień do edycji prywatnej wiadomości."
+  "no_private_message_edit_allowed": "Brak uprawnień do edycji prywatnej wiadomości.",
+  "post_title_too_long": "Tytuł posta zbyt długi.",
+  "email_already_exists": "Email już istnieje.",
+  "user_already_exists": "Użytkownik już istnieje."
 }

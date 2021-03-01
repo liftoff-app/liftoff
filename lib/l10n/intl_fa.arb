@@ -65,5 +65,7 @@
   "registration_closed": "نام‌نویسی بسته است",
   "passwords_dont_match": "گذرواژه‌ها با هم منطبق نیستند.",
   "couldnt_update_user": "ناتوانی در به‌روزرسانی کاربر.",
-  "couldnt_update_post": "ناتوای در به‌روزرسانی مطلب"
+  "couldnt_update_post": "ناتوای در به‌روزرسانی مطلب",
+  "email_already_exists": "این رایانامه از قبل وجود دارد.",
+  "user_already_exists": "این کاربر از قبل وجود دارد."
 }

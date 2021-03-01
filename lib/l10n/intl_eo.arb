@@ -102,5 +102,8 @@
   "couldnt_update_private_message": "Ne povis ĝisdatigi la privatan mesaĝon.",
   "couldnt_update_post": "Ne povis ĝisdatigi la afiŝon",
   "couldnt_create_private_message": "Ne povis krei privatan mesaĝon.",
-  "no_private_message_edit_allowed": "Ne rajtas redakti la privatan mesaĝon."
+  "no_private_message_edit_allowed": "Ne rajtas redakti la privatan mesaĝon.",
+  "post_title_too_long": "Titolo de afiŝo estas tro longa.",
+  "email_already_exists": "Retpoŝtadreso jam ekzistas.",
+  "user_already_exists": "Uzanto jam ekzistas."
 }

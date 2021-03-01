@@ -111,6 +111,9 @@ const toExtract = {
   'couldnt_update_post': null,
   'couldnt_create_private_message': null,
   'no_private_message_edit_allowed': null,
+  'post_title_too_long': null,
+  'email_already_exists': null,
+  'user_already_exists': null,
 };
 
 const repoName = 'lemmy-translations';

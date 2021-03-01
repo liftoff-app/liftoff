@@ -102,5 +102,8 @@
   "couldnt_update_private_message": "Kunne ej opdatere privat besked.",
   "couldnt_update_post": "Kunne ikke opdatere indlæg",
   "couldnt_create_private_message": "Kunne ikke oprette privat besked.",
-  "no_private_message_edit_allowed": "Ulovligt at ændre i privat besked."
+  "no_private_message_edit_allowed": "Ulovligt at ændre i privat besked.",
+  "post_title_too_long": "Indlægstitel for lang.",
+  "email_already_exists": "Emailen findes allerede.",
+  "user_already_exists": "Brugeren findes allerede."
 }

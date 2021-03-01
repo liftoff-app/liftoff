@@ -98,5 +98,8 @@
   "couldnt_update_private_message": "Não foi possível atualizar a mensagem privada.",
   "couldnt_update_post": "Não foi possível atualizar a publicação",
   "couldnt_create_private_message": "Não foi possível criar mensagem privada.",
-  "no_private_message_edit_allowed": "Sem permissão para editar mensagem privada."
+  "no_private_message_edit_allowed": "Sem permissão para editar mensagem privada.",
+  "post_title_too_long": "Título da publicação muito longo.",
+  "email_already_exists": "Este e-mail já existe.",
+  "user_already_exists": "Este usuário já existe."
 }

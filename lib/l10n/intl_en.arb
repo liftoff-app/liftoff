@@ -219,5 +219,11 @@
   "couldnt_create_private_message": "Couldn't create private message.",
   "@couldnt_create_private_message": {},
   "no_private_message_edit_allowed": "Not allowed to edit private message.",
-  "@no_private_message_edit_allowed": {}
+  "@no_private_message_edit_allowed": {},
+  "post_title_too_long": "Post title too long.",
+  "@post_title_too_long": {},
+  "email_already_exists": "Email already exists.",
+  "@email_already_exists": {},
+  "user_already_exists": "User already exists.",
+  "@user_already_exists": {}
 }

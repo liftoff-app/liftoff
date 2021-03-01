@@ -88,5 +88,8 @@
   "couldnt_update_private_message": "Kan beveiligd bericht niet bijwerken.",
   "couldnt_update_post": "Kon post niet bijwerken",
   "couldnt_create_private_message": "Kan beveiligd bericht niet maken.",
-  "no_private_message_edit_allowed": "Niet toegestaan om privé berichten te wijzigen."
+  "no_private_message_edit_allowed": "Niet toegestaan om privé berichten te wijzigen.",
+  "post_title_too_long": "Posttitel te lang.",
+  "email_already_exists": "Email bestaat al.",
+  "user_already_exists": "Gebruiker bestaat al."
 }

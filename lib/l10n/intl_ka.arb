@@ -83,5 +83,8 @@
   "registration_closed": "რეგისტრაცია დახურულია",
   "passwords_dont_match": "პაროლები იგივი არ არის.",
   "couldnt_update_user": "მომხმარებლის განახლება ვერ მოხერხდა.",
-  "couldnt_update_post": "პოსტი ვერ განახლდა"
+  "couldnt_update_post": "პოსტი ვერ განახლდა",
+  "post_title_too_long": "პოსტის სათაური ძალიან გრძელია.",
+  "email_already_exists": "ელ-პოსტა უკვე არსებობს.",
+  "user_already_exists": "მომხმარებელი უკვე არსებობს."
 }

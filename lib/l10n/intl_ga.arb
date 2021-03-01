@@ -98,5 +98,8 @@
   "couldnt_update_private_message": "Níorbh fhéidir teachtaireacht phríobháideach a nuashonrú.",
   "couldnt_update_post": "Níorbh fhéidir an post a nuashonrú",
   "couldnt_create_private_message": "Níorbh fhéidir teachtaireacht phríobháideach a chruthú.",
-  "no_private_message_edit_allowed": "Ní cheadaítear teachtaireacht phríobháideach a chur in eagar."
+  "no_private_message_edit_allowed": "Ní cheadaítear teachtaireacht phríobháideach a chur in eagar.",
+  "post_title_too_long": "Tá teideal an postáil ró-fhada.",
+  "email_already_exists": "Tá ríomhphost ann cheana féin.",
+  "user_already_exists": "Úsáideoir ann cheana."
 }

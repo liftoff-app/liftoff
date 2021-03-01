@@ -102,5 +102,8 @@
   "couldnt_update_private_message": "Kunde inte uppdatera privat meddelande.",
   "couldnt_update_post": "Kunde inte uppdatera inlägg",
   "couldnt_create_private_message": "Kunde inte skapa privat meddelande.",
-  "no_private_message_edit_allowed": "Inte tillåtet att redigera privata meddelanden."
+  "no_private_message_edit_allowed": "Inte tillåtet att redigera privata meddelanden.",
+  "post_title_too_long": "Inläggstiteln är för lång.",
+  "email_already_exists": "E-post finns redan.",
+  "user_already_exists": "Användaren finns redan."
 }

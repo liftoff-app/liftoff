@@ -102,5 +102,8 @@
   "couldnt_update_private_message": "Ezin izan da mezu pribatu hori eguneratu.",
   "couldnt_update_post": "Ezin izan da bidalketa eguneratu",
   "couldnt_create_private_message": "Ezin izan da mezu pribatu hori sortu.",
-  "no_private_message_edit_allowed": "Ezin duzu mezu pribaturik editatu."
+  "no_private_message_edit_allowed": "Ezin duzu mezu pribaturik editatu.",
+  "post_title_too_long": "Bidalketaren izenburua luzeegia da.",
+  "email_already_exists": "Eposta hori dagoeneko existitzen da.",
+  "user_already_exists": "Erabiltzaile hori dagoeneko existitzen da."
 }

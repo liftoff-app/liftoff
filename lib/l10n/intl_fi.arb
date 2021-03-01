@@ -87,5 +87,8 @@
   "couldnt_update_private_message": "Yksityisviestiä ei voitu päivittää.",
   "couldnt_update_post": "Viestiä ei voitu päivittää",
   "couldnt_create_private_message": "Yksityisviestiä ei voitu luoda.",
-  "no_private_message_edit_allowed": "Sinulla ei ole oikeutta muokata yksityisviestiä."
+  "no_private_message_edit_allowed": "Sinulla ei ole oikeutta muokata yksityisviestiä.",
+  "post_title_too_long": "Viestin otsikko on liian pitkä.",
+  "email_already_exists": "Sähköposti on jo olemassa.",
+  "user_already_exists": "Käyttäjä on jo olemassa."
 }

@@ -121,6 +121,9 @@ abstract class L10nStrings {
       'couldnt_create_private_message';
   static const no_private_message_edit_allowed =
       'no_private_message_edit_allowed';
+  static const post_title_too_long = 'post_title_too_long';
+  static const email_already_exists = 'email_already_exists';
+  static const user_already_exists = 'user_already_exists';
 }
 
 extension L10nFromString on String {
@@ -346,6 +349,12 @@ extension L10nFromString on String {
         return L10n.of(context).couldnt_create_private_message;
       case L10nStrings.no_private_message_edit_allowed:
         return L10n.of(context).no_private_message_edit_allowed;
+      case L10nStrings.post_title_too_long:
+        return L10n.of(context).post_title_too_long;
+      case L10nStrings.email_already_exists:
+        return L10n.of(context).email_already_exists;
+      case L10nStrings.user_already_exists:
+        return L10n.of(context).user_already_exists;
 
       default:
         return this;

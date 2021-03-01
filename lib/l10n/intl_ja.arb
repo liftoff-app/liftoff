@@ -90,5 +90,8 @@
   "couldnt_update_private_message": "プライベートメッセージが更新されない。",
   "couldnt_update_post": "投稿が更新されない",
   "couldnt_create_private_message": "プライベートメッセージが作成されない。",
-  "no_private_message_edit_allowed": "プライベートメッセージの編集許可がありません。"
+  "no_private_message_edit_allowed": "プライベートメッセージの編集許可がありません。",
+  "post_title_too_long": "投稿のタイトルが長すぎます。",
+  "email_already_exists": "メールアドレスが既に使用されています。",
+  "user_already_exists": "ユーザーは既に存在します。"
 }
