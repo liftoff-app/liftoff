@@ -1,4 +1,5 @@
 /// migrates chosen strings from lemmy-translations into flutter's i18n solution
+/// uses prettier to format the files
 import 'dart:convert';
 import 'dart:io';
 
@@ -129,7 +130,8 @@ Future<void> main(List<String> args) async {
 
   await repoCleanup();
 
-  print("Don't forget to format the arb files!");
+  await Process.run(
+      'npx', ['prettier', 'lib/l10n/*.arb', '--parser', 'json', '--write']);
 }
 
 /// returns a cleanup function
