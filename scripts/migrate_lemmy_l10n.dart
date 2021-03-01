@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'common.dart';
+import 'gen_l10n_from_string.dart' as gen;
 
 /// Map<key, renamedKey>, if `renamedKey` is null then no rename is performed
 const toExtract = {
@@ -135,6 +136,8 @@ Future<void> main(List<String> args) async {
 
   await Process.run(
       'npx', ['prettier', 'lib/l10n/*.arb', '--parser', 'json', '--write']);
+
+  await gen.main(args);
 }
 
 /// returns a cleanup function
