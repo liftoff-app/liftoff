@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 export 'package:flutter_gen/gen_l10n/l10n.dart';
+
 export 'l10n_from_string.dart';
 
 abstract class LocaleSerde {
