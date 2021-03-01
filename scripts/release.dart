@@ -7,8 +7,7 @@ Future<void> main(List<String> args) async {
   await assertNoStagedGit();
 
   if (args.isEmpty || !{'patch', 'minor', 'major'}.contains(args[0])) {
-    print('Unknown version bump type');
-    exit(1);
+    printError('Unknown version bump type');
   }
 
   final version = await bumpedVersion(args[0]);
@@ -28,8 +27,7 @@ Future<void> assertNoStagedGit() async {
       await Process.run('git', ['diff-index', '--cached', '--quiet', 'HEAD']);
 
   if (res.exitCode != 0) {
-    print('You have staged files, commit or unstage them.');
-    exit(1);
+    printError('You have staged files, commit or unstage them.');
   }
 }
 

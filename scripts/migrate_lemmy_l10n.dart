@@ -199,10 +199,7 @@ void portStrings(
     final renamedKey = extract.value ?? key;
 
     if (!lemmyTranslations[baseLanguage].containsKey(key)) {
-      printError(
-        '"$key" does not exist in $repoName',
-        shouldExit: true,
-      );
+      printError('"$key" does not exist in $repoName');
     }
 
     if (lemmurTranslations[baseLanguage].containsKey(key) && !force) {
