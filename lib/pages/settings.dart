@@ -21,20 +21,20 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
+          title: Text(L10n.of(context).settings),
         ),
         body: ListView(
           children: [
             ListTile(
               leading: const Icon(Icons.person),
-              title: const Text('Accounts'),
+              title: Text(L10n.of(context).accounts),
               onTap: () {
                 goTo(context, (_) => AccountsConfigPage());
               },
             ),
             ListTile(
               leading: const Icon(Icons.color_lens),
-              title: const Text('Appearance'),
+              title: Text(L10n.of(context).appearance),
               onTap: () {
                 goTo(context, (_) => const AppearanceConfigPage());
               },
@@ -55,7 +55,7 @@ class AppearanceConfigPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Appearance'),
+        title: Text(L10n.of(context).appearance),
       ),
       body: ListView(
         children: [
@@ -79,7 +79,7 @@ class AppearanceConfigPage extends HookWidget {
           const SizedBox(height: 12),
           const _SectionHeading('General'),
           ListTile(
-            title: const Text('Language'),
+            title: Text(L10n.of(context).language),
             trailing: SizedBox(
               width: 120,
               child: RadioPicker<Locale>(
@@ -117,11 +117,11 @@ class AccountsConfigPage extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('no'),
+                  child: Text(L10n.of(context).no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('yes'),
+                  child: Text(L10n.of(context).yes),
                 ),
               ],
             ),
@@ -141,11 +141,11 @@ class AccountsConfigPage extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('no'),
+                  child: Text(L10n.of(context).no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('yes'),
+                  child: Text(L10n.of(context).yes),
                 ),
               ],
             ),
@@ -158,7 +158,7 @@ class AccountsConfigPage extends HookWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Accounts'),
+        title: Text(L10n.of(context).accounts),
       ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x
@@ -168,7 +168,7 @@ class AccountsConfigPage extends HookWidget {
         children: [
           SpeedDialChild(
             child: const Icon(Icons.person_add),
-            label: 'Add account',
+            label: L10n.of(context).add_account,
             labelBackgroundColor: theme.canvasColor,
             onTap: () => showCupertinoModalPopup(
                 context: context,
@@ -178,7 +178,7 @@ class AccountsConfigPage extends HookWidget {
           SpeedDialChild(
             child: const Icon(Icons.dns),
             labelBackgroundColor: theme.canvasColor,
-            label: 'Add instance',
+            label: L10n.of(context).add_instance,
             onTap: () => showCupertinoModalPopup(
                 context: context, builder: (_) => AddInstancePage()),
           ),
@@ -199,7 +199,7 @@ class AccountsConfigPage extends HookWidget {
                       builder: (_) => AddInstancePage(),
                     ),
                     icon: const Icon(Icons.add),
-                    label: const Text('Add instance'),
+                    label: Text(L10n.of(context).add_instance),
                   ),
                 ),
               ],
@@ -267,7 +267,7 @@ class AccountsConfigPage extends HookWidget {
             if (accountsStore.usernamesFor(instance).isEmpty)
               ListTile(
                 leading: const Icon(Icons.add),
-                title: const Text('Add account'),
+                title: Text(L10n.of(context).add_account),
                 onTap: () {
                   showCupertinoModalPopup(
                       context: context,

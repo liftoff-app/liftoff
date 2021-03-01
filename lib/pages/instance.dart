@@ -7,6 +7,7 @@ import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
@@ -162,11 +163,11 @@ class InstancePage extends HookWidget {
                 preferredSize: const TabBar(tabs: []).preferredSize,
                 child: Material(
                   color: theme.cardColor,
-                  child: const TabBar(
+                  child: TabBar(
                     tabs: [
-                      Tab(text: 'Posts'),
-                      Tab(text: 'Comments'),
-                      Tab(text: 'About'),
+                      Tab(text: L10n.of(context).posts),
+                      Tab(text: L10n.of(context).comments),
+                      const Tab(text: 'About'),
                     ],
                   ),
                 ),
@@ -332,7 +333,7 @@ class _AboutTab extends HookWidget {
               onTap: () => goToBannedUsers(context),
             ),
             ListTile(
-              title: const Center(child: Text('Modlog')),
+              title: Center(child: Text(L10n.of(context).modlog)),
               onTap: () => goTo(
                 context,
                 (context) => ModlogPage.forInstance(instanceHost: instanceHost),

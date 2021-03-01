@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/goto.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/user_profile.dart';
@@ -41,7 +42,7 @@ class UserProfileTab extends HookWidget {
                   goTo(context, (_) => AccountsConfigPage());
                 },
                 icon: const Icon(Icons.add),
-                label: const Text('Add account'),
+                label: Text(L10n.of(context).add_account),
               )
             ],
           ),

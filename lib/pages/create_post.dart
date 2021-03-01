@@ -10,6 +10,7 @@ import '../hooks/image_picker.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
@@ -165,7 +166,7 @@ class CreatePostPage extends HookWidget {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: selectedCommunity.value?.community?.id,
-          hint: const Text('Community'),
+          hint: Text(L10n.of(context).community),
           onChanged: (communityId) => selectedCommunity.value =
               allCommunitiesSnap.data
                   ?.firstWhere((e) => e.community.id == communityId),
@@ -179,9 +180,9 @@ class CreatePostPage extends HookWidget {
         child: TextField(
           enabled: pictrsDeleteToken.value == null,
           controller: urlController,
-          decoration: const InputDecoration(
-            labelText: 'URL',
-            suffixIcon: Icon(Icons.link),
+          decoration: InputDecoration(
+            labelText: L10n.of(context).url,
+            suffixIcon: const Icon(Icons.link),
           ),
         ),
       ),
@@ -203,7 +204,7 @@ class CreatePostPage extends HookWidget {
       controller: titleController,
       minLines: 1,
       maxLines: 2,
-      decoration: const InputDecoration(labelText: 'Title'),
+      decoration: InputDecoration(labelText: L10n.of(context).title),
     );
 
     final body = IndexedStack(
@@ -214,7 +215,7 @@ class CreatePostPage extends HookWidget {
           keyboardType: TextInputType.multiline,
           maxLines: null,
           minLines: 5,
-          decoration: const InputDecoration(labelText: 'Body'),
+          decoration: InputDecoration(labelText: L10n.of(context).body),
         ),
         Padding(
           padding: const EdgeInsets.all(16),
@@ -289,7 +290,7 @@ class CreatePostPage extends HookWidget {
                         value: nsfw.value,
                         onChanged: (val) => nsfw.value = val,
                       ),
-                      const Text('NSFW')
+                      Text(L10n.of(context).nsfw)
                     ],
                   ),
                 ),
@@ -297,7 +298,7 @@ class CreatePostPage extends HookWidget {
                   onPressed: delayed.pending ? () {} : handleSubmit,
                   child: delayed.loading
                       ? const CircularProgressIndicator()
-                      : const Text('post'),
+                      : Text(L10n.of(context).post),
                 )
               ],
             ),

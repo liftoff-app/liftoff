@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../widgets/sortable_infinite_list.dart';
 
 /// Page with saved posts/comments. Fetches such saved data from the default user
@@ -16,11 +17,11 @@ class SavedPage extends HookWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Saved'),
-          bottom: const TabBar(
+          title: Text(L10n.of(context).saved),
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Posts'),
-              Tab(text: 'Comments'),
+              Tab(text: L10n.of(context).posts),
+              Tab(text: L10n.of(context).comments),
             ],
           ),
         ),

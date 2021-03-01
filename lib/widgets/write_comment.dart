@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
 
@@ -119,7 +120,7 @@ class WriteComment extends HookWidget {
                 onPressed: delayed.pending ? () {} : handleSubmit,
                 child: delayed.loading
                     ? const CircularProgressIndicator()
-                    : const Text('post'),
+                    : Text(L10n.of(context).post),
               )
             ],
           ),

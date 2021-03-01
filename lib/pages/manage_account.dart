@@ -9,6 +9,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/image_picker.dart';
 import '../hooks/ref.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_safe.dart';
 import '../widgets/radio_picker.dart';
@@ -166,11 +167,11 @@ class _ManageAccount extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('no'),
+                  child: Text(L10n.of(context).no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('yes'),
+                  child: Text(L10n.of(context).yes),
                 ),
               ],
             ),
@@ -205,7 +206,7 @@ class _ManageAccount extends HookWidget {
       children: [
         _ImagePicker(
           user: user,
-          name: 'Avatar',
+          name: L10n.of(context).avatar,
           initialUrl: avatar.current,
           onChange: (value) => avatar.current = value,
           informAcceptedRef: informAcceptedAvatarRef,
@@ -213,26 +214,26 @@ class _ManageAccount extends HookWidget {
         const SizedBox(height: 8),
         _ImagePicker(
           user: user,
-          name: 'Banner',
+          name: L10n.of(context).banner,
           initialUrl: banner.current,
           onChange: (value) => banner.current = value,
           informAcceptedRef: informAcceptedBannerRef,
         ),
         const SizedBox(height: 8),
-        Text('Display Name', style: theme.textTheme.headline6),
+        Text(L10n.of(context).display_name, style: theme.textTheme.headline6),
         TextField(controller: displayNameController),
         const SizedBox(height: 8),
-        Text('Bio', style: theme.textTheme.headline6),
+        Text(L10n.of(context).bio, style: theme.textTheme.headline6),
         TextField(
           controller: bioController,
           minLines: 4,
           maxLines: 10,
         ),
         const SizedBox(height: 8),
-        Text('Email', style: theme.textTheme.headline6),
+        Text(L10n.of(context).email, style: theme.textTheme.headline6),
         TextField(controller: emailController),
         const SizedBox(height: 8),
-        Text('Matrix User', style: theme.textTheme.headline6),
+        Text(L10n.of(context).matrix_user, style: theme.textTheme.headline6),
         TextField(controller: matrixUserController),
         const SizedBox(height: 8),
         Text('New password', style: theme.textTheme.headline6),
@@ -258,9 +259,9 @@ class _ManageAccount extends HookWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Sort type'),
-                Text(
+              children: [
+                Text(L10n.of(context).sort_type),
+                const Text(
                   'This has currently no effect on lemmur',
                   style: TextStyle(fontSize: 10),
                 )
@@ -284,9 +285,9 @@ class _ManageAccount extends HookWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Type'),
-                Text(
+              children: [
+                Text(L10n.of(context).type),
+                const Text(
                   'This has currently no effect on lemmur',
                   style: TextStyle(fontSize: 10),
                 )
@@ -312,7 +313,7 @@ class _ManageAccount extends HookWidget {
         CheckboxListTile(
           value: showNsfw.value,
           onChanged: (checked) => showNsfw.value = checked,
-          title: const Text('Show NSFW content'),
+          title: Text(L10n.of(context).show_nsfw),
           subtitle: const Text('This has currently no effect on lemmur'),
           dense: true,
         ),
@@ -320,7 +321,7 @@ class _ManageAccount extends HookWidget {
         CheckboxListTile(
           value: sendNotificationsToEmail.value,
           onChanged: (checked) => sendNotificationsToEmail.value = checked,
-          title: const Text('Send notifications to Email'),
+          title: Text(L10n.of(context).send_notifications_to_email),
           dense: true,
         ),
         const SizedBox(height: 8),
@@ -332,7 +333,7 @@ class _ManageAccount extends HookWidget {
                   height: 20,
                   child: CircularProgressIndicator(),
                 )
-              : const Text('save'),
+              : Text(L10n.of(context).save),
         ),
         const SizedBox(height: 8),
         ElevatedButton(
@@ -340,7 +341,7 @@ class _ManageAccount extends HookWidget {
           style: ElevatedButton.styleFrom(
             primary: Colors.red,
           ),
-          child: const Text('DELETE ACCOUNT'),
+          child: Text(L10n.of(context).delete_account.toUpperCase()),
         ),
         const BottomSafe(),
       ],

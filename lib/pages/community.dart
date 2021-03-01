@@ -10,6 +10,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
@@ -171,11 +172,11 @@ class CommunityPage extends HookWidget {
                 preferredSize: const TabBar(tabs: []).preferredSize,
                 child: Material(
                   color: theme.cardColor,
-                  child: const TabBar(
+                  child: TabBar(
                     tabs: [
-                      Tab(text: 'Posts'),
-                      Tab(text: 'Comments'),
-                      Tab(text: 'About'),
+                      Tab(text: L10n.of(context).posts),
+                      Tab(text: L10n.of(context).comments),
+                      const Tab(text: 'About'),
                     ],
                   ),
                 ),
@@ -430,7 +431,7 @@ class _AboutTab extends StatelessWidget {
                 communityName: community.community.name,
               ),
             ),
-            child: const Text('Modlog'),
+            child: Text(L10n.of(context).modlog),
           ),
         ),
         const _Divider(),

@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
+import '../l10n/l10n.dart';
 import '../pages/full_post.dart';
 import '../url_launcher.dart';
 import '../util/cleanup_url.dart';
@@ -180,10 +181,11 @@ class PostWidget extends HookWidget {
                                   fontSize: 13,
                                   color: theme.textTheme.bodyText1.color),
                               children: [
-                                const TextSpan(
-                                    text: 'by',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w300)),
+                                TextSpan(
+                                  text: L10n.of(context).by,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w300),
+                                ),
                                 TextSpan(
                                   text: ' ${post.creator.originDisplayName}',
                                   style: const TextStyle(
@@ -203,9 +205,10 @@ class PostWidget extends HookWidget {
                                   const TextSpan(text: ' · 📌'),
                                 if (post.post.nsfw) const TextSpan(text: ' · '),
                                 if (post.post.nsfw)
-                                  const TextSpan(
-                                      text: 'NSFW',
-                                      style: TextStyle(color: Colors.red)),
+                                  TextSpan(
+                                      text: L10n.of(context).nsfw,
+                                      style:
+                                          const TextStyle(color: Colors.red)),
                                 if (urlDomain != null)
                                   TextSpan(text: ' · $urlDomain'),
                                 if (post.post.removed)
