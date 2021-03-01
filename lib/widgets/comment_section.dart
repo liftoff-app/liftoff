@@ -17,11 +17,11 @@ class CommentSection extends HookWidget {
   final CommentSortType sortType;
 
   static const sortPairs = {
-    CommentSortType.hot: [Icons.whatshot, 'hot'],
-    CommentSortType.new_: [Icons.new_releases, 'new_'],
-    CommentSortType.old: [Icons.calendar_today, 'old'],
-    CommentSortType.top: [Icons.trending_up, 'top'],
-    CommentSortType.chat: [Icons.chat, 'chat'],
+    CommentSortType.hot: [Icons.whatshot, L10nStrings.hot],
+    CommentSortType.new_: [Icons.new_releases, L10nStrings.new_],
+    CommentSortType.old: [Icons.calendar_today, L10nStrings.old],
+    CommentSortType.top: [Icons.trending_up, L10nStrings.top],
+    CommentSortType.chat: [Icons.chat, L10nStrings.chat],
   };
 
   CommentSection(

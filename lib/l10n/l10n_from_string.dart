@@ -1,230 +1,350 @@
 // FILE GENERATED AUTOMATICALLY, TO NOT EDIT BY HAND
+// ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 
+abstract class L10nStrings {
+  static const add_account = 'add_account';
+  static const select_instance = 'select_instance';
+  static const accounts = 'accounts';
+  static const appearance = 'appearance';
+  static const add_instance = 'add_instance';
+  static const sign_in = 'sign_in';
+  static const register = 'register';
+  static const settings = 'settings';
+  static const password = 'password';
+  static const email_or_username = 'email_or_username';
+  static const posts = 'posts';
+  static const comments = 'comments';
+  static const modlog = 'modlog';
+  static const community = 'community';
+  static const url = 'url';
+  static const title = 'title';
+  static const body = 'body';
+  static const nsfw = 'nsfw';
+  static const post = 'post';
+  static const save = 'save';
+  static const send_message = 'send_message';
+  static const subscribed = 'subscribed';
+  static const local = 'local';
+  static const all = 'all';
+  static const replies = 'replies';
+  static const mentions = 'mentions';
+  static const from = 'from';
+  static const to = 'to';
+  static const deleted_by_creator = 'deleted_by_creator';
+  static const more = 'more';
+  static const mark_as_read = 'mark_as_read';
+  static const mark_as_unread = 'mark_as_unread';
+  static const reply = 'reply';
+  static const edit = 'edit';
+  static const delete = 'delete';
+  static const restore = 'restore';
+  static const yes = 'yes';
+  static const no = 'no';
+  static const avatar = 'avatar';
+  static const banner = 'banner';
+  static const display_name = 'display_name';
+  static const bio = 'bio';
+  static const email = 'email';
+  static const matrix_user = 'matrix_user';
+  static const sort_type = 'sort_type';
+  static const type = 'type';
+  static const show_nsfw = 'show_nsfw';
+  static const send_notifications_to_email = 'send_notifications_to_email';
+  static const delete_account = 'delete_account';
+  static const saved = 'saved';
+  static const communities = 'communities';
+  static const users = 'users';
+  static const theme = 'theme';
+  static const language = 'language';
+  static const hot = 'hot';
+  static const new_ = 'new_';
+  static const old = 'old';
+  static const top = 'top';
+  static const chat = 'chat';
+  static const admin = 'admin';
+  static const by = 'by';
+  static const not_an_admin = 'not_an_admin';
+  static const couldnt_find_post = 'couldnt_find_post';
+  static const not_logged_in = 'not_logged_in';
+  static const site_ban = 'site_ban';
+  static const community_ban = 'community_ban';
+  static const downvotes_disabled = 'downvotes_disabled';
+  static const invalid_url = 'invalid_url';
+  static const locked = 'locked';
+  static const couldnt_create_comment = 'couldnt_create_comment';
+  static const couldnt_like_comment = 'couldnt_like_comment';
+  static const couldnt_update_comment = 'couldnt_update_comment';
+  static const no_comment_edit_allowed = 'no_comment_edit_allowed';
+  static const couldnt_save_comment = 'couldnt_save_comment';
+  static const couldnt_get_comments = 'couldnt_get_comments';
+  static const report_reason_required = 'report_reason_required';
+  static const report_too_long = 'report_too_long';
+  static const couldnt_create_report = 'couldnt_create_report';
+  static const couldnt_resolve_report = 'couldnt_resolve_report';
+  static const invalid_post_title = 'invalid_post_title';
+  static const couldnt_create_post = 'couldnt_create_post';
+  static const couldnt_like_post = 'couldnt_like_post';
+  static const couldnt_find_community = 'couldnt_find_community';
+  static const couldnt_get_posts = 'couldnt_get_posts';
+  static const no_post_edit_allowed = 'no_post_edit_allowed';
+  static const couldnt_save_post = 'couldnt_save_post';
+  static const site_already_exists = 'site_already_exists';
+  static const couldnt_update_site = 'couldnt_update_site';
+  static const invalid_community_name = 'invalid_community_name';
+  static const community_already_exists = 'community_already_exists';
+  static const community_moderator_already_exists =
+      'community_moderator_already_exists';
+  static const community_follower_already_exists =
+      'community_follower_already_exists';
+  static const not_a_moderator = 'not_a_moderator';
+  static const couldnt_update_community = 'couldnt_update_community';
+  static const no_community_edit_allowed = 'no_community_edit_allowed';
+  static const system_err_login = 'system_err_login';
+  static const community_user_already_banned = 'community_user_already_banned';
+  static const couldnt_find_that_username_or_email =
+      'couldnt_find_that_username_or_email';
+  static const password_incorrect = 'password_incorrect';
+  static const registration_closed = 'registration_closed';
+  static const invalid_password = 'invalid_password';
+  static const passwords_dont_match = 'passwords_dont_match';
+  static const captcha_incorrect = 'captcha_incorrect';
+  static const invalid_username = 'invalid_username';
+  static const bio_length_overflow = 'bio_length_overflow';
+  static const couldnt_update_user = 'couldnt_update_user';
+  static const couldnt_update_private_message =
+      'couldnt_update_private_message';
+  static const couldnt_update_post = 'couldnt_update_post';
+  static const couldnt_create_private_message =
+      'couldnt_create_private_message';
+  static const no_private_message_edit_allowed =
+      'no_private_message_edit_allowed';
+}
+
 extension L10nFromString on String {
   String tr(BuildContext context) {
     switch (this) {
-      case 'add_account':
+      case L10nStrings.add_account:
         return L10n.of(context).add_account;
-      case 'select_instance':
+      case L10nStrings.select_instance:
         return L10n.of(context).select_instance;
-      case 'accounts':
+      case L10nStrings.accounts:
         return L10n.of(context).accounts;
-      case 'appearance':
+      case L10nStrings.appearance:
         return L10n.of(context).appearance;
-      case 'add_instance':
+      case L10nStrings.add_instance:
         return L10n.of(context).add_instance;
-      case 'sign_in':
+      case L10nStrings.sign_in:
         return L10n.of(context).sign_in;
-      case 'register':
+      case L10nStrings.register:
         return L10n.of(context).register;
-      case 'settings':
+      case L10nStrings.settings:
         return L10n.of(context).settings;
-      case 'password':
+      case L10nStrings.password:
         return L10n.of(context).password;
-      case 'email_or_username':
+      case L10nStrings.email_or_username:
         return L10n.of(context).email_or_username;
-      case 'posts':
+      case L10nStrings.posts:
         return L10n.of(context).posts;
-      case 'comments':
+      case L10nStrings.comments:
         return L10n.of(context).comments;
-      case 'modlog':
+      case L10nStrings.modlog:
         return L10n.of(context).modlog;
-      case 'community':
+      case L10nStrings.community:
         return L10n.of(context).community;
-      case 'url':
+      case L10nStrings.url:
         return L10n.of(context).url;
-      case 'title':
+      case L10nStrings.title:
         return L10n.of(context).title;
-      case 'body':
+      case L10nStrings.body:
         return L10n.of(context).body;
-      case 'nsfw':
+      case L10nStrings.nsfw:
         return L10n.of(context).nsfw;
-      case 'post':
+      case L10nStrings.post:
         return L10n.of(context).post;
-      case 'save':
+      case L10nStrings.save:
         return L10n.of(context).save;
-      case 'send_message':
+      case L10nStrings.send_message:
         return L10n.of(context).send_message;
-      case 'subscribed':
+      case L10nStrings.subscribed:
         return L10n.of(context).subscribed;
-      case 'local':
+      case L10nStrings.local:
         return L10n.of(context).local;
-      case 'all':
+      case L10nStrings.all:
         return L10n.of(context).all;
-      case 'replies':
+      case L10nStrings.replies:
         return L10n.of(context).replies;
-      case 'mentions':
+      case L10nStrings.mentions:
         return L10n.of(context).mentions;
-      case 'from':
+      case L10nStrings.from:
         return L10n.of(context).from;
-      case 'to':
+      case L10nStrings.to:
         return L10n.of(context).to;
-      case 'deleted_by_creator':
+      case L10nStrings.deleted_by_creator:
         return L10n.of(context).deleted_by_creator;
-      case 'more':
+      case L10nStrings.more:
         return L10n.of(context).more;
-      case 'mark_as_read':
+      case L10nStrings.mark_as_read:
         return L10n.of(context).mark_as_read;
-      case 'mark_as_unread':
+      case L10nStrings.mark_as_unread:
         return L10n.of(context).mark_as_unread;
-      case 'reply':
+      case L10nStrings.reply:
         return L10n.of(context).reply;
-      case 'edit':
+      case L10nStrings.edit:
         return L10n.of(context).edit;
-      case 'delete':
+      case L10nStrings.delete:
         return L10n.of(context).delete;
-      case 'restore':
+      case L10nStrings.restore:
         return L10n.of(context).restore;
-      case 'yes':
+      case L10nStrings.yes:
         return L10n.of(context).yes;
-      case 'no':
+      case L10nStrings.no:
         return L10n.of(context).no;
-      case 'avatar':
+      case L10nStrings.avatar:
         return L10n.of(context).avatar;
-      case 'banner':
+      case L10nStrings.banner:
         return L10n.of(context).banner;
-      case 'display_name':
+      case L10nStrings.display_name:
         return L10n.of(context).display_name;
-      case 'bio':
+      case L10nStrings.bio:
         return L10n.of(context).bio;
-      case 'email':
+      case L10nStrings.email:
         return L10n.of(context).email;
-      case 'matrix_user':
+      case L10nStrings.matrix_user:
         return L10n.of(context).matrix_user;
-      case 'sort_type':
+      case L10nStrings.sort_type:
         return L10n.of(context).sort_type;
-      case 'type':
+      case L10nStrings.type:
         return L10n.of(context).type;
-      case 'show_nsfw':
+      case L10nStrings.show_nsfw:
         return L10n.of(context).show_nsfw;
-      case 'send_notifications_to_email':
+      case L10nStrings.send_notifications_to_email:
         return L10n.of(context).send_notifications_to_email;
-      case 'delete_account':
+      case L10nStrings.delete_account:
         return L10n.of(context).delete_account;
-      case 'saved':
+      case L10nStrings.saved:
         return L10n.of(context).saved;
-      case 'communities':
+      case L10nStrings.communities:
         return L10n.of(context).communities;
-      case 'users':
+      case L10nStrings.users:
         return L10n.of(context).users;
-      case 'theme':
+      case L10nStrings.theme:
         return L10n.of(context).theme;
-      case 'language':
+      case L10nStrings.language:
         return L10n.of(context).language;
-      case 'hot':
+      case L10nStrings.hot:
         return L10n.of(context).hot;
-      case 'new_':
+      case L10nStrings.new_:
         return L10n.of(context).new_;
-      case 'old':
+      case L10nStrings.old:
         return L10n.of(context).old;
-      case 'top':
+      case L10nStrings.top:
         return L10n.of(context).top;
-      case 'chat':
+      case L10nStrings.chat:
         return L10n.of(context).chat;
-      case 'admin':
+      case L10nStrings.admin:
         return L10n.of(context).admin;
-      case 'by':
+      case L10nStrings.by:
         return L10n.of(context).by;
-      case 'not_an_admin':
+      case L10nStrings.not_an_admin:
         return L10n.of(context).not_an_admin;
-      case 'couldnt_find_post':
+      case L10nStrings.couldnt_find_post:
         return L10n.of(context).couldnt_find_post;
-      case 'not_logged_in':
+      case L10nStrings.not_logged_in:
         return L10n.of(context).not_logged_in;
-      case 'site_ban':
+      case L10nStrings.site_ban:
         return L10n.of(context).site_ban;
-      case 'community_ban':
+      case L10nStrings.community_ban:
         return L10n.of(context).community_ban;
-      case 'downvotes_disabled':
+      case L10nStrings.downvotes_disabled:
         return L10n.of(context).downvotes_disabled;
-      case 'invalid_url':
+      case L10nStrings.invalid_url:
         return L10n.of(context).invalid_url;
-      case 'locked':
+      case L10nStrings.locked:
         return L10n.of(context).locked;
-      case 'couldnt_create_comment':
+      case L10nStrings.couldnt_create_comment:
         return L10n.of(context).couldnt_create_comment;
-      case 'couldnt_like_comment':
+      case L10nStrings.couldnt_like_comment:
         return L10n.of(context).couldnt_like_comment;
-      case 'couldnt_update_comment':
+      case L10nStrings.couldnt_update_comment:
         return L10n.of(context).couldnt_update_comment;
-      case 'no_comment_edit_allowed':
+      case L10nStrings.no_comment_edit_allowed:
         return L10n.of(context).no_comment_edit_allowed;
-      case 'couldnt_save_comment':
+      case L10nStrings.couldnt_save_comment:
         return L10n.of(context).couldnt_save_comment;
-      case 'couldnt_get_comments':
+      case L10nStrings.couldnt_get_comments:
         return L10n.of(context).couldnt_get_comments;
-      case 'report_reason_required':
+      case L10nStrings.report_reason_required:
         return L10n.of(context).report_reason_required;
-      case 'report_too_long':
+      case L10nStrings.report_too_long:
         return L10n.of(context).report_too_long;
-      case 'couldnt_create_report':
+      case L10nStrings.couldnt_create_report:
         return L10n.of(context).couldnt_create_report;
-      case 'couldnt_resolve_report':
+      case L10nStrings.couldnt_resolve_report:
         return L10n.of(context).couldnt_resolve_report;
-      case 'invalid_post_title':
+      case L10nStrings.invalid_post_title:
         return L10n.of(context).invalid_post_title;
-      case 'couldnt_create_post':
+      case L10nStrings.couldnt_create_post:
         return L10n.of(context).couldnt_create_post;
-      case 'couldnt_like_post':
+      case L10nStrings.couldnt_like_post:
         return L10n.of(context).couldnt_like_post;
-      case 'couldnt_find_community':
+      case L10nStrings.couldnt_find_community:
         return L10n.of(context).couldnt_find_community;
-      case 'couldnt_get_posts':
+      case L10nStrings.couldnt_get_posts:
         return L10n.of(context).couldnt_get_posts;
-      case 'no_post_edit_allowed':
+      case L10nStrings.no_post_edit_allowed:
         return L10n.of(context).no_post_edit_allowed;
-      case 'couldnt_save_post':
+      case L10nStrings.couldnt_save_post:
         return L10n.of(context).couldnt_save_post;
-      case 'site_already_exists':
+      case L10nStrings.site_already_exists:
         return L10n.of(context).site_already_exists;
-      case 'couldnt_update_site':
+      case L10nStrings.couldnt_update_site:
         return L10n.of(context).couldnt_update_site;
-      case 'invalid_community_name':
+      case L10nStrings.invalid_community_name:
         return L10n.of(context).invalid_community_name;
-      case 'community_already_exists':
+      case L10nStrings.community_already_exists:
         return L10n.of(context).community_already_exists;
-      case 'community_moderator_already_exists':
+      case L10nStrings.community_moderator_already_exists:
         return L10n.of(context).community_moderator_already_exists;
-      case 'community_follower_already_exists':
+      case L10nStrings.community_follower_already_exists:
         return L10n.of(context).community_follower_already_exists;
-      case 'not_a_moderator':
+      case L10nStrings.not_a_moderator:
         return L10n.of(context).not_a_moderator;
-      case 'couldnt_update_community':
+      case L10nStrings.couldnt_update_community:
         return L10n.of(context).couldnt_update_community;
-      case 'no_community_edit_allowed':
+      case L10nStrings.no_community_edit_allowed:
         return L10n.of(context).no_community_edit_allowed;
-      case 'system_err_login':
+      case L10nStrings.system_err_login:
         return L10n.of(context).system_err_login;
-      case 'community_user_already_banned':
+      case L10nStrings.community_user_already_banned:
         return L10n.of(context).community_user_already_banned;
-      case 'couldnt_find_that_username_or_email':
+      case L10nStrings.couldnt_find_that_username_or_email:
         return L10n.of(context).couldnt_find_that_username_or_email;
-      case 'password_incorrect':
+      case L10nStrings.password_incorrect:
         return L10n.of(context).password_incorrect;
-      case 'registration_closed':
+      case L10nStrings.registration_closed:
         return L10n.of(context).registration_closed;
-      case 'invalid_password':
+      case L10nStrings.invalid_password:
         return L10n.of(context).invalid_password;
-      case 'passwords_dont_match':
+      case L10nStrings.passwords_dont_match:
         return L10n.of(context).passwords_dont_match;
-      case 'captcha_incorrect':
+      case L10nStrings.captcha_incorrect:
         return L10n.of(context).captcha_incorrect;
-      case 'invalid_username':
+      case L10nStrings.invalid_username:
         return L10n.of(context).invalid_username;
-      case 'bio_length_overflow':
+      case L10nStrings.bio_length_overflow:
         return L10n.of(context).bio_length_overflow;
-      case 'couldnt_update_user':
+      case L10nStrings.couldnt_update_user:
         return L10n.of(context).couldnt_update_user;
-      case 'couldnt_update_private_message':
+      case L10nStrings.couldnt_update_private_message:
         return L10n.of(context).couldnt_update_private_message;
-      case 'couldnt_update_post':
+      case L10nStrings.couldnt_update_post:
         return L10n.of(context).couldnt_update_post;
-      case 'couldnt_create_private_message':
+      case L10nStrings.couldnt_create_private_message:
         return L10n.of(context).couldnt_create_private_message;
-      case 'no_private_message_edit_allowed':
+      case L10nStrings.no_private_message_edit_allowed:
         return L10n.of(context).no_private_message_edit_allowed;
 
       default:
