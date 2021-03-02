@@ -101,5 +101,6 @@
   "no_private_message_edit_allowed": "Editieren der Privatnachricht nicht erlaubt.",
   "post_title_too_long": "Posttitel zu lang.",
   "email_already_exists": "Email existiert bereits.",
-  "user_already_exists": "Nutzer existiert bereits."
+  "user_already_exists": "Nutzer existiert bereits.",
+  "number_users_online": "{count,plural, =1{{count} Benutzer online} other{{count} Benutzer*innen online}}"
 }

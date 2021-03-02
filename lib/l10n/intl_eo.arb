@@ -105,5 +105,6 @@
   "no_private_message_edit_allowed": "Ne rajtas redakti la privatan mesaĝon.",
   "post_title_too_long": "Titolo de afiŝo estas tro longa.",
   "email_already_exists": "Retpoŝtadreso jam ekzistas.",
-  "user_already_exists": "Uzanto jam ekzistas."
+  "user_already_exists": "Uzanto jam ekzistas.",
+  "number_users_online": "{count,plural, =1{{count} uzanto enreta} other{{count} uzantoj enretaj}}"
 }

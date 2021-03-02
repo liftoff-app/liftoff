@@ -124,6 +124,7 @@ abstract class L10nStrings {
   static const post_title_too_long = 'post_title_too_long';
   static const email_already_exists = 'email_already_exists';
   static const user_already_exists = 'user_already_exists';
+  static const number_users_online = 'number_users_online';
 }
 
 extension L10nFromString on String {

@@ -93,5 +93,6 @@
   "no_private_message_edit_allowed": "プライベートメッセージの編集許可がありません。",
   "post_title_too_long": "投稿のタイトルが長すぎます。",
   "email_already_exists": "メールアドレスが既に使用されています。",
-  "user_already_exists": "ユーザーは既に存在します。"
+  "user_already_exists": "ユーザーは既に存在します。",
+  "number_users_online": "{count,plural, =1{{count} 名のユーザーがオンライン}}"
 }

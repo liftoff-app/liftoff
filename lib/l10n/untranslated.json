@@ -50,7 +50,9 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "number_users_online"
   ],
 
   "ca": [
@@ -182,7 +184,8 @@
     "bio_length_overflow",
     "couldnt_update_private_message",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long"
   ],
 
   "fi": [
@@ -232,7 +235,8 @@
     "report_reason_required",
     "report_too_long",
     "couldnt_create_report",
-    "couldnt_resolve_report"
+    "couldnt_resolve_report",
+    "number_users_online"
   ],
 
   "gl": [
@@ -345,7 +349,11 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "hi": [
@@ -440,7 +448,11 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "hr": [
@@ -553,7 +565,11 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "hu": [
@@ -751,7 +767,11 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "ko": [
@@ -898,7 +918,11 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "pl": [
@@ -906,7 +930,8 @@
     "appearance",
     "add_instance",
     "sign_in",
-    "register"
+    "register",
+    "number_users_online"
   ],
 
   "pt": [
@@ -1019,7 +1044,11 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "pt_BR": [
@@ -1043,7 +1072,8 @@
     "appearance",
     "add_instance",
     "sign_in",
-    "register"
+    "register",
+    "number_users_online"
   ],
 
   "sq": [
@@ -1180,7 +1210,11 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "sr_Latn": [
@@ -1274,7 +1308,11 @@
     "couldnt_update_private_message",
     "couldnt_update_post",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "sv": [
@@ -1285,6 +1323,123 @@
     "add_instance",
     "sign_in",
     "register"
+  ],
+
+  "th": [
+    "add_account",
+    "select_instance",
+    "accounts",
+    "appearance",
+    "add_instance",
+    "sign_in",
+    "register",
+    "settings",
+    "password",
+    "email_or_username",
+    "posts",
+    "comments",
+    "modlog",
+    "community",
+    "url",
+    "title",
+    "body",
+    "nsfw",
+    "post",
+    "save",
+    "send_message",
+    "subscribed",
+    "local",
+    "all",
+    "replies",
+    "mentions",
+    "from",
+    "to",
+    "deleted_by_creator",
+    "more",
+    "mark_as_read",
+    "mark_as_unread",
+    "reply",
+    "edit",
+    "delete",
+    "restore",
+    "yes",
+    "no",
+    "avatar",
+    "banner",
+    "display_name",
+    "bio",
+    "email",
+    "matrix_user",
+    "sort_type",
+    "type",
+    "show_nsfw",
+    "send_notifications_to_email",
+    "delete_account",
+    "saved",
+    "communities",
+    "users",
+    "theme",
+    "language",
+    "hot",
+    "new_",
+    "old",
+    "top",
+    "chat",
+    "admin",
+    "by",
+    "not_an_admin",
+    "couldnt_find_post",
+    "not_logged_in",
+    "site_ban",
+    "community_ban",
+    "downvotes_disabled",
+    "invalid_url",
+    "locked",
+    "couldnt_create_comment",
+    "couldnt_like_comment",
+    "couldnt_update_comment",
+    "no_comment_edit_allowed",
+    "couldnt_save_comment",
+    "couldnt_get_comments",
+    "report_reason_required",
+    "report_too_long",
+    "couldnt_create_report",
+    "couldnt_resolve_report",
+    "invalid_post_title",
+    "couldnt_create_post",
+    "couldnt_like_post",
+    "couldnt_find_community",
+    "couldnt_get_posts",
+    "no_post_edit_allowed",
+    "couldnt_save_post",
+    "site_already_exists",
+    "couldnt_update_site",
+    "invalid_community_name",
+    "community_already_exists",
+    "community_moderator_already_exists",
+    "community_follower_already_exists",
+    "not_a_moderator",
+    "couldnt_update_community",
+    "no_community_edit_allowed",
+    "system_err_login",
+    "community_user_already_banned",
+    "couldnt_find_that_username_or_email",
+    "password_incorrect",
+    "registration_closed",
+    "invalid_password",
+    "passwords_dont_match",
+    "captcha_incorrect",
+    "invalid_username",
+    "bio_length_overflow",
+    "couldnt_update_user",
+    "couldnt_update_private_message",
+    "couldnt_update_post",
+    "couldnt_create_private_message",
+    "no_private_message_edit_allowed",
+    "post_title_too_long",
+    "email_already_exists",
+    "user_already_exists",
+    "number_users_online"
   ],
 
   "tr": [
@@ -1332,7 +1487,8 @@
     "not_a_moderator",
     "invalid_password",
     "captcha_incorrect",
-    "bio_length_overflow"
+    "bio_length_overflow",
+    "number_users_online"
   ],
 
   "zh": [

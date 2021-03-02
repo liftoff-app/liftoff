@@ -91,5 +91,6 @@
   "no_private_message_edit_allowed": "A privát üzenet szerkesztése nem engedélyezett.",
   "post_title_too_long": "A bejegyzés címe túl hosszú.",
   "email_already_exists": "Az email már létezik.",
-  "user_already_exists": "A felhasználó már létezik."
+  "user_already_exists": "A felhasználó már létezik.",
+  "number_users_online": "{count,plural, =1{{count} online felhasználó} other{{count} online felhasználó}}"
 }

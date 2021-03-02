@@ -91,5 +91,6 @@
   "no_private_message_edit_allowed": "Niet toegestaan om privé berichten te wijzigen.",
   "post_title_too_long": "Posttitel te lang.",
   "email_already_exists": "Email bestaat al.",
-  "user_already_exists": "Gebruiker bestaat al."
+  "user_already_exists": "Gebruiker bestaat al.",
+  "number_users_online": "{count,plural, =1{{count} gebruiker online} other{{count} gebruikers online}}"
 }

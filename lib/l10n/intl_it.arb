@@ -105,5 +105,6 @@
   "no_private_message_edit_allowed": "Non hai i permessi per modificare un messaggio privato.",
   "post_title_too_long": "Titolo della pubblicazione troppo lungo.",
   "email_already_exists": "Indirizzo email già presente.",
-  "user_already_exists": "L'utente esiste già."
+  "user_already_exists": "L'utente esiste già.",
+  "number_users_online": "{count,plural, =1{{count} utente connesso} other{{count} utenti connessi}}"
 }

@@ -67,5 +67,6 @@
   "couldnt_update_user": "ناتوانی در به‌روزرسانی کاربر.",
   "couldnt_update_post": "ناتوای در به‌روزرسانی مطلب",
   "email_already_exists": "این رایانامه از قبل وجود دارد.",
-  "user_already_exists": "این کاربر از قبل وجود دارد."
+  "user_already_exists": "این کاربر از قبل وجود دارد.",
+  "number_users_online": "{count,plural, =1{{count} کاربر برخط}}"
 }

@@ -94,5 +94,6 @@
   "no_private_message_edit_allowed": "No teniu permisos per a editar el missatge privat.",
   "post_title_too_long": "El títol de l’apunt és massa llarg.",
   "email_already_exists": "L’adreça ja és en ús.",
-  "user_already_exists": "L’usuari ja existeix."
+  "user_already_exists": "L’usuari ja existeix.",
+  "number_users_online": "{count,plural, =1{{count} usuari en línia} other{{count} usuaris en línia}}"
 }

@@ -115,7 +115,11 @@ const toExtract = {
   'post_title_too_long': null,
   'email_already_exists': null,
   'user_already_exists': null,
+  'number_online': 'number_users_online',
 };
+
+// TODO: migrate those with changed capitalization
+// 'number_of_comments': null,
 
 const repoName = 'lemmy-translations';
 const baseLanguage = 'en';
@@ -210,17 +214,48 @@ void portStrings(
       printError('"$key" does not exist in $repoName');
     }
 
-    if (lemmurTranslations[baseLanguage].containsKey(key) && !force) {
+    if (lemmurTranslations[baseLanguage].containsKey(renamedKey) && !force) {
       confirm('"$key" already exists in lemmur, overwrite?');
+    }
+
+    final metadata = <String, dynamic>{};
+    // ignore: omit_local_variable_types
+    String Function(Map<String, String> translations) transformer =
+        (translations) => translations[key];
+
+    // check if it has a plural form
+    if (lemmyTranslations[baseLanguage].containsKey('${key}_plural')) {
+      final variable = RegExp(r'{([\w_]+)}')
+          .firstMatch(lemmyTranslations[baseLanguage][key])
+          .group(1);
+
+      transformer = (translations) {
+        if (translations[key] == null) return null;
+
+        final fixedVariables =
+            translations[key].replaceAll('{{$variable}}', '{$variable}');
+
+        final pluralForm = () {
+          if (translations.containsKey('${key}_plural')) {
+            return translations['${key}_plural']
+                .replaceAll('{{$variable}}', '{$variable}');
+          }
+
+          return null;
+        }();
+
+        return '{$variable,plural, =1{$fixedVariables}${pluralForm != null ? ' other{$pluralForm}' : ''}}';
+      };
+      metadata['placeholders'] = {variable: {}};
     }
 
     for (final trans in lemmyTranslations.entries) {
       final language = trans.key;
       final strings = trans.value;
 
-      lemmurTranslations[language][renamedKey] = strings[key];
+      lemmurTranslations[language][renamedKey] = transformer(strings);
     }
-    lemmurTranslations[baseLanguage]['@$renamedKey'] = {};
+    lemmurTranslations[baseLanguage]['@$renamedKey'] = metadata;
   }
 }
 

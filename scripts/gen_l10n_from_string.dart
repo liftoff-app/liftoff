@@ -10,6 +10,12 @@ Future<void> main(List<String> args) async {
       as Map<String, dynamic>;
 
   final keys = strings.keys.where((key) => !key.startsWith('@')).toSet();
+  final keysWithoutVariables = keys.where((key) {
+    final metadata = strings['@$key'] as Map<String, dynamic>;
+    final placeholders = metadata['placeholders'] as Map<String, dynamic>;
+
+    return placeholders?.isEmpty ?? true;
+  }).toSet();
 
   await File('lib/l10n/l10n_from_string.dart').writeAsString('''$autoGenHeader
 // ignore_for_file: constant_identifier_names
@@ -24,7 +30,7 @@ ${keys.map((key) => "  static const $key = '$key';").join('\n')}
 extension L10nFromString on String {
   String tr(BuildContext context) {
     switch (this) {
-${keys.map((key) => "      case L10nStrings.$key:\n        return L10n.of(context).$key;").join('\n')}
+${keysWithoutVariables.map((key) => "      case L10nStrings.$key:\n        return L10n.of(context).$key;").join('\n')}
 
       default:
         return this;

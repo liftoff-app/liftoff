@@ -105,5 +105,6 @@
   "no_private_message_edit_allowed": "Ulovligt at ændre i privat besked.",
   "post_title_too_long": "Indlægstitel for lang.",
   "email_already_exists": "Emailen findes allerede.",
-  "user_already_exists": "Brugeren findes allerede."
+  "user_already_exists": "Brugeren findes allerede.",
+  "number_users_online": "{count,plural, =1{{count} Bruger Online} other{{count} Brugere Online}}"
 }
