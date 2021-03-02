@@ -122,6 +122,9 @@ abstract class L10nStrings {
   static const not_a_mod_or_admin = 'not_a_mod_or_admin';
   static const number_of_comments = 'number_of_comments';
   static const number_of_posts = 'number_of_posts';
+  static const number_of_subscribers = 'number_of_subscribers';
+  static const unsubscribe = 'unsubscribe';
+  static const subscribe = 'subscribe';
 }
 
 extension L10nFromString on String {
@@ -355,6 +358,10 @@ extension L10nFromString on String {
         return L10n.of(context).user_already_exists;
       case L10nStrings.not_a_mod_or_admin:
         return L10n.of(context).not_a_mod_or_admin;
+      case L10nStrings.unsubscribe:
+        return L10n.of(context).unsubscribe;
+      case L10nStrings.subscribe:
+        return L10n.of(context).subscribe;
 
       default:
         return this;

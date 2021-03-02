@@ -108,5 +108,8 @@
   "user_already_exists": "Uzanto jam ekzistas.",
   "number_users_online": "{count,plural, =1{{count} uzanto enreta} other{{count} uzantoj enretaj}}",
   "number_of_comments": "{count,plural, =1{{count} komento} other{{count} komentoj}}",
-  "number_of_posts": "{count,plural, =1{{count} afiŝo} other{{count} afiŝoj}}"
+  "number_of_posts": "{count,plural, =1{{count} afiŝo} other{{count} afiŝoj}}",
+  "number_of_subscribers": "{count,plural, =1{{count} abonanto} other{{count} abonantoj}}",
+  "unsubscribe": "Malaboni",
+  "subscribe": "Aboni"
 }

@@ -253,5 +253,17 @@
         "format": "compact"
       }
     }
-  }
+  },
+  "number_of_subscribers": "{count,plural, =1{{count} subscriber} other{{count} subscribers}}",
+  "@number_of_subscribers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unsubscribe": "unsubscribe",
+  "@unsubscribe": {},
+  "subscribe": "subscribe",
+  "@subscribe": {}
 }

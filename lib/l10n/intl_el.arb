@@ -108,5 +108,8 @@
   "user_already_exists": "Ο χρήστης υπάρχει ήδη.",
   "number_users_online": "{count,plural, =1{{count} ενεργός χρήστης} other{{count} ενεργοί χρήστες}}",
   "number_of_comments": "{count,plural, =1{{count} Σχόλιο} other{{count} Σχόλια}}",
-  "number_of_posts": "{count,plural, =1{{count} Δημοσίευση} other{{count} Δημοσιεύσεις}}"
+  "number_of_posts": "{count,plural, =1{{count} Δημοσίευση} other{{count} Δημοσιεύσεις}}",
+  "number_of_subscribers": "{count,plural, =1{{count} εγγεγραμμένος} other{{count} εγγεγραμμένοι}}",
+  "unsubscribe": "Απεγγραφή",
+  "subscribe": "Εγγραφή"
 }

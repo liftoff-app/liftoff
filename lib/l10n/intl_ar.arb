@@ -60,5 +60,7 @@
   "registration_closed": "إنشاء الحسابات معطل",
   "passwords_dont_match": "الكلمات السرية غير متطابقة.",
   "email_already_exists": "عنوان البريد الإلكتروني هذا موجود بالفعل.",
-  "user_already_exists": "هذا المستخدِم موجود بالفعل."
+  "user_already_exists": "هذا المستخدِم موجود بالفعل.",
+  "unsubscribe": "إلغاء الإشتراك",
+  "subscribe": "اتبع"
 }

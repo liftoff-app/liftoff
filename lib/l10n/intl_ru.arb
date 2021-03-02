@@ -105,5 +105,7 @@
   "no_private_message_edit_allowed": "Не разрешается редактировать личное сообщение.",
   "post_title_too_long": "Длина названия записи превышает допустимый лимит.",
   "email_already_exists": "E-mail уже существует.",
-  "user_already_exists": "Пользователь уже существует."
+  "user_already_exists": "Пользователь уже существует.",
+  "unsubscribe": "Отписаться",
+  "subscribe": "Подписаться"
 }

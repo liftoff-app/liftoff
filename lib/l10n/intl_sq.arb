@@ -94,5 +94,8 @@
   "user_already_exists": "Përdoruesi tashmë ekziston.",
   "number_users_online": "{count,plural, =1{{count} Përdorues Online} other{{count} Përdoruesa Online}}",
   "number_of_comments": "{count,plural, =1{{count} Koment} other{{count} Komente}}",
-  "number_of_posts": "{count,plural, =1{{count} Postim} other{{count} Postime}}"
+  "number_of_posts": "{count,plural, =1{{count} Postim} other{{count} Postime}}",
+  "number_of_subscribers": "{count,plural, =1{{count} i abonuar} other{{count} të abonuar}}",
+  "unsubscribe": "Ndalo Abonimin",
+  "subscribe": "Abonohu"
 }

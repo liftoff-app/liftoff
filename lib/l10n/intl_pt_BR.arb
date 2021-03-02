@@ -104,5 +104,8 @@
   "user_already_exists": "Este usuário já existe.",
   "number_users_online": "{count,plural, =1{{count} usuário online} other{{count} usuários online}}",
   "number_of_comments": "{count,plural, =1{{count} comentário} other{{count} comentários}}",
-  "number_of_posts": "{count,plural, =1{{count} publicação} other{{count} publicações}}"
+  "number_of_posts": "{count,plural, =1{{count} publicação} other{{count} publicações}}",
+  "number_of_subscribers": "{count,plural, =1{{count} inscrito} other{{count} inscritos}}",
+  "unsubscribe": "Cancelar inscrição",
+  "subscribe": "Inscrever-se"
 }

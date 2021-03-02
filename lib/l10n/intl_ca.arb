@@ -108,5 +108,8 @@
   "captcha_incorrect": "Captcha incorrecte.",
   "bio_length_overflow": "La biografia d'usuari no pot excedir els 300 caràcters.",
   "number_of_comments": "{count,plural, =1{{count} comentari} other{{count} comentaris}}",
-  "number_of_posts": "{count,plural, =1{{count} Publicació} other{{count} Publicacions}}"
+  "number_of_posts": "{count,plural, =1{{count} Publicació} other{{count} Publicacions}}",
+  "number_of_subscribers": "{count,plural, =1{{count} subscriptor} other{{count} subscriptors}}",
+  "unsubscribe": "Dóna’t de baixa",
+  "subscribe": "Subscriu-t’hi"
 }

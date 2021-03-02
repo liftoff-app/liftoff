@@ -91,5 +91,7 @@
   "no_private_message_edit_allowed": "Не можна редагувати особисті повідомлення.",
   "post_title_too_long": "Довжина назви перебільшує допустимий ліміт.",
   "email_already_exists": "E-mail вже існує.",
-  "user_already_exists": "Користувач вже існує."
+  "user_already_exists": "Користувач вже існує.",
+  "unsubscribe": "Відписатися",
+  "subscribe": "Підписатися"
 }

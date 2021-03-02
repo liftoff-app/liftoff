@@ -101,5 +101,7 @@
   "no_private_message_edit_allowed": "Ní cheadaítear teachtaireacht phríobháideach a chur in eagar.",
   "post_title_too_long": "Tá teideal an postáil ró-fhada.",
   "email_already_exists": "Tá ríomhphost ann cheana féin.",
-  "user_already_exists": "Úsáideoir ann cheana."
+  "user_already_exists": "Úsáideoir ann cheana.",
+  "unsubscribe": "Díliostáil",
+  "subscribe": "Liostáil"
 }

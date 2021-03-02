@@ -108,5 +108,8 @@
   "user_already_exists": "L'utente esiste già.",
   "number_users_online": "{count,plural, =1{{count} utente connesso} other{{count} utenti connessi}}",
   "number_of_comments": "{count,plural, =1{{count} Commento} other{{count} Commenti}}",
-  "number_of_posts": "{count,plural, =1{{count} Pubblicazione} other{{count} Pubblicazioni}}"
+  "number_of_posts": "{count,plural, =1{{count} Pubblicazione} other{{count} Pubblicazioni}}",
+  "number_of_subscribers": "{count,plural, =1{{count} iscritto} other{{count} iscritti}}",
+  "unsubscribe": "Disiscriviti",
+  "subscribe": "Iscriviti"
 }

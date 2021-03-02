@@ -11,8 +11,9 @@ class _ {
   final String key;
   final String rename;
 
-  /// make all letters except the first one lower case in the base language
+  /// make all letters except the first one lower case
   final bool decapitalize;
+  final bool toLowerCase;
 
   /// arb format for the placeholder
   final String format;
@@ -24,11 +25,21 @@ class _ {
     this.key, {
     this.rename,
     this.decapitalize = false,
+    this.toLowerCase = false,
     this.format,
     this.type,
   });
 
   String get renamedKey => rename ?? key;
+
+  // will transform a value of a translation of the base language
+  String transform(String input) {
+    if (toLowerCase) return input.toLowerCase();
+
+    if (decapitalize) return '${input[0]}${input.substring(1).toLowerCase()}';
+
+    return input;
+  }
 }
 
 const toMigrate = <_>[
@@ -142,6 +153,9 @@ const toMigrate = <_>[
   _('number_online', rename: 'number_users_online', type: 'int'),
   _('number_of_comments', type: 'int', format: 'compact'),
   _('number_of_posts', type: 'int', format: 'compact'),
+  _('number_of_subscribers', type: 'int'),
+  _('unsubscribe', toLowerCase: true),
+  _('subscribe', toLowerCase: true),
 ];
 
 const repoName = 'lemmy-translations';
@@ -150,6 +164,8 @@ const flutterIntlPrefix = 'intl_';
 
 Future<void> main(List<String> args) async {
   final force = args.contains('-f') || args.contains('--force');
+
+  checkDuplicateKeys();
 
   final repoCleanup = await cloneLemmyTranslations();
 
@@ -165,6 +181,16 @@ Future<void> main(List<String> args) async {
       'npx', ['prettier', 'lib/l10n/*.arb', '--parser', 'json', '--write']);
 
   await gen.main(args);
+}
+
+/// check if `toMigrate` has duplicate keys
+void checkDuplicateKeys() {
+  final hasDuplicates =
+      toMigrate.map((e) => e.key).toSet().length != toMigrate.length;
+
+  if (hasDuplicates) {
+    printError('"toMigrate" contains duplicate keys');
+  }
 }
 
 /// returns a cleanup function
@@ -282,6 +308,8 @@ void portStrings(
 
       lemmurTranslations[language][migrate.renamedKey] = transformer(strings);
     }
+    lemmurTranslations[baseLanguage][migrate.renamedKey] =
+        migrate.transform(transformer(lemmyTranslations[baseLanguage]));
     lemmurTranslations[baseLanguage]['@${migrate.renamedKey}'] = metadata;
   }
 }
