@@ -95,17 +95,14 @@ abstract class L10nStrings {
   static const couldnt_update_site = 'couldnt_update_site';
   static const invalid_community_name = 'invalid_community_name';
   static const community_already_exists = 'community_already_exists';
-  static const community_moderator_already_exists =
-      'community_moderator_already_exists';
-  static const community_follower_already_exists =
-      'community_follower_already_exists';
+  static const community_moderator_already_exists = 'community_moderator_already_exists';
+  static const community_follower_already_exists = 'community_follower_already_exists';
   static const not_a_moderator = 'not_a_moderator';
   static const couldnt_update_community = 'couldnt_update_community';
   static const no_community_edit_allowed = 'no_community_edit_allowed';
   static const system_err_login = 'system_err_login';
   static const community_user_already_banned = 'community_user_already_banned';
-  static const couldnt_find_that_username_or_email =
-      'couldnt_find_that_username_or_email';
+  static const couldnt_find_that_username_or_email = 'couldnt_find_that_username_or_email';
   static const password_incorrect = 'password_incorrect';
   static const registration_closed = 'registration_closed';
   static const invalid_password = 'invalid_password';
@@ -114,17 +111,17 @@ abstract class L10nStrings {
   static const invalid_username = 'invalid_username';
   static const bio_length_overflow = 'bio_length_overflow';
   static const couldnt_update_user = 'couldnt_update_user';
-  static const couldnt_update_private_message =
-      'couldnt_update_private_message';
+  static const couldnt_update_private_message = 'couldnt_update_private_message';
   static const couldnt_update_post = 'couldnt_update_post';
-  static const couldnt_create_private_message =
-      'couldnt_create_private_message';
-  static const no_private_message_edit_allowed =
-      'no_private_message_edit_allowed';
+  static const couldnt_create_private_message = 'couldnt_create_private_message';
+  static const no_private_message_edit_allowed = 'no_private_message_edit_allowed';
   static const post_title_too_long = 'post_title_too_long';
   static const email_already_exists = 'email_already_exists';
   static const user_already_exists = 'user_already_exists';
   static const number_users_online = 'number_users_online';
+  static const not_a_mod_or_admin = 'not_a_mod_or_admin';
+  static const number_of_comments = 'number_of_comments';
+  static const number_of_posts = 'number_of_posts';
 }
 
 extension L10nFromString on String {
@@ -356,6 +353,8 @@ extension L10nFromString on String {
         return L10n.of(context).email_already_exists;
       case L10nStrings.user_already_exists:
         return L10n.of(context).user_already_exists;
+      case L10nStrings.not_a_mod_or_admin:
+        return L10n.of(context).not_a_mod_or_admin;
 
       default:
         return this;

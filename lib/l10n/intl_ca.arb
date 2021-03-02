@@ -11,7 +11,7 @@
   "title": "Títol",
   "body": "Cos",
   "nsfw": "Per a adults",
-  "post": "Publicar",
+  "post": "publicar",
   "save": "desa",
   "send_message": "Envia el missatge",
   "subscribed": "Subscrit",
@@ -95,5 +95,18 @@
   "post_title_too_long": "El títol de l’apunt és massa llarg.",
   "email_already_exists": "L’adreça ja és en ús.",
   "user_already_exists": "L’usuari ja existeix.",
-  "number_users_online": "{count,plural, =1{{count} usuari en línia} other{{count} usuaris en línia}}"
+  "number_users_online": "{count,plural, =1{{count} usuari en línia} other{{count} usuaris en línia}}",
+  "bio": "Biografia",
+  "invalid_url": "URL invàlida.",
+  "report_reason_required": "Motiu de l'informe necessari.",
+  "report_too_long": "Informe massa llarg.",
+  "couldnt_create_report": "No s'ha pogut crear l'informe.",
+  "couldnt_resolve_report": "No s'ha pogut resoldre l'informe.",
+  "invalid_post_title": "Títol de la publicació invàlid",
+  "not_a_moderator": "No ets un moderador.",
+  "invalid_password": "Contrasenya no vàlida. La contrasenya ha de tenir <= 60 caràcters.",
+  "captcha_incorrect": "Captcha incorrecte.",
+  "bio_length_overflow": "La biografia d'usuari no pot excedir els 300 caràcters.",
+  "number_of_comments": "{count,plural, =1{{count} comentari} other{{count} comentaris}}",
+  "number_of_posts": "{count,plural, =1{{count} Publicació} other{{count} Publicacions}}"
 }

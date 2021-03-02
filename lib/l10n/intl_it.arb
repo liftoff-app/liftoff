@@ -106,5 +106,7 @@
   "post_title_too_long": "Titolo della pubblicazione troppo lungo.",
   "email_already_exists": "Indirizzo email già presente.",
   "user_already_exists": "L'utente esiste già.",
-  "number_users_online": "{count,plural, =1{{count} utente connesso} other{{count} utenti connessi}}"
+  "number_users_online": "{count,plural, =1{{count} utente connesso} other{{count} utenti connessi}}",
+  "number_of_comments": "{count,plural, =1{{count} Commento} other{{count} Commenti}}",
+  "number_of_posts": "{count,plural, =1{{count} Pubblicazione} other{{count} Pubblicazioni}}"
 }

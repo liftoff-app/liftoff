@@ -6,120 +6,143 @@ import 'dart:io';
 import 'common.dart';
 import 'gen_l10n_from_string.dart' as gen;
 
-/// Map<key, renamedKey>, if `renamedKey` is null then no rename is performed
-const toExtract = {
-  'settings': null,
-  'password': null,
-  'email_or_username': null,
-  'posts': null,
-  'comments': null,
-  'modlog': null,
-  'community': null,
-  'url': null,
-  'title': null,
-  'body': null,
-  'nsfw': null,
-  'post': null,
-  'save': null,
-  'send_message': null,
-  'subscribed': null,
-  'local': null,
-  'all': null,
-  'replies': null,
-  'mentions': null,
-  'from': null,
-  'to': null,
-  'deleted': 'deleted_by_creator',
-  'more': null,
-  'mark_as_read': null,
-  'mark_as_unread': null,
-  'reply': null,
-  'edit': null,
-  'delete': null,
-  'restore': null,
-  'yes': null,
-  'no': null,
-  'avatar': null,
-  'banner': null,
-  'display_name': null,
-  'bio': null,
-  'email': null,
-  'matrix_user_id': 'matrix_user',
-  'sort_type': null,
-  'type': null,
-  'show_nsfw': null,
-  'send_notifications_to_email': null,
-  'delete_account': null,
-  'saved': null,
-  'communities': null,
-  'users': null,
-  'theme': null,
-  'language': null,
-  'hot': null,
-  'new': null,
-  'old': null,
-  'top': null,
-  'chat': null,
-  'admin': null,
-  'by': null,
-  'not_a_mod_or_admin': null,
-  'not_an_admin': null,
-  'couldnt_find_post': null,
-  'not_logged_in': null,
-  'site_ban': null,
-  'community_ban': null,
-  'downvotes_disabled': null,
-  'invalid_url': null,
-  'locked': null,
-  'couldnt_create_comment': null,
-  'couldnt_like_comment': null,
-  'couldnt_update_comment': null,
-  'no_comment_edit_allowed': null,
-  'couldnt_save_comment': null,
-  'couldnt_get_comments': null,
-  'report_reason_required': null,
-  'report_too_long': null,
-  'couldnt_create_report': null,
-  'couldnt_resolve_report': null,
-  'invalid_post_title': null,
-  'couldnt_create_post': null,
-  'couldnt_like_post': null,
-  'couldnt_find_community': null,
-  'couldnt_get_posts': null,
-  'no_post_edit_allowed': null,
-  'couldnt_save_post': null,
-  'site_already_exists': null,
-  'couldnt_update_site': null,
-  'invalid_community_name': null,
-  'community_already_exists': null,
-  'community_moderator_already_exists': null,
-  'community_follower_already_exists': null,
-  'not_a_moderator': null,
-  'couldnt_update_community': null,
-  'no_community_edit_allowed': null,
-  'system_err_login': null,
-  'community_user_already_banned': null,
-  'couldnt_find_that_username_or_email': null,
-  'password_incorrect': null,
-  'registration_closed': null,
-  'invalid_password': null,
-  'passwords_dont_match': null,
-  'captcha_incorrect': null,
-  'invalid_username': null,
-  'bio_length_overflow': null,
-  'couldnt_update_user': null,
-  'couldnt_update_private_message': null,
-  'couldnt_update_post': null,
-  'couldnt_create_private_message': null,
-  'no_private_message_edit_allowed': null,
-  'post_title_too_long': null,
-  'email_already_exists': null,
-  'user_already_exists': null,
-  'number_online': 'number_users_online',
-};
+// config for migration of a single key
+class _ {
+  final String key;
+  final String rename;
 
-// TODO: migrate those with changed capitalization
-// 'number_of_comments': null,
+  /// make all letters except the first one lower case in the base language
+  final bool decapitalize;
+
+  /// arb format for the placeholder
+  final String format;
+
+  /// arb type for the placeholder
+  final String type;
+
+  const _(
+    this.key, {
+    this.rename,
+    this.decapitalize = false,
+    this.format,
+    this.type,
+  });
+
+  String get renamedKey => rename ?? key;
+}
+
+const toMigrate = <_>[
+  _('settings'),
+  _('password'),
+  _('email_or_username'),
+  _('posts'),
+  _('comments'),
+  _('modlog'),
+  _('community'),
+  _('url'),
+  _('title'),
+  _('body'),
+  _('nsfw'),
+  _('post'),
+  _('save'),
+  _('send_message'),
+  _('subscribed'),
+  _('local'),
+  _('all'),
+  _('replies'),
+  _('mentions'),
+  _('from'),
+  _('to'),
+  _('deleted', rename: 'deleted_by_creator'),
+  _('more'),
+  _('mark_as_read'),
+  _('mark_as_unread'),
+  _('reply'),
+  _('edit'),
+  _('delete'),
+  _('restore'),
+  _('yes'),
+  _('no'),
+  _('avatar'),
+  _('banner'),
+  _('display_name'),
+  _('bio'),
+  _('email'),
+  _('matrix_user_id', rename: 'matrix_user'),
+  _('sort_type'),
+  _('type'),
+  _('show_nsfw'),
+  _('send_notifications_to_email'),
+  _('delete_account'),
+  _('saved'),
+  _('communities'),
+  _('users'),
+  _('theme'),
+  _('language'),
+  _('hot'),
+  _('new', rename: 'new_'),
+  _('old'),
+  _('top'),
+  _('chat'),
+  _('admin'),
+  _('by'),
+  _('not_a_mod_or_admin'),
+  _('not_an_admin'),
+  _('couldnt_find_post'),
+  _('not_logged_in'),
+  _('site_ban'),
+  _('community_ban'),
+  _('downvotes_disabled'),
+  _('invalid_url'),
+  _('locked'),
+  _('couldnt_create_comment'),
+  _('couldnt_like_comment'),
+  _('couldnt_update_comment'),
+  _('no_comment_edit_allowed'),
+  _('couldnt_save_comment'),
+  _('couldnt_get_comments'),
+  _('report_reason_required'),
+  _('report_too_long'),
+  _('couldnt_create_report'),
+  _('couldnt_resolve_report'),
+  _('invalid_post_title'),
+  _('couldnt_create_post'),
+  _('couldnt_like_post'),
+  _('couldnt_find_community'),
+  _('couldnt_get_posts'),
+  _('no_post_edit_allowed'),
+  _('couldnt_save_post'),
+  _('site_already_exists'),
+  _('couldnt_update_site'),
+  _('invalid_community_name'),
+  _('community_already_exists'),
+  _('community_moderator_already_exists'),
+  _('community_follower_already_exists'),
+  _('not_a_moderator'),
+  _('couldnt_update_community'),
+  _('no_community_edit_allowed'),
+  _('system_err_login'),
+  _('community_user_already_banned'),
+  _('couldnt_find_that_username_or_email'),
+  _('password_incorrect'),
+  _('registration_closed'),
+  _('invalid_password'),
+  _('passwords_dont_match'),
+  _('captcha_incorrect'),
+  _('invalid_username'),
+  _('bio_length_overflow'),
+  _('couldnt_update_user'),
+  _('couldnt_update_private_message'),
+  _('couldnt_update_post'),
+  _('couldnt_create_private_message'),
+  _('no_private_message_edit_allowed'),
+  _('post_title_too_long'),
+  _('email_already_exists'),
+  _('user_already_exists'),
+  _('number_online', rename: 'number_users_online', type: 'int'),
+  _('number_of_comments', type: 'int', format: 'compact'),
+  _('number_of_posts', type: 'int', format: 'compact'),
+];
 
 const repoName = 'lemmy-translations';
 const baseLanguage = 'en';
@@ -201,61 +224,65 @@ void portStrings(
   // port all languages
   for (final language in lemmyTranslations.keys) {
     if (!lemmurTranslations.containsKey(language)) {
-      lemmurTranslations[language] = {};
-      lemmurTranslations[language]['@@locale'] = language;
+      lemmurTranslations[language] = {'@@locale': language};
     }
   }
 
-  for (final extract in toExtract.entries) {
-    final key = extract.key;
-    final renamedKey = extract.value ?? key;
-
-    if (!lemmyTranslations[baseLanguage].containsKey(key)) {
-      printError('"$key" does not exist in $repoName');
+  for (final migrate in toMigrate) {
+    if (!lemmyTranslations[baseLanguage].containsKey(migrate.key)) {
+      printError('"${migrate.key}" does not exist in $repoName');
     }
 
-    if (lemmurTranslations[baseLanguage].containsKey(renamedKey) && !force) {
-      confirm('"$key" already exists in lemmur, overwrite?');
+    if (lemmurTranslations[baseLanguage].containsKey(migrate.renamedKey) &&
+        !force) {
+      confirm('"${migrate.key}" already exists in lemmur, overwrite?');
     }
 
-    final metadata = <String, dynamic>{};
+    final variableName = RegExp(r'{{([\w_]+)}|')
+        .firstMatch(lemmyTranslations[baseLanguage][migrate.key])
+        ?.group(1);
+
+    final metadata = <String, dynamic>{
+      if (variableName != null)
+        'placeholders': {
+          variableName: {
+            if (migrate.type != null) 'type': migrate.type,
+            if (migrate.format != null) 'format': migrate.format,
+          },
+        },
+    };
     // ignore: omit_local_variable_types
     String Function(Map<String, String> translations) transformer =
-        (translations) => translations[key];
+        (translations) => translations[migrate.key];
 
     // check if it has a plural form
-    if (lemmyTranslations[baseLanguage].containsKey('${key}_plural')) {
-      final variable = RegExp(r'{([\w_]+)}')
-          .firstMatch(lemmyTranslations[baseLanguage][key])
-          .group(1);
-
+    if (lemmyTranslations[baseLanguage].containsKey('${migrate.key}_plural')) {
       transformer = (translations) {
-        if (translations[key] == null) return null;
+        if (translations[migrate.key] == null) return null;
 
-        final fixedVariables =
-            translations[key].replaceAll('{{$variable}}', '{$variable}');
+        final fixedVariables = translations[migrate.key]
+            .replaceAll('{{$variableName}}', '{$variableName}');
 
         final pluralForm = () {
-          if (translations.containsKey('${key}_plural')) {
-            return translations['${key}_plural']
-                .replaceAll('{{$variable}}', '{$variable}');
+          if (translations.containsKey('${migrate.key}_plural')) {
+            return translations['${migrate.key}_plural']
+                .replaceAll('{{$variableName}}', '{$variableName}');
           }
 
           return null;
         }();
 
-        return '{$variable,plural, =1{$fixedVariables}${pluralForm != null ? ' other{$pluralForm}' : ''}}';
+        return '{$variableName,plural, =1{$fixedVariables}${pluralForm != null ? ' other{$pluralForm}' : ''}}';
       };
-      metadata['placeholders'] = {variable: {}};
     }
 
     for (final trans in lemmyTranslations.entries) {
       final language = trans.key;
       final strings = trans.value;
 
-      lemmurTranslations[language][renamedKey] = transformer(strings);
+      lemmurTranslations[language][migrate.renamedKey] = transformer(strings);
     }
-    lemmurTranslations[baseLanguage]['@$renamedKey'] = metadata;
+    lemmurTranslations[baseLanguage]['@${migrate.renamedKey}'] = metadata;
   }
 }
 

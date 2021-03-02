@@ -3,7 +3,7 @@
   "settings": "Instellingen",
   "password": "Wachtwoord",
   "email_or_username": "E-mail of gebruikersnaam",
-  "posts": "posts",
+  "posts": "Posts",
   "comments": "Reacties",
   "modlog": "Moderatorlog",
   "community": "Community",
@@ -39,7 +39,7 @@
   "send_notifications_to_email": "Stuur meldingen naar je email",
   "delete_account": "Verwijder account",
   "saved": "Opgeslagen",
-  "communities": "Communities",
+  "communities": "Gemeenschappen",
   "users": "Gebruikers",
   "theme": "Thema",
   "language": "Taal",
@@ -92,5 +92,7 @@
   "post_title_too_long": "Posttitel te lang.",
   "email_already_exists": "Email bestaat al.",
   "user_already_exists": "Gebruiker bestaat al.",
-  "number_users_online": "{count,plural, =1{{count} gebruiker online} other{{count} gebruikers online}}"
+  "number_users_online": "{count,plural, =1{{count} gebruiker online} other{{count} gebruikers online}}",
+  "number_of_comments": "{count,plural, =1{{count} reactie} other{{count} reacties}}",
+  "number_of_posts": "{count,plural, =1{{count} post} other{{count} posts}}"
 }

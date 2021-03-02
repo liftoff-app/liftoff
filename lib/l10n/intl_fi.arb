@@ -91,5 +91,7 @@
   "post_title_too_long": "Viestin otsikko on liian pitkä.",
   "email_already_exists": "Sähköposti on jo olemassa.",
   "user_already_exists": "Käyttäjä on jo olemassa.",
-  "number_users_online": "{count,plural, =1{{count} käyttäjä aktiivisena} other{{count} käyttäjää aktiivisena}}"
+  "number_users_online": "{count,plural, =1{{count} käyttäjä aktiivisena} other{{count} käyttäjää aktiivisena}}",
+  "number_of_comments": "{count,plural, =1{{count} kommentti} other{{count} kommenttia}}",
+  "number_of_posts": "{count,plural, =1{{count} viesti} other{{count} viestiä}}"
 }

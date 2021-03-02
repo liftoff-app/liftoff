@@ -229,7 +229,29 @@
   "number_users_online": "{count,plural, =1{{count} user online} other{{count} users online}}",
   "@number_users_online": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "not_a_mod_or_admin": "Not a moderator or admin.",
+  "@not_a_mod_or_admin": {},
+  "number_of_comments": "{count,plural, =1{{count} Comment} other{{count} Comments}}",
+  "@number_of_comments": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "compact"
+      }
+    }
+  },
+  "number_of_posts": "{count,plural, =1{{count} Post} other{{count} Posts}}",
+  "@number_of_posts": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "compact"
+      }
     }
   }
 }

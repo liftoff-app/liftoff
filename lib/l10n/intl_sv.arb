@@ -106,5 +106,7 @@
   "post_title_too_long": "Inläggstiteln är för lång.",
   "email_already_exists": "E-post finns redan.",
   "user_already_exists": "Användaren finns redan.",
-  "number_users_online": "{count,plural, =1{{count} användare inloggad} other{{count} användare inloggade}}"
+  "number_users_online": "{count,plural, =1{{count} användare inloggad} other{{count} användare inloggade}}",
+  "number_of_comments": "{count,plural, =1{{count} kommentar} other{{count} kommentarer}}",
+  "number_of_posts": "{count,plural, =1{{count} inlägg} other{{count} inlägg}}"
 }

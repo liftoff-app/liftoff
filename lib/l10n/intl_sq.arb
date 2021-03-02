@@ -92,5 +92,7 @@
   "post_title_too_long": "Titulli i postimit ishte shumë i gjatë.",
   "email_already_exists": "Email-i tashmë ekziston.",
   "user_already_exists": "Përdoruesi tashmë ekziston.",
-  "number_users_online": "{count,plural, =1{{count} Përdorues Online} other{{count} Përdoruesa Online}}"
+  "number_users_online": "{count,plural, =1{{count} Përdorues Online} other{{count} Përdoruesa Online}}",
+  "number_of_comments": "{count,plural, =1{{count} Koment} other{{count} Komente}}",
+  "number_of_posts": "{count,plural, =1{{count} Postim} other{{count} Postime}}"
 }

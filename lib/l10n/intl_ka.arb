@@ -87,5 +87,7 @@
   "post_title_too_long": "პოსტის სათაური ძალიან გრძელია.",
   "email_already_exists": "ელ-პოსტა უკვე არსებობს.",
   "user_already_exists": "მომხმარებელი უკვე არსებობს.",
-  "number_users_online": "{count,plural, =1{მომხმარებელი საიტზე} other{მომხმარებელი საიტზე}}"
+  "number_users_online": "{count,plural, =1{მომხმარებელი საიტზე} other{მომხმარებელი საიტზე}}",
+  "number_of_comments": "{count,plural, =1{კომენტარი} other{კომანტარები}}",
+  "number_of_posts": "{count,plural, =1{თარგმნა} other{თარგმნა}}"
 }
