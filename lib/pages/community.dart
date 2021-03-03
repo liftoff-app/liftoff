@@ -398,10 +398,12 @@ class _AboutTab extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 15),
             children: [
-              Chip(label: Text('${onlineUsers ?? 'X'} users online')),
               Chip(
-                  label: Text(
-                      '${community.counts.subscribers} subscriber${pluralS(community.counts.subscribers)}')),
+                  label: Text(L10n.of(context)
+                      .number_of_users_online(onlineUsers ?? 0))),
+              Chip(
+                  label: Text(L10n.of(context)
+                      .number_of_subscribers(community.counts.subscribers))),
               Chip(
                   label: Text(
                       '${community.counts.posts} post${pluralS(community.counts.posts)}')),
@@ -526,7 +528,9 @@ class _FollowButton extends HookWidget {
                   icon: isSubbed.value
                       ? const Icon(Icons.remove, size: 18)
                       : const Icon(Icons.add, size: 18),
-                  label: Text('${isSubbed.value ? 'un' : ''}subscribe'),
+                  label: Text(isSubbed.value
+                      ? L10n.of(context).unsubscribe
+                      : L10n.of(context).subscribe),
                 ),
         ),
       ),

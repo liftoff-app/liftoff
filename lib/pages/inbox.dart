@@ -95,7 +95,7 @@ class InboxPage extends HookWidget {
             tabs: [
               Tab(text: L10n.of(context).replies),
               Tab(text: L10n.of(context).mentions),
-              const Tab(text: 'Messages'),
+              Tab(text: L10n.of(context).messages),
             ],
           ),
         ),

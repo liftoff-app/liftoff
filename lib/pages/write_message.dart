@@ -43,7 +43,7 @@ class WriteMessagePage extends HookWidget {
     final loading = useState(false);
 
     final submit = _isEdit ? L10n.of(context).save : 'send';
-    final title = _isEdit ? 'Edit message' : 'Send message';
+    final title = _isEdit ? 'Edit message' : L10n.of(context).send_message;
 
     handleSubmit() async {
       if (_isEdit) {

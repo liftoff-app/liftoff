@@ -68,7 +68,7 @@
   "couldnt_update_post": "ناتوای در به‌روزرسانی مطلب",
   "email_already_exists": "این رایانامه از قبل وجود دارد.",
   "user_already_exists": "این کاربر از قبل وجود دارد.",
-  "number_users_online": "{count,plural, =1{{count} کاربر برخط}}",
+  "number_of_users_online": "{count,plural, =1{{count} کاربر برخط}}",
   "number_of_comments": "{count,plural, =1{{count} نظر}}",
   "number_of_posts": "{count,plural, =1{{count} مطلب}}",
   "number_of_users": "{count,plural, =1{{count} کاربر}}",

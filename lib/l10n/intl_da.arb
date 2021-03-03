@@ -105,7 +105,7 @@
   "post_title_too_long": "Indlægstitel for lang.",
   "email_already_exists": "Emailen findes allerede.",
   "user_already_exists": "Brugeren findes allerede.",
-  "number_users_online": "{count,plural, =1{{count} Bruger Online} other{{count} Brugere Online}}",
+  "number_of_users_online": "{count,plural, =1{{count} Bruger Online} other{{count} Brugere Online}}",
   "number_of_comments": "{count,plural, =1{{count} Kommentar} other{{count} Kommentarer}}",
   "number_of_posts": "{count,plural, =1{{count} Indlæg} other{{count} Indlæg}}",
   "number_of_subscribers": "{count,plural, =1{{count} Abonnent} other{{count} Abonnenter}}",

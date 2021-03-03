@@ -80,7 +80,7 @@
   "@show_nsfw": {},
   "send_notifications_to_email": "Send notifications to Email",
   "@send_notifications_to_email": {},
-  "delete_account": "Delete Account",
+  "delete_account": "Delete account",
   "@delete_account": {},
   "saved": "Saved",
   "@saved": {},
@@ -212,8 +212,8 @@
   "@email_already_exists": {},
   "user_already_exists": "User already exists.",
   "@user_already_exists": {},
-  "number_users_online": "{count,plural, =1{{count} user online} other{{count} users online}}",
-  "@number_users_online": {
+  "number_of_users_online": "{count,plural, =1{{count} user online} other{{count} users online}}",
+  "@number_of_users_online": {
     "placeholders": {
       "count": {}
     }

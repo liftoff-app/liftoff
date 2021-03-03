@@ -105,7 +105,7 @@
   "post_title_too_long": "Bidalketaren izenburua luzeegia da.",
   "email_already_exists": "Eposta hori dagoeneko existitzen da.",
   "user_already_exists": "Erabiltzaile hori dagoeneko existitzen da.",
-  "number_users_online": "{count,plural, =1{Erabiltzaile {count} konektatuta} other{{count} erabiltzaile konektatuta}}",
+  "number_of_users_online": "{count,plural, =1{Erabiltzaile {count} konektatuta} other{{count} erabiltzaile konektatuta}}",
   "number_of_comments": "{count,plural, =1{Iruzkin {count}} other{{count} iruzkin}}",
   "number_of_posts": "{count,plural, =1{Bidalketa {count}} other{{count} bidalketa}}",
   "number_of_subscribers": "{count,plural, =1{Harpidetu {count}} other{{count} harpidetu}}",

@@ -91,7 +91,7 @@
   "post_title_too_long": "Paylaşım başlığı çok uzun.",
   "email_already_exists": "Böyle bir e-mail adresi zaten var.",
   "user_already_exists": "Böyle bir kullanıcı zaten var.",
-  "number_users_online": "{count,plural, =1{{count} Kullanıcı Hatta} other{{count} Kullanıcı Hatta}}",
+  "number_of_users_online": "{count,plural, =1{{count} Kullanıcı Hatta} other{{count} Kullanıcı Hatta}}",
   "number_of_comments": "{count,plural, =1{{count} Yorum} other{{count} Yorum}}",
   "number_of_posts": "{count,plural, =1{{count} Paylaşım} other{{count} Paylaşım}}",
   "number_of_subscribers": "{count,plural, =1{{count} Takipçi} other{{count} Takipçi}}",

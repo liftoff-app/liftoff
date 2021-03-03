@@ -11,7 +11,6 @@ import '../pages/manage_account.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
-import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'avatar.dart';
 import 'fullscreenable_image.dart';
@@ -256,8 +255,8 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${compactNumber(userView.counts.postCount)}'
-                          ' Post${pluralS(userView.counts.postCount)}',
+                          L10n.of(context)
+                              .number_of_posts(userView.counts.postCount),
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),
                       ],
@@ -274,7 +273,8 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${compactNumber(userView.counts.commentCount)} Comment${pluralS(userView.counts.commentCount)}',
+                          L10n.of(context)
+                              .number_of_comments(userView.counts.commentCount),
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),
                       ],

@@ -104,7 +104,7 @@
   "post_title_too_long": "Le titre de la publication est trop long.",
   "email_already_exists": "L’email existe déjà.",
   "user_already_exists": "L’utilisateur·rice existe déjà.",
-  "number_users_online": "{count,plural, =1{{count} Utilisateur en ligne} other{{count} Utilisateurs en ligne}}",
+  "number_of_users_online": "{count,plural, =1{{count} Utilisateur en ligne} other{{count} Utilisateurs en ligne}}",
   "number_of_comments": "{count,plural, =1{{count} Commentaire} other{{count} Commentaires}}",
   "number_of_posts": "{count,plural, =1{{count} Publication} other{{count} Publications}}",
   "number_of_subscribers": "{count,plural, =1{{count} Abonné} other{{count} Abonnés}}",

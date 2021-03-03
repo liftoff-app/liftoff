@@ -105,7 +105,7 @@
   "post_title_too_long": "El títol de l’apunt és massa llarg.",
   "email_already_exists": "L’adreça ja és en ús.",
   "user_already_exists": "L’usuari ja existeix.",
-  "number_users_online": "{count,plural, =1{{count} usuari en línia} other{{count} usuaris en línia}}",
+  "number_of_users_online": "{count,plural, =1{{count} usuari en línia} other{{count} usuaris en línia}}",
   "number_of_comments": "{count,plural, =1{{count} comentari} other{{count} comentaris}}",
   "number_of_posts": "{count,plural, =1{{count} Publicació} other{{count} Publicacions}}",
   "number_of_subscribers": "{count,plural, =1{{count} subscriptor} other{{count} subscriptors}}",

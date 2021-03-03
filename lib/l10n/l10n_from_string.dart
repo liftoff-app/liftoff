@@ -117,7 +117,7 @@ abstract class L10nStrings {
   static const post_title_too_long = 'post_title_too_long';
   static const email_already_exists = 'email_already_exists';
   static const user_already_exists = 'user_already_exists';
-  static const number_users_online = 'number_users_online';
+  static const number_of_users_online = 'number_of_users_online';
   static const number_of_comments = 'number_of_comments';
   static const number_of_posts = 'number_of_posts';
   static const number_of_subscribers = 'number_of_subscribers';

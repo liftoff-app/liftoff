@@ -216,11 +216,13 @@ class _AboutTab extends HookWidget {
       : assert(communitiesFuture != null),
         assert(instanceHost != null);
 
-  void goToBannedUsers(BuildContext c) {
+  void goToBannedUsers(BuildContext context) {
     goTo(
-      c,
+      context,
       (_) => UsersListPage(
-          users: site.banned.reversed.toList(), title: 'Banned users'),
+        users: site.banned.reversed.toList(),
+        title: L10n.of(context).banned_users,
+      ),
     );
   }
 
@@ -267,8 +269,12 @@ class _AboutTab extends HookWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 children: [
-                  Chip(label: Text('${site.online} users online')),
-                  Chip(label: Text('${site.siteView.counts.users} users')),
+                  Chip(
+                      label: Text(L10n.of(context)
+                          .number_of_users_online(site.online))),
+                  Chip(
+                      label: Text(L10n.of(context)
+                          .number_of_users(site.siteView.counts.users))),
                   Chip(
                       label: Text(
                           '${site.siteView.counts.communities} communities')),
@@ -329,7 +335,7 @@ class _AboutTab extends HookWidget {
               ),
             const _Divider(),
             ListTile(
-              title: const Center(child: Text('Banned users')),
+              title: Center(child: Text(L10n.of(context).banned_users)),
               onTap: () => goToBannedUsers(context),
             ),
             ListTile(

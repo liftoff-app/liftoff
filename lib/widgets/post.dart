@@ -371,11 +371,11 @@ class PostWidget extends HookWidget {
           child: Row(
             children: [
               const Icon(Icons.comment),
+              const SizedBox(width: 6),
               Expanded(
                 flex: 999,
                 child: Text(
-                  '  ${NumberFormat.compact().format(post.counts.comments)}'
-                  ' comment${post.counts.comments == 1 ? '' : 's'}',
+                  L10n.of(context).number_of_comments(post.counts.comments),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                 ),

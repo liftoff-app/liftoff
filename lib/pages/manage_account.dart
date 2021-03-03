@@ -149,18 +149,18 @@ class _ManageAccount extends HookWidget {
       final confirmDelete = await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Remove account?'),
+              title: Text(
+                  '${L10n.of(context).delete_account} @${user.instanceHost}@${user.name}'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'Are you sure you want to remove @${user.instanceHost}@${user.name}? '
-                    'WARNING: this removes your account COMPLETELY, not from lemmur only',
-                  ),
+                  Text(L10n.of(context).delete_account_confirm),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: deleteAccountPasswordController,
                     obscureText: true,
-                    decoration: const InputDecoration(hintText: 'Password'),
+                    decoration:
+                        InputDecoration(hintText: L10n.of(context).password),
                   )
                 ],
               ),
@@ -236,19 +236,20 @@ class _ManageAccount extends HookWidget {
         Text(L10n.of(context).matrix_user, style: theme.textTheme.headline6),
         TextField(controller: matrixUserController),
         const SizedBox(height: 8),
-        Text('New password', style: theme.textTheme.headline6),
+        Text(L10n.of(context).new_password, style: theme.textTheme.headline6),
         TextField(
           controller: newPasswordController,
           obscureText: true,
         ),
         const SizedBox(height: 8),
-        Text('Verify password', style: theme.textTheme.headline6),
+        Text(L10n.of(context).verify_password,
+            style: theme.textTheme.headline6),
         TextField(
           controller: newPasswordVerifyController,
           obscureText: true,
         ),
         const SizedBox(height: 8),
-        Text('Old password', style: theme.textTheme.headline6),
+        Text(L10n.of(context).old_password, style: theme.textTheme.headline6),
         TextField(
           controller: oldPasswordController,
           obscureText: true,
@@ -305,7 +306,7 @@ class _ManageAccount extends HookWidget {
         CheckboxListTile(
           value: showAvatars.value,
           onChanged: (checked) => showAvatars.value = checked,
-          title: const Text('Show avatars'),
+          title: Text(L10n.of(context).show_avatars),
           subtitle: const Text('This has currently no effect on lemmur'),
           dense: true,
         ),
