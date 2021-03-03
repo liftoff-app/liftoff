@@ -111,5 +111,14 @@
   "number_of_posts": "{count,plural, =1{{count} 个帖子} other{{count} 条帖子}}",
   "number_of_subscribers": "{count,plural, =1{{count} 订阅者} other{{count} 名订阅者}}",
   "unsubscribe": "取消订阅",
-  "subscribe": "订阅"
+  "subscribe": "订阅",
+  "number_of_users": "{count,plural, =1{{count} 用户} other{{count} 名用户}}",
+  "messages": "信息",
+  "banned_users": "被禁止用户",
+  "delete_account_confirm": "警告:此操作将永久删除你的数据，请输入密码进行确认。",
+  "new_password": "新密码",
+  "verify_password": "确认密码",
+  "old_password": "当前密码",
+  "show_avatars": "显示头像",
+  "search": "搜索"
 }

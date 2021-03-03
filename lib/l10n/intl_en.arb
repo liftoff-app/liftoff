@@ -40,7 +40,7 @@
   "@post": {},
   "save": "save",
   "@save": {},
-  "send_message": "Send Message",
+  "send_message": "Send message",
   "@send_message": {},
   "subscribed": "Subscribed",
   "@subscribed": {},
@@ -229,14 +229,12 @@
   "number_users_online": "{count,plural, =1{{count} user online} other{{count} users online}}",
   "@number_users_online": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "count": {}
     }
   },
   "not_a_mod_or_admin": "Not a moderator or admin.",
   "@not_a_mod_or_admin": {},
-  "number_of_comments": "{count,plural, =1{{count} Comment} other{{count} Comments}}",
+  "number_of_comments": "{count,plural, =1{{count} comment} other{{count} comments}}",
   "@number_of_comments": {
     "placeholders": {
       "count": {
@@ -245,7 +243,7 @@
       }
     }
   },
-  "number_of_posts": "{count,plural, =1{{count} Post} other{{count} Posts}}",
+  "number_of_posts": "{count,plural, =1{{count} post} other{{count} posts}}",
   "@number_of_posts": {
     "placeholders": {
       "count": {
@@ -257,13 +255,33 @@
   "number_of_subscribers": "{count,plural, =1{{count} subscriber} other{{count} subscribers}}",
   "@number_of_subscribers": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "count": {}
     }
   },
   "unsubscribe": "unsubscribe",
   "@unsubscribe": {},
   "subscribe": "subscribe",
-  "@subscribe": {}
+  "@subscribe": {},
+  "number_of_users": "{count,plural, =1{{count} user} other{{count} users}}",
+  "@number_of_users": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "messages": "Messages",
+  "@messages": {},
+  "banned_users": "Banned users",
+  "@banned_users": {},
+  "delete_account_confirm": "Warning: this will permanently delete all your data. Enter your password to confirm.",
+  "@delete_account_confirm": {},
+  "new_password": "New password",
+  "@new_password": {},
+  "verify_password": "Verify password",
+  "@verify_password": {},
+  "old_password": "Old password",
+  "@old_password": {},
+  "show_avatars": "Show avatars",
+  "@show_avatars": {},
+  "search": "search",
+  "@search": {}
 }

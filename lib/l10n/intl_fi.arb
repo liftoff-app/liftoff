@@ -96,5 +96,14 @@
   "number_of_posts": "{count,plural, =1{{count} viesti} other{{count} viestiä}}",
   "number_of_subscribers": "{count,plural, =1{{count} tilaaja} other{{count} tilaajaa}}",
   "unsubscribe": "Poista tilaus",
-  "subscribe": "Tilaa"
+  "subscribe": "Tilaa",
+  "number_of_users": "{count,plural, =1{{count} käyttäjä} other{{count} käyttäjää}}",
+  "messages": "Viestit",
+  "banned_users": "Porttikieltoon asetetut käyttäjät",
+  "delete_account_confirm": "Varoitus: tämä poistaa pysyvästi kaiken datasi. Anna salasanasi varmistukseksi.",
+  "new_password": "Uusi salasana",
+  "verify_password": "Vahvista salasana",
+  "old_password": "Vanha salasana",
+  "show_avatars": "Näytä avatarit",
+  "search": "Etsi"
 }

@@ -70,5 +70,12 @@
   "user_already_exists": "این کاربر از قبل وجود دارد.",
   "number_users_online": "{count,plural, =1{{count} کاربر برخط}}",
   "number_of_comments": "{count,plural, =1{{count} نظر}}",
-  "number_of_posts": "{count,plural, =1{{count} مطلب}}"
+  "number_of_posts": "{count,plural, =1{{count} مطلب}}",
+  "number_of_users": "{count,plural, =1{{count} کاربر}}",
+  "delete_account_confirm": "هشدار: این کنش، تمام اطلاعات شما را برای همیشه پاک می‌کند. برای تایید، گذرواژه خود را وارد کنید.",
+  "new_password": "گذرواژه جدید",
+  "verify_password": "تایید گذرواژه",
+  "old_password": "پسورد پیشین",
+  "show_avatars": "نمایش آواتارها",
+  "search": "جستجو"
 }

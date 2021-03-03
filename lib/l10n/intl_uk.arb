@@ -93,5 +93,13 @@
   "email_already_exists": "E-mail вже існує.",
   "user_already_exists": "Користувач вже існує.",
   "unsubscribe": "Відписатися",
-  "subscribe": "Підписатися"
+  "subscribe": "Підписатися",
+  "messages": "Повідомлення",
+  "banned_users": "Забанані користувачі",
+  "delete_account_confirm": "Попередження: ця дія повністю знищить всі данні вашего акаунта. Введіть свій пароль для підтвердження.",
+  "new_password": "Новий пароль",
+  "verify_password": "Повторіть пароль",
+  "old_password": "Діючий пароль",
+  "show_avatars": "Показувати аватари",
+  "search": "Пошук"
 }

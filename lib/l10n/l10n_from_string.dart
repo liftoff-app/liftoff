@@ -125,6 +125,15 @@ abstract class L10nStrings {
   static const number_of_subscribers = 'number_of_subscribers';
   static const unsubscribe = 'unsubscribe';
   static const subscribe = 'subscribe';
+  static const number_of_users = 'number_of_users';
+  static const messages = 'messages';
+  static const banned_users = 'banned_users';
+  static const delete_account_confirm = 'delete_account_confirm';
+  static const new_password = 'new_password';
+  static const verify_password = 'verify_password';
+  static const old_password = 'old_password';
+  static const show_avatars = 'show_avatars';
+  static const search = 'search';
 }
 
 extension L10nFromString on String {
@@ -362,6 +371,22 @@ extension L10nFromString on String {
         return L10n.of(context).unsubscribe;
       case L10nStrings.subscribe:
         return L10n.of(context).subscribe;
+      case L10nStrings.messages:
+        return L10n.of(context).messages;
+      case L10nStrings.banned_users:
+        return L10n.of(context).banned_users;
+      case L10nStrings.delete_account_confirm:
+        return L10n.of(context).delete_account_confirm;
+      case L10nStrings.new_password:
+        return L10n.of(context).new_password;
+      case L10nStrings.verify_password:
+        return L10n.of(context).verify_password;
+      case L10nStrings.old_password:
+        return L10n.of(context).old_password;
+      case L10nStrings.show_avatars:
+        return L10n.of(context).show_avatars;
+      case L10nStrings.search:
+        return L10n.of(context).search;
 
       default:
         return this;

@@ -97,5 +97,14 @@
   "number_of_posts": "{count,plural, =1{{count} post} other{{count} posts}}",
   "number_of_subscribers": "{count,plural, =1{{count} abonnee} other{{count} abonnees}}",
   "unsubscribe": "Afmelden",
-  "subscribe": "Abonneren"
+  "subscribe": "Abonneren",
+  "number_of_users": "{count,plural, =1{{count} gebruiker} other{{count} gebruikers}}",
+  "messages": "Berichten",
+  "banned_users": "Verbannen gebruikers",
+  "delete_account_confirm": "Waarschuwing: dit zal al uw data voorgoed verwijderen, vul uw wachtwoord in om te bevestigen.",
+  "new_password": "Nieuw wachtwoord",
+  "verify_password": "Herhaal wachtwoord",
+  "old_password": "Oud wachtwoord",
+  "show_avatars": "Toon avatars",
+  "search": "Zoek"
 }

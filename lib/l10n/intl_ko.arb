@@ -111,5 +111,14 @@
   "number_of_posts": "{count,plural, =1{게시물 수 {count}}}",
   "number_of_subscribers": "{count,plural, =1{구독자수{count}}}",
   "unsubscribe": "구독취소",
-  "subscribe": "구독"
+  "subscribe": "구독",
+  "number_of_users": "{count,plural, =1{가입자수 {count}}}",
+  "messages": "메세지",
+  "banned_users": "금지 된 사용자",
+  "delete_account_confirm": "경고 : 모든 데이터가 영구적으로 삭제됩니다. 확인을 위해 비밀번호를 입력하십시오.",
+  "new_password": "새 비밀번호",
+  "verify_password": "비밀번호 재입력",
+  "old_password": "기존 비밀번호",
+  "show_avatars": "아바타 보기",
+  "search": "검색"
 }

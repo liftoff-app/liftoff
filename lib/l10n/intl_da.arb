@@ -111,5 +111,14 @@
   "number_of_posts": "{count,plural, =1{{count} Indlæg} other{{count} Indlæg}}",
   "number_of_subscribers": "{count,plural, =1{{count} Abonnent} other{{count} Abonnenter}}",
   "unsubscribe": "Afmeld abbonement",
-  "subscribe": "Abboner"
+  "subscribe": "Abboner",
+  "number_of_users": "{count,plural, =1{{count} Bruger} other{{count} Brugere}}",
+  "messages": "Beskeder",
+  "banned_users": "Udelukkede Brugere",
+  "delete_account_confirm": "Advarsel: Dette vil slette alle dine data. Indtast adgangskode for at bekræfte.",
+  "new_password": "Nyt Kodeord",
+  "verify_password": "Check Kodeord",
+  "old_password": "Tidligere Kodeord",
+  "show_avatars": "Vis Avatarer",
+  "search": "Søg"
 }

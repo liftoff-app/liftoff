@@ -111,5 +111,14 @@
   "number_of_posts": "{count,plural, =1{{count} Pubblicazione} other{{count} Pubblicazioni}}",
   "number_of_subscribers": "{count,plural, =1{{count} iscritto} other{{count} iscritti}}",
   "unsubscribe": "Disiscriviti",
-  "subscribe": "Iscriviti"
+  "subscribe": "Iscriviti",
+  "number_of_users": "{count,plural, =1{{count} utente} other{{count} utenti}}",
+  "messages": "Messaggi",
+  "banned_users": "Utenti Espulsi",
+  "delete_account_confirm": "Attenzione: stai per cancellare permanentemente tutti i tuoi dati. Inserisci la tua password per confermare questa azione.",
+  "new_password": "Nuova Password",
+  "verify_password": "Verifica Password",
+  "old_password": "Vecchia Password",
+  "show_avatars": "Mostra Avatar",
+  "search": "Cerca"
 }

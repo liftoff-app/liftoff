@@ -111,5 +111,14 @@
   "number_of_posts": "{count,plural, =1{{count} Publicació} other{{count} Publicacions}}",
   "number_of_subscribers": "{count,plural, =1{{count} subscriptor} other{{count} subscriptors}}",
   "unsubscribe": "Dóna’t de baixa",
-  "subscribe": "Subscriu-t’hi"
+  "subscribe": "Subscriu-t’hi",
+  "number_of_users": "{count,plural, =1{{count} usuari} other{{count} usuaris}}",
+  "messages": "Missatges",
+  "banned_users": "Usuaris expulsats",
+  "delete_account_confirm": "Atenció: aquesta acció suprimirà permanentment la vostra informació. Introduïu la vostra contrasenya per a confirmar.",
+  "new_password": "Contrasenya nova",
+  "verify_password": "Verifica la contrasenya",
+  "old_password": "Contrasenya antiga",
+  "show_avatars": "Mostra els avatars",
+  "search": "Cerca"
 }

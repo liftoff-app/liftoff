@@ -111,5 +111,14 @@
   "number_of_posts": "{count,plural, =1{{count} inlägg} other{{count} inlägg}}",
   "number_of_subscribers": "{count,plural, =1{{count} prenumerant} other{{count} prenumeranter}}",
   "unsubscribe": "Avsluta prenumeration",
-  "subscribe": "Prenumerera"
+  "subscribe": "Prenumerera",
+  "number_of_users": "{count,plural, =1{{count} användare} other{{count} användare}}",
+  "messages": "Meddelanden",
+  "banned_users": "Blockerade användare",
+  "delete_account_confirm": "Varning: den här åtgärden kommer radera alla dina data permanent. Skriv in ditt lösenord för att bekräfta.",
+  "new_password": "Nytt lösenord",
+  "verify_password": "Bekräfta lösenord",
+  "old_password": "Gammalt lösenord",
+  "show_avatars": "Visa profilbilder",
+  "search": "Sök"
 }

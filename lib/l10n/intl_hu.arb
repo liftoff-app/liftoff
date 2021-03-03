@@ -97,5 +97,14 @@
   "number_of_posts": "{count,plural, =1{{count} bejegyzés} other{{count} bejegyzés}}",
   "number_of_subscribers": "{count,plural, =1{{count} feliratkozó} other{{count} feliratkozó}}",
   "unsubscribe": "Leiratkozás",
-  "subscribe": "Feliratkozás"
+  "subscribe": "Feliratkozás",
+  "number_of_users": "{count,plural, =1{{count} felhasználó} other{{count} felhasználó}}",
+  "messages": "Üzenetek",
+  "banned_users": "Kitiltott felhasználók",
+  "delete_account_confirm": "Figyelmeztetés: ez véglegesen törölni fogja az összes adatodat. A megerősítéshez írd be a jelszavad!",
+  "new_password": "Új jelszó",
+  "verify_password": "Jelszó megerősítése",
+  "old_password": "Régi jelszó",
+  "show_avatars": "Avatárok mutatása",
+  "search": "Keresés"
 }

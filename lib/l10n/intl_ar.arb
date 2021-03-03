@@ -62,5 +62,12 @@
   "email_already_exists": "عنوان البريد الإلكتروني هذا موجود بالفعل.",
   "user_already_exists": "هذا المستخدِم موجود بالفعل.",
   "unsubscribe": "إلغاء الإشتراك",
-  "subscribe": "اتبع"
+  "subscribe": "اتبع",
+  "messages": "لرسائل",
+  "banned_users": "المستخدمون المحظورون",
+  "new_password": "لكلمة السرية الجديدة",
+  "verify_password": "تأكيد الكلمة السرية",
+  "old_password": "الكلمة السرية القديمة",
+  "show_avatars": "إظهار الصور الرمزية",
+  "search": "البحث"
 }

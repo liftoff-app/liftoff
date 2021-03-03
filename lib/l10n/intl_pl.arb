@@ -109,5 +109,13 @@
   "email_already_exists": "Email już istnieje.",
   "user_already_exists": "Użytkownik już istnieje.",
   "unsubscribe": "Odsubskrybuj",
-  "subscribe": "Subskrybuj"
+  "subscribe": "Subskrybuj",
+  "messages": "Wiadomości",
+  "banned_users": "Zbanowani Użytkownicy",
+  "delete_account_confirm": "Ostrzeżenie: twoje dane zostaną bezpowrotnie usunięte. Wpisz swoje hasło aby potwierdzić.",
+  "new_password": "Nowe Hasło",
+  "verify_password": "Zweryfikuj Hasło",
+  "old_password": "Stare Hasło",
+  "show_avatars": "Pokaż Awatary",
+  "search": "Szukaj"
 }

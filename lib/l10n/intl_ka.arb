@@ -92,5 +92,14 @@
   "number_of_posts": "{count,plural, =1{თარგმნა} other{თარგმნა}}",
   "number_of_subscribers": "{count,plural, =1{გამომწერი} other{გამომწერები}}",
   "unsubscribe": "გამოწერის გაუქმნება",
-  "subscribe": "გამოწერა"
+  "subscribe": "გამოწერა",
+  "number_of_users": "{count,plural, =1{მომხმარებელი} other{მომხმარებლები}}",
+  "messages": "მესეჯები",
+  "banned_users": "გაშავებული მომხმარებლები",
+  "delete_account_confirm": "გაფთხილება: ეს შენს ყველაფერს წაშლის.  პაროლი ჩაწერეთ რომ დაადასტუროთ.",
+  "new_password": "ახალი პაროლი",
+  "verify_password": "პაროლის დადასტურება",
+  "old_password": "ძველი პაროლი",
+  "show_avatars": "ავატარები გამოჩენა",
+  "search": "ძებმა"
 }

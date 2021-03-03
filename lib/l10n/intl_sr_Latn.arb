@@ -18,5 +18,8 @@
   "chat": "Ćaskanje",
   "by": "od",
   "downvotes_disabled": "Onemogućite negativne glasove",
-  "registration_closed": "Zatvorena registracija"
+  "registration_closed": "Zatvorena registracija",
+  "new_password": "Nova Lozinka",
+  "verify_password": "Potvrdite Loziku",
+  "old_password": "Stara Lozinka"
 }

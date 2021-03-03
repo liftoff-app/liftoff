@@ -19,5 +19,6 @@
   "couldnt_find_community": "समुदायों नहीं ढूंढ़ पाएं |",
   "community_already_exists": "यह समुदाय पहले स मौजूद है |",
   "number_of_comments": "{count,plural, =1{{{ count }} टिप्पणी (कमेंट )} other{{{ count }} टिप्पणियाँ (कोम्मेंट्स )}}",
-  "number_of_posts": "{count,plural, =1{{count} पोस्ट} other{{count} पोस्ट्स}}"
+  "number_of_posts": "{count,plural, =1{{count} पोस्ट} other{{count} पोस्ट्स}}",
+  "show_avatars": "अवतार दिखाएँ"
 }

@@ -103,5 +103,13 @@
   "email_already_exists": "Tá ríomhphost ann cheana féin.",
   "user_already_exists": "Úsáideoir ann cheana.",
   "unsubscribe": "Díliostáil",
-  "subscribe": "Liostáil"
+  "subscribe": "Liostáil",
+  "messages": "Teachtaireachtaí",
+  "banned_users": "Úsáideoirí Coisceadh",
+  "delete_account_confirm": "Rabhadh: scriosfaidh sé seo do chuid sonraí go buan. Iontráil do phasfhocal le deimhniú.",
+  "new_password": "Focal Faire Nua",
+  "verify_password": "Deimhnigh Pasfhocal",
+  "old_password": "Sean Pasfhocal",
+  "show_avatars": "Taispeáin Abhatáranna",
+  "search": "Cuardaigh"
 }

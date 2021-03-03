@@ -111,5 +111,14 @@
   "number_of_posts": "{count,plural, =1{{count} afiŝo} other{{count} afiŝoj}}",
   "number_of_subscribers": "{count,plural, =1{{count} abonanto} other{{count} abonantoj}}",
   "unsubscribe": "Malaboni",
-  "subscribe": "Aboni"
+  "subscribe": "Aboni",
+  "number_of_users": "{count,plural, =1{{count} uzanto} other{{count} uzantoj}}",
+  "messages": "Mesaĝoj",
+  "banned_users": "Forbaritaj uzantoj",
+  "delete_account_confirm": "Averto: ĉi tio por ĉiam forigos ĉiujn viajn datumojn. Enigu pasvorton por konfirmi.",
+  "new_password": "Nova pasvorto",
+  "verify_password": "Konfirmu vian pasvorton",
+  "old_password": "Malnova pasvorto",
+  "show_avatars": "Montri profilbildojn",
+  "search": "Serĉi"
 }

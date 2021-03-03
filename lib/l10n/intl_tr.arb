@@ -97,5 +97,14 @@
   "number_of_posts": "{count,plural, =1{{count} Paylaşım} other{{count} Paylaşım}}",
   "number_of_subscribers": "{count,plural, =1{{count} Takipçi} other{{count} Takipçi}}",
   "unsubscribe": "Takibi bırak",
-  "subscribe": "Takip et"
+  "subscribe": "Takip et",
+  "number_of_users": "{count,plural, =1{{count} Kullanıcı} other{{count} Kullanıcı}}",
+  "messages": "Mesajlar",
+  "banned_users": "Yasaklanmış Kullanıcılar",
+  "delete_account_confirm": "Uyarı: Devam etmek bütün verilerinizi kalıcı olarak silecektir. Onaylamak için şifrenizi girin.",
+  "new_password": "Yeni şifre",
+  "verify_password": "Şifreyi doğrulayın",
+  "old_password": "Eski şifre",
+  "show_avatars": "Avatarları Göster",
+  "search": "Ara"
 }

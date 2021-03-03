@@ -56,7 +56,6 @@ const toMigrate = <_>[
   _('nsfw'),
   _('post'),
   _('save'),
-  _('send_message'),
   _('subscribed'),
   _('local'),
   _('all'),
@@ -150,12 +149,22 @@ const toMigrate = <_>[
   _('post_title_too_long'),
   _('email_already_exists'),
   _('user_already_exists'),
-  _('number_online', rename: 'number_users_online', type: 'int'),
-  _('number_of_comments', type: 'int', format: 'compact'),
-  _('number_of_posts', type: 'int', format: 'compact'),
-  _('number_of_subscribers', type: 'int'),
+  _('number_online', rename: 'number_users_online'),
+  _('number_of_comments', type: 'int', format: 'compact', toLowerCase: true),
+  _('number_of_posts', type: 'int', format: 'compact', toLowerCase: true),
+  _('number_of_subscribers'),
+  _('number_of_users'),
   _('unsubscribe', toLowerCase: true),
   _('subscribe', toLowerCase: true),
+  _('messages'),
+  _('banned_users', decapitalize: true),
+  _('delete_account_confirm'),
+  _('new_password', decapitalize: true),
+  _('verify_password', decapitalize: true),
+  _('old_password', decapitalize: true),
+  _('show_avatars', decapitalize: true),
+  _('search', toLowerCase: true),
+  _('send_message', decapitalize: true),
 ];
 
 const repoName = 'lemmy-translations';
@@ -185,11 +194,13 @@ Future<void> main(List<String> args) async {
 
 /// check if `toMigrate` has duplicate keys
 void checkDuplicateKeys() {
-  final hasDuplicates =
-      toMigrate.map((e) => e.key).toSet().length != toMigrate.length;
-
-  if (hasDuplicates) {
-    printError('"toMigrate" contains duplicate keys');
+  final seen = <String>{};
+  for (final renamedKey in toMigrate.map((e) => e.renamedKey)) {
+    if (seen.contains(renamedKey)) {
+      printError(
+          'The renamedKey "$renamedKey" appears more than once in "toMigrate"');
+    }
+    seen.add(renamedKey);
   }
 }
 

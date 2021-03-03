@@ -110,5 +110,14 @@
   "number_of_posts": "{count,plural, =1{{count} Publication} other{{count} Publications}}",
   "number_of_subscribers": "{count,plural, =1{{count} Abonné} other{{count} Abonnés}}",
   "unsubscribe": "Se désabonner",
-  "subscribe": "S’abonner"
+  "subscribe": "S’abonner",
+  "number_of_users": "{count,plural, =1{{count} Utilisateur} other{{count} Utilisateurs}}",
+  "messages": "Messages",
+  "banned_users": "Utilisateurs interdits",
+  "delete_account_confirm": "Avertissement : cette action supprimera toutes vos données de façons permanente ! Saisissez votre mot de passe pour confirmer.",
+  "new_password": "Nouveau mot de passe",
+  "verify_password": "Vérifiez le mot de passe",
+  "old_password": "Ancien mot de passe",
+  "show_avatars": "Afficher les avatars",
+  "search": "Rechercher"
 }
