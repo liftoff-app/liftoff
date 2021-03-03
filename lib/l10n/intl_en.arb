@@ -1,19 +1,5 @@
 {
   "@@locale": "en",
-  "add_account": "Add account",
-  "@add_account": {},
-  "select_instance": "select instance",
-  "@select_instance": {},
-  "accounts": "Accounts",
-  "@accounts": {},
-  "appearance": "Appearance",
-  "@appearance": {},
-  "add_instance": "Add instance",
-  "@add_instance": {},
-  "sign_in": "Sign in",
-  "@sign_in": {},
-  "register": "Register",
-  "@register": {},
   "settings": "Settings",
   "@settings": {},
   "password": "Password",
@@ -40,8 +26,6 @@
   "@post": {},
   "save": "save",
   "@save": {},
-  "send_message": "Send message",
-  "@send_message": {},
   "subscribed": "Subscribed",
   "@subscribed": {},
   "local": "Local",
@@ -122,6 +106,8 @@
   "@admin": {},
   "by": "by",
   "@by": {},
+  "not_a_mod_or_admin": "Not a moderator or admin.",
+  "@not_a_mod_or_admin": {},
   "not_an_admin": "Not an admin.",
   "@not_an_admin": {},
   "couldnt_find_post": "Couldn't find post.",
@@ -232,8 +218,6 @@
       "count": {}
     }
   },
-  "not_a_mod_or_admin": "Not a moderator or admin.",
-  "@not_a_mod_or_admin": {},
   "number_of_comments": "{count,plural, =1{{count} comment} other{{count} comments}}",
   "@number_of_comments": {
     "placeholders": {
@@ -258,16 +242,16 @@
       "count": {}
     }
   },
-  "unsubscribe": "unsubscribe",
-  "@unsubscribe": {},
-  "subscribe": "subscribe",
-  "@subscribe": {},
   "number_of_users": "{count,plural, =1{{count} user} other{{count} users}}",
   "@number_of_users": {
     "placeholders": {
       "count": {}
     }
   },
+  "unsubscribe": "unsubscribe",
+  "@unsubscribe": {},
+  "subscribe": "subscribe",
+  "@subscribe": {},
   "messages": "Messages",
   "@messages": {},
   "banned_users": "Banned users",
@@ -283,5 +267,7 @@
   "show_avatars": "Show avatars",
   "@show_avatars": {},
   "search": "search",
-  "@search": {}
+  "@search": {},
+  "send_message": "Send message",
+  "@send_message": {}
 }

@@ -7,6 +7,7 @@ import 'common.dart';
 import 'gen_l10n_from_string.dart' as gen;
 
 // config for migration of a single key
+// ignore: camel_case_types
 class _ {
   final String key;
   final String rename;

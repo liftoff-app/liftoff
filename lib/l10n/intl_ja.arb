@@ -13,7 +13,6 @@
   "nsfw": "閲覧注意",
   "post": "投稿",
   "save": "保存",
-  "send_message": "メッセージを送信",
   "subscribed": "登録済み",
   "all": "全て",
   "replies": "返信",
@@ -98,14 +97,15 @@
   "number_of_comments": "{count,plural, =1{{count} 件のコメント}}",
   "number_of_posts": "{count,plural, =1{{count} 件の投稿}}",
   "number_of_subscribers": "{count,plural, =1{{count} 名の登録者}}",
+  "number_of_users": "{count,plural, =1{{count} 名のユーザー}}",
   "unsubscribe": "登録解除",
   "subscribe": "登録",
-  "number_of_users": "{count,plural, =1{{count} 名のユーザー}}",
   "messages": "メッセージ",
   "delete_account_confirm": "警告: あなたのデータを全て恒久的に削除します。確認のためパスワードを入力してください。",
   "new_password": "新しいパスワード",
   "verify_password": "パスワードの確認",
   "old_password": "現在のパスワード",
   "show_avatars": "アバターを表示",
-  "search": "検索"
+  "search": "検索",
+  "send_message": "メッセージを送信"
 }

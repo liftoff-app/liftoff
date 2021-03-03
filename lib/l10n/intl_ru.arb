@@ -13,7 +13,6 @@
   "nsfw": "NSFW",
   "post": "запись",
   "save": "сохранить",
-  "send_message": "Послать сообщение",
   "subscribed": "Подписаны",
   "local": "Местное",
   "all": "Всё",
@@ -115,5 +114,6 @@
   "verify_password": "Повторите пароль",
   "old_password": "Действующий пароль",
   "show_avatars": "Показывать аватары",
-  "search": "Поиск"
+  "search": "Поиск",
+  "send_message": "Послать сообщение"
 }

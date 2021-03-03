@@ -13,7 +13,6 @@
   "nsfw": "NSFW",
   "post": "Beitrag",
   "save": "speichern",
-  "send_message": "Nachricht absenden",
   "subscribed": "Abonniert",
   "local": "Lokal",
   "all": "Alle",
@@ -106,9 +105,9 @@
   "number_of_comments": "{count,plural, =1{{count} Kommentar} other{{count} Kommentare}}",
   "number_of_posts": "{count,plural, =1{{count} Beitrag} other{{count} Beiträge}}",
   "number_of_subscribers": "{count,plural, =1{{count} Abonnent} other{{count} Abonnent*innen}}",
+  "number_of_users": "{count,plural, =1{{count} Benutzer} other{{count} Benutzer*innen}}",
   "unsubscribe": "Deabonnieren",
   "subscribe": "Abonnieren",
-  "number_of_users": "{count,plural, =1{{count} Benutzer} other{{count} Benutzer*innen}}",
   "messages": "Nachrichten",
   "banned_users": "Gebannte Benutzer",
   "delete_account_confirm": "Achtung: Dadurch werden alle Ihre Daten dauerhaft gelöscht. Geben Sie zur Bestätigung Ihr Passwort ein.",
@@ -116,5 +115,6 @@
   "verify_password": "Passwort überprüfen",
   "old_password": "Letztes Passwort",
   "show_avatars": "Avatare anzeigen",
-  "search": "Suchen"
+  "search": "Suchen",
+  "send_message": "Nachricht absenden"
 }

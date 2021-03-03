@@ -13,7 +13,6 @@
   "nsfw": "NSFW",
   "post": "postáil",
   "save": "sábháil",
-  "send_message": "Seol Teachtaireacht",
   "subscribed": "Suibscríofa",
   "local": "Áitiúil",
   "all": "Gach",
@@ -111,5 +110,6 @@
   "verify_password": "Deimhnigh Pasfhocal",
   "old_password": "Sean Pasfhocal",
   "show_avatars": "Taispeáin Abhatáranna",
-  "search": "Cuardaigh"
+  "search": "Cuardaigh",
+  "send_message": "Seol Teachtaireacht"
 }

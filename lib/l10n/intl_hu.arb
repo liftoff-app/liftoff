@@ -13,7 +13,6 @@
   "nsfw": "Korhatáros tartalom",
   "post": "Elküld",
   "save": "mentés",
-  "send_message": "Üzenet küldése",
   "subscribed": "Feliratkozva",
   "all": "Mind",
   "replies": "Válaszok",
@@ -96,9 +95,9 @@
   "number_of_comments": "{count,plural, =1{{count} hozzászólás} other{{count} hozzászólás}}",
   "number_of_posts": "{count,plural, =1{{count} bejegyzés} other{{count} bejegyzés}}",
   "number_of_subscribers": "{count,plural, =1{{count} feliratkozó} other{{count} feliratkozó}}",
+  "number_of_users": "{count,plural, =1{{count} felhasználó} other{{count} felhasználó}}",
   "unsubscribe": "Leiratkozás",
   "subscribe": "Feliratkozás",
-  "number_of_users": "{count,plural, =1{{count} felhasználó} other{{count} felhasználó}}",
   "messages": "Üzenetek",
   "banned_users": "Kitiltott felhasználók",
   "delete_account_confirm": "Figyelmeztetés: ez véglegesen törölni fogja az összes adatodat. A megerősítéshez írd be a jelszavad!",
@@ -106,5 +105,6 @@
   "verify_password": "Jelszó megerősítése",
   "old_password": "Régi jelszó",
   "show_avatars": "Avatárok mutatása",
-  "search": "Keresés"
+  "search": "Keresés",
+  "send_message": "Üzenet küldése"
 }

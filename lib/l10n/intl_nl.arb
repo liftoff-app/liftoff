@@ -13,7 +13,6 @@
   "nsfw": "NSFW",
   "post": "post",
   "save": "opslaan",
-  "send_message": "Verstuur bericht",
   "subscribed": "Geabonneerd",
   "all": "Alle",
   "replies": "Reacties",
@@ -96,9 +95,9 @@
   "number_of_comments": "{count,plural, =1{{count} reactie} other{{count} reacties}}",
   "number_of_posts": "{count,plural, =1{{count} post} other{{count} posts}}",
   "number_of_subscribers": "{count,plural, =1{{count} abonnee} other{{count} abonnees}}",
+  "number_of_users": "{count,plural, =1{{count} gebruiker} other{{count} gebruikers}}",
   "unsubscribe": "Afmelden",
   "subscribe": "Abonneren",
-  "number_of_users": "{count,plural, =1{{count} gebruiker} other{{count} gebruikers}}",
   "messages": "Berichten",
   "banned_users": "Verbannen gebruikers",
   "delete_account_confirm": "Waarschuwing: dit zal al uw data voorgoed verwijderen, vul uw wachtwoord in om te bevestigen.",
@@ -106,5 +105,6 @@
   "verify_password": "Herhaal wachtwoord",
   "old_password": "Oud wachtwoord",
   "show_avatars": "Toon avatars",
-  "search": "Zoek"
+  "search": "Zoek",
+  "send_message": "Verstuur bericht"
 }

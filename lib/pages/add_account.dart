@@ -59,7 +59,7 @@ class AddAccountPage extends HookWidget {
       key: scaffoldKey,
       appBar: AppBar(
         leading: const CloseButton(),
-        title: Text(L10n.of(context).add_account),
+        title: const Text('Add account'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(15),
@@ -78,7 +78,7 @@ class AddAccountPage extends HookWidget {
               ),
             ),
           RadioPicker<String>(
-            title: L10n.of(context).select_instance,
+            title: 'select instance',
             values: accountsStore.instances.toList(),
             groupValue: selectedInstance.value,
             onChanged: (value) => selectedInstance.value = value,
@@ -97,7 +97,7 @@ class AddAccountPage extends HookWidget {
                 padding: EdgeInsets.all(8),
                 child: Icon(Icons.add),
               ),
-              title: Text(L10n.of(context).add_instance),
+              title: const Text('Add instance'),
               onTap: () async {
                 final value = await showCupertinoModalPopup<String>(
                   context: context,
@@ -128,7 +128,7 @@ class AddAccountPage extends HookWidget {
                     ? () {}
                     : handleOnAdd,
             child: !loading.loading
-                ? Text(L10n.of(context).sign_in)
+                ? const Text('Sign in')
                 : SizedBox(
                     width: 20,
                     height: 20,
@@ -143,7 +143,7 @@ class AddAccountPage extends HookWidget {
               // TODO: extract to LemmyUrls or something
               ul.launch('https://${selectedInstance.value}/login');
             },
-            child: Text(L10n.of(context).register),
+            child: const Text('Register'),
           ),
         ],
       ),

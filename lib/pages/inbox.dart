@@ -59,7 +59,7 @@ class InboxPage extends HookWidget {
               selected.value = val;
               isc.clear();
             },
-            title: L10n.of(context).select_instance,
+            title: 'select instance',
             groupValue: selected.value,
             buttonBuilder: (context, displayString, onPressed) => TextButton(
               style: TextButton.styleFrom(

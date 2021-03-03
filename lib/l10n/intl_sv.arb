@@ -13,7 +13,6 @@
   "nsfw": "Känsligt eller oförbehållsamt innehåll",
   "post": "publicera",
   "save": "spara",
-  "send_message": "Skicka meddelande",
   "subscribed": "Prenumererar",
   "local": "Lokalt",
   "all": "Allt",
@@ -110,9 +109,9 @@
   "number_of_comments": "{count,plural, =1{{count} kommentar} other{{count} kommentarer}}",
   "number_of_posts": "{count,plural, =1{{count} inlägg} other{{count} inlägg}}",
   "number_of_subscribers": "{count,plural, =1{{count} prenumerant} other{{count} prenumeranter}}",
+  "number_of_users": "{count,plural, =1{{count} användare} other{{count} användare}}",
   "unsubscribe": "Avsluta prenumeration",
   "subscribe": "Prenumerera",
-  "number_of_users": "{count,plural, =1{{count} användare} other{{count} användare}}",
   "messages": "Meddelanden",
   "banned_users": "Blockerade användare",
   "delete_account_confirm": "Varning: den här åtgärden kommer radera alla dina data permanent. Skriv in ditt lösenord för att bekräfta.",
@@ -120,5 +119,6 @@
   "verify_password": "Bekräfta lösenord",
   "old_password": "Gammalt lösenord",
   "show_avatars": "Visa profilbilder",
-  "search": "Sök"
+  "search": "Sök",
+  "send_message": "Skicka meddelande"
 }

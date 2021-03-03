@@ -13,7 +13,6 @@
   "nsfw": "Müstehcen",
   "post": "paylaşım",
   "save": "kaydet",
-  "send_message": "Mesaj Yolla",
   "subscribed": "Takibe alındı",
   "all": "Hepsi",
   "replies": "Cevaplar",
@@ -96,9 +95,9 @@
   "number_of_comments": "{count,plural, =1{{count} Yorum} other{{count} Yorum}}",
   "number_of_posts": "{count,plural, =1{{count} Paylaşım} other{{count} Paylaşım}}",
   "number_of_subscribers": "{count,plural, =1{{count} Takipçi} other{{count} Takipçi}}",
+  "number_of_users": "{count,plural, =1{{count} Kullanıcı} other{{count} Kullanıcı}}",
   "unsubscribe": "Takibi bırak",
   "subscribe": "Takip et",
-  "number_of_users": "{count,plural, =1{{count} Kullanıcı} other{{count} Kullanıcı}}",
   "messages": "Mesajlar",
   "banned_users": "Yasaklanmış Kullanıcılar",
   "delete_account_confirm": "Uyarı: Devam etmek bütün verilerinizi kalıcı olarak silecektir. Onaylamak için şifrenizi girin.",
@@ -106,5 +105,6 @@
   "verify_password": "Şifreyi doğrulayın",
   "old_password": "Eski şifre",
   "show_avatars": "Avatarları Göster",
-  "search": "Ara"
+  "search": "Ara",
+  "send_message": "Mesaj Yolla"
 }

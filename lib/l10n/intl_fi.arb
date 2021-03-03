@@ -13,7 +13,6 @@
   "nsfw": "NSFW",
   "post": "viesti",
   "save": "tallenna",
-  "send_message": "Lähetä viesti",
   "subscribed": "Tilattu",
   "all": "Kaikki",
   "replies": "Vastaukset",
@@ -95,9 +94,9 @@
   "number_of_comments": "{count,plural, =1{{count} kommentti} other{{count} kommenttia}}",
   "number_of_posts": "{count,plural, =1{{count} viesti} other{{count} viestiä}}",
   "number_of_subscribers": "{count,plural, =1{{count} tilaaja} other{{count} tilaajaa}}",
+  "number_of_users": "{count,plural, =1{{count} käyttäjä} other{{count} käyttäjää}}",
   "unsubscribe": "Poista tilaus",
   "subscribe": "Tilaa",
-  "number_of_users": "{count,plural, =1{{count} käyttäjä} other{{count} käyttäjää}}",
   "messages": "Viestit",
   "banned_users": "Porttikieltoon asetetut käyttäjät",
   "delete_account_confirm": "Varoitus: tämä poistaa pysyvästi kaiken datasi. Anna salasanasi varmistukseksi.",
@@ -105,5 +104,6 @@
   "verify_password": "Vahvista salasana",
   "old_password": "Vanha salasana",
   "show_avatars": "Näytä avatarit",
-  "search": "Etsi"
+  "search": "Etsi",
+  "send_message": "Lähetä viesti"
 }

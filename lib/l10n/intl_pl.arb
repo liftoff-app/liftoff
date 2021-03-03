@@ -1,7 +1,5 @@
 {
   "@@locale": "pl",
-  "add_account": "Dodaj konto",
-  "select_instance": "Wybierz instancje",
   "settings": "Ustawienia",
   "password": "Hasło",
   "email_or_username": "Email lub Nazwa Użytkownika",
@@ -15,7 +13,6 @@
   "nsfw": "NSFW",
   "post": "post",
   "save": "zapisz",
-  "send_message": "Wyślij Wiadomość",
   "subscribed": "Zasubskrybowane",
   "local": "Lokalne",
   "all": "Wszystko",
@@ -117,5 +114,6 @@
   "verify_password": "Zweryfikuj Hasło",
   "old_password": "Stare Hasło",
   "show_avatars": "Pokaż Awatary",
-  "search": "Szukaj"
+  "search": "Szukaj",
+  "send_message": "Wyślij Wiadomość"
 }

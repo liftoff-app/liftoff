@@ -13,7 +13,6 @@
   "nsfw": "NSFW",
   "post": "publiko",
   "save": "ruaj",
-  "send_message": "Dërgo Mesazh",
   "subscribed": "Jeni abonuar",
   "all": "Gjithçka",
   "replies": "Përgjigjet",
@@ -96,9 +95,9 @@
   "number_of_comments": "{count,plural, =1{{count} Koment} other{{count} Komente}}",
   "number_of_posts": "{count,plural, =1{{count} Postim} other{{count} Postime}}",
   "number_of_subscribers": "{count,plural, =1{{count} i abonuar} other{{count} të abonuar}}",
+  "number_of_users": "{count,plural, =1{{count} Përdorues} other{{count} Përdoruesa}}",
   "unsubscribe": "Ndalo Abonimin",
   "subscribe": "Abonohu",
-  "number_of_users": "{count,plural, =1{{count} Përdorues} other{{count} Përdoruesa}}",
   "messages": "Mesazhet",
   "banned_users": "Pëdoruesit e dëbuar",
   "delete_account_confirm": "Paralajmërim: kjo do të fshij të gjitha të dhënat e juaja përgjithmonë. Shtyp fjalëkalimin tënd për ta konfirmuar.",
@@ -106,5 +105,6 @@
   "verify_password": "Konfirmo Fjalëkalimin",
   "old_password": "Fjalëkalimi i vjetër",
   "show_avatars": "Shfaq fotot e profilit",
-  "search": "Kërko"
+  "search": "Kërko",
+  "send_message": "Dërgo Mesazh"
 }

@@ -13,7 +13,6 @@
   "nsfw": "Ακατάλληλο για ανηλίκους",
   "post": "δημοσίευση",
   "save": "αποθήκευση",
-  "send_message": "Αποστολή μηνύματος",
   "subscribed": "Συνδρομές",
   "local": "Τοπικά",
   "all": "Όλα",
@@ -110,9 +109,9 @@
   "number_of_comments": "{count,plural, =1{{count} Σχόλιο} other{{count} Σχόλια}}",
   "number_of_posts": "{count,plural, =1{{count} Δημοσίευση} other{{count} Δημοσιεύσεις}}",
   "number_of_subscribers": "{count,plural, =1{{count} εγγεγραμμένος} other{{count} εγγεγραμμένοι}}",
+  "number_of_users": "{count,plural, =1{{count} χρήστης} other{{count} χρήστες}}",
   "unsubscribe": "Απεγγραφή",
   "subscribe": "Εγγραφή",
-  "number_of_users": "{count,plural, =1{{count} χρήστης} other{{count} χρήστες}}",
   "messages": "Μηνύματα",
   "banned_users": "Αποβεβλημένοι χρήστες",
   "delete_account_confirm": "Προσοχή: αυτό θα διαγράψει όλα τα δεδομένα σας. Είσαγετε τον κωδικό σας για επιβεβαίωση.",
@@ -120,5 +119,6 @@
   "verify_password": "Επαλήθευση κωδικού",
   "old_password": "Παλιός κωδικός",
   "show_avatars": "Εμφάνιση των άβαταρς",
-  "search": "Αναζήτηση"
+  "search": "Αναζήτηση",
+  "send_message": "Αποστολή μηνύματος"
 }

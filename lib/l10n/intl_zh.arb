@@ -13,7 +13,6 @@
   "nsfw": "工作场所不宜",
   "post": "回帖",
   "save": "保存",
-  "send_message": "发送消息",
   "subscribed": "已订阅",
   "local": "本地",
   "all": "所有",
@@ -110,9 +109,9 @@
   "number_of_comments": "{count,plural, =1{{count} 条评论} other{{count} 条评论}}",
   "number_of_posts": "{count,plural, =1{{count} 个帖子} other{{count} 条帖子}}",
   "number_of_subscribers": "{count,plural, =1{{count} 订阅者} other{{count} 名订阅者}}",
+  "number_of_users": "{count,plural, =1{{count} 用户} other{{count} 名用户}}",
   "unsubscribe": "取消订阅",
   "subscribe": "订阅",
-  "number_of_users": "{count,plural, =1{{count} 用户} other{{count} 名用户}}",
   "messages": "信息",
   "banned_users": "被禁止用户",
   "delete_account_confirm": "警告:此操作将永久删除你的数据，请输入密码进行确认。",
@@ -120,5 +119,6 @@
   "verify_password": "确认密码",
   "old_password": "当前密码",
   "show_avatars": "显示头像",
-  "search": "搜索"
+  "search": "搜索",
+  "send_message": "发送消息"
 }

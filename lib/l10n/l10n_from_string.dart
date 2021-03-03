@@ -5,13 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 
 abstract class L10nStrings {
-  static const add_account = 'add_account';
-  static const select_instance = 'select_instance';
-  static const accounts = 'accounts';
-  static const appearance = 'appearance';
-  static const add_instance = 'add_instance';
-  static const sign_in = 'sign_in';
-  static const register = 'register';
   static const settings = 'settings';
   static const password = 'password';
   static const email_or_username = 'email_or_username';
@@ -25,7 +18,6 @@ abstract class L10nStrings {
   static const nsfw = 'nsfw';
   static const post = 'post';
   static const save = 'save';
-  static const send_message = 'send_message';
   static const subscribed = 'subscribed';
   static const local = 'local';
   static const all = 'all';
@@ -66,6 +58,7 @@ abstract class L10nStrings {
   static const chat = 'chat';
   static const admin = 'admin';
   static const by = 'by';
+  static const not_a_mod_or_admin = 'not_a_mod_or_admin';
   static const not_an_admin = 'not_an_admin';
   static const couldnt_find_post = 'couldnt_find_post';
   static const not_logged_in = 'not_logged_in';
@@ -95,14 +88,17 @@ abstract class L10nStrings {
   static const couldnt_update_site = 'couldnt_update_site';
   static const invalid_community_name = 'invalid_community_name';
   static const community_already_exists = 'community_already_exists';
-  static const community_moderator_already_exists = 'community_moderator_already_exists';
-  static const community_follower_already_exists = 'community_follower_already_exists';
+  static const community_moderator_already_exists =
+      'community_moderator_already_exists';
+  static const community_follower_already_exists =
+      'community_follower_already_exists';
   static const not_a_moderator = 'not_a_moderator';
   static const couldnt_update_community = 'couldnt_update_community';
   static const no_community_edit_allowed = 'no_community_edit_allowed';
   static const system_err_login = 'system_err_login';
   static const community_user_already_banned = 'community_user_already_banned';
-  static const couldnt_find_that_username_or_email = 'couldnt_find_that_username_or_email';
+  static const couldnt_find_that_username_or_email =
+      'couldnt_find_that_username_or_email';
   static const password_incorrect = 'password_incorrect';
   static const registration_closed = 'registration_closed';
   static const invalid_password = 'invalid_password';
@@ -111,21 +107,23 @@ abstract class L10nStrings {
   static const invalid_username = 'invalid_username';
   static const bio_length_overflow = 'bio_length_overflow';
   static const couldnt_update_user = 'couldnt_update_user';
-  static const couldnt_update_private_message = 'couldnt_update_private_message';
+  static const couldnt_update_private_message =
+      'couldnt_update_private_message';
   static const couldnt_update_post = 'couldnt_update_post';
-  static const couldnt_create_private_message = 'couldnt_create_private_message';
-  static const no_private_message_edit_allowed = 'no_private_message_edit_allowed';
+  static const couldnt_create_private_message =
+      'couldnt_create_private_message';
+  static const no_private_message_edit_allowed =
+      'no_private_message_edit_allowed';
   static const post_title_too_long = 'post_title_too_long';
   static const email_already_exists = 'email_already_exists';
   static const user_already_exists = 'user_already_exists';
   static const number_users_online = 'number_users_online';
-  static const not_a_mod_or_admin = 'not_a_mod_or_admin';
   static const number_of_comments = 'number_of_comments';
   static const number_of_posts = 'number_of_posts';
   static const number_of_subscribers = 'number_of_subscribers';
+  static const number_of_users = 'number_of_users';
   static const unsubscribe = 'unsubscribe';
   static const subscribe = 'subscribe';
-  static const number_of_users = 'number_of_users';
   static const messages = 'messages';
   static const banned_users = 'banned_users';
   static const delete_account_confirm = 'delete_account_confirm';
@@ -134,25 +132,12 @@ abstract class L10nStrings {
   static const old_password = 'old_password';
   static const show_avatars = 'show_avatars';
   static const search = 'search';
+  static const send_message = 'send_message';
 }
 
 extension L10nFromString on String {
   String tr(BuildContext context) {
     switch (this) {
-      case L10nStrings.add_account:
-        return L10n.of(context).add_account;
-      case L10nStrings.select_instance:
-        return L10n.of(context).select_instance;
-      case L10nStrings.accounts:
-        return L10n.of(context).accounts;
-      case L10nStrings.appearance:
-        return L10n.of(context).appearance;
-      case L10nStrings.add_instance:
-        return L10n.of(context).add_instance;
-      case L10nStrings.sign_in:
-        return L10n.of(context).sign_in;
-      case L10nStrings.register:
-        return L10n.of(context).register;
       case L10nStrings.settings:
         return L10n.of(context).settings;
       case L10nStrings.password:
@@ -179,8 +164,6 @@ extension L10nFromString on String {
         return L10n.of(context).post;
       case L10nStrings.save:
         return L10n.of(context).save;
-      case L10nStrings.send_message:
-        return L10n.of(context).send_message;
       case L10nStrings.subscribed:
         return L10n.of(context).subscribed;
       case L10nStrings.local:
@@ -261,6 +244,8 @@ extension L10nFromString on String {
         return L10n.of(context).admin;
       case L10nStrings.by:
         return L10n.of(context).by;
+      case L10nStrings.not_a_mod_or_admin:
+        return L10n.of(context).not_a_mod_or_admin;
       case L10nStrings.not_an_admin:
         return L10n.of(context).not_an_admin;
       case L10nStrings.couldnt_find_post:
@@ -365,8 +350,6 @@ extension L10nFromString on String {
         return L10n.of(context).email_already_exists;
       case L10nStrings.user_already_exists:
         return L10n.of(context).user_already_exists;
-      case L10nStrings.not_a_mod_or_admin:
-        return L10n.of(context).not_a_mod_or_admin;
       case L10nStrings.unsubscribe:
         return L10n.of(context).unsubscribe;
       case L10nStrings.subscribe:
@@ -387,6 +370,8 @@ extension L10nFromString on String {
         return L10n.of(context).show_avatars;
       case L10nStrings.search:
         return L10n.of(context).search;
+      case L10nStrings.send_message:
+        return L10n.of(context).send_message;
 
       default:
         return this;

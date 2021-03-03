@@ -13,7 +13,6 @@
   "nsfw": "Eduki hunkigarriak (NSFW)",
   "post": "bidali",
   "save": "gorde",
-  "send_message": "Bidali mezua",
   "subscribed": "Harpidetuta",
   "local": "Lokala",
   "all": "Guztiak",
@@ -110,9 +109,9 @@
   "number_of_comments": "{count,plural, =1{Iruzkin {count}} other{{count} iruzkin}}",
   "number_of_posts": "{count,plural, =1{Bidalketa {count}} other{{count} bidalketa}}",
   "number_of_subscribers": "{count,plural, =1{Harpidetu {count}} other{{count} harpidetu}}",
+  "number_of_users": "{count,plural, =1{Erabiltzaile {count}} other{{count} erabiltzaile}}",
   "unsubscribe": "Ezabatu harpidetza",
   "subscribe": "Harpidetu",
-  "number_of_users": "{count,plural, =1{Erabiltzaile {count}} other{{count} erabiltzaile}}",
   "messages": "Mezuak",
   "banned_users": "Debekatutako erabiltzaileak",
   "delete_account_confirm": "Abisua: honek zure datu guztiak betirako ezabatu ditu. Sartu zure pasahitza baieztatzeko.",
@@ -120,5 +119,6 @@
   "verify_password": "Balioztatu pasahitza",
   "old_password": "Aurreko pasahitza",
   "show_avatars": "Erakutsi avatarrak",
-  "search": "Bilatu"
+  "search": "Bilatu",
+  "send_message": "Bidali mezua"
 }

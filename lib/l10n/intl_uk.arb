@@ -13,7 +13,6 @@
   "nsfw": "NSFW",
   "post": "Запис",
   "save": "зберегти",
-  "send_message": "Послати повідомлення",
   "subscribed": "Підписані",
   "all": "Все",
   "replies": "Відповіді",
@@ -101,5 +100,6 @@
   "verify_password": "Повторіть пароль",
   "old_password": "Діючий пароль",
   "show_avatars": "Показувати аватари",
-  "search": "Пошук"
+  "search": "Пошук",
+  "send_message": "Послати повідомлення"
 }
