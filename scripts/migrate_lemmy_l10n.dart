@@ -187,8 +187,15 @@ Future<void> main(List<String> args) async {
 
   await repoCleanup();
 
-  await Process.run(
-      'npx', ['prettier', 'lib/l10n/*.arb', '--parser', 'json', '--write']);
+  await Process.run('npx', [
+    'prettier',
+    'lib/l10n/*.arb',
+    '--parser',
+    'json',
+    '--write',
+    '--print-width',
+    '1',
+  ]);
 
   await gen.main(args);
 }
