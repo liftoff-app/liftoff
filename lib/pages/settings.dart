@@ -86,7 +86,7 @@ class AppearanceConfigPage extends HookWidget {
                 title: 'Choose language',
                 groupValue: configStore.locale,
                 values: L10n.supportedLocales,
-                // TODO: add actual language names
+                mapValueToString: (locale) => locale.languageName,
                 onChanged: (selected) {
                   configStore.locale = selected;
                 },

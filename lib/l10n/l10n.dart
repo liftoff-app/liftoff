@@ -15,3 +15,46 @@ abstract class LocaleSerde {
 
   static String toJson(Locale locale) => locale.toLanguageTag();
 }
+
+const _languageNames = {
+  'ca': 'Català',
+  'ar': 'عربي',
+  'en': 'English',
+  'el': 'Ελληνικά',
+  'eu': 'Euskara',
+  'eo': 'Esperanto',
+  'es': 'Español',
+  'da': 'Dansk',
+  'de': 'Deutsch',
+  'ga': 'Gaeilge',
+  'gl': 'Galego',
+  'hr': 'hrvatski',
+  'hu': 'Magyar Nyelv',
+  'ka': 'ქართული ენა',
+  'ko': '한국어',
+  'km': 'ភាសាខ្មែរ',
+  'hi': 'मानक हिन्दी',
+  'fa': 'فارسی',
+  'ja': '日本語',
+  'oc': 'Occitan',
+  'pl': 'Polski',
+  'pt': 'Português',
+  'pt_BR': 'Português Brasileiro',
+  'zh': '中文',
+  'fi': 'Suomi',
+  'fr': 'Français',
+  'sv': 'Svenska',
+  'sq': 'Shqip',
+  'sr_Latn': 'srpski',
+  'th': 'ภาษาไทย',
+  'tr': 'Türkçe',
+  'uk': 'Українська Mова',
+  'ru': 'Русский',
+  'nl': 'Nederlands',
+  'it': 'Italiano',
+};
+
+extension LanguageName on Locale {
+  /// returns the name of the language in the given language
+  String get languageName => _languageNames[toString()] ?? toString();
+}
