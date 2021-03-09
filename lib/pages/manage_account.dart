@@ -287,7 +287,7 @@ class _ManageAccount extends HookWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(L10n.of(context).type),
+                Text(L10n.of(context).sort_type),
                 const Text(
                   'This has currently no effect on lemmur',
                   style: TextStyle(fontSize: 10),

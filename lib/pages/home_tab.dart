@@ -189,7 +189,7 @@ class HomeTab extends HookWidget {
     }
 
     final title = () {
-      final first = selectedList.value.listingType.value;
+      final first = selectedList.value.listingType.tr(context);
 
       final last = selectedList.value.instanceHost == null
           ? ''
