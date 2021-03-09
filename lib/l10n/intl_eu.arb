@@ -120,5 +120,13 @@
   "old_password": "Aurreko pasahitza",
   "show_avatars": "Erakutsi avatarrak",
   "search": "Bilatu",
-  "send_message": "Bidali mezua"
+  "send_message": "Bidali mezua",
+  "top_day": "Gaur pil-pilean",
+  "top_week": "Asteko Onena",
+  "top_month": "Hilabeteko Onena",
+  "top_year": "Urteko Onena",
+  "top_all": "Onena",
+  "most_comments": "Iruzkin gehienak",
+  "new_comments": "Iruzkin berriak",
+  "active": "Aktibo"
 }

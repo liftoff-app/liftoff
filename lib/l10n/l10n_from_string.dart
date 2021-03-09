@@ -133,6 +133,14 @@ abstract class L10nStrings {
   static const show_avatars = 'show_avatars';
   static const search = 'search';
   static const send_message = 'send_message';
+  static const top_day = 'top_day';
+  static const top_week = 'top_week';
+  static const top_month = 'top_month';
+  static const top_year = 'top_year';
+  static const top_all = 'top_all';
+  static const most_comments = 'most_comments';
+  static const new_comments = 'new_comments';
+  static const active = 'active';
 }
 
 extension L10nFromString on String {
@@ -372,6 +380,22 @@ extension L10nFromString on String {
         return L10n.of(context).search;
       case L10nStrings.send_message:
         return L10n.of(context).send_message;
+      case L10nStrings.top_day:
+        return L10n.of(context).top_day;
+      case L10nStrings.top_week:
+        return L10n.of(context).top_week;
+      case L10nStrings.top_month:
+        return L10n.of(context).top_month;
+      case L10nStrings.top_year:
+        return L10n.of(context).top_year;
+      case L10nStrings.top_all:
+        return L10n.of(context).top_all;
+      case L10nStrings.most_comments:
+        return L10n.of(context).most_comments;
+      case L10nStrings.new_comments:
+        return L10n.of(context).new_comments;
+      case L10nStrings.active:
+        return L10n.of(context).active;
 
       default:
         return this;

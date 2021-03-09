@@ -120,5 +120,13 @@
   "old_password": "Malnova pasvorto",
   "show_avatars": "Montri profilbildojn",
   "search": "Serĉi",
-  "send_message": "Sendi mesaĝon"
+  "send_message": "Sendi mesaĝon",
+  "top_day": "Supraj tagaj",
+  "top_week": "Supraj semajnaj",
+  "top_month": "Supraj monataj",
+  "top_year": "Supraj jaraj",
+  "top_all": "Supraj ĉiamaj",
+  "most_comments": "Plej komentitaj",
+  "new_comments": "Nove komentitaj",
+  "active": "Aktiva"
 }

@@ -119,5 +119,13 @@
   "old_password": "Ancien mot de passe",
   "show_avatars": "Afficher les avatars",
   "search": "Rechercher",
-  "send_message": "Envoyer le message"
+  "send_message": "Envoyer le message",
+  "top_day": "Top du jour",
+  "top_week": "Top de la semaine",
+  "top_month": "Top du mois",
+  "top_year": "Top de l'année",
+  "top_all": "Top",
+  "most_comments": "Plus commentés",
+  "new_comments": "Nouveaux commentaires",
+  "active": "Actif"
 }

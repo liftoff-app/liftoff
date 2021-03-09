@@ -120,5 +120,13 @@
   "old_password": "기존 비밀번호",
   "show_avatars": "아바타 보기",
   "search": "검색",
-  "send_message": "메세지 전송"
+  "send_message": "메세지 전송",
+  "top_day": "일별",
+  "top_week": "주별",
+  "top_month": "월별",
+  "top_year": "년간",
+  "top_all": "전체",
+  "most_comments": "최근 댓글",
+  "new_comments": "새 덧글",
+  "active": "활발한"
 }

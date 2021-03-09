@@ -120,5 +120,7 @@
   "old_password": "Tidligere Kodeord",
   "show_avatars": "Vis Avatarer",
   "search": "Søg",
-  "send_message": "Send Besked"
+  "send_message": "Send Besked",
+  "top_day": "Top dag",
+  "active": "Active"
 }

@@ -10,15 +10,23 @@ extension SortTypeL10n on SortType {
       case SortType.new_:
         return L10n.of(context).new_;
       case SortType.topYear:
+        return L10n.of(context).top_year;
       case SortType.topMonth:
+        return L10n.of(context).top_month;
+      case SortType.topWeek:
+        return L10n.of(context).top_week;
       case SortType.topDay:
+        return L10n.of(context).top_day;
       case SortType.topAll:
+        return L10n.of(context).top_all;
       case SortType.newComments:
+        return L10n.of(context).new_comments;
       case SortType.active:
+        return L10n.of(context).active;
       case SortType.mostComments:
+        return L10n.of(context).most_comments;
       default:
-        // TODO: l10n string
-        return value;
+        throw Exception('unreachable');
     }
   }
 }

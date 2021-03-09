@@ -166,6 +166,14 @@ const toMigrate = <_>[
   _('show_avatars', decapitalize: true),
   _('search', toLowerCase: true),
   _('send_message', decapitalize: true),
+  _('top_day'),
+  _('top_week'),
+  _('top_month'),
+  _('top_year'),
+  _('top_all'),
+  _('most_comments'),
+  _('new_comments'),
+  _('active'),
 ];
 
 const repoName = 'lemmy-translations';

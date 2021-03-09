@@ -106,5 +106,6 @@
   "old_password": "Régi jelszó",
   "show_avatars": "Avatárok mutatása",
   "search": "Keresés",
-  "send_message": "Üzenet küldése"
+  "send_message": "Üzenet küldése",
+  "top_day": "A nap bejegyzése"
 }

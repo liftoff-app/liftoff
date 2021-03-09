@@ -107,5 +107,7 @@
   "old_password": "現在のパスワード",
   "show_avatars": "アバターを表示",
   "search": "検索",
-  "send_message": "メッセージを送信"
+  "send_message": "メッセージを送信",
+  "top_day": "日間トップ",
+  "active": "活発さ"
 }

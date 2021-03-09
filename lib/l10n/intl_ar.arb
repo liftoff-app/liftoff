@@ -69,5 +69,13 @@
   "old_password": "الكلمة السرية القديمة",
   "show_avatars": "إظهار الصور الرمزية",
   "search": "البحث",
-  "send_message": "أرسل الرسالة"
+  "send_message": "أرسل الرسالة",
+  "top_day": "المتداول",
+  "top_week": "المتداول هذا",
+  "top_month": "المتداول هذا",
+  "top_year": "المتداول هذه",
+  "top_all": "المتداولة",
+  "most_comments": "الأكثر",
+  "new_comments": "الأحدث",
+  "active": "النشط"
 }

@@ -120,5 +120,13 @@
   "old_password": "当前密码",
   "show_avatars": "显示头像",
   "search": "搜索",
-  "send_message": "发送消息"
+  "send_message": "发送消息",
+  "top_day": "日推荐",
+  "top_week": "周推荐",
+  "top_month": "月推荐",
+  "top_year": "年推荐",
+  "top_all": "全部推荐",
+  "most_comments": "最多评论",
+  "new_comments": "新评论",
+  "active": "活跃"
 }

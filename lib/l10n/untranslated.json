@@ -59,7 +59,13 @@
   ],
 
   "da": [
-    "not_a_mod_or_admin"
+    "not_a_mod_or_admin",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments"
   ],
 
   "de": [
@@ -67,7 +73,13 @@
     "report_reason_required",
     "report_too_long",
     "couldnt_create_report",
-    "couldnt_resolve_report"
+    "couldnt_resolve_report",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments"
   ],
 
   "el": [
@@ -130,7 +142,14 @@
     "subscribe",
     "messages",
     "banned_users",
-    "send_message"
+    "send_message",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "fi": [
@@ -149,7 +168,14 @@
     "invalid_password",
     "captcha_incorrect",
     "invalid_username",
-    "bio_length_overflow"
+    "bio_length_overflow",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "fr": [
@@ -292,7 +318,15 @@
     "old_password",
     "show_avatars",
     "search",
-    "send_message"
+    "send_message",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "hi": [
@@ -396,7 +430,15 @@
     "new_password",
     "verify_password",
     "old_password",
-    "search"
+    "search",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "hr": [
@@ -521,7 +563,15 @@
     "old_password",
     "show_avatars",
     "search",
-    "send_message"
+    "send_message",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "hu": [
@@ -539,7 +589,14 @@
     "not_a_moderator",
     "invalid_password",
     "captcha_incorrect",
-    "bio_length_overflow"
+    "bio_length_overflow",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "it": [
@@ -560,7 +617,13 @@
     "invalid_password",
     "captcha_incorrect",
     "invalid_username",
-    "banned_users"
+    "banned_users",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments"
   ],
 
   "ka": [
@@ -583,7 +646,14 @@
     "bio_length_overflow",
     "couldnt_update_private_message",
     "couldnt_create_private_message",
-    "no_private_message_edit_allowed"
+    "no_private_message_edit_allowed",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "km": [
@@ -708,7 +778,15 @@
     "old_password",
     "show_avatars",
     "search",
-    "send_message"
+    "send_message",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "ko": [
@@ -730,7 +808,14 @@
     "not_a_moderator",
     "invalid_password",
     "captcha_incorrect",
-    "bio_length_overflow"
+    "bio_length_overflow",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "oc": [
@@ -855,7 +940,15 @@
     "old_password",
     "show_avatars",
     "search",
-    "send_message"
+    "send_message",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "pl": [
@@ -864,7 +957,8 @@
     "number_of_comments",
     "number_of_posts",
     "number_of_subscribers",
-    "number_of_users"
+    "number_of_users",
+    "new_comments"
   ],
 
   "pt": [
@@ -989,7 +1083,15 @@
     "old_password",
     "show_avatars",
     "search",
-    "send_message"
+    "send_message",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "pt_BR": [
@@ -997,7 +1099,13 @@
     "report_reason_required",
     "report_too_long",
     "couldnt_create_report",
-    "couldnt_resolve_report"
+    "couldnt_resolve_report",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments"
   ],
 
   "ru": [
@@ -1006,7 +1114,9 @@
     "number_of_comments",
     "number_of_posts",
     "number_of_subscribers",
-    "number_of_users"
+    "number_of_users",
+    "most_comments",
+    "new_comments"
   ],
 
   "sq": [
@@ -1024,7 +1134,14 @@
     "not_a_moderator",
     "invalid_password",
     "captcha_incorrect",
-    "bio_length_overflow"
+    "bio_length_overflow",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "sr": [
@@ -1149,7 +1266,15 @@
     "old_password",
     "show_avatars",
     "search",
-    "send_message"
+    "send_message",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "sr_Latn": [
@@ -1252,11 +1377,20 @@
     "delete_account_confirm",
     "show_avatars",
     "search",
-    "send_message"
+    "send_message",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "sv": [
-    "not_a_mod_or_admin"
+    "not_a_mod_or_admin",
+    "new_comments"
   ],
 
   "th": [
@@ -1381,7 +1515,15 @@
     "old_password",
     "show_avatars",
     "search",
-    "send_message"
+    "send_message",
+    "top_day",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "tr": [
@@ -1399,7 +1541,14 @@
     "not_a_moderator",
     "invalid_password",
     "captcha_incorrect",
-    "bio_length_overflow"
+    "bio_length_overflow",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "uk": [
@@ -1422,7 +1571,14 @@
     "number_of_comments",
     "number_of_posts",
     "number_of_subscribers",
-    "number_of_users"
+    "number_of_users",
+    "top_week",
+    "top_month",
+    "top_year",
+    "top_all",
+    "most_comments",
+    "new_comments",
+    "active"
   ],
 
   "zh": [

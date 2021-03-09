@@ -269,5 +269,21 @@
   "search": "search",
   "@search": {},
   "send_message": "Send message",
-  "@send_message": {}
+  "@send_message": {},
+  "top_day": "Top Day",
+  "@top_day": {},
+  "top_week": "Top Week",
+  "@top_week": {},
+  "top_month": "Top Month",
+  "@top_month": {},
+  "top_year": "Top Year",
+  "@top_year": {},
+  "top_all": "Top All Time",
+  "@top_all": {},
+  "most_comments": "Most Comments",
+  "@most_comments": {},
+  "new_comments": "New Comments",
+  "@new_comments": {},
+  "active": "Active",
+  "@active": {}
 }

@@ -115,5 +115,12 @@
   "old_password": "Stare Hasło",
   "show_avatars": "Pokaż Awatary",
   "search": "Szukaj",
-  "send_message": "Wyślij Wiadomość"
+  "send_message": "Wyślij Wiadomość",
+  "top_day": "Najpopularniejsze dziś",
+  "top_week": "Najpopularniejsze tydzień",
+  "top_month": "Najpopularniejsze miesiąc",
+  "top_year": "Najpopularniejsze rok",
+  "top_all": "Najpopularniejsze kiedykolwiek",
+  "most_comments": "Najwięcej komentarzy",
+  "active": "Aktywne"
 }

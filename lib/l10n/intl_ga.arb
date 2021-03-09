@@ -111,5 +111,13 @@
   "old_password": "Sean Pasfhocal",
   "show_avatars": "Taispeáin Abhatáranna",
   "search": "Cuardaigh",
-  "send_message": "Seol Teachtaireacht"
+  "send_message": "Seol Teachtaireacht",
+  "top_day": "Lá Barr",
+  "top_week": "Seachtain Barr",
+  "top_month": "Barr Mí",
+  "top_year": "Bar Bliain",
+  "top_all": "Barr an Ama Uile",
+  "most_comments": "Tuairimí an chuid is mó",
+  "new_comments": "Tráchtaireachtaí Nua",
+  "active": "Gnóthach"
 }

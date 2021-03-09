@@ -120,5 +120,13 @@
   "old_password": "Vecchia Password",
   "show_avatars": "Mostra Avatar",
   "search": "Cerca",
-  "send_message": "Invia Messaggio"
+  "send_message": "Invia Messaggio",
+  "top_day": "Migliori della giornata",
+  "top_week": "Migliori della settimana",
+  "top_month": "Migliori del mese",
+  "top_year": "Migliori dell'anno",
+  "top_all": "Migliori di sempre",
+  "most_comments": "Più commenti",
+  "new_comments": "Nuovi Commenti",
+  "active": "Attivi"
 }

@@ -105,5 +105,6 @@
   "old_password": "Vanha salasana",
   "show_avatars": "Näytä avatarit",
   "search": "Etsi",
-  "send_message": "Lähetä viesti"
+  "send_message": "Lähetä viesti",
+  "top_day": "Päivän parhaimmat"
 }

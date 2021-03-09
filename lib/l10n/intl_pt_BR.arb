@@ -116,5 +116,7 @@
   "old_password": "Senha antiga",
   "show_avatars": "Mostrar Avatares",
   "search": "Busca",
-  "send_message": "Enviar mensagem"
+  "send_message": "Enviar mensagem",
+  "top_day": "Top do dia",
+  "active": "Ativo"
 }

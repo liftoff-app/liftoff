@@ -120,5 +120,13 @@
   "old_password": "Contrasenya antiga",
   "show_avatars": "Mostra els avatars",
   "search": "Cerca",
-  "send_message": "Envia el missatge"
+  "send_message": "Envia el missatge",
+  "top_day": "El millor del dia",
+  "top_week": "El millor de la setmana",
+  "top_month": "El millor del mes",
+  "top_year": "El millor de l'any",
+  "top_all": "El millor de tots els temps",
+  "most_comments": "Més comentaris",
+  "new_comments": "Comentaris nous",
+  "active": "Actiu"
 }

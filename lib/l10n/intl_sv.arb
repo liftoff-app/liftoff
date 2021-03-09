@@ -120,5 +120,12 @@
   "old_password": "Gammalt lösenord",
   "show_avatars": "Visa profilbilder",
   "search": "Sök",
-  "send_message": "Skicka meddelande"
+  "send_message": "Skicka meddelande",
+  "top_day": "Dagstoppen",
+  "top_week": "Veckotoppen",
+  "top_month": "Månadstoppen",
+  "top_year": "Årstoppen",
+  "top_all": "Totaltoppen",
+  "most_comments": "Flest kommentarer",
+  "active": "Aktivt"
 }
