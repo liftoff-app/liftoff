@@ -218,10 +218,10 @@ class CommentWidget extends HookWidget {
 
     final body = () {
       if (isDeleted.value) {
-        return const Flexible(
+        return Flexible(
           child: Text(
-            'comment deleted by creator',
-            style: TextStyle(fontStyle: FontStyle.italic),
+            L10n.of(context).deleted_by_creator,
+            style: const TextStyle(fontStyle: FontStyle.italic),
           ),
         );
       } else if (comment.comment.removed) {

@@ -335,8 +335,10 @@ class PrivateMessageTile extends HookWidget {
           ),
           const SizedBox(height: 5),
           if (pmv.value.privateMessage.deleted)
-            const Text('deleted by creator',
-                style: TextStyle(fontStyle: FontStyle.italic))
+            Text(
+              L10n.of(context).deleted_by_creator,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            )
           else
             body,
           Row(children: [
