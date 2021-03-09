@@ -9,6 +9,7 @@ import 'package:lemmy_api_client/v2.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/infinite_scroll.dart';
@@ -83,7 +84,7 @@ class HomeTab extends HookWidget {
               ),
               ListTile(
                 title: Text(
-                  'Subscribed',
+                  L10n.of(context).subscribed,
                   style: TextStyle(
                     color: accStore.hasNoAccount
                         ? theme.textTheme.bodyText1.color.withOpacity(0.4)
@@ -143,7 +144,7 @@ class HomeTab extends HookWidget {
                 ),
                 ListTile(
                   title: Text(
-                    'Subscribed',
+                    L10n.of(context).subscribed,
                     style: TextStyle(
                         color: accStore.isAnonymousFor(instance)
                             ? theme.textTheme.bodyText1.color.withOpacity(0.4)
@@ -161,7 +162,7 @@ class HomeTab extends HookWidget {
                   leading: const SizedBox(width: 20),
                 ),
                 ListTile(
-                  title: const Text('Local'),
+                  title: Text(L10n.of(context).local),
                   onTap: () => pop(_SelectedList(
                     listingType: PostListingType.local,
                     instanceHost: instance,
@@ -169,7 +170,7 @@ class HomeTab extends HookWidget {
                   leading: const SizedBox(width: 20),
                 ),
                 ListTile(
-                  title: const Text('All'),
+                  title: Text(L10n.of(context).all),
                   onTap: () => pop(_SelectedList(
                     listingType: PostListingType.all,
                     instanceHost: instance,
@@ -188,7 +189,7 @@ class HomeTab extends HookWidget {
     }
 
     final title = () {
-      final first = selectedList.value.listingType.value;
+      final first = selectedList.value.listingType.tr(context);
 
       final last = selectedList.value.instanceHost == null
           ? ''

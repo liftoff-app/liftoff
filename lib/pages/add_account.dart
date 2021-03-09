@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/radio_picker.dart';
 import 'add_instance.dart';
@@ -110,13 +111,14 @@ class AddAccountPage extends HookWidget {
           TextField(
             autofocus: true,
             controller: usernameController,
-            decoration: const InputDecoration(labelText: 'Username or email'),
+            decoration:
+                InputDecoration(labelText: L10n.of(context).email_or_username),
           ),
           const SizedBox(height: 5),
           TextField(
             controller: passwordController,
             obscureText: true,
-            decoration: const InputDecoration(labelText: 'Password'),
+            decoration: InputDecoration(labelText: L10n.of(context).password),
           ),
           ElevatedButton(
             onPressed: usernameController.text.isEmpty ||
@@ -138,6 +140,7 @@ class AddAccountPage extends HookWidget {
           ),
           TextButton(
             onPressed: () {
+              // TODO: extract to LemmyUrls or something
               ul.launch('https://${selectedInstance.value}/login');
             },
             child: const Text('Register'),

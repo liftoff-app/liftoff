@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
 import '../comment_tree.dart';
+import '../l10n/l10n.dart';
 import 'bottom_modal.dart';
 import 'bottom_safe.dart';
 import 'comment.dart';
@@ -16,11 +17,11 @@ class CommentSection extends HookWidget {
   final CommentSortType sortType;
 
   static const sortPairs = {
-    CommentSortType.hot: [Icons.whatshot, 'Hot'],
-    CommentSortType.new_: [Icons.new_releases, 'New'],
-    CommentSortType.old: [Icons.calendar_today, 'Old'],
-    CommentSortType.top: [Icons.trending_up, 'Top'],
-    CommentSortType.chat: [Icons.chat, 'Chat'],
+    CommentSortType.hot: [Icons.whatshot, L10nStrings.hot],
+    CommentSortType.new_: [Icons.new_releases, L10nStrings.new_],
+    CommentSortType.old: [Icons.calendar_today, L10nStrings.old],
+    CommentSortType.top: [Icons.trending_up, L10nStrings.top],
+    CommentSortType.chat: [Icons.chat, L10nStrings.chat],
   };
 
   CommentSection(
@@ -60,7 +61,7 @@ class CommentSection extends HookWidget {
                       for (final e in sortPairs.entries)
                         ListTile(
                           leading: Icon(e.value[0] as IconData),
-                          title: Text(e.value[1] as String),
+                          title: Text((e.value[1] as String).tr(context)),
                           trailing: sorting.value == e.key
                               ? const Icon(Icons.check)
                               : null,
@@ -75,7 +76,7 @@ class CommentSection extends HookWidget {
               },
               child: Row(
                 children: [
-                  Text(sortPairs[sorting.value][1] as String),
+                  Text((sortPairs[sorting.value][1] as String).tr(context)),
                   const Icon(Icons.arrow_drop_down),
                 ],
               ),

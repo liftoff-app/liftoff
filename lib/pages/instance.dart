@@ -7,6 +7,7 @@ import 'package:lemmy_api_client/v2.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
@@ -162,11 +163,11 @@ class InstancePage extends HookWidget {
                 preferredSize: const TabBar(tabs: []).preferredSize,
                 child: Material(
                   color: theme.cardColor,
-                  child: const TabBar(
+                  child: TabBar(
                     tabs: [
-                      Tab(text: 'Posts'),
-                      Tab(text: 'Comments'),
-                      Tab(text: 'About'),
+                      Tab(text: L10n.of(context).posts),
+                      Tab(text: L10n.of(context).comments),
+                      const Tab(text: 'About'),
                     ],
                   ),
                 ),
@@ -215,11 +216,13 @@ class _AboutTab extends HookWidget {
       : assert(communitiesFuture != null),
         assert(instanceHost != null);
 
-  void goToBannedUsers(BuildContext c) {
+  void goToBannedUsers(BuildContext context) {
     goTo(
-      c,
+      context,
       (_) => UsersListPage(
-          users: site.banned.reversed.toList(), title: 'Banned users'),
+        users: site.banned.reversed.toList(),
+        title: L10n.of(context).banned_users,
+      ),
     );
   }
 
@@ -266,8 +269,12 @@ class _AboutTab extends HookWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 children: [
-                  Chip(label: Text('${site.online} users online')),
-                  Chip(label: Text('${site.siteView.counts.users} users')),
+                  Chip(
+                      label: Text(L10n.of(context)
+                          .number_of_users_online(site.online))),
+                  Chip(
+                      label: Text(L10n.of(context)
+                          .number_of_users(site.siteView.counts.users))),
                   Chip(
                       label: Text(
                           '${site.siteView.counts.communities} communities')),
@@ -328,11 +335,11 @@ class _AboutTab extends HookWidget {
               ),
             const _Divider(),
             ListTile(
-              title: const Center(child: Text('Banned users')),
+              title: Center(child: Text(L10n.of(context).banned_users)),
               onTap: () => goToBannedUsers(context),
             ),
             ListTile(
-              title: const Center(child: Text('Modlog')),
+              title: Center(child: Text(L10n.of(context).modlog)),
               onTap: () => goTo(
                 context,
                 (context) => ModlogPage.forInstance(instanceHost: instanceHost),

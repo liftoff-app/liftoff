@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/goto.dart';
 import '../widgets/radio_picker.dart';
 import 'search_results.dart';
@@ -38,7 +39,7 @@ class SearchTab extends HookWidget {
             TextField(
               controller: searchInputController,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(hintText: 'search'),
+              decoration: InputDecoration(hintText: L10n.of(context).search),
             ),
             const SizedBox(height: 5),
             Row(
@@ -65,7 +66,7 @@ class SearchTab extends HookWidget {
                           instanceHost: instanceHost.value,
                           query: searchInputController.text,
                         )),
-                child: const Text('search'),
+                child: Text(L10n.of(context).search),
               )
           ],
         ),

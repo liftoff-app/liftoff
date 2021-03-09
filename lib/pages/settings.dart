@@ -6,8 +6,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/goto.dart';
 import '../widgets/about_tile.dart';
+import '../widgets/radio_picker.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
 import 'manage_account.dart';
@@ -19,7 +21,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
+          title: Text(L10n.of(context).settings),
         ),
         body: ListView(
           children: [
@@ -68,11 +70,29 @@ class AppearanceConfigPage extends HookWidget {
               },
             ),
           SwitchListTile(
-              title: const Text('AMOLED dark mode'),
-              value: configStore.amoledDarkMode,
-              onChanged: (checked) {
-                configStore.amoledDarkMode = checked;
-              })
+            title: const Text('AMOLED dark mode'),
+            value: configStore.amoledDarkMode,
+            onChanged: (checked) {
+              configStore.amoledDarkMode = checked;
+            },
+          ),
+          const SizedBox(height: 12),
+          const _SectionHeading('General'),
+          ListTile(
+            title: Text(L10n.of(context).language),
+            trailing: SizedBox(
+              width: 120,
+              child: RadioPicker<Locale>(
+                title: 'Choose language',
+                groupValue: configStore.locale,
+                values: L10n.supportedLocales,
+                mapValueToString: (locale) => locale.languageName,
+                onChanged: (selected) {
+                  configStore.locale = selected;
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -97,11 +117,11 @@ class AccountsConfigPage extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('no'),
+                  child: Text(L10n.of(context).no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('yes'),
+                  child: Text(L10n.of(context).yes),
                 ),
               ],
             ),
@@ -121,11 +141,11 @@ class AccountsConfigPage extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('no'),
+                  child: Text(L10n.of(context).no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('yes'),
+                  child: Text(L10n.of(context).yes),
                 ),
               ],
             ),

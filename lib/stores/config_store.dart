@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/l10n.dart';
+
 part 'config_store.g.dart';
 
 /// Store managing user-level configuration such as theme or language
@@ -31,12 +33,23 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
+  Locale _locale;
+  // default value is set in the `load` method because json_serializable does
+  // not accept non-literals as constant values
+  @JsonKey(fromJson: LocaleSerde.fromJson, toJson: LocaleSerde.toJson)
+  Locale get locale => _locale;
+  set locale(Locale locale) {
+    _locale = locale;
+    notifyListeners();
+    save();
+  }
+
   static Future<ConfigStore> load() async {
     final prefs = await _prefs;
 
     return _$ConfigStoreFromJson(
       jsonDecode(prefs.getString(prefsKey) ?? '{}') as Map<String, dynamic>,
-    );
+    ).._locale ??= const Locale('en');
   }
 
   Future<void> save() async {

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../widgets/comment.dart';
 import '../widgets/post.dart';
 import '../widgets/sortable_infinite_list.dart';
@@ -27,13 +28,13 @@ class SearchResultsPage extends HookWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text('Looking for "$query"'),
-            bottom: const TabBar(
+            bottom: TabBar(
               isScrollable: true,
               tabs: [
-                Tab(text: 'Posts'),
-                Tab(text: 'Comments'),
-                Tab(text: 'Users'),
-                Tab(text: 'Communities'),
+                Tab(text: L10n.of(context).posts),
+                Tab(text: L10n.of(context).comments),
+                Tab(text: L10n.of(context).users),
+                Tab(text: L10n.of(context).communities),
               ],
             ),
           ),

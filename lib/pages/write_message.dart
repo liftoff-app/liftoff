@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
 import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
@@ -41,8 +42,8 @@ class WriteMessagePage extends HookWidget {
         useTextEditingController(text: privateMessage?.content);
     final loading = useState(false);
 
-    final submit = _isEdit ? 'save' : 'send';
-    final title = _isEdit ? 'Edit message' : 'Send message';
+    final submit = _isEdit ? L10n.of(context).save : 'send';
+    final title = _isEdit ? 'Edit message' : L10n.of(context).send_message;
 
     handleSubmit() async {
       if (_isEdit) {

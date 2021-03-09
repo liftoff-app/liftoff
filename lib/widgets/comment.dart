@@ -10,6 +10,7 @@ import '../comment_tree.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/delayed_action.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
@@ -217,10 +218,10 @@ class CommentWidget extends HookWidget {
 
     final body = () {
       if (isDeleted.value) {
-        return const Flexible(
+        return Flexible(
           child: Text(
-            'comment deleted by creator',
-            style: TextStyle(fontStyle: FontStyle.italic),
+            L10n.of(context).deleted_by_creator,
+            style: const TextStyle(fontStyle: FontStyle.italic),
           ),
         );
       } else if (comment.comment.removed) {
@@ -292,14 +293,14 @@ class CommentWidget extends HookWidget {
               icon: Icons.more_horiz,
               onPressed: () => _openMoreMenu(context),
               delayedLoading: delayedDeletion,
-              tooltip: 'more',
+              tooltip: L10n.of(context).more,
             ),
             _SaveComment(commentTree.comment),
             if (!isDeleted.value && !comment.comment.removed)
               TileAction(
                 icon: Icons.reply,
                 onPressed: loggedInAction((_) => reply()),
-                tooltip: 'reply',
+                tooltip: L10n.of(context).reply,
               ),
             TileAction(
               icon: Icons.arrow_upward,
@@ -364,7 +365,10 @@ class CommentWidget extends HookWidget {
                   ),
                   if (isOP) _CommentTag('OP', theme.accentColor),
                   if (comment.creator.admin)
-                    _CommentTag('ADMIN', theme.accentColor),
+                    _CommentTag(
+                      L10n.of(context).admin.toUpperCase(),
+                      theme.accentColor,
+                    ),
                   if (comment.creator.banned)
                     const _CommentTag('BANNED', Colors.red),
                   if (comment.creatorBannedFromCommunity)
@@ -465,7 +469,9 @@ class _MarkAsRead extends HookWidget {
       onPressed:
           userMentionId != null ? handleMarkMentionAsSeen : handleMarkAsSeen,
       iconColor: isRead.value ? Theme.of(context).accentColor : null,
-      tooltip: 'mark as ${isRead.value ? 'un' : ''}read',
+      tooltip: isRead.value
+          ? L10n.of(context).mark_as_unread
+          : L10n.of(context).mark_as_read,
     );
   }
 }

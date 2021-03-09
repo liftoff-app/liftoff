@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v2.dart';
 
+import '../l10n/l10n.dart';
 import 'radio_picker.dart';
 
 /// Dropdown filters where you can change sorting or viewing type
@@ -26,7 +27,7 @@ class PostListOptions extends StatelessWidget {
               values: SortType.values,
               groupValue: sortValue,
               onChanged: onSortChanged,
-              mapValueToString: (value) => value.value,
+              mapValueToString: (value) => value.tr(context),
             ),
             const Spacer(),
             if (styleButton)

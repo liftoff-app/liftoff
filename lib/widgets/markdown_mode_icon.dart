@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// used mostly for pages where markdown editor is used
 ///
 /// brush icon is rotated to look similarly to build icon
-Widget markdownModeIcon({bool fancy}) => fancy
+Widget markdownModeIcon({@required bool fancy}) => fancy
     ? const Icon(Icons.build)
     : const RotatedBox(
         quarterTurns: 1,

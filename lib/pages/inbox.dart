@@ -10,6 +10,7 @@ import 'package:matrix4_transform/matrix4_transform.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../util/delayed_action.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
@@ -90,11 +91,11 @@ class InboxPage extends HookWidget {
               tooltip: unreadOnly.value ? 'show all' : 'show only unread',
             )
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Replies'),
-              Tab(text: 'Mentions'),
-              Tab(text: 'Messages'),
+              Tab(text: L10n.of(context).replies),
+              Tab(text: L10n.of(context).mentions),
+              Tab(text: L10n.of(context).messages),
             ],
           ),
         ),
@@ -279,7 +280,7 @@ class PrivateMessageTile extends HookWidget {
           Row(
             children: [
               Text(
-                toMe ? 'from ' : 'to ',
+                '${toMe ? L10n.of(context).from : L10n.of(context).to} ',
                 style: TextStyle(color: theme.textTheme.caption.color),
               ),
               InkWell(
@@ -334,8 +335,10 @@ class PrivateMessageTile extends HookWidget {
           ),
           const SizedBox(height: 5),
           if (pmv.value.privateMessage.deleted)
-            const Text('deleted by creator',
-                style: TextStyle(fontStyle: FontStyle.italic))
+            Text(
+              L10n.of(context).deleted_by_creator,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            )
           else
             body,
           Row(children: [
@@ -343,19 +346,19 @@ class PrivateMessageTile extends HookWidget {
             TileAction(
               icon: moreIcon,
               onPressed: showMoreMenu,
-              tooltip: 'more',
+              tooltip: L10n.of(context).more,
             ),
             if (toMe) ...[
               TileAction(
                 iconColor: read.value ? theme.accentColor : null,
                 icon: Icons.check,
-                tooltip: 'mark as read',
+                tooltip: L10n.of(context).mark_as_read,
                 onPressed: handleRead,
                 delayedLoading: readDelayed,
               ),
               TileAction(
                 icon: Icons.reply,
-                tooltip: 'reply',
+                tooltip: L10n.of(context).reply,
                 onPressed: () {
                   showCupertinoModalPopup(
                       context: context,
@@ -368,7 +371,7 @@ class PrivateMessageTile extends HookWidget {
             ] else ...[
               TileAction(
                 icon: Icons.edit,
-                tooltip: 'edit',
+                tooltip: L10n.of(context).edit,
                 onPressed: () async {
                   final val = await showCupertinoModalPopup<PrivateMessageView>(
                       context: context,
@@ -379,7 +382,9 @@ class PrivateMessageTile extends HookWidget {
               TileAction(
                 delayedLoading: deleteDelayed,
                 icon: deleted.value ? Icons.restore : Icons.delete,
-                tooltip: deleted.value ? 'restore' : 'delete',
+                tooltip: deleted.value
+                    ? L10n.of(context).restore
+                    : L10n.of(context).delete,
                 onPressed: handleDelete,
               ),
             ]
