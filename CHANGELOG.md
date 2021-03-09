@@ -1,3 +1,10 @@
+## Unreleased
+
+### Fixed
+
+- Quote blocks in posts and comments are now much prettier
+- Code blocks nwo have monospace font. As they should
+
 ## v0.3.0 - 2021-02-25
 
 WARNING: due to some internal changes your local settings will be reset (logged out of accounts, removed instances, theme back to default)
