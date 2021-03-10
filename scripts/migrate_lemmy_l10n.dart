@@ -325,7 +325,11 @@ void portStrings(
           return null;
         }();
 
-        return '{$variableName,plural, =1{$fixedVariables}${pluralForm != null ? ' other{$pluralForm}' : ''}}';
+        if (pluralForm == null) {
+          return '{$variableName,plural, other{$fixedVariables}}';
+        }
+
+        return '{$variableName,plural, =1{$fixedVariables} other{$pluralForm}}';
       };
     }
 

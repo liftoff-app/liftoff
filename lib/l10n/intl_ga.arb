@@ -113,11 +113,16 @@
   "search": "Cuardaigh",
   "send_message": "Seol Teachtaireacht",
   "top_day": "Lá Barr",
+  "active": "Gnóthach",
+  "not_a_mod_or_admin": "Ní modhnóir ná riarthóir é.",
+  "report_reason_required": "Cúis leis an Tuarascáil Riachtanach.",
+  "report_too_long": "Tuairiscigh ró-fhada.",
+  "couldnt_create_report": "Níorbh fhéidir tuairisc a chruthú.",
+  "couldnt_resolve_report": "Níorbh fhéidir an tuarascáil a réiteach.",
   "top_week": "Seachtain Barr",
   "top_month": "Barr Mí",
   "top_year": "Bar Bliain",
   "top_all": "Barr an Ama Uile",
   "most_comments": "Tuairimí an chuid is mó",
-  "new_comments": "Tráchtaireachtaí Nua",
-  "active": "Gnóthach"
+  "new_comments": "Tráchtaireachtaí Nua"
 }

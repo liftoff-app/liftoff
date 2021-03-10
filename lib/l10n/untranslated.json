@@ -1,57 +1,11 @@
 {
   "ar": [
-    "local",
-    "from",
-    "banner",
-    "display_name",
-    "bio",
-    "not_a_mod_or_admin",
-    "couldnt_find_post",
-    "invalid_url",
-    "couldnt_like_comment",
-    "couldnt_update_comment",
-    "no_comment_edit_allowed",
-    "couldnt_save_comment",
-    "couldnt_get_comments",
-    "report_reason_required",
-    "report_too_long",
-    "couldnt_create_report",
-    "couldnt_resolve_report",
-    "invalid_post_title",
-    "couldnt_create_post",
-    "couldnt_like_post",
-    "couldnt_find_community",
-    "couldnt_get_posts",
-    "no_post_edit_allowed",
-    "couldnt_save_post",
-    "site_already_exists",
-    "couldnt_update_site",
-    "invalid_community_name",
-    "community_already_exists",
-    "community_moderator_already_exists",
-    "community_follower_already_exists",
-    "not_a_moderator",
-    "couldnt_update_community",
-    "no_community_edit_allowed",
-    "system_err_login",
-    "community_user_already_banned",
-    "couldnt_find_that_username_or_email",
-    "invalid_password",
-    "captcha_incorrect",
-    "invalid_username",
-    "bio_length_overflow",
     "couldnt_update_user",
-    "couldnt_update_private_message",
-    "couldnt_update_post",
-    "couldnt_create_private_message",
-    "no_private_message_edit_allowed",
-    "post_title_too_long",
     "number_of_users_online",
     "number_of_comments",
     "number_of_posts",
     "number_of_subscribers",
-    "number_of_users",
-    "delete_account_confirm"
+    "number_of_users"
   ],
 
   "ca": [
@@ -87,10 +41,6 @@
   ],
 
   "eo": [
-    "not_a_mod_or_admin"
-  ],
-
-  "es": [
     "not_a_mod_or_admin"
   ],
 
@@ -179,16 +129,10 @@
   ],
 
   "fr": [
-    "not_a_mod_or_admin",
-    "report_too_long"
+    "not_a_mod_or_admin"
   ],
 
   "ga": [
-    "not_a_mod_or_admin",
-    "report_reason_required",
-    "report_too_long",
-    "couldnt_create_report",
-    "couldnt_resolve_report",
     "number_of_users_online",
     "number_of_comments",
     "number_of_posts",
@@ -787,10 +731,6 @@
     "most_comments",
     "new_comments",
     "active"
-  ],
-
-  "ko": [
-    "not_a_mod_or_admin"
   ],
 
   "nl": [
@@ -1579,9 +1519,5 @@
     "most_comments",
     "new_comments",
     "active"
-  ],
-
-  "zh": [
-    "not_a_mod_or_admin"
   ]
 }

@@ -127,5 +127,6 @@
   "top_all": "Top",
   "most_comments": "Plus commentés",
   "new_comments": "Nouveaux commentaires",
-  "active": "Actif"
+  "active": "Actif",
+  "report_too_long": "Rapport trop long."
 }
