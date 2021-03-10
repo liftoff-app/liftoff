@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "v*.*.*"
-    branches: [master]
 
 jobs:
   get-vars:
@@ -62,15 +61,18 @@ jobs:
             build/app/outputs/bundle/release/app-release.aab
 
       - name: Android build
-        run: flutter build apk --split-per-abi
+        run: |
+          flutter build apk --split-per-abi
+
+          mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
+          mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
+          mv build/app/outputs/flutter-apk/app-x86_64-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
 
       - uses: actions/upload-artifact@v2
         with:
           name: android-build
           path: |
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-            build/app/outputs/flutter-apk/app-x86_64-release.apk
+            lemmur-*.apk
 
   linux-build:
     name: Linux build
@@ -128,7 +130,7 @@ jobs:
       - name: Archive
         working-directory: build/windows/runner/Release
         run: |
-          7z a lemmur-${{ needs.CI.outputs.tag }}-x86_64-windows.zip *
+          7z a lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-windows.zip *
 
       - uses: actions/upload-artifact@v2
         with:
@@ -145,14 +147,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'krawieck/lemmur'
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v2
 
-      - name: Rename artifacts
-        working-directory: android-build
-        run: |
-          mv app-arm64-v8a-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
-          mv app-armeabi-v7a-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
-          mv app-x86_64-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
+      - uses: actions/download-artifact@v2
 
       - name: ls
         run: ls -R
