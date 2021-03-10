@@ -106,14 +106,14 @@ jobs:
           flutter build linux
 
       - name: Archive
-        working-directory: build/linux/x64/release/bundle
+        working-directory: build/linux/release/bundle
         run: |
           tar -czf lemmur-${{ needs.CI.outputs.tag }}-x86_64-linux.tar.gz *
 
       - uses: actions/upload-artifact@v2
         with:
           name: linux-build
-          path: build/linux/x64/release/bundle/lemmur-*.tar.gz
+          path: build/linux/release/bundle/lemmur-*.tar.gz
 
   windows-build:
     name: Windows build
