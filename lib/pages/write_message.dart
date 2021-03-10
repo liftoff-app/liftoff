@@ -16,11 +16,9 @@ class WriteMessagePage extends HookWidget {
   /// if it's non null then this page is used for edit
   final PrivateMessage privateMessage;
 
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
   final bool _isEdit;
 
-  WriteMessagePage.send({
+  const WriteMessagePage.send({
     @required this.recipient,
     @required this.instanceHost,
   })  : assert(recipient != null),
@@ -58,7 +56,7 @@ class WriteMessagePage extends HookWidget {
 
           // ignore: avoid_catches_without_on_clauses
         } catch (e) {
-          scaffoldKey.currentState.showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(e.toString()),
           ));
         }
@@ -76,7 +74,7 @@ class WriteMessagePage extends HookWidget {
           //       containing this widget adds new message?
           // ignore: avoid_catches_without_on_clauses
         } catch (e) {
-          scaffoldKey.currentState.showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(e.toString()),
           ));
         } finally {
@@ -106,7 +104,6 @@ class WriteMessagePage extends HookWidget {
     );
 
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         title: Text(title),
         leading: const CloseButton(),

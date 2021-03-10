@@ -36,14 +36,15 @@ class MarkdownText extends StatelessWidget {
       ),
       onTapLink: (href) {
         linkLauncher(context: context, url: href, instanceHost: instanceHost)
-            .catchError((e) => Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Row(
-                    children: [
-                      const Icon(Icons.warning),
-                      Text("couldn't open link, ${e.toString()}"),
-                    ],
-                  ),
-                )));
+            .catchError(
+                (e) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Row(
+                        children: [
+                          const Icon(Icons.warning),
+                          Text("couldn't open link, ${e.toString()}"),
+                        ],
+                      ),
+                    )));
       },
       imageBuilder: (uri, title, alt) => FullscreenableImage(
         url: uri.toString(),

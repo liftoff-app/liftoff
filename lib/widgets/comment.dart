@@ -143,7 +143,7 @@ class CommentWidget extends HookWidget {
               title: const Text('Open in browser'),
               onTap: () async => await ul.canLaunch(com.comment.link)
                   ? ul.launch(com.comment.link)
-                  : Scaffold.of(context).showSnackBar(
+                  : ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("can't open in browser"))),
             ),
             ListTile(
@@ -271,7 +271,7 @@ class CommentWidget extends HookWidget {
                   onPressed: () {
                     Clipboard.setData(ClipboardData(
                             text: commentTree.comment.comment.content))
-                        .then((_) => Scaffold.of(context).showSnackBar(
+                        .then((_) => ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('comment copied to clipboard'))));
                   }),

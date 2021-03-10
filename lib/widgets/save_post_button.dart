@@ -29,7 +29,7 @@ class SavePostButton extends HookWidget {
         isSaved.value = res.saved;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        Scaffold.of(context)
+        ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('saving failed :(')));
       }
       loading.cancel();

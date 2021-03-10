@@ -70,7 +70,7 @@ class PostWidget extends HookWidget {
             title: const Text('Open in browser'),
             onTap: () async => await ul.canLaunch(post.post.apId)
                 ? ul.launch(post.post.apId)
-                : Scaffold.of(context).showSnackBar(
+                : ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("can't open in browser"))),
           ),
           ListTile(
@@ -506,7 +506,7 @@ class _Voting extends HookWidget {
         myVote.value = res.myVote ?? VoteType.none;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        Scaffold.of(context)
+        ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('voting failed :(')));
         return;
       }

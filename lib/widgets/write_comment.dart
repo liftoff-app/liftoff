@@ -15,10 +15,8 @@ class WriteComment extends HookWidget {
   final Post post;
   final Comment comment;
 
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
-  WriteComment.toPost(this.post) : comment = null;
-  WriteComment.toComment({@required this.comment, @required this.post})
+  const WriteComment.toPost(this.post) : comment = null;
+  const WriteComment.toComment({@required this.comment, @required this.post})
       : assert(comment != null),
         assert(post != null);
 
@@ -67,14 +65,13 @@ class WriteComment extends HookWidget {
         Navigator.of(context).pop(res.commentView);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to post comment')));
       }
       delayed.cancel();
     }
 
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         leading: const CloseButton(),
         actions: [

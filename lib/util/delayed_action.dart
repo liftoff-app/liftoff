@@ -5,7 +5,7 @@ import 'package:lemmy_api_client/v2.dart';
 import '../hooks/delayed_loading.dart';
 
 /// Executes an API action that uses [DelayedLoading], has a try-catch
-/// that displays a [SnackBar] on the Scaffold.of(context) when the action fails
+/// that displays a [SnackBar] when the action fails
 Future<void> delayedAction<T>({
   @required BuildContext context,
   @required DelayedLoading delayedLoading,
@@ -26,7 +26,8 @@ Future<void> delayedAction<T>({
     onSuccess?.call(val);
     // ignore: avoid_catches_without_on_clauses
   } catch (e) {
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(e.toString())));
   }
   cleanup?.call(val);
   delayedLoading.cancel();

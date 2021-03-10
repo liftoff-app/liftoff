@@ -121,7 +121,7 @@ class CommunityPage extends HookWidget {
               title: const Text('Open in browser'),
               onTap: () async => await ul.canLaunch(community.community.actorId)
                   ? ul.launch(community.community.actorId)
-                  : Scaffold.of(context).showSnackBar(
+                  : ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("can't open in browser"))),
             ),
             ListTile(
@@ -488,7 +488,7 @@ class _FollowButton extends HookWidget {
         isSubbed.value = !isSubbed.value;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
             children: [
               const Icon(Icons.warning),
