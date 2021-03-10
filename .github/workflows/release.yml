@@ -1,0 +1,174 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+    branches: [master]
+
+jobs:
+  get-vars:
+    name: Get vars
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.vars.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set variables
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+  android-build:
+    name: Android build
+    runs-on: ubuntu-latest
+    needs: get-vars
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Inject keystore
+        working-directory: android
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ALIAS: ${{ secrets.ALIAS }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        run: |
+          echo storePassword=$KEY_STORE_PASSWORD > key.properties
+          echo keyPassword=$KEY_PASSWORD >> key.properties
+          echo keyAlias=$ALIAS >> key.properties
+          echo storeFile=$HOME/key.jks >> key.properties
+
+          echo $SIGNING_KEY | base64 -d | tee ~/key.jks >/dev/null
+
+      - name: Generate appbundle
+        run: flutter build appbundle
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: android-appbundle
+          path: |
+            build/app/outputs/bundle/release/app-release.aab
+
+      - name: Android build
+        run: flutter build apk --split-per-abi
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: android-build
+          path: |
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            build/app/outputs/flutter-apk/app-x86_64-release.apk
+
+  linux-build:
+    name: Linux build
+    needs: get-vars
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
+      - name: Get additional dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libblkid-dev
+
+      - name: Enable linux support
+        run: |
+          flutter config --enable-linux-desktop
+
+      - name: Build
+        run: |
+          flutter build linux
+
+      - name: Archive
+        working-directory: build/linux/release/bundle
+        run: |
+          tar -czf lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-linux.tar.gz *
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linux-build
+          path: build/linux/release/bundle/lemmur-*.tar.gz
+
+  windows-build:
+    name: Windows build
+    needs: get-vars
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
+      - name: Enable windows support
+        run: |
+          flutter config --enable-windows-desktop
+
+      - name: Build
+        run: |
+          flutter build windows
+
+      - name: Archive
+        working-directory: build/windows/runner/Release
+        run: |
+          7z a lemmur-${{ needs.CI.outputs.tag }}-x86_64-windows.zip *
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: windows-build
+          path: build/windows/runner/Release/lemmur-*.zip
+
+  release:
+    name: Release
+    needs:
+      - get-vars
+      - android-build
+      - linux-build
+      - windows-build
+    runs-on: ubuntu-latest
+    if: github.repository == 'krawieck/lemmur'
+    steps:
+      - uses: actions/download-artifact@v2
+
+      - name: Rename artifacts
+        working-directory: android-build
+        run: |
+          mv app-arm64-v8a-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
+          mv app-armeabi-v7a-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
+          mv app-x86_64-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
+
+      - name: ls
+        run: ls -R
+
+      - name: Extract current changelog
+        run: mv fastlane/metadata/android/en-US/changelogs/$(ls fastlane/metadata/android/en-US/changelogs/ | xargs -I'{}' basename '{}' .txt | sort -n | tail -n 1).txt current-changelog.txt
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            android-build/*
+            linux-build/*
+            windows-build/*
+          draft: true
+          prerelease: true
+          body_path: current-changelog.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
