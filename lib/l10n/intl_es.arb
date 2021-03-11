@@ -128,5 +128,6 @@
   "top_all": "Lo mejor de todos los tiempos",
   "most_comments": "La mayoría de los comentarios",
   "new_comments": "Nuevos Comentarios",
-  "active": "Activo"
+  "active": "Activo",
+  "not_a_mod_or_admin": "No eres un moderador ni un administrador."
 }

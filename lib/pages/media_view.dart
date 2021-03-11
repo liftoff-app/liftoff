@@ -12,11 +12,10 @@ import '../widgets/bottom_modal.dart';
 /// View to interact with a media object. Zoom in/out, download, share, etc.
 class MediaViewPage extends HookWidget {
   final String url;
-  final GlobalKey<ScaffoldState> _key = GlobalKey();
   static const yThreshold = 150;
   static const speedThreshold = 45;
 
-  MediaViewPage(this.url);
+  const MediaViewPage(this.url);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class MediaViewPage extends HookWidget {
     final prevOffset = usePrevious(offset.value);
 
     notImplemented() {
-      _key.currentState.showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("this feature hasn't been implemented yet 😰")));
     }
 
@@ -64,7 +63,6 @@ class MediaViewPage extends HookWidget {
     }
 
     return Scaffold(
-      key: _key,
       extendBodyBehindAppBar: true,
       extendBody: true,
       backgroundColor:

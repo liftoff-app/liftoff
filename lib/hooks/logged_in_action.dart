@@ -23,7 +23,7 @@ VoidCallback Function(
     if (any && store.hasNoAccount ||
         !any && store.isAnonymousFor(instanceHost)) {
       return () {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(message ?? 'you have to be logged in to do that'),
           action: SnackBarAction(
               label: 'log in',

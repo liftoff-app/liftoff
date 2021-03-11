@@ -180,7 +180,7 @@ class AccountsConfigPage extends HookWidget {
             labelBackgroundColor: theme.canvasColor,
             label: 'Add instance',
             onTap: () => showCupertinoModalPopup(
-                context: context, builder: (_) => AddInstancePage()),
+                context: context, builder: (_) => const AddInstancePage()),
           ),
         ],
         child: const Icon(Icons.add),
@@ -196,7 +196,7 @@ class AccountsConfigPage extends HookWidget {
                   child: TextButton.icon(
                     onPressed: () => showCupertinoModalPopup(
                       context: context,
-                      builder: (_) => AddInstancePage(),
+                      builder: (_) => const AddInstancePage(),
                     ),
                     icon: const Icon(Icons.add),
                     label: const Text('Add instance'),

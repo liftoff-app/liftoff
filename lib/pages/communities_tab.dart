@@ -110,7 +110,7 @@ class CommunitiesTab extends HookWidget {
         ]);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        Scaffold.of(context)
+        ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
@@ -259,7 +259,7 @@ class _CommunitySubscribeToggle extends HookWidget {
         ));
         subbed.value = !subbed.value;
       } on Exception catch (err) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Failed to ${subbed.value ? 'un' : ''}follow: $err'),
         ));
       }

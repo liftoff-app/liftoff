@@ -15,9 +15,9 @@ import 'add_instance.dart';
 /// A modal where an account can be added for a given instance
 class AddAccountPage extends HookWidget {
   final String instanceHost;
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  AddAccountPage({@required this.instanceHost}) : assert(instanceHost != null);
+  const AddAccountPage({@required this.instanceHost})
+      : assert(instanceHost != null);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class AddAccountPage extends HookWidget {
         );
         Navigator.of(context).pop();
       } on Exception catch (err) {
-        scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
       }
@@ -56,7 +56,6 @@ class AddAccountPage extends HookWidget {
     }
 
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         leading: const CloseButton(),
         title: const Text('Add account'),
@@ -101,7 +100,7 @@ class AddAccountPage extends HookWidget {
               onTap: () async {
                 final value = await showCupertinoModalPopup<String>(
                   context: context,
-                  builder: (context) => AddInstancePage(),
+                  builder: (context) => const AddInstancePage(),
                 );
                 Navigator.of(context).pop(value);
               },

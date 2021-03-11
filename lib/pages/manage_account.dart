@@ -133,11 +133,11 @@ class _ManageAccount extends HookWidget {
         informAcceptedAvatarRef.current();
         informAcceptedBannerRef.current();
 
-        Scaffold.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('User settings saved'),
         ));
       } on Exception catch (err) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
       } finally {
@@ -190,7 +190,7 @@ class _ManageAccount extends HookWidget {
           accountsStore.removeAccount(user.instanceHost, user.name);
           Navigator.of(context).pop();
         } on Exception catch (err) {
-          Scaffold.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(err.toString()),
           ));
         }
@@ -404,7 +404,7 @@ class _ImagePicker extends HookWidget {
           onChange?.call(url.value);
         }
       } on Exception catch (_) {
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to upload image')));
       }
 

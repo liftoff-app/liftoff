@@ -44,10 +44,8 @@ class CreatePostFab extends HookWidget {
 class CreatePostPage extends HookWidget {
   final CommunityView community;
 
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
-  CreatePostPage() : community = null;
-  CreatePostPage.toCommunity(this.community);
+  const CreatePostPage() : community = null;
+  const CreatePostPage.toCommunity(this.community);
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +98,7 @@ class CreatePostPage extends HookWidget {
         print(urlController.text);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to upload image')));
       } finally {
         imageUploadLoading.value = false;
@@ -229,7 +227,7 @@ class CreatePostPage extends HookWidget {
 
     handleSubmit() async {
       if (selectedCommunity.value == null || titleController.text.isEmpty) {
-        scaffoldKey.currentState.showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Choosing a community and a title is required'),
         ));
         return;
@@ -253,14 +251,13 @@ class CreatePostPage extends HookWidget {
         return;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        scaffoldKey.currentState
+        ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Failed to post')));
       }
       delayed.cancel();
     }
 
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         leading: const CloseButton(),
         actions: [

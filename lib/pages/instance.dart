@@ -81,7 +81,7 @@ class InstancePage extends HookWidget {
               onTap: () async => await ul
                       .canLaunch('https://${site.instanceHost}')
                   ? ul.launch('https://${site.instanceHost}')
-                  : Scaffold.of(context).showSnackBar(
+                  : ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("can't open in browser"))),
             ),
             ListTile(

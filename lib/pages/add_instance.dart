@@ -10,9 +10,7 @@ import '../widgets/fullscreenable_image.dart';
 
 /// A page that let's user add a new instance. Pops a url of the added instance
 class AddInstancePage extends HookWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
-  AddInstancePage();
+  const AddInstancePage();
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +53,13 @@ class AddInstancePage extends HookWidget {
         await accountsStore.addInstance(inst, assumeValid: true);
         Navigator.of(context).pop(inst);
       } on Exception catch (err) {
-        scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(err.toString()),
         ));
       }
     }
 
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         leading: const CloseButton(),
         title: const Text('Add instance'),
