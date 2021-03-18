@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
+import '../util/share.dart';
 import 'avatar.dart';
 import 'bottom_modal.dart';
 import 'fullscreenable_image.dart';
@@ -384,9 +384,9 @@ class PostWidget extends HookWidget {
               if (!fullPost)
                 IconButton(
                   icon: const Icon(Icons.share),
-                  onPressed: () => Share.text(
-                      'Share post url', post.post.apId, 'text/plain'),
-                ), // TODO: find a way to mark it as url
+                  onPressed: () =>
+                      Share.share(post.post.apId, context: context),
+                ),
               if (!fullPost) SavePostButton(post),
               _Voting(post),
             ],

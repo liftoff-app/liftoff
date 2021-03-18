@@ -31,7 +31,7 @@ dependencies:
   modal_bottom_sheet: ^1.0.0+1
 
   # native
-  esys_flutter_share: ^1.0.2
+  share: ^2.0.1
   url_launcher: ^5.5.1
   shared_preferences: ">=0.5.0 <2.0.0"
   package_info: ^0.4.3

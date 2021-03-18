@@ -1,4 +1,3 @@
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +15,7 @@ import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
+import '../util/share.dart';
 import '../util/text_color.dart';
 import 'avatar.dart';
 import 'bottom_modal.dart';
@@ -149,14 +149,12 @@ class CommentWidget extends HookWidget {
             ListTile(
               leading: const Icon(Icons.share),
               title: const Text('Share url'),
-              onTap: () => Share.text(
-                  'Share comment url', com.comment.link, 'text/plain'),
+              onTap: () => Share.share(com.comment.link, context: context),
             ),
             ListTile(
               leading: const Icon(Icons.share),
               title: const Text('Share text'),
-              onTap: () => Share.text(
-                  'Share comment text', com.comment.content, 'text/plain'),
+              onTap: () => Share.share(com.comment.content, context: context),
             ),
             ListTile(
               leading:
