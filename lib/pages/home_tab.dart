@@ -277,32 +277,31 @@ class InfiniteHomeList extends HookWidget {
           listingType != PostListingType.community, 'only subscribed or all');
 
       final instances = () {
-        if (listingType == PostListingType.all) {
-          return accStore.instances;
-        } else {
+        if (listingType == PostListingType.subscribed) {
           return accStore.loggedInInstances;
         }
+
+        return accStore.instances;
       }();
 
-      final futures =
-          instances.map((instanceHost) => LemmyApiV2(instanceHost).run(GetPosts(
-                type: listingType,
-                sort: sort,
-                page: page,
-                limit: limit,
-                auth: accStore.defaultTokenFor(instanceHost)?.raw,
-              )));
-      final posts = await Future.wait(futures);
-      final newPosts = <PostView>[];
-      final longest = posts.map((e) => e.length).reduce(max);
+      final futures = [
+        for (final instanceHost in instances)
+          LemmyApiV2(instanceHost).run(GetPosts(
+            type: listingType,
+            sort: sort,
+            page: page,
+            limit: limit,
+            auth: accStore.defaultTokenFor(instanceHost)?.raw,
+          ))
+      ];
+      final instancePosts = await Future.wait(futures);
+      final longest = instancePosts.map((e) => e.length).reduce(max);
 
-      for (var i = 0; i < longest; i++) {
-        for (final el in posts) {
-          if (el.elementAt(i) != null) {
-            newPosts.add(el[i]);
-          }
-        }
-      }
+      final newPosts = [
+        for (var i = 0; i < longest; i++)
+          for (final posts in instancePosts)
+            if (i < posts.length) posts[i]
+      ];
 
       return newPosts;
     }
