@@ -4,6 +4,7 @@
 
 - Quote blocks in posts and comments are now much prettier
 - Code blocks nwo have monospace font. As they should
+- Switching accounts in the profile tab now correctly reacts to the change
 
 ## v0.3.0 - 2021-02-25
 
