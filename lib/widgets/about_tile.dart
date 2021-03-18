@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:package_info/package_info.dart';
@@ -17,8 +18,14 @@ class AboutTile extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final packageInfoSnap = useMemoFuture(
-      () => PackageInfo.fromPlatform()
-          .then((e) => e, onError: (_, __) => PackageInfo(version: '')),
+      () async {
+        try {
+          return await PackageInfo.fromPlatform();
+        } on MissingPluginException {
+          // when we get here it means PackageInfo does not support this platform
+          return PackageInfo(version: '');
+        }
+      },
     );
     final assetBundle = DefaultAssetBundle.of(context);
     final changelogSnap =
