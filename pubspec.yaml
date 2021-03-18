@@ -61,7 +61,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  effective_dart: ^1.0.0
   flutter_launcher_icons: ^0.8.1
   json_serializable: ^3.5.1
   build_runner: ^1.11.1

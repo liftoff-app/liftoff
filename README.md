@@ -1,7 +1,6 @@
 <div align="center">
 
 [![](https://github.com/krawieck/lemmur/workflows/ci/badge.svg)](https://github.com/krawieck/lemmur/actions)
-[![style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://pub.dev/packages/effective_dart)
 
 <img width=200px height=200px src="https://raw.githubusercontent.com/krawieck/lemmur/master/assets/readme_icon.svg"/>
 
