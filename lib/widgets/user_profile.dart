@@ -47,7 +47,7 @@ class UserProfile extends HookWidget {
         sort: SortType.active,
         auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
       ));
-    });
+    }, [userId, instanceHost]);
 
     if (!userDetailsSnap.hasData) {
       return const Center(child: CircularProgressIndicator());
