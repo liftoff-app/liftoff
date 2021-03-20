@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -16,6 +15,7 @@ import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/more_icon.dart';
+import '../util/share.dart';
 import '../widgets/avatar.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
@@ -108,8 +108,7 @@ class CommunityPage extends HookWidget {
     }
 
     // FUNCTIONS
-    void _share() =>
-        Share.text('Share instance', community.community.actorId, 'text/plain');
+    void _share() => share(community.community.actorId, context: context);
 
     void _openMoreMenu() {
       showBottomModal(

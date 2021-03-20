@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- Share buttons on windows/linux now copy the data to the clipboard
+
 ### Fixed
 
 - Quote blocks in posts and comments are now much prettier

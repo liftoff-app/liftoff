@@ -1,4 +1,3 @@
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +9,7 @@ import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
 import '../util/more_icon.dart';
+import '../util/share.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
 import '../widgets/reveal_after_scroll.dart';
@@ -84,7 +84,7 @@ class FullPostPage extends HookWidget {
       }
     }
 
-    sharePost() => Share.text('Share post', post.post.apId, 'text/plain');
+    sharePost() => share(post.post.apId, context: context);
 
     comment() async {
       final newComment = await showCupertinoModalPopup<CommentView>(
