@@ -384,8 +384,7 @@ class PostWidget extends HookWidget {
               if (!fullPost)
                 IconButton(
                   icon: const Icon(Icons.share),
-                  onPressed: () =>
-                      Share.share(post.post.apId, context: context),
+                  onPressed: () => share(post.post.apId, context: context),
                 ),
               if (!fullPost) SavePostButton(post),
               _Voting(post),

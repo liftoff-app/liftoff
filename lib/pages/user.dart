@@ -49,7 +49,7 @@ class UserPage extends HookWidget {
             SendMessageButton(userDetailsSnap.data.userView.user),
             IconButton(
               icon: const Icon(Icons.share),
-              onPressed: () => Share.share(
+              onPressed: () => share(
                 userDetailsSnap.data.userView.user.actorId,
                 context: context,
               ),

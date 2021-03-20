@@ -35,7 +35,7 @@ class MediaViewPage extends HookWidget {
 
     // TODO: hide navbar and topbar on android without a content jump
 
-    share() {
+    sharePhoto() {
       showBottomModal(
         context: context,
         builder: (context) => Column(
@@ -45,7 +45,7 @@ class MediaViewPage extends HookWidget {
               title: const Text('Share link'),
               onTap: () {
                 Navigator.of(context).pop();
-                Share.share(url, context: context);
+                share(url, context: context);
               },
             ),
             ListTile(
@@ -77,7 +77,7 @@ class MediaViewPage extends HookWidget {
                 IconButton(
                   icon: const Icon(Icons.share),
                   tooltip: 'share',
-                  onPressed: share,
+                  onPressed: sharePhoto,
                 ),
                 IconButton(
                   icon: const Icon(Icons.file_download),

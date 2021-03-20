@@ -108,7 +108,7 @@ class CommunityPage extends HookWidget {
     }
 
     // FUNCTIONS
-    void _share() => Share.share(community.community.actorId, context: context);
+    void _share() => share(community.community.actorId, context: context);
 
     void _openMoreMenu() {
       showBottomModal(

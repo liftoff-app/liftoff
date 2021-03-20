@@ -149,12 +149,12 @@ class CommentWidget extends HookWidget {
             ListTile(
               leading: const Icon(Icons.share),
               title: const Text('Share url'),
-              onTap: () => Share.share(com.comment.link, context: context),
+              onTap: () => share(com.comment.link, context: context),
             ),
             ListTile(
               leading: const Icon(Icons.share),
               title: const Text('Share text'),
-              onTap: () => Share.share(com.comment.content, context: context),
+              onTap: () => share(com.comment.content, context: context),
             ),
             ListTile(
               leading:

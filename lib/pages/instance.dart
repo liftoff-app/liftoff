@@ -67,7 +67,7 @@ class InstancePage extends HookWidget {
 
     final site = siteSnap.data;
 
-    void _share() => Share.share('https://$instanceHost', context: context);
+    void _share() => share('https://$instanceHost', context: context);
 
     void _openMoreMenu(BuildContext c) {
       showBottomModal(
