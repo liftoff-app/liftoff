@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,6 +11,7 @@ import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
+import '../util/share.dart';
 import '../util/text_color.dart';
 import '../widgets/avatar.dart';
 import '../widgets/bottom_modal.dart';
@@ -29,9 +29,6 @@ class InstancePage extends HookWidget {
   final String instanceHost;
   final Future<FullSiteView> siteFuture;
   final Future<List<CommunityView>> communitiesFuture;
-
-  void _share() =>
-      Share.text('Share instance', 'https://$instanceHost', 'text/plain');
 
   InstancePage({@required this.instanceHost})
       : assert(instanceHost != null),
@@ -69,6 +66,8 @@ class InstancePage extends HookWidget {
     }
 
     final site = siteSnap.data;
+
+    void _share() => share('https://$instanceHost', context: context);
 
     void _openMoreMenu(BuildContext c) {
       showBottomModal(

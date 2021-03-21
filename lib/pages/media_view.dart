@@ -1,12 +1,12 @@
 import 'dart:math' show max, min;
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../util/share.dart';
 import '../widgets/bottom_modal.dart';
 
 /// View to interact with a media object. Zoom in/out, download, share, etc.
@@ -35,7 +35,7 @@ class MediaViewPage extends HookWidget {
 
     // TODO: hide navbar and topbar on android without a content jump
 
-    share() {
+    sharePhoto() {
       showBottomModal(
         context: context,
         builder: (context) => Column(
@@ -45,7 +45,7 @@ class MediaViewPage extends HookWidget {
               title: const Text('Share link'),
               onTap: () {
                 Navigator.of(context).pop();
-                Share.text('Share image url', url, 'text/plain');
+                share(url, context: context);
               },
             ),
             ListTile(
@@ -77,7 +77,7 @@ class MediaViewPage extends HookWidget {
                 IconButton(
                   icon: const Icon(Icons.share),
                   tooltip: 'share',
-                  onPressed: share,
+                  onPressed: sharePhoto,
                 ),
                 IconButton(
                   icon: const Icon(Icons.file_download),
