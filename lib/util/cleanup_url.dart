@@ -1,6 +1,6 @@
 /// Strips protocol, 'www.', and trailing '/' from [url] aka. cleans it up
 String cleanUpUrl(String url) {
-  var newUrl = url;
+  var newUrl = url.toLowerCase();
 
   if (newUrl.startsWith('https://')) {
     newUrl = newUrl.substring(8);
