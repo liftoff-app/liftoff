@@ -1,19 +1,7 @@
-/// Strips protocol, 'www.', and trailing '/' from [url] aka. cleans it up
-String cleanUpUrl(String url) {
-  var newUrl = url.toLowerCase();
-
-  if (newUrl.startsWith('https://')) {
-    newUrl = newUrl.substring(8);
-  }
-  if (newUrl.startsWith('www.')) {
-    newUrl = newUrl.substring(4);
-  }
-  if (newUrl.endsWith('/')) {
-    newUrl = newUrl.substring(0, newUrl.length - 1);
-  }
-
-  return newUrl;
-}
+/// Returns host of a url without a leading 'www.' or protocol if present also
+/// removes trailing '/'
+String cleanUpUrl(String url) =>
+    urlHost(url.startsWith('https://') ? url : 'https://$url');
 
 // Returns host of a url without a leading 'www.' if present
 String urlHost(String url) {
