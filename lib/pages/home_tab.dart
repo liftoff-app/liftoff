@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/infinite_scroll.dart';
 import '../hooks/memo_future.dart';
@@ -34,7 +34,7 @@ class HomeTab extends HookWidget {
     final instancesIcons = useMemoFuture(() async {
       final instances = accStore.instances.toList(growable: false);
       final sites = await Future.wait(instances.map(
-          (e) => LemmyApiV2(e).run(const GetSite()).catchError((e) => null)));
+          (e) => LemmyApiV3(e).run(const GetSite()).catchError((e) => null)));
 
       return {
         for (var i = 0; i < sites.length; i++)
@@ -286,11 +286,12 @@ class InfiniteHomeList extends HookWidget {
 
       final futures = [
         for (final instanceHost in instances)
-          LemmyApiV2(instanceHost).run(GetPosts(
+          LemmyApiV3(instanceHost).run(GetPosts(
             type: listingType,
             sort: sort,
             page: page,
             limit: limit,
+            savedOnly: false,
             auth: accStore.defaultTokenFor(instanceHost)?.raw,
           ))
       ];
@@ -308,11 +309,12 @@ class InfiniteHomeList extends HookWidget {
 
     FetcherWithSorting<PostView> fetcherFromInstance(
             String instanceHost, PostListingType listingType) =>
-        (page, batchSize, sort) => LemmyApiV2(instanceHost).run(GetPosts(
+        (page, batchSize, sort) => LemmyApiV3(instanceHost).run(GetPosts(
               type: listingType,
               sort: sort,
               page: page,
               limit: batchSize,
+              savedOnly: false,
               auth: accStore.defaultTokenFor(instanceHost)?.raw,
             ));
 

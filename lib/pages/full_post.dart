@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/logged_in_action.dart';
 import '../hooks/refreshable.dart';
@@ -36,7 +36,7 @@ class FullPostPage extends HookWidget {
     final scrollController = useScrollController();
 
     final fullPostRefreshable =
-        useRefreshable(() => LemmyApiV2(instanceHost).run(GetPost(
+        useRefreshable(() => LemmyApiV3(instanceHost).run(GetPost(
               id: id,
               auth: accStore.defaultTokenFor(instanceHost)?.raw,
             )));

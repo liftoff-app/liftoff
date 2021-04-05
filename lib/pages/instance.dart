@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
@@ -32,14 +32,14 @@ class InstancePage extends HookWidget {
 
   InstancePage({@required this.instanceHost})
       : assert(instanceHost != null),
-        siteFuture = LemmyApiV2(instanceHost).run(const GetSite()),
-        communitiesFuture = LemmyApiV2(instanceHost).run(const ListCommunities(
+        siteFuture = LemmyApiV3(instanceHost).run(const GetSite()),
+        communitiesFuture = LemmyApiV3(instanceHost).run(const ListCommunities(
             type: PostListingType.local, sort: SortType.hot, limit: 6));
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final siteSnap = useFuture(siteFuture);
+    final siteSnap = useFuture(siteFuture, initialData: null);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
     final accStore = useAccountsStore();
     final scrollController = useScrollController();
@@ -177,21 +177,23 @@ class InstancePage extends HookWidget {
             children: [
               InfinitePostList(
                   fetcher: (page, batchSize, sort) =>
-                      LemmyApiV2(instanceHost).run(GetPosts(
+                      LemmyApiV3(instanceHost).run(GetPosts(
                         // TODO: switch between all and subscribed
                         type: PostListingType.all,
                         sort: sort,
                         limit: batchSize,
                         page: page,
+                        savedOnly: false,
                         auth: accStore.defaultTokenFor(instanceHost)?.raw,
                       ))),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sort) =>
-                      LemmyApiV2(instanceHost).run(GetComments(
+                      LemmyApiV3(instanceHost).run(GetComments(
                         type: CommentListingType.all,
                         sort: sort,
                         limit: batchSize,
                         page: page,
+                        savedOnly: false,
                         auth: accStore.defaultTokenFor(instanceHost)?.raw,
                       ))),
               _AboutTab(site,
@@ -228,14 +230,14 @@ class _AboutTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final commSnap = useFuture(communitiesFuture);
+    final commSnap = useFuture(communitiesFuture, initialData: null);
     final accStore = useAccountsStore();
 
     void goToCommunities() {
       goTo(
         context,
         (_) => CommunitiesListPage(
-          fetcher: (page, batchSize, sortType) => LemmyApiV2(instanceHost).run(
+          fetcher: (page, batchSize, sortType) => LemmyApiV3(instanceHost).run(
             ListCommunities(
               type: PostListingType.local,
               sort: sortType,
@@ -325,12 +327,12 @@ class _AboutTab extends HookWidget {
             ),
             for (final u in site.admins)
               ListTile(
-                title: Text(u.user.originDisplayName),
-                subtitle: u.user.bio != null
-                    ? MarkdownText(u.user.bio, instanceHost: instanceHost)
+                title: Text(u.person.originDisplayName),
+                subtitle: u.person.bio != null
+                    ? MarkdownText(u.person.bio, instanceHost: instanceHost)
                     : null,
-                onTap: () => goToUser.fromUserSafe(context, u.user),
-                leading: Avatar(url: u.user.avatar),
+                onTap: () => goToUser.fromPersonSafe(context, u.person),
+                leading: Avatar(url: u.person.avatar),
               ),
             const _Divider(),
             ListTile(

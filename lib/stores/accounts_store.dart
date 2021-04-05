@@ -3,17 +3,15 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../util/unawaited.dart';
 
 part 'accounts_store.g.dart';
 
 /// Store that manages all accounts
 @JsonSerializable()
 class AccountsStore extends ChangeNotifier {
-  static const prefsKey = 'v1:AccountsStore';
+  static const prefsKey = 'v2:AccountsStore';
   static final _prefs = SharedPreferences.getInstance();
 
   /// Map containing JWT tokens of specific users.
@@ -50,7 +48,7 @@ class AccountsStore extends ChangeNotifier {
   }
 
   /// automatically sets default accounts
-  void _assignDefaultAccounts() {
+  Future<void> _assignDefaultAccounts() async {
     // remove dangling defaults
     defaultAccounts.entries
         .map((dft) {
@@ -80,7 +78,8 @@ class AccountsStore extends ChangeNotifier {
       if (!defaultAccounts.containsKey(instanceHost)) {
         // select first account in this instance, if any
         if (!isAnonymousFor(instanceHost)) {
-          setDefaultAccountFor(instanceHost, usernamesFor(instanceHost).first);
+          await setDefaultAccountFor(
+              instanceHost, usernamesFor(instanceHost).first);
         }
       }
     }
@@ -91,7 +90,8 @@ class AccountsStore extends ChangeNotifier {
       for (final instanceHost in instances) {
         // select first account in this instance, if any
         if (!isAnonymousFor(instanceHost)) {
-          setDefaultAccount(instanceHost, usernamesFor(instanceHost).first);
+          await setDefaultAccount(
+              instanceHost, usernamesFor(instanceHost).first);
         }
       }
     }
@@ -147,19 +147,19 @@ class AccountsStore extends ChangeNotifier {
   }
 
   /// sets globally default account
-  void setDefaultAccount(String instanceHost, String username) {
+  Future<void> setDefaultAccount(String instanceHost, String username) {
     defaultAccount = '$username@$instanceHost';
 
     notifyListeners();
-    save();
+    return save();
   }
 
   /// sets default account for given instance
-  void setDefaultAccountFor(String instanceHost, String username) {
+  Future<void> setDefaultAccountFor(String instanceHost, String username) {
     defaultAccounts[instanceHost] = username;
 
     notifyListeners();
-    save();
+    return save();
   }
 
   /// An instance is considered anonymous if it was not
@@ -198,7 +198,7 @@ class AccountsStore extends ChangeNotifier {
       throw Exception('No such instance was added');
     }
 
-    final lemmy = LemmyApiV2(instanceHost);
+    final lemmy = LemmyApiV3(instanceHost);
     final token = await lemmy.run(Login(
       usernameOrEmail: usernameOrEmail,
       password: password,
@@ -206,11 +206,11 @@ class AccountsStore extends ChangeNotifier {
     final userData =
         await lemmy.run(GetSite(auth: token.raw)).then((value) => value.myUser);
 
-    tokens[instanceHost][userData.name] = token;
+    tokens[instanceHost][userData.person.name] = token;
 
-    _assignDefaultAccounts();
+    await _assignDefaultAccounts();
     notifyListeners();
-    unawaited(save());
+    return save();
   }
 
   /// adds a new instance with no accounts associated with it.
@@ -226,7 +226,7 @@ class AccountsStore extends ChangeNotifier {
 
     if (!assumeValid) {
       try {
-        await LemmyApiV2(instanceHost).run(const GetSite());
+        await LemmyApiV3(instanceHost).run(const GetSite());
         // ignore: avoid_catches_without_on_clauses
       } catch (_) {
         throw Exception('This instance seems to not exist');
@@ -235,25 +235,25 @@ class AccountsStore extends ChangeNotifier {
 
     tokens[instanceHost] = HashMap();
 
-    _assignDefaultAccounts();
+    await _assignDefaultAccounts();
     notifyListeners();
-    unawaited(save());
+    return save();
   }
 
   /// This also removes all accounts assigned to this instance
-  void removeInstance(String instanceHost) {
+  Future<void> removeInstance(String instanceHost) async {
     tokens.remove(instanceHost);
 
-    _assignDefaultAccounts();
+    await _assignDefaultAccounts();
     notifyListeners();
-    save();
+    return save();
   }
 
-  void removeAccount(String instanceHost, String username) {
+  Future<void> removeAccount(String instanceHost, String username) async {
     tokens[instanceHost].remove(username);
 
-    _assignDefaultAccounts();
+    await _assignDefaultAccounts();
     notifyListeners();
-    save();
+    return save();
   }
 }

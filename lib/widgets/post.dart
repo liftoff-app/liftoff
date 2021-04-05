@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
@@ -191,7 +191,7 @@ class PostWidget extends HookWidget {
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = () => goToUser.fromUserSafe(
+                                    ..onTap = () => goToUser.fromPersonSafe(
                                           context,
                                           post.creator,
                                         ),
@@ -496,7 +496,7 @@ class _Voting extends HookWidget {
     final loggedInAction = useLoggedInAction(post.instanceHost);
 
     vote(VoteType vote, Jwt token) async {
-      final api = LemmyApiV2(post.instanceHost);
+      final api = LemmyApiV3(post.instanceHost);
 
       loading.start();
       try {

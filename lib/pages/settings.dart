@@ -127,7 +127,7 @@ class AccountsConfigPage extends HookWidget {
             ),
           ) ??
           false) {
-        accountsStore.removeInstance(instanceHost);
+        await accountsStore.removeInstance(instanceHost);
       }
     }
 
@@ -151,7 +151,7 @@ class AccountsConfigPage extends HookWidget {
             ),
           ) ??
           false) {
-        accountsStore.removeAccount(instanceHost, username);
+        return accountsStore.removeAccount(instanceHost, username);
       }
     }
 

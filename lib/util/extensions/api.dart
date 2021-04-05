@@ -1,4 +1,4 @@
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../cleanup_url.dart';
 
@@ -12,7 +12,7 @@ extension GetOriginInstanceCommunitySafe on CommunitySafe {
   String get originInstanceHost => _extract(actorId);
 }
 
-extension GetOriginInstanceUserSafe on UserSafe {
+extension GetOriginInstancePersonSafe on PersonSafe {
   String get originInstanceHost => _extract(actorId);
 }
 
@@ -32,7 +32,7 @@ extension CommunityDisplayNames on CommunitySafe {
       local ? displayName : '!$name@$originInstanceHost';
 }
 
-extension UserDisplayNames on UserSafe {
+extension UserDisplayNames on PersonSafe {
   String get displayName {
     if (preferredUsername != null && preferredUsername.isNotEmpty) {
       return preferredUsername;

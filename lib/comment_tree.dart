@@ -1,4 +1,4 @@
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import 'util/hot_rank.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
@@ -28,10 +28,11 @@ class WriteComment extends HookWidget {
     final accStore = useAccountsStore();
 
     final preview = () {
-      final body = MarkdownText(
-        comment?.content ?? post.body,
-        instanceHost: post.instanceHost,
-      );
+      final body = () {
+        final text = comment?.content ?? post.body;
+        if (text == null) return const SizedBox.shrink();
+        return MarkdownText(text, instanceHost: post.instanceHost);
+      }();
 
       if (post != null) {
         return Column(
@@ -50,7 +51,7 @@ class WriteComment extends HookWidget {
     }();
 
     handleSubmit() async {
-      final api = LemmyApiV2(post.instanceHost);
+      final api = LemmyApiV3(post.instanceHost);
 
       final token = accStore.defaultTokenFor(post.instanceHost);
 

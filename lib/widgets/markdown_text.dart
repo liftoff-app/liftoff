@@ -34,7 +34,7 @@ class MarkdownText extends StatelessWidget {
             // TODO: use a font from google fonts maybe? the defaults aren't very pretty
             .copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),
       ),
-      onTapLink: (href) {
+      onTapLink: (text, href, title) {
         linkLauncher(context: context, url: href, instanceHost: instanceHost)
             .catchError(
                 (e) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(

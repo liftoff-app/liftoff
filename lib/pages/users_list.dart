@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
@@ -9,7 +9,7 @@ import '../widgets/markdown_text.dart';
 /// Infinite list of Users fetched by the given fetcher
 class UsersListPage extends StatelessWidget {
   final String title;
-  final List<UserViewSafe> users;
+  final List<PersonViewSafe> users;
 
   const UsersListPage({Key key, @required this.users, this.title})
       : assert(users != null),
@@ -34,7 +34,7 @@ class UsersListPage extends StatelessWidget {
 }
 
 class UsersListItem extends StatelessWidget {
-  final UserViewSafe user;
+  final PersonViewSafe user;
 
   const UsersListItem({Key key, @required this.user})
       : assert(user != null),
@@ -42,17 +42,17 @@ class UsersListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        title: Text(user.user.originDisplayName),
-        subtitle: user.user.bio != null
+        title: Text(user.person.originDisplayName),
+        subtitle: user.person.bio != null
             ? Opacity(
                 opacity: 0.5,
                 child: MarkdownText(
-                  user.user.bio,
+                  user.person.bio,
                   instanceHost: user.instanceHost,
                 ),
               )
             : null,
-        onTap: () => goToUser.fromUserSafe(context, user.user),
-        leading: Avatar(url: user.user.avatar),
+        onTap: () => goToUser.fromPersonSafe(context, user.person),
+        leading: Avatar(url: user.person.avatar),
       );
 }

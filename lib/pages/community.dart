@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
@@ -62,12 +62,12 @@ class CommunityPage extends HookWidget {
       final token = accountsStore.defaultTokenFor(instanceHost);
 
       if (communityId != null) {
-        return LemmyApiV2(instanceHost).run(GetCommunity(
+        return LemmyApiV3(instanceHost).run(GetCommunity(
           id: communityId,
           auth: token?.raw,
         ));
       } else {
-        return LemmyApiV2(instanceHost).run(GetCommunity(
+        return LemmyApiV3(instanceHost).run(GetCommunity(
           name: communityName,
           auth: token?.raw,
         ));
@@ -186,17 +186,18 @@ class CommunityPage extends HookWidget {
             children: [
               InfinitePostList(
                 fetcher: (page, batchSize, sort) =>
-                    LemmyApiV2(community.instanceHost).run(GetPosts(
+                    LemmyApiV3(community.instanceHost).run(GetPosts(
                   type: PostListingType.community,
                   sort: sort,
                   communityId: community.community.id,
                   page: page,
                   limit: batchSize,
+                  savedOnly: false,
                 )),
               ),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sortType) =>
-                      LemmyApiV2(community.instanceHost).run(GetComments(
+                      LemmyApiV3(community.instanceHost).run(GetComments(
                         communityId: community.community.id,
                         auth: accountsStore
                             .defaultTokenFor(community.instanceHost)
@@ -205,6 +206,7 @@ class CommunityPage extends HookWidget {
                         sort: sortType,
                         limit: batchSize,
                         page: page,
+                        savedOnly: false,
                       ))),
               _AboutTab(
                 community: community,
@@ -372,10 +374,6 @@ class _AboutTab extends StatelessWidget {
     @required this.onlineUsers,
   }) : super(key: key);
 
-  void goToCategories() {
-    print('GO TO CATEGORIES');
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -416,14 +414,6 @@ class _AboutTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: OutlinedButton(
-            onPressed: goToCategories,
-            child: Text(community.category.name),
-          ),
-        ),
-        const _Divider(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: OutlinedButton(
             onPressed: () => goTo(
               context,
               (context) => ModlogPage.forCommunity(
@@ -446,7 +436,7 @@ class _AboutTab extends StatelessWidget {
             ListTile(
               title: Text(
                   mod.moderator.preferredUsername ?? '@${mod.moderator.name}'),
-              onTap: () => goToUser.fromUserSafe(context, mod.moderator),
+              onTap: () => goToUser.fromPersonSafe(context, mod.moderator),
             ),
         ]
       ],
@@ -480,7 +470,7 @@ class _FollowButton extends HookWidget {
     subscribe(Jwt token) async {
       delayed.start();
       try {
-        await LemmyApiV2(community.instanceHost).run(FollowCommunity(
+        await LemmyApiV3(community.instanceHost).run(FollowCommunity(
             communityId: community.community.id,
             follow: !isSubbed.value,
             auth: token.raw));

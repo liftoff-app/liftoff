@@ -91,7 +91,7 @@ class UserProfileTab extends HookWidget {
         actions: actions,
       ),
       body: UserProfile(
-        userId: accountsStore.defaultToken.payload.id,
+        userId: accountsStore.defaultToken.payload.sub,
         instanceHost: accountsStore.defaultInstanceHost,
       ),
     );

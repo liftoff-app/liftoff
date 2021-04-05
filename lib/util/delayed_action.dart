@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/delayed_loading.dart';
 
@@ -22,7 +22,7 @@ Future<void> delayedAction<T>({
   T val;
   try {
     delayedLoading.start();
-    val = await LemmyApiV2(instanceHost).run<T>(query);
+    val = await LemmyApiV3(instanceHost).run<T>(query);
     onSuccess?.call(val);
     // ignore: avoid_catches_without_on_clauses
   } catch (e) {

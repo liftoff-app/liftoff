@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
@@ -81,7 +81,7 @@ class _SearchResultsList extends HookWidget {
 
     return SortableInfiniteList(
       fetcher: (page, batchSize, sort) async {
-        final s = await LemmyApiV2(instanceHost).run(Search(
+        final s = await LemmyApiV3(instanceHost).run(Search(
           q: query,
           sort: sort,
           type: type,
@@ -115,7 +115,7 @@ class _SearchResultsList extends HookWidget {
               child: PostWidget(data as PostView),
             );
           case SearchType.users:
-            return UsersListItem(user: data as UserViewSafe);
+            return UsersListItem(user: data as PersonViewSafe);
           default:
             throw UnimplementedError();
         }

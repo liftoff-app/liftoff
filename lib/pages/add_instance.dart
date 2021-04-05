@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/debounce.dart';
 import '../hooks/stores.dart';
@@ -32,7 +32,7 @@ class AddInstancePage extends HookWidget {
       }
       try {
         icon.value =
-            (await LemmyApiV2(inst).run(const GetSite())).siteView.site.icon;
+            (await LemmyApiV3(inst).run(const GetSite())).siteView.site.icon;
         isSite.value = true;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fuzzy/fuzzy.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/refreshable.dart';
@@ -35,7 +35,7 @@ class CommunitiesTab extends HookWidget {
     getInstances() {
       final futures = accountsStore.loggedInInstances
           .map(
-            (instanceHost) => LemmyApiV2(instanceHost)
+            (instanceHost) => LemmyApiV3(instanceHost)
                 .run(const GetSite())
                 .then((e) => e.siteView.site),
           )
@@ -47,12 +47,12 @@ class CommunitiesTab extends HookWidget {
     getCommunities() {
       final futures = accountsStore.loggedInInstances
           .map(
-            (instanceHost) => LemmyApiV2(instanceHost)
-                .run(GetUserDetails(
+            (instanceHost) => LemmyApiV3(instanceHost)
+                .run(GetPersonDetails(
                   sort: SortType.active,
                   savedOnly: false,
-                  userId:
-                      accountsStore.defaultTokenFor(instanceHost).payload.id,
+                  personId:
+                      accountsStore.defaultTokenFor(instanceHost).payload.sub,
                   auth: accountsStore.defaultTokenFor(instanceHost).raw,
                 ))
                 .then((e) => e.follows),
@@ -252,7 +252,7 @@ class _CommunitySubscribeToggle extends HookWidget {
       delayed.start();
 
       try {
-        await LemmyApiV2(instanceHost).run(FollowCommunity(
+        await LemmyApiV3(instanceHost).run(FollowCommunity(
           communityId: communityId,
           follow: !subbed.value,
           auth: accountsStore.defaultTokenFor(instanceHost).raw,

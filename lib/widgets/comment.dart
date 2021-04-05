@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../comment_tree.dart';
@@ -64,15 +64,15 @@ class CommentWidget extends HookWidget {
           hideOnRead: hideOnRead,
         );
 
-  CommentWidget.fromUserMentionView(
-    UserMentionView userMentionView, {
+  CommentWidget.fromPersonMentionView(
+    PersonMentionView userMentionView, {
     bool hideOnRead = false,
   }) : this(
           CommentTree(CommentView.fromJson(userMentionView.toJson())),
           hideOnRead: hideOnRead,
           canBeMarkedAsRead: true,
           detached: true,
-          userMentionId: userMentionView.userMention.id,
+          userMentionId: userMentionView.personMention.id,
         );
 
   _showCommentInfo(BuildContext context) {
@@ -95,7 +95,10 @@ class CommentWidget extends HookWidget {
     final accStore = useAccountsStore();
 
     final isMine = commentTree.comment.comment.creatorId ==
-        accStore.defaultTokenFor(commentTree.comment.instanceHost)?.payload?.id;
+        accStore
+            .defaultTokenFor(commentTree.comment.instanceHost)
+            ?.payload
+            ?.sub;
     final selectable = useState(false);
     final showRaw = useState(false);
     final collapsed = useState(false);
@@ -345,7 +348,7 @@ class CommentWidget extends HookWidget {
                       padding: const EdgeInsets.only(right: 5),
                       child: InkWell(
                         onTap: () =>
-                            goToUser.fromUserSafe(context, comment.creator),
+                            goToUser.fromPersonSafe(context, comment.creator),
                         child: Avatar(
                           url: comment.creator.avatar,
                           radius: 10,
@@ -355,7 +358,7 @@ class CommentWidget extends HookWidget {
                     ),
                   InkWell(
                     onTap: () =>
-                        goToUser.fromUserSafe(context, comment.creator),
+                        goToUser.fromPersonSafe(context, comment.creator),
                     child: Text(comment.creator.originDisplayName,
                         style: TextStyle(
                           color: theme.accentColor,
@@ -446,17 +449,17 @@ class _MarkAsRead extends HookWidget {
           },
         );
 
-    Future<void> handleMarkMentionAsSeen() => delayedAction<UserMentionView>(
+    Future<void> handleMarkMentionAsSeen() => delayedAction<PersonMentionView>(
           context: context,
           delayedLoading: delayedRead,
           instanceHost: instanceHost,
-          query: MarkUserMentionAsRead(
-            userMentionId: userMentionId,
+          query: MarkPersonMentionAsRead(
+            personMentionId: userMentionId,
             read: !isRead.value,
             auth: accStore.defaultTokenFor(instanceHost)?.raw,
           ),
           onSuccess: (val) {
-            isRead.value = val.userMention.read;
+            isRead.value = val.personMention.read;
             onChanged?.call(isRead.value);
           },
         );

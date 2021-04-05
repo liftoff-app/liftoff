@@ -5,4 +5,5 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 /// [keys] can be used to rebuild the Future
 AsyncSnapshot<T> useMemoFuture<T>(Future<T> Function() valueBuilder,
         [List<Object> keys = const <dynamic>[]]) =>
-    useFuture(useMemoized<Future<T>>(valueBuilder, keys), preserveState: false);
+    useFuture(useMemoized<Future<T>>(valueBuilder, keys),
+        preserveState: false, initialData: null);

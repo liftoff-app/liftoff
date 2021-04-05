@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 
 import '../hooks/delayed_loading.dart';
@@ -106,7 +106,7 @@ class InboxPage extends HookWidget {
               controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV2(selected.value).run(GetReplies(
+                  LemmyApiV3(selected.value).run(GetReplies(
                 auth: accStore.defaultTokenFor(selected.value).raw,
                 sort: sortType,
                 limit: batchSize,
@@ -119,19 +119,19 @@ class InboxPage extends HookWidget {
                 hideOnRead: unreadOnly.value,
               ),
             ),
-            SortableInfiniteList<UserMentionView>(
+            SortableInfiniteList<PersonMentionView>(
               noItems: const Text('no mentions'),
               controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV2(selected.value).run(GetUserMentions(
+                  LemmyApiV3(selected.value).run(GetPersonMentions(
                 auth: accStore.defaultTokenFor(selected.value).raw,
                 sort: sortType,
                 limit: batchSize,
                 page: page,
                 unreadOnly: unreadOnly.value,
               )),
-              itemBuilder: (umv) => CommentWidget.fromUserMentionView(
+              itemBuilder: (umv) => CommentWidget.fromPersonMentionView(
                 umv,
                 hideOnRead: unreadOnly.value,
               ),
@@ -142,7 +142,7 @@ class InboxPage extends HookWidget {
                 child: Text('no messages'),
               ),
               controller: isc,
-              fetcher: (page, batchSize) => LemmyApiV2(selected.value).run(
+              fetcher: (page, batchSize) => LemmyApiV3(selected.value).run(
                 GetPrivateMessages(
                   auth: accStore.defaultTokenFor(selected.value).raw,
                   limit: batchSize,
@@ -189,7 +189,7 @@ class PrivateMessageTile extends HookWidget {
     final toMe = useMemoized(() =>
         pmv.value.recipient.originInstanceHost == pmv.value.instanceHost &&
         pmv.value.recipient.id ==
-            accStore.defaultTokenFor(pmv.value.instanceHost)?.payload?.id);
+            accStore.defaultTokenFor(pmv.value.instanceHost)?.payload?.sub);
 
     final otherSide =
         useMemoized(() => toMe ? pmv.value.creator : pmv.value.recipient);
@@ -285,7 +285,7 @@ class PrivateMessageTile extends HookWidget {
               ),
               InkWell(
                 borderRadius: BorderRadius.circular(10),
-                onTap: () => goToUser.fromUserSafe(context, otherSide),
+                onTap: () => goToUser.fromPersonSafe(context, otherSide),
                 child: Row(
                   children: [
                     if (otherSide.avatar != null)

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lemmy_api_client/pictrs.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/image_picker.dart';
@@ -31,7 +31,7 @@ class ManageAccountPage extends HookWidget {
     final accountStore = useAccountsStore();
 
     final userFuture = useMemoized(() async {
-      final site = await LemmyApiV2(instanceHost).run(
+      final site = await LemmyApiV3(instanceHost).run(
           GetSite(auth: accountStore.tokenFor(instanceHost, username).raw));
 
       return site.myUser;
@@ -41,7 +41,7 @@ class ManageAccountPage extends HookWidget {
       appBar: AppBar(
         title: Text('@$instanceHost@$username'),
       ),
-      body: FutureBuilder<UserSafeSettings>(
+      body: FutureBuilder<LocalUserSettingsView>(
         future: userFuture,
         builder: (_, userSnap) {
           if (userSnap.hasError) {
@@ -63,7 +63,7 @@ class _ManageAccount extends HookWidget {
       : assert(user != null),
         super(key: key);
 
-  final UserSafeSettings user;
+  final LocalUserSettingsView user;
 
   @override
   Widget build(BuildContext context) {
@@ -73,18 +73,20 @@ class _ManageAccount extends HookWidget {
     final deleteDelayedLoading = useDelayedLoading();
 
     final displayNameController =
-        useTextEditingController(text: user.preferredUsername);
-    final bioController = useTextEditingController(text: user.bio);
-    final emailController = useTextEditingController(text: user.email);
+        useTextEditingController(text: user.person.preferredUsername);
+    final bioController = useTextEditingController(text: user.person.bio);
+    final emailController =
+        useTextEditingController(text: user.localUser.email);
     final matrixUserController =
-        useTextEditingController(text: user.matrixUserId);
-    final avatar = useRef(user.avatar);
-    final banner = useRef(user.banner);
-    final showAvatars = useState(user.showAvatars);
-    final showNsfw = useState(user.showNsfw);
-    final sendNotificationsToEmail = useState(user.sendNotificationsToEmail);
-    final defaultListingType = useState(user.defaultListingType);
-    final defaultSortType = useState(user.defaultSortType);
+        useTextEditingController(text: user.person.matrixUserId);
+    final avatar = useRef(user.person.avatar);
+    final banner = useRef(user.person.banner);
+    final showAvatars = useState(user.localUser.showAvatars);
+    final showNsfw = useState(user.localUser.showNsfw);
+    final sendNotificationsToEmail =
+        useState(user.localUser.sendNotificationsToEmail);
+    final defaultListingType = useState(user.localUser.defaultListingType);
+    final defaultSortType = useState(user.localUser.defaultSortType);
     final newPasswordController = useTextEditingController();
     final newPasswordVerifyController = useTextEditingController();
     final oldPasswordController = useTextEditingController();
@@ -94,18 +96,18 @@ class _ManageAccount extends HookWidget {
 
     final deleteAccountPasswordController = useTextEditingController();
 
-    final token = accountsStore.tokenFor(user.instanceHost, user.name);
+    final token = accountsStore.tokenFor(user.instanceHost, user.person.name);
 
     handleSubmit() async {
       saveDelayedLoading.start();
 
       try {
-        await LemmyApiV2(user.instanceHost).run(SaveUserSettings(
+        await LemmyApiV3(user.instanceHost).run(SaveUserSettings(
           showNsfw: showNsfw.value,
-          theme: user.theme,
+          theme: user.localUser.theme,
           defaultSortType: defaultSortType.value,
           defaultListingType: defaultListingType.value,
-          lang: user.lang,
+          lang: user.localUser.lang,
           showAvatars: showAvatars.value,
           sendNotificationsToEmail: sendNotificationsToEmail.value,
           auth: token.raw,
@@ -150,7 +152,7 @@ class _ManageAccount extends HookWidget {
             context: context,
             builder: (context) => AlertDialog(
               title: Text(
-                  '${L10n.of(context).delete_account} @${user.instanceHost}@${user.name}'),
+                  '${L10n.of(context).delete_account} @${user.instanceHost}@${user.person.name}'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -182,12 +184,13 @@ class _ManageAccount extends HookWidget {
         deleteDelayedLoading.start();
 
         try {
-          await LemmyApiV2(user.instanceHost).run(DeleteAccount(
+          await LemmyApiV3(user.instanceHost).run(DeleteAccount(
             password: deleteAccountPasswordController.text,
             auth: token.raw,
           ));
 
-          accountsStore.removeAccount(user.instanceHost, user.name);
+          await accountsStore.removeAccount(
+              user.instanceHost, user.person.name);
           Navigator.of(context).pop();
         } on Exception catch (err) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -354,7 +357,7 @@ class _ManageAccount extends HookWidget {
 class _ImagePicker extends HookWidget {
   final String name;
   final String initialUrl;
-  final UserSafeSettings user;
+  final LocalUserSettingsView user;
   final ValueChanged<String> onChange;
 
   /// _ImagePicker will set the ref to a callback that can inform _ImagePicker
@@ -395,7 +398,8 @@ class _ImagePicker extends HookWidget {
 
           final upload = await PictrsApi(user.instanceHost).upload(
             filePath: pic.path,
-            auth: accountsStore.tokenFor(user.instanceHost, user.name).raw,
+            auth:
+                accountsStore.tokenFor(user.instanceHost, user.person.name).raw,
           );
           pictrsDeleteToken.value = upload.files[0];
           url.value =

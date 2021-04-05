@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
@@ -10,7 +10,7 @@ import '../widgets/markdown_text.dart';
 
 /// Page for writing and editing a private message
 class WriteMessagePage extends HookWidget {
-  final UserSafe recipient;
+  final PersonSafe recipient;
   final String instanceHost;
 
   /// if it's non null then this page is used for edit
@@ -47,7 +47,7 @@ class WriteMessagePage extends HookWidget {
       if (_isEdit) {
         loading.value = true;
         try {
-          final msg = await LemmyApiV2(instanceHost).run(EditPrivateMessage(
+          final msg = await LemmyApiV3(instanceHost).run(EditPrivateMessage(
             auth: accStore.defaultTokenFor(instanceHost)?.raw,
             privateMessageId: privateMessage.id,
             content: bodyController.text,
@@ -64,7 +64,7 @@ class WriteMessagePage extends HookWidget {
       } else {
         loading.value = true;
         try {
-          await LemmyApiV2(instanceHost).run(CreatePrivateMessage(
+          await LemmyApiV3(instanceHost).run(CreatePrivateMessage(
             auth: accStore.defaultTokenFor(instanceHost)?.raw,
             content: bodyController.text,
             recipientId: recipient.id,

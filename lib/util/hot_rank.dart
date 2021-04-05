@@ -1,6 +1,6 @@
 import 'dart:math' show log, max, pow, ln10;
 
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 /// Calculates hot rank
 /// because API always claims it's `0`

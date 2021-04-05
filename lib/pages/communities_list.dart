@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../util/goto.dart';
 import '../widgets/avatar.dart';

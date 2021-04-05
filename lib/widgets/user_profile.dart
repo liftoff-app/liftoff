@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
@@ -22,16 +22,16 @@ class UserProfile extends HookWidget {
   final String instanceHost;
   final int userId;
 
-  final FullUserView _fullUserView;
+  final FullPersonView _fullUserView;
 
   const UserProfile({@required this.userId, @required this.instanceHost})
       : assert(userId != null),
         assert(instanceHost != null),
         _fullUserView = null;
 
-  UserProfile.fromFullUserView(this._fullUserView)
+  UserProfile.fromFullPersonView(this._fullUserView)
       : assert(_fullUserView != null),
-        userId = _fullUserView.userView.user.id,
+        userId = _fullUserView.personView.person.id,
         instanceHost = _fullUserView.instanceHost;
 
   @override
@@ -41,8 +41,8 @@ class UserProfile extends HookWidget {
     final userDetailsSnap = useMemoFuture(() async {
       if (_fullUserView != null) return _fullUserView;
 
-      return await LemmyApiV2(instanceHost).run(GetUserDetails(
-        userId: userId,
+      return await LemmyApiV3(instanceHost).run(GetPersonDetails(
+        personId: userId,
         savedOnly: false,
         sort: SortType.active,
         auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
@@ -63,7 +63,7 @@ class UserProfile extends HookWidget {
       );
     }
 
-    final userView = userDetailsSnap.data.userView;
+    final userView = userDetailsSnap.data.personView;
 
     return DefaultTabController(
       length: 3,
@@ -96,9 +96,9 @@ class UserProfile extends HookWidget {
           // TODO: first batch is already fetched on render
           // TODO: comment and post come from the same endpoint, could be shared
           InfinitePostList(
-            fetcher: (page, batchSize, sort) => LemmyApiV2(instanceHost)
-                .run(GetUserDetails(
-                  userId: userView.user.id,
+            fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
+                .run(GetPersonDetails(
+                  personId: userView.person.id,
                   savedOnly: false,
                   sort: SortType.active,
                   page: page,
@@ -108,9 +108,9 @@ class UserProfile extends HookWidget {
                 .then((val) => val.posts),
           ),
           InfiniteCommentList(
-            fetcher: (page, batchSize, sort) => LemmyApiV2(instanceHost)
-                .run(GetUserDetails(
-                  userId: userView.user.id,
+            fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
+                .run(GetPersonDetails(
+                  personId: userView.person.id,
                   savedOnly: false,
                   sort: SortType.active,
                   page: page,
@@ -131,7 +131,7 @@ class UserProfile extends HookWidget {
 /// Such as his nickname, no. of posts, no. of posts,
 /// banner, avatar etc.
 class _UserOverview extends HookWidget {
-  final UserViewSafe userView;
+  final PersonViewSafe userView;
 
   const _UserOverview(this.userView);
 
@@ -143,12 +143,12 @@ class _UserOverview extends HookWidget {
 
     return Stack(
       children: [
-        if (userView.user.banner != null)
+        if (userView.person.banner != null)
           // TODO: for some reason doesnt react to presses
           FullscreenableImage(
-            url: userView.user.banner,
+            url: userView.person.banner,
             child: CachedNetworkImage(
-              imageUrl: userView.user.banner,
+              imageUrl: userView.person.banner,
               errorWidget: (_, __, ___) => const SizedBox.shrink(),
             ),
           )
@@ -192,7 +192,7 @@ class _UserOverview extends HookWidget {
         SafeArea(
           child: Column(
             children: [
-              if (userView.user.avatar != null)
+              if (userView.person.avatar != null)
                 SizedBox(
                   width: 80,
                   height: 80,
@@ -207,21 +207,21 @@ class _UserOverview extends HookWidget {
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(12)),
                       child: FullscreenableImage(
-                        url: userView.user.avatar,
+                        url: userView.person.avatar,
                         child: CachedNetworkImage(
-                          imageUrl: userView.user.avatar,
+                          imageUrl: userView.person.avatar,
                           errorWidget: (_, __, ___) => const SizedBox.shrink(),
                         ),
                       ),
                     ),
                   ),
                 ),
-              if (userView.user.avatar != null)
+              if (userView.person.avatar != null)
                 const SizedBox(height: 8)
               else
                 const SizedBox(height: 80),
               Text(
-                userView.user.displayName,
+                userView.person.displayName,
                 style: theme.textTheme.headline6,
               ),
               const SizedBox(height: 4),
@@ -229,14 +229,14 @@ class _UserOverview extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '@${userView.user.name}@',
+                    '@${userView.person.name}@',
                     style: theme.textTheme.caption,
                   ),
                   InkWell(
-                    onTap: () =>
-                        goToInstance(context, userView.user.originInstanceHost),
+                    onTap: () => goToInstance(
+                        context, userView.person.originInstanceHost),
                     child: Text(
-                      userView.user.originInstanceHost,
+                      userView.person.originInstanceHost,
                       style: theme.textTheme.caption,
                     ),
                   )
@@ -284,7 +284,7 @@ class _UserOverview extends HookWidget {
               ),
               const SizedBox(height: 15),
               Text(
-                'Joined ${userView.user.published.fancy}',
+                'Joined ${userView.person.published.fancy}',
                 style: theme.textTheme.bodyText1,
               ),
               Row(
@@ -298,7 +298,7 @@ class _UserOverview extends HookWidget {
                     padding: const EdgeInsets.only(left: 4),
                     child: Text(
                       DateFormat('MMM dd, yyyy')
-                          .format(userView.user.published),
+                          .format(userView.person.published),
                       style: theme.textTheme.bodyText1,
                     ),
                   ),
@@ -314,21 +314,21 @@ class _UserOverview extends HookWidget {
 }
 
 class _AboutTab extends HookWidget {
-  final FullUserView userDetails;
+  final FullPersonView userDetails;
 
   const _AboutTab(this.userDetails);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final instanceHost = userDetails.userView.user.instanceHost;
+    final instanceHost = userDetails.personView.person.instanceHost;
 
     final accStore = useAccountsStore();
 
     final isOwnedAccount = accStore.loggedInInstances.contains(instanceHost) &&
         accStore
             .usernamesFor(instanceHost)
-            .contains(userDetails.userView.user.name);
+            .contains(userDetails.personView.person.name);
 
     const wallPadding = EdgeInsets.symmetric(horizontal: 15);
 
@@ -365,13 +365,13 @@ class _AboutTab extends HookWidget {
               context,
               (_) => ManageAccountPage(
                   instanceHost: userDetails.instanceHost,
-                  username: userDetails.userView.user.name),
+                  username: userDetails.personView.person.name),
             ),
           ),
-        if (userDetails.userView.user.bio != null) ...[
+        if (userDetails.personView.person.bio != null) ...[
           Padding(
               padding: wallPadding,
-              child: MarkdownText(userDetails.userView.user.bio,
+              child: MarkdownText(userDetails.personView.person.bio,
                   instanceHost: instanceHost)),
           divider,
         ],

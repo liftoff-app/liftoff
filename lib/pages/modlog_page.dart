@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
@@ -36,7 +36,7 @@ class ModlogPage extends HookWidget {
     final isDone = useState(false);
 
     final modlogFut = useMemoized(
-      () => LemmyApiV2(instanceHost).run(
+      () => LemmyApiV3(instanceHost).run(
         GetModlog(
           communityId: communityId,
           page: page.value,
@@ -128,7 +128,7 @@ class _ModlogTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    InlineSpan user(UserSafe user) => TextSpan(
+    InlineSpan user(PersonSafe user) => TextSpan(
           children: [
             WidgetSpan(
               child: Avatar(
@@ -307,7 +307,7 @@ class _ModlogTable extends StatelessWidget {
                   const TextSpan(text: 'banned ')
                 else
                   const TextSpan(text: 'unbanned '),
-                user(bannedFromCommunity.bannedUser),
+                user(bannedFromCommunity.bannedPerson),
                 const TextSpan(text: ' from community '),
                 community(bannedFromCommunity.community),
               ],
@@ -325,7 +325,7 @@ class _ModlogTable extends StatelessWidget {
                   const TextSpan(text: 'banned ')
                 else
                   const TextSpan(text: 'unbanned '),
-                user(banned.bannedUser),
+                user(banned.bannedPerson),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -341,7 +341,7 @@ class _ModlogTable extends StatelessWidget {
                   const TextSpan(text: 'removed ')
                 else
                   const TextSpan(text: 'appointed '),
-                user(addedToCommunity.moddedUser),
+                user(addedToCommunity.moddedPerson),
                 const TextSpan(text: ' as mod of '),
                 community(addedToCommunity.community),
               ],
@@ -359,7 +359,7 @@ class _ModlogTable extends StatelessWidget {
                   const TextSpan(text: 'removed ')
                 else
                   const TextSpan(text: 'apointed '),
-                user(added.moddedUser),
+                user(added.moddedPerson),
                 const TextSpan(text: ' as admin'),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
@@ -400,7 +400,7 @@ class _ModlogTable extends StatelessWidget {
 
 class _ModlogEntry {
   final DateTime when;
-  final UserSafe mod;
+  final PersonSafe mod;
   final Widget action;
   final String reason;
 
