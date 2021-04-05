@@ -3,6 +3,7 @@
 ### Added
 
 - Share buttons on windows/linux now copy the data to the clipboard
+- Initial translations have been incorporated into lemmur. It is not yet possible to contribute translation strings
 
 ### Changed
 
@@ -13,6 +14,7 @@
 - Quote blocks in posts and comments are now much prettier
 - Code blocks now have monospace font. As they should
 - Switching accounts in the profile tab now correctly reacts to the change
+- You can no longer add the same instance twice just by changing capitalization (thanks to @ryg-git)
 
 ## v0.3.0 - 2021-02-25
 
