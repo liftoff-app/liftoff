@@ -44,7 +44,7 @@ dependencies:
   # utils
   timeago: ^2.0.27
   fuzzy: <1.0.0
-  lemmy_api_client: ^0.13.0
+  lemmy_api_client: ^0.14.0
   intl: ^0.17.0
   matrix4_transform: ^1.1.7
   json_annotation: ^4.0.1

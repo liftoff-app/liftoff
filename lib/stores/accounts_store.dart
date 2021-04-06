@@ -11,7 +11,7 @@ part 'accounts_store.g.dart';
 /// Store that manages all accounts
 @JsonSerializable()
 class AccountsStore extends ChangeNotifier {
-  static const prefsKey = 'v2:AccountsStore';
+  static const prefsKey = 'v3:AccountsStore';
   static final _prefs = SharedPreferences.getInstance();
 
   /// Map containing JWT tokens of specific users.
@@ -206,7 +206,9 @@ class AccountsStore extends ChangeNotifier {
     final userData =
         await lemmy.run(GetSite(auth: token.raw)).then((value) => value.myUser);
 
-    tokens[instanceHost][userData.person.name] = token;
+    tokens[instanceHost][userData.person.name] = token.copyWith(
+      payload: token.payload.copyWith(sub: userData.person.id),
+    );
 
     await _assignDefaultAccounts();
     notifyListeners();

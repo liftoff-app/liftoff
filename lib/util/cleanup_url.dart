@@ -1,9 +1,9 @@
-/// Returns host of a url without a leading 'www.' or protocol if present also
-/// removes trailing '/'
-String cleanUpUrl(String url) {
+/// Returns a normalized host of a (maybe) url without a leading www.
+String normalizeInstanceHost(String maybeUrl) {
   try {
-    return urlHost(url.startsWith('https://') ? url : 'https://$url');
-  } on FormatException catch (_) {
+    return urlHost(
+        maybeUrl.startsWith('https://') ? maybeUrl : 'https://$maybeUrl');
+  } on FormatException {
     return '';
   }
 }

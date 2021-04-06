@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- Some actions would pass the wrong user id around causing infinite spinners, this is now fixed
+
 ## v0.4.0 - 2021-04-05
 
 ### Added
