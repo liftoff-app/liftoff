@@ -3,6 +3,8 @@
 ### Fixed
 
 - Some actions would pass the wrong user id around causing infinite spinners, this is now fixed
+- When writing a comment the parent text is now selectable
+- Text of a post is now selectable
 
 ## v0.4.0 - 2021-04-05
 
