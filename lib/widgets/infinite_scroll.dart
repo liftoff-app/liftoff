@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -47,6 +49,10 @@ class InfiniteScroll<T> extends HookWidget {
   /// Widget that will be displayed if there are no items
   final Widget noItems;
 
+  /// Maps an item to its unique property that will allow to detect possible
+  /// duplicates thus perfoming deduplication
+  final Object Function(T item) uniqueProp;
+
   const InfiniteScroll({
     this.batchSize = 10,
     this.leading = const SizedBox.shrink(),
@@ -57,6 +63,7 @@ class InfiniteScroll<T> extends HookWidget {
     @required this.fetcher,
     this.controller,
     this.noItems = const SizedBox.shrink(),
+    this.uniqueProp,
   })  : assert(itemBuilder != null),
         assert(fetcher != null),
         assert(batchSize > 0);
@@ -64,6 +71,8 @@ class InfiniteScroll<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final data = useState<List<T>>([]);
+    // holds unique props of the data
+    final dataSet = useRef(HashSet<Object>());
     final hasMore = useRef(true);
     final isFetching = useRef(false);
 
@@ -111,13 +120,19 @@ class InfiniteScroll<T> extends HookWidget {
             // if it's already fetching more, skip
             if (!isFetching.current) {
               isFetching.current = true;
-              fetcher(page, batchSize).then((newData) {
+              fetcher(page, batchSize).then((incoming) {
                 // if got less than the batchSize, mark the list as done
-                if (newData.length < batchSize) {
+                if (incoming.length < batchSize) {
                   hasMore.current = false;
                 }
+
+                final newData = incoming.where(
+                  (e) => !dataSet.current.contains(uniqueProp?.call(e) ?? e),
+                );
+
                 // append new data
                 data.value = [...data.value, ...newData];
+                dataSet.current.addAll(newData.map(uniqueProp ?? (e) => e));
               }).whenComplete(() => isFetching.current = false);
             }
 

@@ -38,6 +38,7 @@ class CommunitiesListPage extends StatelessWidget {
             )
           ],
         ),
+        uniqueProp: (item) => item.community.id,
       ),
     );
   }

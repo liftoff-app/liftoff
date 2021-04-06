@@ -120,6 +120,20 @@ class _SearchResultsList extends HookWidget {
             throw UnimplementedError();
         }
       },
+      uniqueProp: (item) {
+        switch (type) {
+          case SearchType.comments:
+            return (item as CommentView).comment.id;
+          case SearchType.communities:
+            return (item as CommunityView).community.id;
+          case SearchType.posts:
+            return (item as PostView).post.id;
+          case SearchType.users:
+            return (item as PersonViewSafe).person.id;
+          default:
+            return item;
+        }
+      },
     );
   }
 }
