@@ -115,9 +115,12 @@ class FullPostPage extends HookWidget {
                 onPressed: () => PostWidget.showMoreMenu(context, post)),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-            onPressed: loggedInAction((_) => comment()),
-            child: const Icon(Icons.comment)),
+        floatingActionButton: post.post.locked
+            ? null
+            : FloatingActionButton(
+                onPressed: loggedInAction((_) => comment()),
+                child: const Icon(Icons.comment),
+              ),
         body: RefreshIndicator(
           onRefresh: refresh,
           child: ListView(

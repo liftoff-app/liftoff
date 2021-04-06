@@ -297,7 +297,9 @@ class CommentWidget extends HookWidget {
               tooltip: L10n.of(context).more,
             ),
             _SaveComment(commentTree.comment),
-            if (!isDeleted.value && !comment.comment.removed)
+            if (!isDeleted.value &&
+                !comment.comment.removed &&
+                !comment.post.locked)
               TileAction(
                 icon: Icons.reply,
                 onPressed: loggedInAction((_) => reply()),

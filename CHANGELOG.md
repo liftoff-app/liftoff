@@ -2,6 +2,12 @@
 
 ### Changed
 
+- Disable commenting on locked posts
+
+### Fixed
+
+- When writing a comment the parent text is now selectable
+- Text of a post is now selectable
 - Account actions in settings are more obvious to access: long press an account/instance to see possible actions such as setting as default or removal
 
 ## v0.4.1 - 2021-04-06
