@@ -94,9 +94,16 @@ class MyHomePage extends HookWidget {
 
     return Scaffold(
       extendBody: true,
-      body: IndexedStack(
-        index: currentTab.value,
-        children: pages,
+      body: Column(
+        children: [
+          Expanded(
+            child: IndexedStack(
+              index: currentTab.value,
+              children: pages,
+            ),
+          ),
+          const SizedBox(height: kMinInteractiveDimension / 2),
+        ],
       ),
       floatingActionButton: const CreatePostFab(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
