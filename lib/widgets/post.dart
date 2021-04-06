@@ -415,9 +415,13 @@ class PostWidget extends HookWidget {
                 linkPreview(),
               if (post.post.body != null && fullPost)
                 Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: MarkdownText(post.post.body,
-                        instanceHost: instanceHost)),
+                  padding: const EdgeInsets.all(10),
+                  child: MarkdownText(
+                    post.post.body,
+                    instanceHost: instanceHost,
+                    selectable: true,
+                  ),
+                ),
               if (post.post.body != null && !fullPost)
                 LayoutBuilder(
                   builder: (context, constraints) {
