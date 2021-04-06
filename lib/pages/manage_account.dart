@@ -39,7 +39,7 @@ class ManageAccountPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('@$instanceHost@$username'),
+        title: Text('$username@$instanceHost'),
       ),
       body: FutureBuilder<LocalUserSettingsView>(
         future: userFuture,
