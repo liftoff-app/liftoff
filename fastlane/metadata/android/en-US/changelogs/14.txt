@@ -1,0 +1,3 @@
+### Fixed
+
+- Some actions would pass the wrong user id around causing infinite spinners, this is now fixed
