@@ -31,13 +31,17 @@ class WriteComment extends HookWidget {
       final body = () {
         final text = comment?.content ?? post.body;
         if (text == null) return const SizedBox.shrink();
-        return MarkdownText(text, instanceHost: post.instanceHost);
+        return MarkdownText(
+          text,
+          instanceHost: post.instanceHost,
+          selectable: true,
+        );
       }();
 
       if (post != null) {
         return Column(
           children: [
-            Text(
+            SelectableText(
               post.name,
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
