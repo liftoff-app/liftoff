@@ -25,7 +25,7 @@ class AddInstancePage extends HookWidget {
     final debounce = useDebounce(() async {
       if (prevInput == instanceController.text) return;
 
-      final inst = cleanUpUrl(instanceController.text);
+      final inst = normalizeInstanceHost(instanceController.text);
       if (inst.isEmpty) {
         isSite.value = null;
         return;
@@ -47,7 +47,7 @@ class AddInstancePage extends HookWidget {
         instanceController.removeListener(debounce);
       };
     }, []);
-    final inst = cleanUpUrl(instanceController.text);
+    final inst = normalizeInstanceHost(instanceController.text);
     handleOnAdd() async {
       try {
         await accountsStore.addInstance(inst, assumeValid: true);
