@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../util/goto.dart';
 import '../widgets/about_tile.dart';
+import '../widgets/bottom_modal.dart';
 import '../widgets/radio_picker.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
@@ -128,6 +128,7 @@ class AccountsConfigPage extends HookWidget {
           ) ??
           false) {
         await accountsStore.removeInstance(instanceHost);
+        Navigator.of(context).pop();
       }
     }
 
@@ -151,8 +152,48 @@ class AccountsConfigPage extends HookWidget {
             ),
           ) ??
           false) {
-        return accountsStore.removeAccount(instanceHost, username);
+        await accountsStore.removeAccount(instanceHost, username);
+        Navigator.of(context).pop();
       }
+    }
+
+    void accountActions(String instanceHost, String username) {
+      showBottomModal(
+        context: context,
+        builder: (context) => Column(
+          children: [
+            if (accountsStore.defaultUsernameFor(instanceHost) != username)
+              ListTile(
+                leading: const Icon(Icons.check_circle_outline),
+                title: const Text('Set as default'),
+                onTap: () {
+                  accountsStore.setDefaultAccountFor(instanceHost, username);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ListTile(
+              leading: const Icon(Icons.delete),
+              title: const Text('Remove account'),
+              onTap: () => removeUserDialog(instanceHost, username),
+            ),
+          ],
+        ),
+      );
+    }
+
+    void instanceActions(String instanceHost) {
+      showBottomModal(
+        context: context,
+        builder: (context) => Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.delete),
+              title: const Text('Remove instance'),
+              onTap: () => removeInstanceDialog(instanceHost),
+            ),
+          ],
+        ),
+      );
     }
 
     return Scaffold(
@@ -206,62 +247,30 @@ class AccountsConfigPage extends HookWidget {
             ),
           for (final instance in accountsStore.instances) ...[
             const SizedBox(height: 40),
-            Slidable(
-              actionPane: const SlidableBehindActionPane(),
-              secondaryActions: [
-                IconSlideAction(
-                  onTap: () => removeInstanceDialog(instance),
-                  icon: Icons.delete_sweep,
-                  color: Colors.red,
-                ),
-              ],
-              key: Key(instance),
-              // TODO: missing ripple effect
-              child: Container(
-                color: theme.scaffoldBackgroundColor,
-                child: ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  title: _SectionHeading(instance),
-                ),
-              ),
+            ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              onLongPress: () => instanceActions(instance),
+              title: _SectionHeading(instance),
             ),
             for (final username in accountsStore.usernamesFor(instance)) ...[
-              Slidable(
-                actionPane: const SlidableBehindActionPane(),
-                key: Key('$username@$instance'),
-                secondaryActions: [
-                  IconSlideAction(
-                    onTap: () => removeUserDialog(instance, username),
-                    icon: Icons.delete_sweep,
-                    color: Colors.red,
-                  ),
-                ],
-                // TODO: missing ripple effect
-                child: Container(
-                  color: theme.scaffoldBackgroundColor,
-                  child: ListTile(
-                    trailing:
-                        username == accountsStore.defaultUsernameFor(instance)
-                            ? Icon(
-                                Icons.check_circle_outline,
-                                color: theme.accentColor,
-                              )
-                            : null,
-                    title: Text(username),
-                    onLongPress: () {
-                      accountsStore.setDefaultAccountFor(instance, username);
-                    },
-                    onTap: () {
-                      goTo(
-                          context,
-                          (_) => ManageAccountPage(
-                                instanceHost: instance,
-                                username: username,
-                              ));
-                    },
-                  ),
-                ),
+              ListTile(
+                trailing: username == accountsStore.defaultUsernameFor(instance)
+                    ? Icon(
+                        Icons.check_circle_outline,
+                        color: theme.accentColor,
+                      )
+                    : null,
+                title: Text(username),
+                onLongPress: () => accountActions(instance, username),
+                onTap: () {
+                  goTo(
+                      context,
+                      (_) => ManageAccountPage(
+                            instanceHost: instance,
+                            username: username,
+                          ));
+                },
               ),
             ],
             if (accountsStore.usernamesFor(instance).isEmpty)
