@@ -14,9 +14,9 @@ class RevealAfterScroll extends HookWidget {
   final bool fade;
 
   const RevealAfterScroll({
-    @required this.scrollController,
-    @required this.child,
-    @required this.after,
+    required this.scrollController,
+    required this.child,
+    required this.after,
     this.transition = 15,
     this.fade = false,
   })  : assert(scrollController != null),

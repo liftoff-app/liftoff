@@ -15,8 +15,7 @@ class MarkdownText extends StatelessWidget {
   final bool selectable;
 
   const MarkdownText(this.text,
-      {@required this.instanceHost, this.selectable = false})
-      : assert(instanceHost != null);
+      {required this.instanceHost, this.selectable = false});
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +31,10 @@ class MarkdownText extends StatelessWidget {
         ),
         code: theme.textTheme.bodyText1
             // TODO: use a font from google fonts maybe? the defaults aren't very pretty
-            .copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),
+            ?.copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),
       ),
       onTapLink: (text, href, title) {
+        if (href == null) return;
         linkLauncher(context: context, url: href, instanceHost: instanceHost)
             .catchError(
                 (e) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(

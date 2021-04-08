@@ -10,9 +10,9 @@ class FullscreenableImage extends StatelessWidget {
   final Widget child;
 
   const FullscreenableImage({
-    Key key,
-    @required this.url,
-    @required this.child,
+    Key? key,
+    required this.url,
+    required this.child,
   }) : super(key: key);
 
   @override

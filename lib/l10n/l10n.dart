@@ -6,7 +6,7 @@ export 'l10n_api.dart';
 export 'l10n_from_string.dart';
 
 abstract class LocaleSerde {
-  static Locale fromJson(String json) {
+  static Locale? fromJson(String? json) {
     if (json == null) return null;
 
     final lang = json.split('-');

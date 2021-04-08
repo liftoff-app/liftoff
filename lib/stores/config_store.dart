@@ -15,7 +15,7 @@ class ConfigStore extends ChangeNotifier {
   static const prefsKey = 'v1:ConfigStore';
   static final _prefs = SharedPreferences.getInstance();
 
-  ThemeMode _theme;
+  late ThemeMode _theme;
   @JsonKey(defaultValue: ThemeMode.system)
   ThemeMode get theme => _theme;
   set theme(ThemeMode theme) {
@@ -24,7 +24,7 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
-  bool _amoledDarkMode;
+  late bool _amoledDarkMode;
   @JsonKey(defaultValue: false)
   bool get amoledDarkMode => _amoledDarkMode;
   set amoledDarkMode(bool amoledDarkMode) {
@@ -33,11 +33,11 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
-  Locale _locale;
+  Locale? _locale;
   // default value is set in the `load` method because json_serializable does
   // not accept non-literals as constant values
   @JsonKey(fromJson: LocaleSerde.fromJson, toJson: LocaleSerde.toJson)
-  Locale get locale => _locale;
+  Locale get locale => _locale ?? const Locale('en');
   set locale(Locale locale) {
     _locale = locale;
     notifyListeners();
@@ -49,7 +49,7 @@ class ConfigStore extends ChangeNotifier {
 
     return _$ConfigStoreFromJson(
       jsonDecode(prefs.getString(prefsKey) ?? '{}') as Map<String, dynamic>,
-    ).._locale ??= const Locale('en');
+    );
   }
 
   Future<void> save() async {

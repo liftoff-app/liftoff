@@ -26,7 +26,7 @@ class MediaViewPage extends HookWidget {
     final isDragging = useState(false);
 
     final offset = useState(Offset.zero);
-    final prevOffset = usePrevious(offset.value);
+    final prevOffset = usePrevious(offset.value) ?? Offset.zero;
 
     notImplemented() {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -12,22 +12,18 @@ import '../widgets/bottom_safe.dart';
 class ModlogPage extends HookWidget {
   final String instanceHost;
   final String name;
-  final int communityId;
+  final int? communityId;
 
   const ModlogPage.forInstance({
-    @required this.instanceHost,
-  })  : assert(instanceHost != null),
-        communityId = null,
+    required this.instanceHost,
+  })   : communityId = null,
         name = instanceHost;
 
   const ModlogPage.forCommunity({
-    @required this.instanceHost,
-    @required this.communityId,
-    @required String communityName,
-  })  : assert(instanceHost != null),
-        assert(communityId != null),
-        assert(communityName != null),
-        name = '!$communityName';
+    required this.instanceHost,
+    required int this.communityId,
+    required String communityName,
+  }) : name = '!$communityName';
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +61,7 @@ class ModlogPage extends HookWidget {
                       return Center(
                           child: Text('Error: ${snapshot.error?.toString()}'));
                     }
-                    final modlog = snapshot.data;
+                    final modlog = snapshot.requireData;
 
                     if (modlog.added.length +
                             modlog.addedToCommunity.length +
@@ -78,7 +74,7 @@ class ModlogPage extends HookWidget {
                             modlog.stickiedPosts.length ==
                         0) {
                       WidgetsBinding.instance
-                          .addPostFrameCallback((_) => isDone.value = true);
+                          ?.addPostFrameCallback((_) => isDone.value = true);
 
                       return const Center(child: Text('no more logs to show'));
                     }
@@ -118,9 +114,7 @@ class ModlogPage extends HookWidget {
 }
 
 class _ModlogTable extends StatelessWidget {
-  const _ModlogTable({Key key, @required this.modlog})
-      : assert(modlog != null),
-        super(key: key);
+  const _ModlogTable({Key? key, required this.modlog}) : super(key: key);
 
   final Modlog modlog;
 
@@ -179,7 +173,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (removedPost.modRemovePost.removed)
+                if (removedPost.modRemovePost.removed ?? false)
                   const TextSpan(text: 'removed')
                 else
                   const TextSpan(text: 'restored'),
@@ -205,7 +199,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (lockedPost.modLockPost.locked)
+                if (lockedPost.modLockPost.locked ?? false)
                   const TextSpan(text: 'locked')
                 else
                   const TextSpan(text: 'unlocked'),
@@ -231,7 +225,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (stickiedPost.modStickyPost.stickied)
+                if (stickiedPost.modStickyPost.stickied ?? false)
                   const TextSpan(text: 'stickied')
                 else
                   const TextSpan(text: 'unstickied'),
@@ -257,7 +251,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (removedComment.modRemoveComment.removed)
+                if (removedComment.modRemoveComment.removed ?? false)
                   const TextSpan(text: 'removed')
                 else
                   const TextSpan(text: 'restored'),
@@ -286,7 +280,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (removedCommunity.modRemoveCommunity.removed)
+                if (removedCommunity.modRemoveCommunity.removed ?? false)
                   const TextSpan(text: 'removed')
                 else
                   const TextSpan(text: 'restored'),
@@ -303,7 +297,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (bannedFromCommunity.modBanFromCommunity.banned)
+                if (bannedFromCommunity.modBanFromCommunity.banned ?? false)
                   const TextSpan(text: 'banned ')
                 else
                   const TextSpan(text: 'unbanned '),
@@ -321,7 +315,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (banned.modBan.banned)
+                if (banned.modBan.banned ?? false)
                   const TextSpan(text: 'banned ')
                 else
                   const TextSpan(text: 'unbanned '),
@@ -337,7 +331,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (addedToCommunity.modAddCommunity.removed)
+                if (addedToCommunity.modAddCommunity.removed ?? false)
                   const TextSpan(text: 'removed ')
                 else
                   const TextSpan(text: 'appointed '),
@@ -355,7 +349,7 @@ class _ModlogTable extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                if (added.modAdd.removed)
+                if (added.modAdd.removed ?? false)
                   const TextSpan(text: 'removed ')
                 else
                   const TextSpan(text: 'apointed '),
@@ -402,16 +396,14 @@ class _ModlogEntry {
   final DateTime when;
   final PersonSafe mod;
   final Widget action;
-  final String reason;
+  final String? reason;
 
   const _ModlogEntry({
-    @required this.when,
-    @required this.mod,
-    @required this.action,
+    required this.when,
+    required this.mod,
+    required this.action,
     this.reason,
-  })  : assert(when != null),
-        assert(mod != null),
-        assert(action != null);
+  });
 
   _ModlogEntry.fromModRemovePostView(
     ModRemovePostView removedPost,
@@ -539,7 +531,7 @@ class _ModlogEntry {
             ),
           ),
           action,
-          if (reason == null) const Center(child: Text('-')) else Text(reason),
+          if (reason == null) const Center(child: Text('-')) else Text(reason!),
         ]
             .map(
               (widget) => Padding(

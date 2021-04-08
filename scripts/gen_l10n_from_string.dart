@@ -30,7 +30,7 @@ ${keys.map((key) => "  static const $key = '$key';").join('\n')}
 extension L10nFromString on String {
   String tr(BuildContext context) {
     switch (this) {
-${keysWithoutVariables.map((key) => "      case L10nStrings.$key:\n        return L10n.of(context).$key;").join('\n')}
+${keysWithoutVariables.map((key) => "      case L10nStrings.$key:\n        return L10n.of(context)!.$key;").join('\n')}
 
       default:
         return this;

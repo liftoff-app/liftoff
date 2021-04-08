@@ -26,7 +26,7 @@ class CommentSection extends HookWidget {
 
   CommentSection(
     List<CommentView> rawComments, {
-    @required this.postCreatorId,
+    required this.postCreatorId,
     this.sortType = CommentSortType.hot,
   })  : comments =
             CommentTree.sortList(sortType, CommentTree.fromList(rawComments)),
@@ -76,7 +76,7 @@ class CommentSection extends HookWidget {
               },
               child: Row(
                 children: [
-                  Text((sortPairs[sorting.value][1] as String).tr(context)),
+                  Text((sortPairs[sorting.value]![1] as String).tr(context)),
                   const Icon(Icons.arrow_drop_down),
                 ],
               ),

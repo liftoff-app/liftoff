@@ -21,7 +21,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(L10n.of(context).settings),
+          title: Text(L10n.of(context)!.settings),
         ),
         body: ListView(
           children: [
@@ -66,7 +66,7 @@ class AppearanceConfigPage extends HookWidget {
               title: Text(describeEnum(theme)),
               groupValue: configStore.theme,
               onChanged: (selected) {
-                configStore.theme = selected;
+                if (selected != null) configStore.theme = selected;
               },
             ),
           SwitchListTile(
@@ -79,7 +79,7 @@ class AppearanceConfigPage extends HookWidget {
           const SizedBox(height: 12),
           const _SectionHeading('General'),
           ListTile(
-            title: Text(L10n.of(context).language),
+            title: Text(L10n.of(context)!.language),
             trailing: SizedBox(
               width: 120,
               child: RadioPicker<Locale>(
@@ -117,11 +117,11 @@ class AccountsConfigPage extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(L10n.of(context).no),
+                  child: Text(L10n.of(context)!.no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(L10n.of(context).yes),
+                  child: Text(L10n.of(context)!.yes),
                 ),
               ],
             ),
@@ -142,11 +142,11 @@ class AccountsConfigPage extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(L10n.of(context).no),
+                  child: Text(L10n.of(context)!.no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(L10n.of(context).yes),
+                  child: Text(L10n.of(context)!.yes),
                 ),
               ],
             ),
@@ -301,7 +301,7 @@ class _SectionHeading extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(text.toUpperCase(),
-          style: theme.textTheme.subtitle2.copyWith(color: theme.accentColor)),
+          style: theme.textTheme.subtitle2?.copyWith(color: theme.accentColor)),
     );
   }
 }

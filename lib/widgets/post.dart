@@ -33,7 +33,7 @@ enum MediaType {
   none,
 }
 
-MediaType whatType(String url) {
+MediaType whatType(String? url) {
   if (url == null || url.isEmpty) return MediaType.none;
 
   // TODO: make detection more nuanced
@@ -95,13 +95,13 @@ class PostWidget extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    void _openLink() => linkLauncher(
-        context: context, url: post.post.url, instanceHost: instanceHost);
+    void _openLink(String url) =>
+        linkLauncher(context: context, url: url, instanceHost: instanceHost);
 
     final urlDomain = () {
       if (whatType(post.post.url) == MediaType.none) return null;
 
-      return urlHost(post.post.url);
+      return urlHost(post.post.url!);
     }();
 
     /// assemble info section
@@ -141,7 +141,7 @@ class PostWidget extends HookWidget {
                             text: TextSpan(
                               style: TextStyle(
                                   fontSize: 15,
-                                  color: theme.textTheme.bodyText1.color),
+                                  color: theme.textTheme.bodyText1?.color),
                               children: [
                                 const TextSpan(
                                     text: '!',
@@ -179,10 +179,10 @@ class PostWidget extends HookWidget {
                             text: TextSpan(
                               style: TextStyle(
                                   fontSize: 13,
-                                  color: theme.textTheme.bodyText1.color),
+                                  color: theme.textTheme.bodyText1?.color),
                               children: [
                                 TextSpan(
-                                  text: L10n.of(context).by,
+                                  text: L10n.of(context)!.by,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w300),
                                 ),
@@ -206,7 +206,7 @@ class PostWidget extends HookWidget {
                                 if (post.post.nsfw) const TextSpan(text: ' · '),
                                 if (post.post.nsfw)
                                   TextSpan(
-                                      text: L10n.of(context).nsfw,
+                                      text: L10n.of(context)!.nsfw,
                                       style:
                                           const TextStyle(color: Colors.red)),
                                 if (urlDomain != null)
@@ -260,13 +260,13 @@ class PostWidget extends HookWidget {
                 const Spacer(),
                 InkWell(
                   borderRadius: BorderRadius.circular(20),
-                  onTap: _openLink,
+                  onTap: () => _openLink(post.post.url!),
                   child: Stack(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: CachedNetworkImage(
-                          imageUrl: post.post.thumbnailUrl,
+                          imageUrl: post.post.thumbnailUrl!,
                           width: 70,
                           height: 70,
                           fit: BoxFit.cover,
@@ -297,11 +297,11 @@ class PostWidget extends HookWidget {
       return Padding(
         padding: const EdgeInsets.all(10),
         child: InkWell(
-          onTap: _openLink,
+          onTap: () => _openLink(post.post.url!),
           child: Container(
             decoration: BoxDecoration(
                 border: Border.all(
-                    color: Theme.of(context).iconTheme.color.withAlpha(170)),
+                    color: Theme.of(context).iconTheme.color!.withAlpha(170)),
                 borderRadius: BorderRadius.circular(5)),
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -312,7 +312,7 @@ class PostWidget extends HookWidget {
                       const Spacer(),
                       Text('$urlDomain ',
                           style: theme.textTheme.caption
-                              .apply(fontStyle: FontStyle.italic)),
+                              ?.apply(fontStyle: FontStyle.italic)),
                       const Icon(Icons.launch, size: 12),
                     ],
                   ),
@@ -322,7 +322,7 @@ class PostWidget extends HookWidget {
                         child: Text(
                           post.post.embedTitle ?? '',
                           style: theme.textTheme.subtitle1
-                              .apply(fontWeightDelta: 2),
+                              ?.apply(fontWeightDelta: 2),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -330,12 +330,12 @@ class PostWidget extends HookWidget {
                     ],
                   ),
                   if (post.post.embedDescription != null &&
-                      post.post.embedDescription.isNotEmpty)
+                      post.post.embedDescription!.isNotEmpty)
                     Row(
                       children: [
                         Flexible(
                           child: Text(
-                            post.post.embedDescription,
+                            post.post.embedDescription!,
                             maxLines: 4,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -355,9 +355,9 @@ class PostWidget extends HookWidget {
       assert(post.post.url != null);
 
       return FullscreenableImage(
-        url: post.post.url,
+        url: post.post.url!,
         child: CachedNetworkImage(
-          imageUrl: post.post.url,
+          imageUrl: post.post.url!,
           errorWidget: (_, __, ___) => const Icon(Icons.warning),
           progressIndicatorBuilder: (context, url, progress) =>
               CircularProgressIndicator(value: progress.progress),
@@ -375,7 +375,7 @@ class PostWidget extends HookWidget {
               Expanded(
                 flex: 999,
                 child: Text(
-                  L10n.of(context).number_of_comments(post.counts.comments),
+                  L10n.of(context)!.number_of_comments(post.counts.comments),
                   overflow: TextOverflow.fade,
                   softWrap: false,
                 ),
@@ -411,13 +411,13 @@ class PostWidget extends HookWidget {
               if (whatType(post.post.url) != MediaType.other &&
                   whatType(post.post.url) != MediaType.none)
                 postImage()
-              else if (post.post.url != null && post.post.url.isNotEmpty)
+              else if (post.post.url != null && post.post.url!.isNotEmpty)
                 linkPreview(),
               if (post.post.body != null && fullPost)
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: MarkdownText(
-                    post.post.body,
+                    post.post.body!,
                     instanceHost: instanceHost,
                     selectable: true,
                   ),
@@ -446,7 +446,7 @@ class PostWidget extends HookWidget {
                                 heightFactor: 0.8,
                                 child: Padding(
                                     padding: const EdgeInsets.all(10),
-                                    child: MarkdownText(post.post.body,
+                                    child: MarkdownText(post.post.body!,
                                         instanceHost: instanceHost)),
                               ),
                             ),
@@ -469,7 +469,7 @@ class PostWidget extends HookWidget {
                     } else {
                       return Padding(
                           padding: const EdgeInsets.all(10),
-                          child: MarkdownText(post.post.body,
+                          child: MarkdownText(post.post.body!,
                               instanceHost: instanceHost));
                     }
                   },
@@ -489,8 +489,7 @@ class _Voting extends HookWidget {
   final bool wasVoted;
 
   _Voting(this.post)
-      : assert(post != null),
-        wasVoted = (post.myVote ?? VoteType.none) != VoteType.none;
+      : wasVoted = (post.myVote ?? VoteType.none) != VoteType.none;
 
   @override
   Widget build(BuildContext context) {

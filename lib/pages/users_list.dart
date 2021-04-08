@@ -11,9 +11,8 @@ class UsersListPage extends StatelessWidget {
   final String title;
   final List<PersonViewSafe> users;
 
-  const UsersListPage({Key key, @required this.users, this.title})
-      : assert(users != null),
-        super(key: key);
+  const UsersListPage({Key? key, required this.users, this.title = ''})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class UsersListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.cardColor,
-        title: Text(title ?? ''),
+        title: Text(title),
       ),
       body: ListView.builder(
         itemBuilder: (context, i) => UsersListItem(user: users[i]),
@@ -36,9 +35,7 @@ class UsersListPage extends StatelessWidget {
 class UsersListItem extends StatelessWidget {
   final PersonViewSafe user;
 
-  const UsersListItem({Key key, @required this.user})
-      : assert(user != null),
-        super(key: key);
+  const UsersListItem({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => ListTile(
@@ -47,7 +44,7 @@ class UsersListItem extends StatelessWidget {
             ? Opacity(
                 opacity: 0.5,
                 child: MarkdownText(
-                  user.person.bio,
+                  user.person.bio!,
                   instanceHost: user.instanceHost,
                 ),
               )

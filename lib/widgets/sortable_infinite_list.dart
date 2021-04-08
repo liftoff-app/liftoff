@@ -16,21 +16,19 @@ typedef FetcherWithSorting<T> = Future<List<T>> Function(
 class SortableInfiniteList<T> extends HookWidget {
   final FetcherWithSorting<T> fetcher;
   final Widget Function(T) itemBuilder;
-  final InfiniteScrollController controller;
-  final Function onStyleChange;
+  final InfiniteScrollController? controller;
+  final Function? onStyleChange;
   final Widget noItems;
   final SortType defaultSort;
 
   const SortableInfiniteList({
-    @required this.fetcher,
-    @required this.itemBuilder,
+    required this.fetcher,
+    required this.itemBuilder,
     this.controller,
     this.onStyleChange,
-    this.noItems,
+    this.noItems = const SizedBox.shrink(),
     this.defaultSort = SortType.active,
-  })  : assert(fetcher != null),
-        assert(itemBuilder != null),
-        assert(defaultSort != null);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +60,12 @@ class SortableInfiniteList<T> extends HookWidget {
 
 class InfinitePostList extends StatelessWidget {
   final FetcherWithSorting<PostView> fetcher;
-  final InfiniteScrollController controller;
+  final InfiniteScrollController? controller;
 
   const InfinitePostList({
-    @required this.fetcher,
+    required this.fetcher,
     this.controller,
-  }) : assert(fetcher != null);
+  });
 
   Widget build(BuildContext context) => SortableInfiniteList<PostView>(
         onStyleChange: () {},
@@ -85,12 +83,12 @@ class InfinitePostList extends StatelessWidget {
 
 class InfiniteCommentList extends StatelessWidget {
   final FetcherWithSorting<CommentView> fetcher;
-  final InfiniteScrollController controller;
+  final InfiniteScrollController? controller;
 
   const InfiniteCommentList({
-    @required this.fetcher,
+    required this.fetcher,
     this.controller,
-  }) : assert(fetcher != null);
+  });
 
   Widget build(BuildContext context) => SortableInfiniteList<CommentView>(
         itemBuilder: (comment) => CommentWidget(

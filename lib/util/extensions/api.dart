@@ -34,8 +34,9 @@ extension CommunityDisplayNames on CommunitySafe {
 
 extension UserDisplayNames on PersonSafe {
   String get displayName {
-    if (preferredUsername != null && preferredUsername.isNotEmpty) {
-      return preferredUsername;
+    final prefName = preferredUsername;
+    if (prefName != null && prefName.isNotEmpty) {
+      return prefName;
     }
 
     return '@$name';

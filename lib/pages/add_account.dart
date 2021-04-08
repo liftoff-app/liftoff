@@ -16,8 +16,7 @@ import 'add_instance.dart';
 class AddAccountPage extends HookWidget {
   final String instanceHost;
 
-  const AddAccountPage({@required this.instanceHost})
-      : assert(instanceHost != null);
+  const AddAccountPage({required this.instanceHost});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +28,12 @@ class AddAccountPage extends HookWidget {
 
     final loading = useDelayedLoading();
     final selectedInstance = useState(instanceHost);
-    final icon = useState<String>(null);
+    final icon = useState<String?>(null);
 
     useEffect(() {
       LemmyApiV3(selectedInstance.value)
           .run(const GetSite())
-          .then((site) => icon.value = site.siteView.site.icon);
+          .then((site) => icon.value = site.siteView?.site.icon);
       return null;
     }, [selectedInstance.value]);
 
@@ -69,9 +68,9 @@ class AddAccountPage extends HookWidget {
             SizedBox(
               height: 150,
               child: FullscreenableImage(
-                url: icon.value,
+                url: icon.value!,
                 child: CachedNetworkImage(
-                  imageUrl: icon.value,
+                  imageUrl: icon.value!,
                   errorWidget: (_, __, ___) => const SizedBox.shrink(),
                 ),
               ),
@@ -111,13 +110,13 @@ class AddAccountPage extends HookWidget {
             autofocus: true,
             controller: usernameController,
             decoration:
-                InputDecoration(labelText: L10n.of(context).email_or_username),
+                InputDecoration(labelText: L10n.of(context)!.email_or_username),
           ),
           const SizedBox(height: 5),
           TextField(
             controller: passwordController,
             obscureText: true,
-            decoration: InputDecoration(labelText: L10n.of(context).password),
+            decoration: InputDecoration(labelText: L10n.of(context)!.password),
           ),
           ElevatedButton(
             onPressed: usernameController.text.isEmpty ||

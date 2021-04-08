@@ -10,20 +10,16 @@ import 'write_message.dart';
 
 /// Page showing posts, comments, and general info about a user.
 class UserPage extends HookWidget {
-  final int userId;
+  final int? userId;
   final String instanceHost;
   final Future<FullPersonView> _userDetails;
 
-  UserPage({@required this.userId, @required this.instanceHost})
-      : assert(userId != null),
-        assert(instanceHost != null),
-        _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
+  UserPage({required this.userId, required this.instanceHost})
+      : _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
             personId: userId, savedOnly: true, sort: SortType.active));
 
-  UserPage.fromName({@required this.instanceHost, @required String username})
-      : assert(instanceHost != null),
-        assert(username != null),
-        userId = null,
+  UserPage.fromName({required this.instanceHost, required String username})
+      : userId = null,
         _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
             username: username, savedOnly: true, sort: SortType.active));
 
@@ -33,7 +29,7 @@ class UserPage extends HookWidget {
 
     final body = () {
       if (userDetailsSnap.hasData) {
-        return UserProfile.fromFullPersonView(userDetailsSnap.data);
+        return UserProfile.fromFullPersonView(userDetailsSnap.data!);
       } else if (userDetailsSnap.hasError) {
         return const Center(child: Text('Could not find that user.'));
       } else {
@@ -46,11 +42,11 @@ class UserPage extends HookWidget {
       appBar: AppBar(
         actions: [
           if (userDetailsSnap.hasData) ...[
-            SendMessageButton(userDetailsSnap.data.personView.person),
+            SendMessageButton(userDetailsSnap.data!.personView.person),
             IconButton(
               icon: const Icon(Icons.share),
               onPressed: () => share(
-                userDetailsSnap.data.personView.person.actorId,
+                userDetailsSnap.data!.personView.person.actorId,
                 context: context,
               ),
             ),
