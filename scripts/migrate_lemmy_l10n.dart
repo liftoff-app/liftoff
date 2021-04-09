@@ -307,12 +307,14 @@ void portStrings(
         },
     };
     // ignore: omit_local_variable_types
-    String Function(Map<String, String> translations) transformer =
-        (translations) => translations[migrate.key]!;
+    String? Function(Map<String, String> translations) transformer =
+        (translations) => translations[migrate.key];
 
     // check if it has a plural form
     if (baseTranslations.containsKey('${migrate.key}_plural')) {
       transformer = (translations) {
+        if (translations[migrate.key] == null) return null;
+
         final fixedVariables = translations[migrate.key]!
             .replaceAll('{{$variableName}}', '{$variableName}');
 
@@ -339,8 +341,11 @@ void portStrings(
 
       lemmurTranslations[language]![migrate.renamedKey] = transformer(strings);
     }
-    lemmurTranslations[baseLanguage]![migrate.renamedKey] =
-        migrate.transform(transformer(baseTranslations));
+    final transformed = transformer(baseTranslations);
+    if (transformed != null) {
+      lemmurTranslations[baseLanguage]![migrate.renamedKey] =
+          migrate.transform(transformed);
+    }
     lemmurTranslations[baseLanguage]!['@${migrate.renamedKey}'] = metadata;
   }
 }
