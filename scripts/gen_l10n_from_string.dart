@@ -12,7 +12,7 @@ Future<void> main(List<String> args) async {
   final keys = strings.keys.where((key) => !key.startsWith('@')).toSet();
   final keysWithoutVariables = keys.where((key) {
     final metadata = strings['@$key'] as Map<String, dynamic>;
-    final placeholders = metadata['placeholders'] as Map<String, dynamic>;
+    final placeholders = metadata['placeholders'] as Map<String, dynamic>?;
 
     return placeholders?.isEmpty ?? true;
   }).toSet();

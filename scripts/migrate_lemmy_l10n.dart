@@ -10,17 +10,17 @@ import 'gen_l10n_from_string.dart' as gen;
 // ignore: camel_case_types
 class _ {
   final String key;
-  final String rename;
+  final String? rename;
 
   /// make all letters except the first one lower case
   final bool decapitalize;
   final bool toLowerCase;
 
   /// arb format for the placeholder
-  final String format;
+  final String? format;
 
   /// arb type for the placeholder
-  final String type;
+  final String? type;
 
   const _(
     this.key, {
@@ -281,18 +281,20 @@ void portStrings(
     }
   }
 
+  final baseTranslations = lemmyTranslations[baseLanguage]!;
+
   for (final migrate in toMigrate) {
-    if (!lemmyTranslations[baseLanguage].containsKey(migrate.key)) {
+    if (!baseTranslations.containsKey(migrate.key)) {
       printError('"${migrate.key}" does not exist in $repoName');
     }
 
-    if (lemmurTranslations[baseLanguage].containsKey(migrate.renamedKey) &&
+    if (lemmurTranslations[baseLanguage]!.containsKey(migrate.renamedKey) &&
         !force) {
       confirm('"${migrate.key}" already exists in lemmur, overwrite?');
     }
 
     final variableName = RegExp(r'{{([\w_]+)}|')
-        .firstMatch(lemmyTranslations[baseLanguage][migrate.key])
+        .firstMatch(baseTranslations[migrate.key]!)
         ?.group(1);
 
     final metadata = <String, dynamic>{
@@ -306,19 +308,17 @@ void portStrings(
     };
     // ignore: omit_local_variable_types
     String Function(Map<String, String> translations) transformer =
-        (translations) => translations[migrate.key];
+        (translations) => translations[migrate.key]!;
 
     // check if it has a plural form
-    if (lemmyTranslations[baseLanguage].containsKey('${migrate.key}_plural')) {
+    if (baseTranslations.containsKey('${migrate.key}_plural')) {
       transformer = (translations) {
-        if (translations[migrate.key] == null) return null;
-
-        final fixedVariables = translations[migrate.key]
+        final fixedVariables = translations[migrate.key]!
             .replaceAll('{{$variableName}}', '{$variableName}');
 
         final pluralForm = () {
           if (translations.containsKey('${migrate.key}_plural')) {
-            return translations['${migrate.key}_plural']
+            return translations['${migrate.key}_plural']!
                 .replaceAll('{{$variableName}}', '{$variableName}');
           }
 
@@ -337,11 +337,11 @@ void portStrings(
       final language = trans.key;
       final strings = trans.value;
 
-      lemmurTranslations[language][migrate.renamedKey] = transformer(strings);
+      lemmurTranslations[language]![migrate.renamedKey] = transformer(strings);
     }
-    lemmurTranslations[baseLanguage][migrate.renamedKey] =
-        migrate.transform(transformer(lemmyTranslations[baseLanguage]));
-    lemmurTranslations[baseLanguage]['@${migrate.renamedKey}'] = metadata;
+    lemmurTranslations[baseLanguage]![migrate.renamedKey] =
+        migrate.transform(transformer(baseTranslations));
+    lemmurTranslations[baseLanguage]!['@${migrate.renamedKey}'] = metadata;
   }
 }
 
@@ -359,7 +359,7 @@ Future<void> save(Map<String, Map<String, dynamic>> lemmurTranslations) async {
     }
   }
   for (final rem in toRemove) {
-    lemmurTranslations[rem[0]].remove(rem[1]);
+    lemmurTranslations[rem[0]]?.remove(rem[1]);
   }
 
   for (final language in lemmurTranslations.keys) {
