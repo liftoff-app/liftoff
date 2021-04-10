@@ -97,29 +97,9 @@ class AccountsStore extends ChangeNotifier {
     }
   }
 
-  String? get defaultUsername {
-    // if (defaultAccount == null) {
-    //   return null;
-    // }
+  String? get defaultUsername => defaultAccount?.split('@')[0];
 
-    return defaultAccount?.split('@')[0];
-  }
-
-  String? get defaultInstanceHost {
-    // if (defaultAccount == null) {
-    //   return null;
-    // }
-
-    return defaultAccount?.split('@')[1];
-  }
-
-  String? defaultUsernameFor(String instanceHost) {
-    if (isAnonymousFor(instanceHost)) {
-      return null;
-    }
-
-    return defaultAccounts[instanceHost];
-  }
+  String? get defaultInstanceHost => defaultAccount?.split('@')[1];
 
   Jwt? get defaultToken {
     if (defaultAccount == null) {
@@ -128,6 +108,14 @@ class AccountsStore extends ChangeNotifier {
 
     final userTag = defaultAccount!.split('@');
     return tokens[userTag[1]]?[userTag[0]];
+  }
+
+  String? defaultUsernameFor(String instanceHost) {
+    if (isAnonymousFor(instanceHost)) {
+      return null;
+    }
+
+    return defaultAccounts[instanceHost];
   }
 
   Jwt? defaultTokenFor(String instanceHost) {
