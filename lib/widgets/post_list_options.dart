@@ -15,7 +15,7 @@ class PostListOptions extends StatelessWidget {
     required this.onSortChanged,
     required this.sortValue,
     this.styleButton = true,
-  }) : assert(sortValue != null);
+  });
 
   @override
   Widget build(BuildContext context) => Padding(

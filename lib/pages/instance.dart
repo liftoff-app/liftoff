@@ -71,7 +71,7 @@ class InstancePage extends HookWidget {
 
     void _share() => share('https://$instanceHost', context: context);
 
-    void _openMoreMenu(BuildContext c) {
+    void _openMoreMenu() {
       showBottomModal(
         context: context,
         builder: (context) => Column(
@@ -118,9 +118,7 @@ class InstancePage extends HookWidget {
               ),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: _share),
-                IconButton(
-                    icon: Icon(moreIcon),
-                    onPressed: () => _openMoreMenu(context)),
+                IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(children: [
@@ -292,14 +290,12 @@ class _AboutTab extends HookWidget {
                           .number_of_users_online(site.online))),
                   Chip(
                       label: Text(L10n.of(context)!
-                          .number_of_users(site.siteView!.counts.users))),
-                  Chip(
-                      label: Text(
-                          '${site.siteView!.counts.communities} communities')),
-                  Chip(label: Text('${site.siteView!.counts.posts} posts')),
+                          .number_of_users(siteView.counts.users))),
                   Chip(
                       label:
-                          Text('${site.siteView!.counts.comments} comments')),
+                          Text('${siteView.counts.communities} communities')),
+                  Chip(label: Text('${siteView.counts.posts} posts')),
+                  Chip(label: Text('${siteView.counts.comments} comments')),
                 ].spaced(8),
               ),
             ),

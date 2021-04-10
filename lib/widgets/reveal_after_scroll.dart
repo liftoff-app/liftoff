@@ -19,9 +19,7 @@ class RevealAfterScroll extends HookWidget {
     required this.after,
     this.transition = 15,
     this.fade = false,
-  })  : assert(scrollController != null),
-        assert(child != null),
-        assert(after != null);
+  });
 
   @override
   Widget build(BuildContext context) {

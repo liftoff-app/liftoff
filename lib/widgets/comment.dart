@@ -425,8 +425,6 @@ class _MarkAsRead extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accStore = useAccountsStore();
-
     final comment = commentView.comment;
     final instanceHost = commentView.instanceHost;
     final loggedInAction = useLoggedInAction(instanceHost);

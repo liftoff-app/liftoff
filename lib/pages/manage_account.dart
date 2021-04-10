@@ -405,7 +405,7 @@ class _ImagePicker extends HookWidget {
           url.value =
               pathToPictrs(user.instanceHost, pictrsDeleteToken.value!.file);
 
-          onChange?.call(url.value!);
+          onChange?.call(url.value);
         }
       } on Exception catch (_) {
         ScaffoldMessenger.of(context).showSnackBar(
