@@ -33,11 +33,11 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
-  Locale? _locale;
-  // default value is set in the `load` method because json_serializable does
-  // not accept non-literals as constant values
+  late Locale _locale;
+  // default value is set in the `LocaleSerde.fromJson` method because json_serializable does
+  // not accept non-literals as defaultValue
   @JsonKey(fromJson: LocaleSerde.fromJson, toJson: LocaleSerde.toJson)
-  Locale get locale => _locale ?? const Locale('en');
+  Locale get locale => _locale;
   set locale(Locale locale) {
     _locale = locale;
     notifyListeners();
