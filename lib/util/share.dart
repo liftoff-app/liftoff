@@ -10,7 +10,6 @@ Future<void> share(
   Rect? sharePositionOrigin,
   required BuildContext context,
 }) async {
-
   try {
     return await Share.share(
       text,
