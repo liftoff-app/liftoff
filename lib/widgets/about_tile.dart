@@ -23,7 +23,12 @@ class AboutTile extends HookWidget {
           return await PackageInfo.fromPlatform();
         } on MissingPluginException {
           // when we get here it means PackageInfo does not support this platform
-          return PackageInfo(version: '');
+          return PackageInfo(
+            appName: 'lemmur',
+            packageName: '',
+            version: '',
+            buildNumber: '',
+          );
         }
       },
     );
@@ -31,12 +36,15 @@ class AboutTile extends HookWidget {
     final changelogSnap =
         useMemoFuture(() => assetBundle.loadString('CHANGELOG.md'));
 
-    if (!packageInfoSnap.hasData || !changelogSnap.hasData) {
-      return const SizedBox.shrink();
-    }
-
     final packageInfo = packageInfoSnap.data;
     final changelog = changelogSnap.data;
+
+    if (!packageInfoSnap.hasData ||
+        !changelogSnap.hasData ||
+        packageInfo == null ||
+        changelog == null) {
+      return const SizedBox.shrink();
+    }
 
     return AboutListTile(
       icon: const Icon(Icons.info),

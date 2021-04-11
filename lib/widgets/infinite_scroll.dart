@@ -6,17 +6,13 @@ import '../hooks/ref.dart';
 import 'bottom_safe.dart';
 
 class InfiniteScrollController {
-  VoidCallback clear;
+  late VoidCallback clear;
 
   InfiniteScrollController() {
     usedBeforeCreation() => throw Exception(
         'Tried to use $runtimeType before it being initialized');
 
     clear = usedBeforeCreation;
-  }
-
-  void dispose() {
-    clear = null;
   }
 }
 
@@ -36,13 +32,13 @@ class InfiniteScroll<T> extends HookWidget {
   /// is considered finished
   final Future<List<T>> Function(int page, int batchSize) fetcher;
 
-  final InfiniteScrollController controller;
+  final InfiniteScrollController? controller;
 
   /// Widget to be added at the beginning of the list
   final Widget leading;
 
   /// Padding for the [ListView.builder]
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? padding;
 
   /// Widget that will be displayed if there are no items
   final Widget noItems;
@@ -53,13 +49,11 @@ class InfiniteScroll<T> extends HookWidget {
     this.padding,
     this.loadingWidget =
         const ListTile(title: Center(child: CircularProgressIndicator())),
-    @required this.itemBuilder,
-    @required this.fetcher,
+    required this.itemBuilder,
+    required this.fetcher,
     this.controller,
     this.noItems = const SizedBox.shrink(),
-  })  : assert(itemBuilder != null),
-        assert(fetcher != null),
-        assert(batchSize > 0);
+  }) : assert(batchSize > 0);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +63,7 @@ class InfiniteScroll<T> extends HookWidget {
 
     useEffect(() {
       if (controller != null) {
-        controller.clear = () {
+        controller?.clear = () {
           data.value = [];
           hasMore.current = true;
         };
@@ -82,7 +76,9 @@ class InfiniteScroll<T> extends HookWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
-        controller.clear();
+        data.value = [];
+        hasMore.current = true;
+
         await HapticFeedback.mediumImpact();
         await Future.delayed(const Duration(seconds: 1));
       },

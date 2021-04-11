@@ -24,7 +24,7 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
       iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
       textTheme: TextTheme(
         headline6: theme.textTheme.headline6
-            .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+            ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
       ),
     ),
     tabBarTheme: TabBarTheme(

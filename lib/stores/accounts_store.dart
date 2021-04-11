@@ -20,18 +20,18 @@ class AccountsStore extends ChangeNotifier {
   /// `tokens['instanceHost']['username']`
   @protected
   @JsonKey(defaultValue: {'lemmy.ml': {}})
-  Map<String, Map<String, Jwt>> tokens;
+  late Map<String, Map<String, Jwt>> tokens;
 
   /// default account for a given instance
   /// map where keys are instanceHosts and values are usernames
   @protected
   @JsonKey(defaultValue: {})
-  Map<String, String> defaultAccounts;
+  late Map<String, String> defaultAccounts;
 
   /// default account for the app
   /// It is in a form of `username@instanceHost`
   @protected
-  String defaultAccount;
+  String? defaultAccount;
 
   static Future<AccountsStore> load() async {
     final prefs = await _prefs;
@@ -63,8 +63,8 @@ class AccountsStore extends ChangeNotifier {
         .toList()
         .forEach(defaultAccounts.remove);
     if (defaultAccount != null) {
-      final instance = defaultAccount.split('@')[1];
-      final username = defaultAccount.split('@')[0];
+      final instance = defaultAccount!.split('@')[1];
+      final username = defaultAccount!.split('@')[0];
       // if instance or username doesn't exist, remove
       if (!instances.contains(instance) ||
           !usernamesFor(instance).contains(username)) {
@@ -97,23 +97,20 @@ class AccountsStore extends ChangeNotifier {
     }
   }
 
-  String get defaultUsername {
+  String? get defaultUsername => defaultAccount?.split('@')[0];
+
+  String? get defaultInstanceHost => defaultAccount?.split('@')[1];
+
+  Jwt? get defaultToken {
     if (defaultAccount == null) {
       return null;
     }
 
-    return defaultAccount.split('@')[0];
+    final userTag = defaultAccount!.split('@');
+    return tokens[userTag[1]]?[userTag[0]];
   }
 
-  String get defaultInstanceHost {
-    if (defaultAccount == null) {
-      return null;
-    }
-
-    return defaultAccount.split('@')[1];
-  }
-
-  String defaultUsernameFor(String instanceHost) {
+  String? defaultUsernameFor(String instanceHost) {
     if (isAnonymousFor(instanceHost)) {
       return null;
     }
@@ -121,29 +118,20 @@ class AccountsStore extends ChangeNotifier {
     return defaultAccounts[instanceHost];
   }
 
-  Jwt get defaultToken {
-    if (defaultAccount == null) {
-      return null;
-    }
-
-    final userTag = defaultAccount.split('@');
-    return tokens[userTag[1]][userTag[0]];
-  }
-
-  Jwt defaultTokenFor(String instanceHost) {
+  Jwt? defaultTokenFor(String instanceHost) {
     if (isAnonymousFor(instanceHost)) {
       return null;
     }
 
-    return tokens[instanceHost][defaultAccounts[instanceHost]];
+    return tokens[instanceHost]?[defaultAccounts[instanceHost]];
   }
 
-  Jwt tokenFor(String instanceHost, String username) {
+  Jwt? tokenFor(String instanceHost, String username) {
     if (!usernamesFor(instanceHost).contains(username)) {
       return null;
     }
 
-    return tokens[instanceHost][username];
+    return tokens[instanceHost]?[username];
   }
 
   /// sets globally default account
@@ -169,7 +157,7 @@ class AccountsStore extends ChangeNotifier {
       return true;
     }
 
-    return tokens[instanceHost].isEmpty;
+    return tokens[instanceHost]!.isEmpty;
   }
 
   /// `true` if no added instance has an account assigned to it
@@ -182,7 +170,7 @@ class AccountsStore extends ChangeNotifier {
 
   /// Usernames that are assigned to a given instance
   Iterable<String> usernamesFor(String instanceHost) =>
-      tokens[instanceHost].keys;
+      tokens[instanceHost]?.keys ?? const Iterable.empty();
 
   /// adds a new account
   /// if it's the first account ever the account is
@@ -203,10 +191,11 @@ class AccountsStore extends ChangeNotifier {
       usernameOrEmail: usernameOrEmail,
       password: password,
     ));
-    final userData =
-        await lemmy.run(GetSite(auth: token.raw)).then((value) => value.myUser);
+    final userData = await lemmy
+        .run(GetSite(auth: token.raw))
+        .then((value) => value.myUser!);
 
-    tokens[instanceHost][userData.person.name] = token.copyWith(
+    tokens[instanceHost]![userData.person.name] = token.copyWith(
       payload: token.payload.copyWith(sub: userData.person.id),
     );
 
@@ -252,7 +241,11 @@ class AccountsStore extends ChangeNotifier {
   }
 
   Future<void> removeAccount(String instanceHost, String username) async {
-    tokens[instanceHost].remove(username);
+    if (!tokens.containsKey(instanceHost)) {
+      throw Exception("instance doesn't exist");
+    }
+
+    tokens[instanceHost]!.remove(username);
 
     await _assignDefaultAccounts();
     notifyListeners();

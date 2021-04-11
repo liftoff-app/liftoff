@@ -33,7 +33,7 @@ class CommentWidget extends HookWidget {
   final bool wasVoted;
   final bool canBeMarkedAsRead;
   final bool hideOnRead;
-  final int userMentionId;
+  final int? userMentionId;
 
   static const colors = [
     Colors.pink,
@@ -95,10 +95,7 @@ class CommentWidget extends HookWidget {
     final accStore = useAccountsStore();
 
     final isMine = commentTree.comment.comment.creatorId ==
-        accStore
-            .defaultTokenFor(commentTree.comment.instanceHost)
-            ?.payload
-            ?.sub;
+        accStore.defaultTokenFor(commentTree.comment.instanceHost)?.payload.sub;
     final selectable = useState(false);
     final showRaw = useState(false);
     final collapsed = useState(false);
@@ -221,7 +218,7 @@ class CommentWidget extends HookWidget {
       if (isDeleted.value) {
         return Flexible(
           child: Text(
-            L10n.of(context).deleted_by_creator,
+            L10n.of(context)!.deleted_by_creator,
             style: const TextStyle(fontStyle: FontStyle.italic),
           ),
         );
@@ -294,7 +291,7 @@ class CommentWidget extends HookWidget {
               icon: Icons.more_horiz,
               onPressed: () => _openMoreMenu(context),
               delayedLoading: delayedDeletion,
-              tooltip: L10n.of(context).more,
+              tooltip: L10n.of(context)!.more,
             ),
             _SaveComment(commentTree.comment),
             if (!isDeleted.value &&
@@ -303,7 +300,7 @@ class CommentWidget extends HookWidget {
               TileAction(
                 icon: Icons.reply,
                 onPressed: loggedInAction((_) => reply()),
-                tooltip: L10n.of(context).reply,
+                tooltip: L10n.of(context)!.reply,
               ),
             TileAction(
               icon: Icons.arrow_upward,
@@ -369,7 +366,7 @@ class CommentWidget extends HookWidget {
                   if (isOP) _CommentTag('OP', theme.accentColor),
                   if (comment.creator.admin)
                     _CommentTag(
-                      L10n.of(context).admin.toUpperCase(),
+                      L10n.of(context)!.admin.toUpperCase(),
                       theme.accentColor,
                     ),
                   if (comment.creator.banned)
@@ -417,33 +414,32 @@ class CommentWidget extends HookWidget {
 
 class _MarkAsRead extends HookWidget {
   final CommentView commentView;
-  final ValueChanged<bool> onChanged;
-  final int userMentionId;
+  final ValueChanged<bool>? onChanged;
+  final int? userMentionId;
 
   const _MarkAsRead(
     this.commentView, {
-    @required this.onChanged,
-    @required this.userMentionId,
-  }) : assert(commentView != null);
+    required this.onChanged,
+    required this.userMentionId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final accStore = useAccountsStore();
-
     final comment = commentView.comment;
     final instanceHost = commentView.instanceHost;
+    final loggedInAction = useLoggedInAction(instanceHost);
 
     final isRead = useState(comment.read);
     final delayedRead = useDelayedLoading();
 
-    Future<void> handleMarkAsSeen() => delayedAction<FullCommentView>(
+    Future<void> handleMarkAsSeen(Jwt token) => delayedAction<FullCommentView>(
           context: context,
           delayedLoading: delayedRead,
           instanceHost: instanceHost,
           query: MarkCommentAsRead(
             commentId: comment.id,
             read: !isRead.value,
-            auth: accStore.defaultTokenFor(instanceHost)?.raw,
+            auth: token.raw,
           ),
           onSuccess: (val) {
             isRead.value = val.commentView.comment.read;
@@ -451,14 +447,15 @@ class _MarkAsRead extends HookWidget {
           },
         );
 
-    Future<void> handleMarkMentionAsSeen() => delayedAction<PersonMentionView>(
+    Future<void> handleMarkMentionAsSeen(Jwt token) =>
+        delayedAction<PersonMentionView>(
           context: context,
           delayedLoading: delayedRead,
           instanceHost: instanceHost,
           query: MarkPersonMentionAsRead(
-            personMentionId: userMentionId,
+            personMentionId: userMentionId!,
             read: !isRead.value,
-            auth: accStore.defaultTokenFor(instanceHost)?.raw,
+            auth: token.raw,
           ),
           onSuccess: (val) {
             isRead.value = val.personMention.read;
@@ -469,12 +466,13 @@ class _MarkAsRead extends HookWidget {
     return TileAction(
       icon: Icons.check,
       delayedLoading: delayedRead,
-      onPressed:
-          userMentionId != null ? handleMarkMentionAsSeen : handleMarkAsSeen,
+      onPressed: userMentionId != null
+          ? loggedInAction(handleMarkMentionAsSeen)
+          : loggedInAction(handleMarkAsSeen),
       iconColor: isRead.value ? Theme.of(context).accentColor : null,
       tooltip: isRead.value
-          ? L10n.of(context).mark_as_unread
-          : L10n.of(context).mark_as_read,
+          ? L10n.of(context)!.mark_as_unread
+          : L10n.of(context)!.mark_as_read,
     );
   }
 }
@@ -487,7 +485,7 @@ class _SaveComment extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final loggedInAction = useLoggedInAction(comment.instanceHost);
-    final isSaved = useState(comment.saved ?? false);
+    final isSaved = useState(comment.saved);
     final delayed = useDelayedLoading();
 
     handleSave(Jwt token) => delayedAction<FullCommentView>(
@@ -529,7 +527,7 @@ class _CommentTag extends StatelessWidget {
           child: Text(text,
               style: TextStyle(
                 color: textColorBasedOnBackground(bgColor),
-                fontSize: Theme.of(context).textTheme.bodyText1.fontSize - 5,
+                fontSize: Theme.of(context).textTheme.bodyText1!.fontSize! - 5,
                 fontWeight: FontWeight.w800,
               )),
         ),

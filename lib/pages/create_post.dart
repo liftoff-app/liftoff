@@ -23,18 +23,20 @@ import 'full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
 class CreatePostFab extends HookWidget {
-  final CommunityView community;
+  final CommunityView? community;
 
   const CreatePostFab({this.community});
 
   @override
   Widget build(BuildContext context) {
-    final loggedInAction = useLoggedInAction(null, any: true);
+    final loggedInAction = useAnyLoggedInAction();
 
     return FloatingActionButton(
       onPressed: loggedInAction((_) => showCupertinoModalPopup(
           context: context,
-          builder: (_) => CreatePostPage.toCommunity(community))),
+          builder: (_) => community == null
+              ? const CreatePostPage()
+              : CreatePostPage.toCommunity(community!))),
       child: const Icon(Icons.add),
     );
   }
@@ -42,10 +44,10 @@ class CreatePostFab extends HookWidget {
 
 /// Modal for creating a post to some community in some instance
 class CreatePostPage extends HookWidget {
-  final CommunityView community;
+  final CommunityView? community;
 
   const CreatePostPage() : community = null;
-  const CreatePostPage.toCommunity(this.community);
+  const CreatePostPage.toCommunity(CommunityView this.community);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,8 @@ class CreatePostPage extends HookWidget {
     final delayed = useDelayedLoading();
     final imagePicker = useImagePicker();
     final imageUploadLoading = useState(false);
-    final pictrsDeleteToken = useState<PictrsUploadFile>(null);
+    final pictrsDeleteToken = useState<PictrsUploadFile?>(null);
+    final loggedInAction = useLoggedInAction(selectedInstance.value);
 
     final allCommunitiesSnap = useMemoFuture(
       () => LemmyApiV3(selectedInstance.value)
@@ -69,7 +72,7 @@ class CreatePostPage extends HookWidget {
         type: PostListingType.all,
         sort: SortType.hot,
         limit: 9999,
-        auth: accStore.defaultTokenFor(selectedInstance.value).raw,
+        auth: accStore.defaultTokenFor(selectedInstance.value)?.raw,
       ))
           .then(
         (value) {
@@ -80,14 +83,13 @@ class CreatePostPage extends HookWidget {
       [selectedInstance.value],
     );
 
-    uploadPicture() async {
+    uploadPicture(Jwt token) async {
       try {
         final pic = await imagePicker.getImage(source: ImageSource.gallery);
         // pic is null when the picker was cancelled
         if (pic != null) {
           imageUploadLoading.value = true;
 
-          final token = accStore.defaultTokenFor(selectedInstance.value);
           final pictrs = PictrsApi(selectedInstance.value);
           final upload =
               await pictrs.upload(filePath: pic.path, auth: token.raw);
@@ -105,10 +107,8 @@ class CreatePostPage extends HookWidget {
       }
     }
 
-    removePicture() {
-      PictrsApi(selectedInstance.value)
-          .delete(pictrsDeleteToken.value)
-          .catchError((_) {});
+    removePicture(PictrsUploadFile deleteToken) {
+      PictrsApi(selectedInstance.value).delete(deleteToken).catchError((_) {});
 
       pictrsDeleteToken.value = null;
       urlController.text = '';
@@ -140,10 +140,10 @@ class CreatePostPage extends HookWidget {
 
     List<DropdownMenuItem<int>> communitiesList() {
       if (allCommunitiesSnap.hasData) {
-        return allCommunitiesSnap.data.map(communityDropDownItem).toList();
+        return allCommunitiesSnap.data!.map(communityDropDownItem).toList();
       } else {
         if (selectedCommunity.value != null) {
-          return [communityDropDownItem(selectedCommunity.value)];
+          return [communityDropDownItem(selectedCommunity.value!)];
         } else {
           return const [
             DropdownMenuItem(
@@ -163,8 +163,8 @@ class CreatePostPage extends HookWidget {
               borderRadius: BorderRadius.all(Radius.circular(10)))),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
-          value: selectedCommunity.value?.community?.id,
-          hint: Text(L10n.of(context).community),
+          value: selectedCommunity.value?.community.id,
+          hint: Text(L10n.of(context)!.community),
           onChanged: (communityId) => selectedCommunity.value =
               allCommunitiesSnap.data
                   ?.firstWhere((e) => e.community.id == communityId),
@@ -179,7 +179,7 @@ class CreatePostPage extends HookWidget {
           enabled: pictrsDeleteToken.value == null,
           controller: urlController,
           decoration: InputDecoration(
-            labelText: L10n.of(context).url,
+            labelText: L10n.of(context)!.url,
             suffixIcon: const Icon(Icons.link),
           ),
         ),
@@ -191,8 +191,9 @@ class CreatePostPage extends HookWidget {
             : Icon(pictrsDeleteToken.value == null
                 ? Icons.add_photo_alternate
                 : Icons.close),
-        onPressed:
-            pictrsDeleteToken.value == null ? uploadPicture : removePicture,
+        onPressed: pictrsDeleteToken.value == null
+            ? loggedInAction(uploadPicture)
+            : () => removePicture(pictrsDeleteToken.value!),
         tooltip:
             pictrsDeleteToken.value == null ? 'Add picture' : 'Delete picture',
       )
@@ -202,7 +203,7 @@ class CreatePostPage extends HookWidget {
       controller: titleController,
       minLines: 1,
       maxLines: 2,
-      decoration: InputDecoration(labelText: L10n.of(context).title),
+      decoration: InputDecoration(labelText: L10n.of(context)!.title),
     );
 
     final body = IndexedStack(
@@ -213,7 +214,7 @@ class CreatePostPage extends HookWidget {
           keyboardType: TextInputType.multiline,
           maxLines: null,
           minLines: 5,
-          decoration: InputDecoration(labelText: L10n.of(context).body),
+          decoration: InputDecoration(labelText: L10n.of(context)!.body),
         ),
         Padding(
           padding: const EdgeInsets.all(16),
@@ -225,7 +226,7 @@ class CreatePostPage extends HookWidget {
       ],
     );
 
-    handleSubmit() async {
+    handleSubmit(Jwt token) async {
       if (selectedCommunity.value == null || titleController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Choosing a community and a title is required'),
@@ -235,8 +236,6 @@ class CreatePostPage extends HookWidget {
 
       final api = LemmyApiV3(selectedInstance.value);
 
-      final token = accStore.defaultTokenFor(selectedInstance.value);
-
       delayed.start();
       try {
         final res = await api.run(CreatePost(
@@ -244,7 +243,7 @@ class CreatePostPage extends HookWidget {
           body: bodyController.text.isEmpty ? null : bodyController.text,
           nsfw: nsfw.value,
           name: titleController.text,
-          communityId: selectedCommunity.value.community.id,
+          communityId: selectedCommunity.value!.community.id,
           auth: token.raw,
         ));
         unawaited(goToReplace(context, (_) => FullPostPage.fromPostView(res)));
@@ -285,17 +284,20 @@ class CreatePostPage extends HookWidget {
                     children: [
                       Checkbox(
                         value: nsfw.value,
-                        onChanged: (val) => nsfw.value = val,
+                        onChanged: (val) {
+                          if (val != null) nsfw.value = val;
+                        },
                       ),
-                      Text(L10n.of(context).nsfw)
+                      Text(L10n.of(context)!.nsfw)
                     ],
                   ),
                 ),
                 TextButton(
-                  onPressed: delayed.pending ? () {} : handleSubmit,
+                  onPressed:
+                      delayed.pending ? () {} : loggedInAction(handleSubmit),
                   child: delayed.loading
                       ? const CircularProgressIndicator()
-                      : Text(L10n.of(context).post),
+                      : Text(L10n.of(context)!.post),
                 )
               ],
             ),

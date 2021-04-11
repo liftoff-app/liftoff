@@ -32,13 +32,14 @@ class HomeTab extends HookWidget {
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
     final instancesIcons = useMemoFuture(() async {
-      final instances = accStore.instances.toList(growable: false);
-      final sites = await Future.wait(instances.map(
-          (e) => LemmyApiV3(e).run(const GetSite()).catchError((e) => null)));
+      final sites = await Future.wait(accStore.instances.map((e) =>
+          LemmyApiV3(e)
+              .run<FullSiteView?>(const GetSite())
+              .catchError((e) => null)));
 
       return {
-        for (var i = 0; i < sites.length; i++)
-          instances[i]: sites[i].siteView.site.icon
+        for (final site in sites)
+          if (site != null) site.instanceHost: site.siteView?.site.icon
       };
     });
 
@@ -48,7 +49,8 @@ class HomeTab extends HookWidget {
     // - listingType == subscribed on an instance that has no longer a logged in account
     // - instanceHost of a removed instance
     useEffect(() {
-      if (accStore.isAnonymousFor(selectedList.value.instanceHost) &&
+      if ((selectedList.value.instanceHost == null ||
+                  accStore.isAnonymousFor(selectedList.value.instanceHost!)) &&
               selectedList.value.listingType == PostListingType.subscribed ||
           !accStore.instances.contains(selectedList.value.instanceHost)) {
         selectedList.value = _SelectedList(
@@ -60,7 +62,8 @@ class HomeTab extends HookWidget {
 
       return null;
     }, [
-      accStore.isAnonymousFor(selectedList.value.instanceHost),
+      selectedList.value.instanceHost == null ||
+          accStore.isAnonymousFor(selectedList.value.instanceHost!),
       accStore.hasNoAccount,
       accStore.instances.length,
     ]);
@@ -84,10 +87,10 @@ class HomeTab extends HookWidget {
               ),
               ListTile(
                 title: Text(
-                  L10n.of(context).subscribed,
+                  L10n.of(context)!.subscribed,
                   style: TextStyle(
                     color: accStore.hasNoAccount
-                        ? theme.textTheme.bodyText1.color.withOpacity(0.4)
+                        ? theme.textTheme.bodyText1?.color?.withOpacity(0.4)
                         : null,
                   ),
                 ),
@@ -119,7 +122,7 @@ class HomeTab extends HookWidget {
                     instance.toUpperCase(),
                     style: TextStyle(
                         color:
-                            theme.textTheme.bodyText1.color.withOpacity(0.7)),
+                            theme.textTheme.bodyText1?.color?.withOpacity(0.7)),
                   ),
                   onTap: () => goToInstance(context, instance),
                   dense: true,
@@ -127,14 +130,14 @@ class HomeTab extends HookWidget {
                   visualDensity: const VisualDensity(
                       vertical: VisualDensity.minimumDensity),
                   leading: (instancesIcons.hasData &&
-                          instancesIcons.data[instance] != null)
+                          instancesIcons.data![instance] != null)
                       ? Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: SizedBox(
                             width: 25,
                             height: 25,
                             child: CachedNetworkImage(
-                              imageUrl: instancesIcons.data[instance],
+                              imageUrl: instancesIcons.data![instance]!,
                               height: 25,
                               width: 25,
                             ),
@@ -144,10 +147,10 @@ class HomeTab extends HookWidget {
                 ),
                 ListTile(
                   title: Text(
-                    L10n.of(context).subscribed,
+                    L10n.of(context)!.subscribed,
                     style: TextStyle(
                         color: accStore.isAnonymousFor(instance)
-                            ? theme.textTheme.bodyText1.color.withOpacity(0.4)
+                            ? theme.textTheme.bodyText1?.color?.withOpacity(0.4)
                             : null),
                   ),
                   onTap: accStore.isAnonymousFor(instance)
@@ -162,7 +165,7 @@ class HomeTab extends HookWidget {
                   leading: const SizedBox(width: 20),
                 ),
                 ListTile(
-                  title: Text(L10n.of(context).local),
+                  title: Text(L10n.of(context)!.local),
                   onTap: () => pop(_SelectedList(
                     listingType: PostListingType.local,
                     instanceHost: instance,
@@ -170,7 +173,7 @@ class HomeTab extends HookWidget {
                   leading: const SizedBox(width: 20),
                 ),
                 ListTile(
-                  title: Text(L10n.of(context).all),
+                  title: Text(L10n.of(context)!.all),
                   onTap: () => pop(_SelectedList(
                     listingType: PostListingType.all,
                     instanceHost: instance,
@@ -229,7 +232,7 @@ class HomeTab extends HookWidget {
               Flexible(
                 child: Text(
                   title,
-                  style: theme.appBarTheme.textTheme.headline6,
+                  style: theme.appBarTheme.textTheme?.headline6,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                 ),
@@ -249,15 +252,13 @@ class HomeTab extends HookWidget {
 
 /// Infinite list of posts
 class InfiniteHomeList extends HookWidget {
-  final Function onStyleChange;
   final InfiniteScrollController controller;
   final _SelectedList selectedList;
 
   const InfiniteHomeList({
-    @required this.selectedList,
-    this.onStyleChange,
-    this.controller,
-  }) : assert(selectedList != null);
+    required this.selectedList,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +324,7 @@ class InfiniteHomeList extends HookWidget {
           ? (page, limit, sort) =>
               generalFetcher(page, limit, sort, selectedList.listingType)
           : fetcherFromInstance(
-              selectedList.instanceHost, selectedList.listingType),
+              selectedList.instanceHost!, selectedList.listingType),
       controller: controller,
     );
   }
@@ -331,13 +332,13 @@ class InfiniteHomeList extends HookWidget {
 
 class _SelectedList {
   /// when null it implies the 'EVERYTHING' mode
-  final String instanceHost;
+  final String? instanceHost;
   final PostListingType listingType;
 
   const _SelectedList({
-    @required this.listingType,
+    required this.listingType,
     this.instanceHost,
-  }) : assert(listingType != null);
+  });
 
   String toString() =>
       'SelectedList(instanceHost: $instanceHost, listingType: $listingType)';

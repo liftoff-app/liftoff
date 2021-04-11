@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 /// Can be disabled with `noBlank`
 class Avatar extends StatelessWidget {
   const Avatar({
-    Key key,
-    @required this.url,
+    Key? key,
+    required this.url,
     this.radius = 25,
     this.noBlank = false,
   }) : super(key: key);
 
-  final String url;
+  final String? url;
   final double radius;
   final bool noBlank;
 
@@ -27,7 +27,9 @@ class Avatar extends StatelessWidget {
       );
     }();
 
-    if (url == null) {
+    final imageUrl = url;
+
+    if (imageUrl == null) {
       return blankWidget;
     }
 
@@ -35,7 +37,7 @@ class Avatar extends StatelessWidget {
       child: CachedNetworkImage(
         height: radius * 2,
         width: radius * 2,
-        imageUrl: url,
+        imageUrl: imageUrl,
         fit: BoxFit.cover,
         errorWidget: (_, __, ___) => blankWidget,
       ),

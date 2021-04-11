@@ -13,8 +13,8 @@ void confirm(String message) {
   }
 }
 
-void printError(String message, {bool shouldExit = true}) {
+Never printError(String message) {
   stderr.writeln('\x1B[31m$message\x1B[0m');
 
-  if (shouldExit) exit(1);
+  exit(1);
 }

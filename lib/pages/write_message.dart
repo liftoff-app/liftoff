@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../hooks/stores.dart';
+import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
 import '../widgets/markdown_mode_icon.dart';
@@ -14,16 +14,14 @@ class WriteMessagePage extends HookWidget {
   final String instanceHost;
 
   /// if it's non null then this page is used for edit
-  final PrivateMessage privateMessage;
+  final PrivateMessage? privateMessage;
 
   final bool _isEdit;
 
   const WriteMessagePage.send({
-    @required this.recipient,
-    @required this.instanceHost,
-  })  : assert(recipient != null),
-        assert(instanceHost != null),
-        privateMessage = null,
+    required this.recipient,
+    required this.instanceHost,
+  })   : privateMessage = null,
         _isEdit = false;
 
   WriteMessagePage.edit(PrivateMessageView pmv)
@@ -34,22 +32,21 @@ class WriteMessagePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accStore = useAccountsStore();
     final showFancy = useState(false);
     final bodyController =
         useTextEditingController(text: privateMessage?.content);
     final loading = useState(false);
+    final loggedInAction = useLoggedInAction(instanceHost);
+    final submit = _isEdit ? L10n.of(context)!.save : 'send';
+    final title = _isEdit ? 'Edit message' : L10n.of(context)!.send_message;
 
-    final submit = _isEdit ? L10n.of(context).save : 'send';
-    final title = _isEdit ? 'Edit message' : L10n.of(context).send_message;
-
-    handleSubmit() async {
+    handleSubmit(Jwt token) async {
       if (_isEdit) {
         loading.value = true;
         try {
           final msg = await LemmyApiV3(instanceHost).run(EditPrivateMessage(
-            auth: accStore.defaultTokenFor(instanceHost)?.raw,
-            privateMessageId: privateMessage.id,
+            auth: token.raw,
+            privateMessageId: privateMessage!.id,
             content: bodyController.text,
           ));
           Navigator.of(context).pop(msg);
@@ -65,7 +62,7 @@ class WriteMessagePage extends HookWidget {
         loading.value = true;
         try {
           await LemmyApiV3(instanceHost).run(CreatePrivateMessage(
-            auth: accStore.defaultTokenFor(instanceHost)?.raw,
+            auth: token.raw,
             content: bodyController.text,
             recipientId: recipient.id,
           ));
@@ -124,7 +121,7 @@ class WriteMessagePage extends HookWidget {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: loading.value ? () {} : handleSubmit,
+                onPressed: loading.value ? () {} : loggedInAction(handleSubmit),
                 child: loading.value
                     ? const SizedBox(
                         height: 20,

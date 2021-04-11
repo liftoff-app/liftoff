@@ -36,18 +36,14 @@ extension on CommentSortType {
         return (b, a) =>
             a.comment.counts.score.compareTo(b.comment.counts.score);
     }
-
-    throw Exception('unreachable');
   }
 }
 
 class CommentTree {
   CommentView comment;
-  List<CommentTree> children;
+  List<CommentTree> children = [];
 
-  CommentTree(this.comment, [this.children]) {
-    children ??= [];
-  }
+  CommentTree(this.comment);
 
   /// takes raw linear comments and turns them into a CommentTree
   static List<CommentTree> fromList(List<CommentView> comments) {

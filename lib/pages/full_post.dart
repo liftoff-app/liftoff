@@ -20,13 +20,11 @@ import '../widgets/write_comment.dart';
 class FullPostPage extends HookWidget {
   final int id;
   final String instanceHost;
-  final PostView post;
+  final PostView? post;
 
-  const FullPostPage({@required this.id, @required this.instanceHost})
-      : assert(id != null),
-        assert(instanceHost != null),
-        post = null;
-  FullPostPage.fromPostView(this.post)
+  const FullPostPage({required this.id, required this.instanceHost})
+      : post = null;
+  FullPostPage.fromPostView(PostView this.post)
       : id = post.post.id,
         instanceHost = post.instanceHost;
 
@@ -64,8 +62,8 @@ class FullPostPage extends HookWidget {
     // VARIABLES
 
     final post = fullPostRefreshable.snapshot.hasData
-        ? fullPostRefreshable.snapshot.data.postView
-        : this.post;
+        ? fullPostRefreshable.snapshot.data!.postView
+        : this.post!;
 
     final fullPost = fullPostRefreshable.snapshot.data;
 
@@ -129,7 +127,7 @@ class FullPostPage extends HookWidget {
             children: [
               const SizedBox(height: 15),
               PostWidget(post, fullPost: true),
-              if (fullPostRefreshable.snapshot.hasData)
+              if (fullPost != null)
                 CommentSection(
                     newComments.value.followedBy(fullPost.comments).toList(),
                     postCreatorId: fullPost.postView.creator.id)

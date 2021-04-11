@@ -14,7 +14,7 @@ class SavePostButton extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSaved = useState(post.saved ?? false);
+    final isSaved = useState(post.saved);
     final savedIcon = isSaved.value ? Icons.bookmark : Icons.bookmark_border;
     final loading = useDelayedLoading();
     final loggedInAction = useLoggedInAction(post.instanceHost);

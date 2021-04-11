@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -18,7 +19,7 @@ class SearchTab extends HookWidget {
     final accStore = useAccountsStore();
     // null if there are no added instances
     final instanceHost = useState(
-      accStore.instances.firstWhere((_) => true, orElse: () => null),
+      accStore.instances.firstWhereOrNull((_) => true),
     );
 
     if (instanceHost.value == null) {
@@ -29,17 +30,18 @@ class SearchTab extends HookWidget {
         ),
       );
     }
+
     return Scaffold(
       appBar: AppBar(),
       body: GestureDetector(
-        onTapDown: (_) => primaryFocus.unfocus(),
+        onTapDown: (_) => primaryFocus?.unfocus(),
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
             TextField(
               controller: searchInputController,
               textAlign: TextAlign.center,
-              decoration: InputDecoration(hintText: L10n.of(context).search),
+              decoration: InputDecoration(hintText: L10n.of(context)!.search),
             ),
             const SizedBox(height: 5),
             Row(
@@ -52,7 +54,7 @@ class SearchTab extends HookWidget {
                 Expanded(
                   child: RadioPicker<String>(
                     values: accStore.instances.toList(),
-                    groupValue: instanceHost.value,
+                    groupValue: instanceHost.value!,
                     onChanged: (value) => instanceHost.value = value,
                   ),
                 ),
@@ -63,10 +65,10 @@ class SearchTab extends HookWidget {
                 onPressed: () => goTo(
                     context,
                     (c) => SearchResultsPage(
-                          instanceHost: instanceHost.value,
+                          instanceHost: instanceHost.value!,
                           query: searchInputController.text,
                         )),
-                child: Text(L10n.of(context).search),
+                child: Text(L10n.of(context)!.search),
               )
           ],
         ),

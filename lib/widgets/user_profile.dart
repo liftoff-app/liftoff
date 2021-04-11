@@ -22,16 +22,13 @@ class UserProfile extends HookWidget {
   final String instanceHost;
   final int userId;
 
-  final FullPersonView _fullUserView;
+  final FullPersonView? _fullUserView;
 
-  const UserProfile({@required this.userId, @required this.instanceHost})
-      : assert(userId != null),
-        assert(instanceHost != null),
-        _fullUserView = null;
+  const UserProfile({required this.userId, required this.instanceHost})
+      : _fullUserView = null;
 
-  UserProfile.fromFullPersonView(this._fullUserView)
-      : assert(_fullUserView != null),
-        userId = _fullUserView.personView.person.id,
+  UserProfile.fromFullPersonView(FullPersonView this._fullUserView)
+      : userId = _fullUserView.personView.person.id,
         instanceHost = _fullUserView.instanceHost;
 
   @override
@@ -62,8 +59,8 @@ class UserProfile extends HookWidget {
         ]),
       );
     }
-
-    final userView = userDetailsSnap.data.personView;
+    final fullPersonView = userDetailsSnap.data!;
+    final userView = fullPersonView.personView;
 
     return DefaultTabController(
       length: 3,
@@ -83,8 +80,8 @@ class UserProfile extends HookWidget {
                 color: theme.cardColor,
                 child: TabBar(
                   tabs: [
-                    Tab(text: L10n.of(context).posts),
-                    Tab(text: L10n.of(context).comments),
+                    Tab(text: L10n.of(context)!.posts),
+                    Tab(text: L10n.of(context)!.comments),
                     const Tab(text: 'About'),
                   ],
                 ),
@@ -119,7 +116,7 @@ class UserProfile extends HookWidget {
                 ))
                 .then((val) => val.comments),
           ),
-          _AboutTab(userDetailsSnap.data),
+          _AboutTab(fullPersonView),
         ]),
       ),
     );
@@ -146,9 +143,9 @@ class _UserOverview extends HookWidget {
         if (userView.person.banner != null)
           // TODO: for some reason doesnt react to presses
           FullscreenableImage(
-            url: userView.person.banner,
+            url: userView.person.banner!,
             child: CachedNetworkImage(
-              imageUrl: userView.person.banner,
+              imageUrl: userView.person.banner!,
               errorWidget: (_, __, ___) => const SizedBox.shrink(),
             ),
           )
@@ -207,9 +204,9 @@ class _UserOverview extends HookWidget {
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(12)),
                       child: FullscreenableImage(
-                        url: userView.person.avatar,
+                        url: userView.person.avatar!,
                         child: CachedNetworkImage(
-                          imageUrl: userView.person.avatar,
+                          imageUrl: userView.person.avatar!,
                           errorWidget: (_, __, ___) => const SizedBox.shrink(),
                         ),
                       ),
@@ -255,7 +252,7 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          L10n.of(context)
+                          L10n.of(context)!
                               .number_of_posts(userView.counts.postCount),
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),
@@ -273,7 +270,7 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          L10n.of(context)
+                          L10n.of(context)!
                               .number_of_comments(userView.counts.commentCount),
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),
@@ -338,7 +335,7 @@ class _AboutTab extends HookWidget {
       child: const Divider(),
     );
 
-    communityTile(String name, String icon, int id) => ListTile(
+    communityTile(String name, String? icon, int id) => ListTile(
           dense: true,
           onTap: () => goToCommunity.byId(context, instanceHost, id),
           title: Text('!$name'),
@@ -371,7 +368,7 @@ class _AboutTab extends HookWidget {
         if (userDetails.personView.person.bio != null) ...[
           Padding(
               padding: wallPadding,
-              child: MarkdownText(userDetails.personView.person.bio,
+              child: MarkdownText(userDetails.personView.person.bio!,
                   instanceHost: instanceHost)),
           divider,
         ],
@@ -380,7 +377,7 @@ class _AboutTab extends HookWidget {
             title: Center(
               child: Text(
                 'Moderates:',
-                style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                style: theme.textTheme.headline6?.copyWith(fontSize: 18),
               ),
             ),
           ),
@@ -396,7 +393,7 @@ class _AboutTab extends HookWidget {
             title: Center(
               child: Text(
                 'Subscribed:',
-                style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                style: theme.textTheme.headline6?.copyWith(fontSize: 18),
               ),
             ),
           ),

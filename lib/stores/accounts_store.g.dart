@@ -8,20 +8,19 @@ part of 'accounts_store.dart';
 
 AccountsStore _$AccountsStoreFromJson(Map<String, dynamic> json) {
   return AccountsStore()
-    ..tokens = (json['tokens'] as Map<String, dynamic>)?.map(
+    ..tokens = (json['tokens'] as Map<String, dynamic>?)?.map(
           (k, e) => MapEntry(
               k,
-              (e as Map<String, dynamic>)?.map(
-                (k, e) =>
-                    MapEntry(k, e == null ? null : Jwt.fromJson(e as String)),
+              (e as Map<String, dynamic>).map(
+                (k, e) => MapEntry(k, Jwt.fromJson(e as String)),
               )),
         ) ??
         {'lemmy.ml': {}}
-    ..defaultAccounts = (json['defaultAccounts'] as Map<String, dynamic>)?.map(
+    ..defaultAccounts = (json['defaultAccounts'] as Map<String, dynamic>?)?.map(
           (k, e) => MapEntry(k, e as String),
         ) ??
         {}
-    ..defaultAccount = json['defaultAccount'] as String;
+    ..defaultAccount = json['defaultAccount'] as String?;
 }
 
 Map<String, dynamic> _$AccountsStoreToJson(AccountsStore instance) =>

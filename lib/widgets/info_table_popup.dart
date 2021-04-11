@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'bottom_modal.dart';
 
 void showInfoTablePopup({
-  @required BuildContext context,
-  @required Map<String, dynamic> table,
-  String title,
+  required BuildContext context,
+  required Map<String, dynamic> table,
+  String? title,
 }) {
-  assert(context != null);
-  assert(table != null);
-
   showBottomModal(
     context: context,
     title: title,

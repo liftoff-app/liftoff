@@ -6,12 +6,10 @@ import 'package:share/share.dart';
 /// on platforms that do not support native sharing
 Future<void> share(
   String text, {
-  String subject,
-  Rect sharePositionOrigin,
-  @required BuildContext context,
+  String? subject,
+  Rect? sharePositionOrigin,
+  required BuildContext context,
 }) async {
-  assert(context != null);
-
   try {
     return await Share.share(
       text,

@@ -13,15 +13,24 @@ class SavedPage extends HookWidget {
   Widget build(BuildContext context) {
     final accountStore = useAccountsStore();
 
+    if (accountStore.hasNoAccount) {
+      Scaffold(
+        appBar: AppBar(),
+        body: const Center(
+          child: Text('no account found'),
+        ),
+      );
+    }
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(L10n.of(context).saved),
+          title: Text(L10n.of(context)!.saved),
           bottom: TabBar(
             tabs: [
-              Tab(text: L10n.of(context).posts),
-              Tab(text: L10n.of(context).comments),
+              Tab(text: L10n.of(context)!.posts),
+              Tab(text: L10n.of(context)!.comments),
             ],
           ),
         ),
@@ -29,27 +38,27 @@ class SavedPage extends HookWidget {
           children: [
             InfinitePostList(
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(accountStore.defaultInstanceHost).run(
+                  LemmyApiV3(accountStore.defaultInstanceHost!).run(
                 GetPosts(
                   type: PostListingType.all,
                   sort: sortType,
                   savedOnly: true,
                   page: page,
                   limit: batchSize,
-                  auth: accountStore.defaultToken.raw,
+                  auth: accountStore.defaultToken!.raw,
                 ),
               ),
             ),
             InfiniteCommentList(
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(accountStore.defaultInstanceHost).run(
+                  LemmyApiV3(accountStore.defaultInstanceHost!).run(
                 GetComments(
                   type: CommentListingType.all,
                   sort: sortType,
                   savedOnly: true,
                   page: page,
                   limit: batchSize,
-                  auth: accountStore.defaultToken.raw,
+                  auth: accountStore.defaultToken!.raw,
                 ),
               ),
             ),

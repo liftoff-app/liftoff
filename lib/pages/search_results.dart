@@ -15,11 +15,9 @@ class SearchResultsPage extends HookWidget {
   final String query;
 
   SearchResultsPage({
-    @required this.instanceHost,
-    @required this.query,
-  })  : assert(instanceHost != null),
-        assert(query != null),
-        assert(instanceHost.isNotEmpty),
+    required this.instanceHost,
+    required this.query,
+  })   : assert(instanceHost.isNotEmpty),
         assert(query.isNotEmpty);
 
   @override
@@ -31,10 +29,10 @@ class SearchResultsPage extends HookWidget {
             bottom: TabBar(
               isScrollable: true,
               tabs: [
-                Tab(text: L10n.of(context).posts),
-                Tab(text: L10n.of(context).comments),
-                Tab(text: L10n.of(context).users),
-                Tab(text: L10n.of(context).communities),
+                Tab(text: L10n.of(context)!.posts),
+                Tab(text: L10n.of(context)!.comments),
+                Tab(text: L10n.of(context)!.users),
+                Tab(text: L10n.of(context)!.communities),
               ],
             ),
           ),
@@ -68,18 +66,16 @@ class _SearchResultsList extends HookWidget {
   final String instanceHost;
 
   const _SearchResultsList({
-    @required this.type,
-    @required this.query,
-    @required this.instanceHost,
-  })  : assert(type != null),
-        assert(query != null),
-        assert(instanceHost != null);
+    required this.type,
+    required this.query,
+    required this.instanceHost,
+  });
 
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
 
-    return SortableInfiniteList(
+    return SortableInfiniteList<Object>(
       fetcher: (page, batchSize, sort) async {
         final s = await LemmyApiV3(instanceHost).run(Search(
           q: query,
