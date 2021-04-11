@@ -196,6 +196,7 @@ class AccountsConfigPage extends HookWidget {
       );
     }
 
+    // TODO: speeddial v3 has really stupid defaults here https://github.com/darioielardi/flutter_speed_dial/issues/149
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
