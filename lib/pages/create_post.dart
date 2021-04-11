@@ -66,6 +66,9 @@ class CreatePostPage extends HookWidget {
     final pictrsDeleteToken = useState<PictrsUploadFile?>(null);
     final loggedInAction = useLoggedInAction(selectedInstance.value);
 
+    final titleFocusNode = useFocusNode();
+    final bodyFocusNode = useFocusNode();
+
     final allCommunitiesSnap = useMemoFuture(
       () => LemmyApiV3(selectedInstance.value)
           .run(ListCommunities(
@@ -155,77 +158,6 @@ class CreatePostPage extends HookWidget {
       }
     }
 
-    // TODO: use lazy autocomplete
-    final communitiesDropdown = InputDecorator(
-      decoration: const InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)))),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<int>(
-          value: selectedCommunity.value?.community.id,
-          hint: Text(L10n.of(context)!.community),
-          onChanged: (communityId) => selectedCommunity.value =
-              allCommunitiesSnap.data
-                  ?.firstWhere((e) => e.community.id == communityId),
-          items: communitiesList(),
-        ),
-      ),
-    );
-
-    final url = Row(children: [
-      Expanded(
-        child: TextField(
-          enabled: pictrsDeleteToken.value == null,
-          controller: urlController,
-          decoration: InputDecoration(
-            labelText: L10n.of(context)!.url,
-            suffixIcon: const Icon(Icons.link),
-          ),
-        ),
-      ),
-      const SizedBox(width: 5),
-      IconButton(
-        icon: imageUploadLoading.value
-            ? const CircularProgressIndicator()
-            : Icon(pictrsDeleteToken.value == null
-                ? Icons.add_photo_alternate
-                : Icons.close),
-        onPressed: pictrsDeleteToken.value == null
-            ? loggedInAction(uploadPicture)
-            : () => removePicture(pictrsDeleteToken.value!),
-        tooltip:
-            pictrsDeleteToken.value == null ? 'Add picture' : 'Delete picture',
-      )
-    ]);
-
-    final title = TextField(
-      controller: titleController,
-      minLines: 1,
-      maxLines: 2,
-      decoration: InputDecoration(labelText: L10n.of(context)!.title),
-    );
-
-    final body = IndexedStack(
-      index: showFancy.value ? 1 : 0,
-      children: [
-        TextField(
-          controller: bodyController,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          minLines: 5,
-          decoration: InputDecoration(labelText: L10n.of(context)!.body),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: MarkdownText(
-            bodyController.text,
-            instanceHost: selectedInstance.value,
-          ),
-        ),
-      ],
-    );
-
     handleSubmit(Jwt token) async {
       if (selectedCommunity.value == null || titleController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -255,6 +187,88 @@ class CreatePostPage extends HookWidget {
       }
       delayed.cancel();
     }
+
+    // TODO: use lazy autocomplete
+    final communitiesDropdown = InputDecorator(
+      decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)))),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<int>(
+          value: selectedCommunity.value?.community.id,
+          hint: Text(L10n.of(context)!.community),
+          onChanged: (communityId) => selectedCommunity.value =
+              allCommunitiesSnap.data
+                  ?.firstWhere((e) => e.community.id == communityId),
+          items: communitiesList(),
+        ),
+      ),
+    );
+
+    final url = Row(children: [
+      Expanded(
+        child: TextField(
+          enabled: pictrsDeleteToken.value == null,
+          controller: urlController,
+          autofillHints: const [AutofillHints.url],
+          keyboardType: TextInputType.url,
+          onSubmitted: (_) => titleFocusNode.requestFocus(),
+          decoration: InputDecoration(
+            labelText: L10n.of(context)!.url,
+            suffixIcon: const Icon(Icons.link),
+          ),
+        ),
+      ),
+      const SizedBox(width: 5),
+      IconButton(
+        icon: imageUploadLoading.value
+            ? const CircularProgressIndicator()
+            : Icon(pictrsDeleteToken.value == null
+                ? Icons.add_photo_alternate
+                : Icons.close),
+        onPressed: pictrsDeleteToken.value == null
+            ? loggedInAction(uploadPicture)
+            : () => removePicture(pictrsDeleteToken.value!),
+        tooltip:
+            pictrsDeleteToken.value == null ? 'Add picture' : 'Delete picture',
+      )
+    ]);
+
+    final title = TextField(
+      controller: titleController,
+      focusNode: titleFocusNode,
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.sentences,
+      onSubmitted: (_) => bodyFocusNode.requestFocus(),
+      minLines: 1,
+      maxLines: 2,
+      decoration: InputDecoration(labelText: L10n.of(context)!.title),
+    );
+
+    final body = IndexedStack(
+      index: showFancy.value ? 1 : 0,
+      children: [
+        TextField(
+          controller: bodyController,
+          focusNode: bodyFocusNode,
+          keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
+          onSubmitted: (_) =>
+              delayed.pending ? () {} : loggedInAction(handleSubmit),
+          maxLines: null,
+          minLines: 5,
+          decoration: InputDecoration(labelText: L10n.of(context)!.body),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: MarkdownText(
+            bodyController.text,
+            instanceHost: selectedInstance.value,
+          ),
+        ),
+      ],
+    );
 
     return Scaffold(
       appBar: AppBar(

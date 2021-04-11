@@ -31,6 +31,16 @@ class SearchTab extends HookWidget {
       );
     }
 
+    handleSearch() => searchInputController.text.isNotEmpty
+        ? goTo(
+            context,
+            (context) => SearchResultsPage(
+              instanceHost: instanceHost.value!,
+              query: searchInputController.text,
+            ),
+          )
+        : null;
+
     return Scaffold(
       appBar: AppBar(),
       body: ListView(
@@ -38,7 +48,9 @@ class SearchTab extends HookWidget {
         children: [
           TextField(
             controller: searchInputController,
+            keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
+            onSubmitted: (_) => handleSearch(),
             decoration: InputDecoration(hintText: L10n.of(context)!.search),
           ),
           const SizedBox(height: 5),
@@ -60,12 +72,7 @@ class SearchTab extends HookWidget {
           ),
           if (searchInputController.text.isNotEmpty)
             ElevatedButton(
-              onPressed: () => goTo(
-                  context,
-                  (c) => SearchResultsPage(
-                        instanceHost: instanceHost.value!,
-                        query: searchInputController.text,
-                      )),
+              onPressed: handleSearch,
               child: Text(L10n.of(context)!.search),
             )
         ],

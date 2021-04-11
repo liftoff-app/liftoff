@@ -24,6 +24,7 @@ class AddAccountPage extends HookWidget {
 
     final usernameController = useListenable(useTextEditingController());
     final passwordController = useListenable(useTextEditingController());
+    final passwordFocusNode = useFocusNode();
     final accountsStore = useAccountsStore();
 
     final loading = useDelayedLoading();
@@ -53,6 +54,13 @@ class AddAccountPage extends HookWidget {
       }
       loading.cancel();
     }
+
+    final handleSubmit =
+        usernameController.text.isEmpty || passwordController.text.isEmpty
+            ? null
+            : loading.pending
+                ? () {}
+                : handleOnAdd;
 
     return Scaffold(
       appBar: AppBar(
@@ -105,10 +113,11 @@ class AddAccountPage extends HookWidget {
               },
             ),
           ),
-          // TODO: add support for password managers
           TextField(
             autofocus: true,
             controller: usernameController,
+            autofillHints: const [AutofillHints.email, AutofillHints.username],
+            onSubmitted: (_) => passwordFocusNode.requestFocus(),
             decoration:
                 InputDecoration(labelText: L10n.of(context)!.email_or_username),
           ),
@@ -116,15 +125,14 @@ class AddAccountPage extends HookWidget {
           TextField(
             controller: passwordController,
             obscureText: true,
+            focusNode: passwordFocusNode,
+            onSubmitted: (_) => handleSubmit?.call(),
+            autofillHints: const [AutofillHints.password],
+            keyboardType: TextInputType.visiblePassword,
             decoration: InputDecoration(labelText: L10n.of(context)!.password),
           ),
           ElevatedButton(
-            onPressed: usernameController.text.isEmpty ||
-                    passwordController.text.isEmpty
-                ? null
-                : loading.pending
-                    ? () {}
-                    : handleOnAdd,
+            onPressed: handleSubmit,
             child: !loading.loading
                 ? const Text('Sign in')
                 : SizedBox(
