@@ -56,7 +56,7 @@ class InstancePage extends HookWidget {
                   padding: const EdgeInsets.all(8),
                   child: Text('ERROR: ${siteSnap.error}'),
                 )
-              ] else if (siteSnap.data!.siteView == null)
+              ] else if (siteSnap.hasData && siteSnap.data!.siteView == null)
                 const Text('ERROR')
               else
                 const CircularProgressIndicator(semanticsLabel: 'loading')

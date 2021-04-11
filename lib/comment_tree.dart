@@ -41,9 +41,9 @@ extension on CommentSortType {
 
 class CommentTree {
   CommentView comment;
-  List<CommentTree> children;
+  List<CommentTree> children = [];
 
-  CommentTree(this.comment, [this.children = const []]);
+  CommentTree(this.comment);
 
   /// takes raw linear comments and turns them into a CommentTree
   static List<CommentTree> fromList(List<CommentView> comments) {
