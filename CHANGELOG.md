@@ -6,6 +6,7 @@
 
 ### Fixed
 
+- Actually fixed the thing that v0.4.1 supposedly fixed
 - When writing a comment the parent text is now selectable
 - Text of a post is now selectable
 - Account actions in settings are more obvious to access: long press an account/instance to see possible actions such as setting as default or removal
