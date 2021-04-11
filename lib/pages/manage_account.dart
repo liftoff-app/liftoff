@@ -91,6 +91,13 @@ class _ManageAccount extends HookWidget {
 
     final deleteAccountPasswordController = useTextEditingController();
 
+    final bioFocusNode = useFocusNode();
+    final emailFocusNode = useFocusNode();
+    final matrixUserFocusNode = useFocusNode();
+    final newPasswordFocusNode = useFocusNode();
+    final verifyPasswordFocusNode = useFocusNode();
+    final oldPasswordFocusNode = useFocusNode();
+
     final token =
         accountsStore.userDataFor(user.instanceHost, user.person.name)!.jwt;
 
@@ -156,6 +163,8 @@ class _ManageAccount extends HookWidget {
                   const SizedBox(height: 10),
                   TextField(
                     controller: deleteAccountPasswordController,
+                    autofillHints: const [AutofillHints.password],
+                    keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     decoration:
                         InputDecoration(hintText: L10n.of(context)!.password),
@@ -220,37 +229,64 @@ class _ManageAccount extends HookWidget {
         ),
         const SizedBox(height: 8),
         Text(L10n.of(context)!.display_name, style: theme.textTheme.headline6),
-        TextField(controller: displayNameController),
+        TextField(
+          controller: displayNameController,
+          onSubmitted: (_) => bioFocusNode.requestFocus(),
+        ),
         const SizedBox(height: 8),
         Text(L10n.of(context)!.bio, style: theme.textTheme.headline6),
         TextField(
           controller: bioController,
+          focusNode: bioFocusNode,
+          textCapitalization: TextCapitalization.sentences,
+          onSubmitted: (_) => emailFocusNode.requestFocus(),
           minLines: 4,
           maxLines: 10,
         ),
         const SizedBox(height: 8),
         Text(L10n.of(context)!.email, style: theme.textTheme.headline6),
-        TextField(controller: emailController),
+        TextField(
+          focusNode: emailFocusNode,
+          controller: emailController,
+          autofillHints: const [AutofillHints.email],
+          keyboardType: TextInputType.emailAddress,
+          onSubmitted: (_) => matrixUserFocusNode.requestFocus(),
+        ),
         const SizedBox(height: 8),
         Text(L10n.of(context)!.matrix_user, style: theme.textTheme.headline6),
-        TextField(controller: matrixUserController),
+        TextField(
+          focusNode: matrixUserFocusNode,
+          controller: matrixUserController,
+          onSubmitted: (_) => newPasswordFocusNode.requestFocus(),
+        ),
         const SizedBox(height: 8),
         Text(L10n.of(context)!.new_password, style: theme.textTheme.headline6),
         TextField(
+          focusNode: newPasswordFocusNode,
           controller: newPasswordController,
+          autofillHints: const [AutofillHints.newPassword],
+          keyboardType: TextInputType.visiblePassword,
           obscureText: true,
+          onSubmitted: (_) => verifyPasswordFocusNode.requestFocus(),
         ),
         const SizedBox(height: 8),
         Text(L10n.of(context)!.verify_password,
             style: theme.textTheme.headline6),
         TextField(
+          focusNode: verifyPasswordFocusNode,
           controller: newPasswordVerifyController,
+          autofillHints: const [AutofillHints.newPassword],
+          keyboardType: TextInputType.visiblePassword,
           obscureText: true,
+          onSubmitted: (_) => oldPasswordFocusNode.requestFocus(),
         ),
         const SizedBox(height: 8),
         Text(L10n.of(context)!.old_password, style: theme.textTheme.headline6),
         TextField(
+          focusNode: oldPasswordFocusNode,
           controller: oldPasswordController,
+          autofillHints: const [AutofillHints.password],
+          keyboardType: TextInputType.visiblePassword,
           obscureText: true,
         ),
         const SizedBox(height: 8),

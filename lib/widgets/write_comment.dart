@@ -97,6 +97,8 @@ class WriteComment extends HookWidget {
             children: [
               TextField(
                 controller: controller,
+                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
                 autofocus: true,
                 minLines: 5,
                 maxLines: null,
