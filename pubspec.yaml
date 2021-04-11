@@ -47,6 +47,7 @@ dependencies:
   intl: ^0.17.0
   matrix4_transform: ^2.0.0
   json_annotation: ^4.0.1
+  keyboard_dismisser: ^2.0.0
 
   flutter:
     sdk: flutter

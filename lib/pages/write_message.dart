@@ -86,6 +86,7 @@ class WriteMessagePage extends HookWidget {
         TextField(
           controller: bodyController,
           keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
           maxLines: null,
           minLines: 5,
           autofocus: true,
