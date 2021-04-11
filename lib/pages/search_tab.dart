@@ -33,45 +33,42 @@ class SearchTab extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(),
-      body: GestureDetector(
-        onTapDown: (_) => primaryFocus?.unfocus(),
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          children: [
-            TextField(
-              controller: searchInputController,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(hintText: L10n.of(context)!.search),
-            ),
-            const SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text('instance:',
-                      style: Theme.of(context).textTheme.subtitle1),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        children: [
+          TextField(
+            controller: searchInputController,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(hintText: L10n.of(context)!.search),
+          ),
+          const SizedBox(height: 5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text('instance:',
+                    style: Theme.of(context).textTheme.subtitle1),
+              ),
+              Expanded(
+                child: RadioPicker<String>(
+                  values: accStore.instances.toList(),
+                  groupValue: instanceHost.value!,
+                  onChanged: (value) => instanceHost.value = value,
                 ),
-                Expanded(
-                  child: RadioPicker<String>(
-                    values: accStore.instances.toList(),
-                    groupValue: instanceHost.value!,
-                    onChanged: (value) => instanceHost.value = value,
-                  ),
-                ),
-              ],
-            ),
-            if (searchInputController.text.isNotEmpty)
-              ElevatedButton(
-                onPressed: () => goTo(
-                    context,
-                    (c) => SearchResultsPage(
-                          instanceHost: instanceHost.value!,
-                          query: searchInputController.text,
-                        )),
-                child: Text(L10n.of(context)!.search),
-              )
-          ],
-        ),
+              ),
+            ],
+          ),
+          if (searchInputController.text.isNotEmpty)
+            ElevatedButton(
+              onPressed: () => goTo(
+                  context,
+                  (c) => SearchResultsPage(
+                        instanceHost: instanceHost.value!,
+                        query: searchInputController.text,
+                      )),
+              child: Text(L10n.of(context)!.search),
+            )
+        ],
       ),
     );
   }
