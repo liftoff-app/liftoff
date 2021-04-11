@@ -36,7 +36,7 @@ class FullPostPage extends HookWidget {
     final fullPostRefreshable =
         useRefreshable(() => LemmyApiV3(instanceHost).run(GetPost(
               id: id,
-              auth: accStore.defaultTokenFor(instanceHost)?.raw,
+              auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
             )));
     final loggedInAction = useLoggedInAction(instanceHost);
     final newComments = useState(const <CommentView>[]);

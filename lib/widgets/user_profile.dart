@@ -42,7 +42,7 @@ class UserProfile extends HookWidget {
         personId: userId,
         savedOnly: false,
         sort: SortType.active,
-        auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
+        auth: accountsStore.defaultUserDataFor(instanceHost)?.jwt.raw,
       ));
     }, [userId, instanceHost]);
 
@@ -100,7 +100,7 @@ class UserProfile extends HookWidget {
                   sort: SortType.active,
                   page: page,
                   limit: batchSize,
-                  auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
+                  auth: accountsStore.defaultUserDataFor(instanceHost)?.jwt.raw,
                 ))
                 .then((val) => val.posts),
           ),
@@ -112,7 +112,7 @@ class UserProfile extends HookWidget {
                   sort: SortType.active,
                   page: page,
                   limit: batchSize,
-                  auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
+                  auth: accountsStore.defaultUserDataFor(instanceHost)?.jwt.raw,
                 ))
                 .then((val) => val.comments),
           ),

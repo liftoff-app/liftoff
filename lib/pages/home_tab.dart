@@ -293,7 +293,7 @@ class InfiniteHomeList extends HookWidget {
             page: page,
             limit: limit,
             savedOnly: false,
-            auth: accStore.defaultTokenFor(instanceHost)?.raw,
+            auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
           ))
       ];
       final instancePosts = await Future.wait(futures);
@@ -316,7 +316,7 @@ class InfiniteHomeList extends HookWidget {
               page: page,
               limit: batchSize,
               savedOnly: false,
-              auth: accStore.defaultTokenFor(instanceHost)?.raw,
+              auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
             ));
 
     return InfinitePostList(

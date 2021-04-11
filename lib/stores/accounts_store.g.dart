@@ -8,11 +8,12 @@ part of 'accounts_store.dart';
 
 AccountsStore _$AccountsStoreFromJson(Map<String, dynamic> json) {
   return AccountsStore()
-    ..tokens = (json['tokens'] as Map<String, dynamic>?)?.map(
+    ..accounts = (json['accounts'] as Map<String, dynamic>?)?.map(
           (k, e) => MapEntry(
               k,
               (e as Map<String, dynamic>).map(
-                (k, e) => MapEntry(k, Jwt.fromJson(e as String)),
+                (k, e) =>
+                    MapEntry(k, UserData.fromJson(e as Map<String, dynamic>)),
               )),
         ) ??
         {'lemmy.ml': {}}
@@ -25,7 +26,19 @@ AccountsStore _$AccountsStoreFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$AccountsStoreToJson(AccountsStore instance) =>
     <String, dynamic>{
-      'tokens': instance.tokens,
+      'accounts': instance.accounts,
       'defaultAccounts': instance.defaultAccounts,
       'defaultAccount': instance.defaultAccount,
+    };
+
+UserData _$UserDataFromJson(Map<String, dynamic> json) {
+  return UserData(
+    jwt: Jwt.fromJson(json['jwt'] as String),
+    userId: json['userId'] as int,
+  );
+}
+
+Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
+      'jwt': instance.jwt,
+      'userId': instance.userId,
     };

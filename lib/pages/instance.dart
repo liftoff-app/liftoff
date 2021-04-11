@@ -184,7 +184,8 @@ class InstancePage extends HookWidget {
                         limit: batchSize,
                         page: page,
                         savedOnly: false,
-                        auth: accStore.defaultTokenFor(instanceHost)?.raw,
+                        auth:
+                            accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
                       ))),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sort) =>
@@ -194,7 +195,8 @@ class InstancePage extends HookWidget {
                         limit: batchSize,
                         page: page,
                         savedOnly: false,
-                        auth: accStore.defaultTokenFor(instanceHost)?.raw,
+                        auth:
+                            accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
                       ))),
               _AboutTab(site,
                   communitiesFuture: communitiesFuture,
@@ -244,7 +246,7 @@ class _AboutTab extends HookWidget {
               sort: sortType,
               limit: batchSize,
               page: page,
-              auth: accStore.defaultTokenFor(instanceHost)?.raw,
+              auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
             ),
           ),
           title: 'Communities of ${site.siteView?.site.name}',
