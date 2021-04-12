@@ -30,7 +30,7 @@ VoidCallback Function(
         ));
       };
     }
-    return () => action(store.defaultToken!);
+    return () => action(store.defaultUserData!.jwt);
   };
 }
 
@@ -52,7 +52,7 @@ VoidCallback Function(
         ));
       };
     }
-    final token = store.defaultTokenFor(instanceHost)!;
+    final token = store.defaultUserDataFor(instanceHost)!.jwt;
     return () => action(token);
   };
 }

@@ -75,7 +75,7 @@ class CreatePostPage extends HookWidget {
         type: PostListingType.all,
         sort: SortType.hot,
         limit: 9999,
-        auth: accStore.defaultTokenFor(selectedInstance.value)?.raw,
+        auth: accStore.defaultUserDataFor(selectedInstance.value)?.jwt.raw,
       ))
           .then(
         (value) {

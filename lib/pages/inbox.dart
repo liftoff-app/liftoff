@@ -109,7 +109,7 @@ class InboxPage extends HookWidget {
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
                   LemmyApiV3(selectedInstance).run(GetReplies(
-                auth: accStore.defaultTokenFor(selectedInstance)!.raw,
+                auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                 sort: sortType,
                 limit: batchSize,
                 page: page,
@@ -127,7 +127,7 @@ class InboxPage extends HookWidget {
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
                   LemmyApiV3(selectedInstance).run(GetPersonMentions(
-                auth: accStore.defaultTokenFor(selectedInstance)!.raw,
+                auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                 sort: sortType,
                 limit: batchSize,
                 page: page,
@@ -146,7 +146,7 @@ class InboxPage extends HookWidget {
               controller: isc,
               fetcher: (page, batchSize) => LemmyApiV3(selectedInstance).run(
                 GetPrivateMessages(
-                  auth: accStore.defaultTokenFor(selectedInstance)!.raw,
+                  auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                   limit: batchSize,
                   page: page,
                   unreadOnly: unreadOnly.value,
@@ -190,7 +190,7 @@ class PrivateMessageTile extends HookWidget {
     final toMe = useMemoized(() =>
         pmv.value.recipient.originInstanceHost == pmv.value.instanceHost &&
         pmv.value.recipient.id ==
-            accStore.defaultTokenFor(pmv.value.instanceHost)?.payload.sub);
+            accStore.defaultUserDataFor(pmv.value.instanceHost)?.userId);
 
     final otherSide =
         useMemoized(() => toMe ? pmv.value.creator : pmv.value.recipient);
@@ -240,7 +240,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: DeletePrivateMessage(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultTokenFor(pmv.value.instanceHost)!.raw,
+            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
             deleted: !deleted.value,
           ),
           onSuccess: (val) => deleted.value = val.privateMessage.deleted,
@@ -252,7 +252,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: MarkPrivateMessageAsRead(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultTokenFor(pmv.value.instanceHost)!.raw,
+            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
             read: !read.value,
           ),
           // TODO: add notification for notifying parent list

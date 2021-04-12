@@ -15,6 +15,10 @@
 - Text of a post is now selectable
 - Tapping outside of a text input hides the keyboard
 
+### Fixed
+
+- Actually fixed the thing that v0.4.1 supposedly fixed
+
 ## v0.4.1 - 2021-04-06
 
 ### Fixed

@@ -11,16 +11,16 @@ part 'accounts_store.g.dart';
 /// Store that manages all accounts
 @JsonSerializable()
 class AccountsStore extends ChangeNotifier {
-  static const prefsKey = 'v3:AccountsStore';
+  static const prefsKey = 'v4:AccountsStore';
   static final _prefs = SharedPreferences.getInstance();
 
-  /// Map containing JWT tokens of specific users.
+  /// Map containing user data (jwt token, userId) of specific accounts.
   /// If a token is in this map, the user is considered logged in
   /// for that account.
-  /// `tokens['instanceHost']['username']`
+  /// `accounts['instanceHost']['username']`
   @protected
   @JsonKey(defaultValue: {'lemmy.ml': {}})
-  late Map<String, Map<String, Jwt>> tokens;
+  late Map<String, Map<String, UserData>> accounts;
 
   /// default account for a given instance
   /// map where keys are instanceHosts and values are usernames
@@ -101,13 +101,13 @@ class AccountsStore extends ChangeNotifier {
 
   String? get defaultInstanceHost => defaultAccount?.split('@')[1];
 
-  Jwt? get defaultToken {
+  UserData? get defaultUserData {
     if (defaultAccount == null) {
       return null;
     }
 
     final userTag = defaultAccount!.split('@');
-    return tokens[userTag[1]]?[userTag[0]];
+    return accounts[userTag[1]]?[userTag[0]];
   }
 
   String? defaultUsernameFor(String instanceHost) {
@@ -118,20 +118,20 @@ class AccountsStore extends ChangeNotifier {
     return defaultAccounts[instanceHost];
   }
 
-  Jwt? defaultTokenFor(String instanceHost) {
+  UserData? defaultUserDataFor(String instanceHost) {
     if (isAnonymousFor(instanceHost)) {
       return null;
     }
 
-    return tokens[instanceHost]?[defaultAccounts[instanceHost]];
+    return accounts[instanceHost]?[defaultAccounts[instanceHost]];
   }
 
-  Jwt? tokenFor(String instanceHost, String username) {
+  UserData? userDataFor(String instanceHost, String username) {
     if (!usernamesFor(instanceHost).contains(username)) {
       return null;
     }
 
-    return tokens[instanceHost]?[username];
+    return accounts[instanceHost]?[username];
   }
 
   /// sets globally default account
@@ -157,20 +157,20 @@ class AccountsStore extends ChangeNotifier {
       return true;
     }
 
-    return tokens[instanceHost]!.isEmpty;
+    return accounts[instanceHost]!.isEmpty;
   }
 
   /// `true` if no added instance has an account assigned to it
   bool get hasNoAccount => loggedInInstances.isEmpty;
 
-  Iterable<String> get instances => tokens.keys;
+  Iterable<String> get instances => accounts.keys;
 
   Iterable<String> get loggedInInstances =>
       instances.where((e) => !isAnonymousFor(e));
 
   /// Usernames that are assigned to a given instance
   Iterable<String> usernamesFor(String instanceHost) =>
-      tokens[instanceHost]?.keys ?? const Iterable.empty();
+      accounts[instanceHost]?.keys ?? const Iterable.empty();
 
   /// adds a new account
   /// if it's the first account ever the account is
@@ -187,16 +187,16 @@ class AccountsStore extends ChangeNotifier {
     }
 
     final lemmy = LemmyApiV3(instanceHost);
-    final token = await lemmy.run(Login(
+    final jwt = await lemmy.run(Login(
       usernameOrEmail: usernameOrEmail,
       password: password,
     ));
-    final userData = await lemmy
-        .run(GetSite(auth: token.raw))
-        .then((value) => value.myUser!);
+    final userData =
+        await lemmy.run(GetSite(auth: jwt.raw)).then((value) => value.myUser!);
 
-    tokens[instanceHost]![userData.person.name] = token.copyWith(
-      payload: token.payload.copyWith(sub: userData.person.id),
+    accounts[instanceHost]![userData.person.name] = UserData(
+      jwt: jwt,
+      userId: userData.person.id,
     );
 
     await _assignDefaultAccounts();
@@ -224,7 +224,7 @@ class AccountsStore extends ChangeNotifier {
       }
     }
 
-    tokens[instanceHost] = HashMap();
+    accounts[instanceHost] = HashMap();
 
     await _assignDefaultAccounts();
     notifyListeners();
@@ -233,7 +233,7 @@ class AccountsStore extends ChangeNotifier {
 
   /// This also removes all accounts assigned to this instance
   Future<void> removeInstance(String instanceHost) async {
-    tokens.remove(instanceHost);
+    accounts.remove(instanceHost);
 
     await _assignDefaultAccounts();
     notifyListeners();
@@ -241,14 +241,31 @@ class AccountsStore extends ChangeNotifier {
   }
 
   Future<void> removeAccount(String instanceHost, String username) async {
-    if (!tokens.containsKey(instanceHost)) {
+    if (!accounts.containsKey(instanceHost)) {
       throw Exception("instance doesn't exist");
     }
 
-    tokens[instanceHost]!.remove(username);
+    accounts[instanceHost]!.remove(username);
 
     await _assignDefaultAccounts();
     notifyListeners();
     return save();
   }
+}
+
+/// Stores data associated with a logged in user
+@JsonSerializable()
+class UserData {
+  final Jwt jwt;
+  final int userId;
+
+  const UserData({
+    required this.jwt,
+    required this.userId,
+  });
+
+  factory UserData.fromJson(Map<String, dynamic> json) =>
+      _$UserDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserDataToJson(this);
 }

@@ -81,7 +81,7 @@ class _SearchResultsList extends HookWidget {
           q: query,
           sort: sort,
           type: type,
-          auth: accStore.defaultTokenFor(instanceHost)?.raw,
+          auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
           page: page,
           limit: batchSize,
         ));

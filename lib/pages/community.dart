@@ -55,7 +55,7 @@ class CommunityPage extends HookWidget {
     final scrollController = useScrollController();
 
     final fullCommunitySnap = useMemoFuture(() {
-      final token = accountsStore.defaultTokenFor(instanceHost);
+      final token = accountsStore.defaultUserDataFor(instanceHost)?.jwt;
 
       if (communityId != null) {
         return LemmyApiV3(instanceHost).run(GetCommunity(
@@ -196,8 +196,9 @@ class CommunityPage extends HookWidget {
                       LemmyApiV3(community.instanceHost).run(GetComments(
                         communityId: community.community.id,
                         auth: accountsStore
-                            .defaultTokenFor(community.instanceHost)
-                            ?.raw,
+                            .defaultUserDataFor(community.instanceHost)
+                            ?.jwt
+                            .raw,
                         type: CommentListingType.community,
                         sort: sortType,
                         limit: batchSize,
