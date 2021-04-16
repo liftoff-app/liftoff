@@ -69,7 +69,7 @@ class AppearanceConfigPage extends HookWidget {
                 if (selected != null) configStore.theme = selected;
               },
             ),
-          SwitchListTile(
+          SwitchListTile.adaptive(
             title: const Text('AMOLED dark mode'),
             value: configStore.amoledDarkMode,
             onChanged: (checked) {
@@ -78,6 +78,27 @@ class AppearanceConfigPage extends HookWidget {
           ),
           const SizedBox(height: 12),
           const _SectionHeading('General'),
+          SwitchListTile.adaptive(
+            title: Text(L10n.of(context)!.show_nsfw),
+            value: configStore.showNsfw,
+            onChanged: (checked) {
+              configStore.showNsfw = checked;
+            },
+          ),
+          SwitchListTile.adaptive(
+            title: Text(L10n.of(context)!.show_avatars),
+            value: configStore.showAvatars,
+            onChanged: (checked) {
+              configStore.showAvatars = checked;
+            },
+          ),
+          SwitchListTile.adaptive(
+            title: const Text('Show scores'),
+            value: configStore.showScores,
+            onChanged: (checked) {
+              configStore.showScores = checked;
+            },
+          ),
           ListTile(
             title: Text(L10n.of(context)!.language),
             trailing: SizedBox(
