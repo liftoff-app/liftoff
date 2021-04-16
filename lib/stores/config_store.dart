@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/l10n.dart';
@@ -40,6 +41,64 @@ class ConfigStore extends ChangeNotifier {
   Locale get locale => _locale;
   set locale(Locale locale) {
     _locale = locale;
+    notifyListeners();
+    save();
+  }
+
+  late bool _showAvatars;
+  @JsonKey(defaultValue: true)
+  bool get showAvatars => _showAvatars;
+  set showAvatars(bool showAvatars) {
+    _showAvatars = showAvatars;
+    notifyListeners();
+    save();
+  }
+
+  late bool _showNsfw;
+  @JsonKey(defaultValue: false)
+  bool get showNsfw => _showNsfw;
+  set showNsfw(bool showNsfw) {
+    _showNsfw = showNsfw;
+    notifyListeners();
+    save();
+  }
+
+  late bool _showScores;
+  @JsonKey(defaultValue: true)
+  bool get showScores => _showScores;
+  set showScores(bool showScores) {
+    _showScores = showScores;
+    notifyListeners();
+    save();
+  }
+
+  void importLemmyUserSettings(LocalUserSettings localUserSettings) {
+    // themes from lemmy-ui that are dark mode
+    // const darkModeLemmyUiThemes = {
+    //   'solar',
+    //   'cyborg',
+    //   'darkly',
+    //   'vaporwave-dark',
+    //   // TODO: is it dark theme?
+    //   'i386',
+    // };
+
+    _showAvatars = localUserSettings.showAvatars;
+    _showNsfw = localUserSettings.showNsfw;
+    // TODO: should these also be imported? If so, how?
+    // _theme = darkModeLemmyUiThemes.contains(localUserSettings.theme)
+    //     ? ThemeMode.dark
+    //     : ThemeMode.light;
+    // _locale = L10n.supportedLocales.contains(Locale(localUserSettings.lang))
+    //     ? Locale(localUserSettings.lang)
+    //     : _locale;
+    // TODO: add when it is released
+    // _showScores = localUserSettings.showScores;
+
+    // TODO: should these even be supported? Or we should use our own per-community setting
+    // SortType defaultSortType
+    // PostListingType defaultListingType
+
     notifyListeners();
     save();
   }
