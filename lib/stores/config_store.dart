@@ -144,6 +144,5 @@ class ConfigStore extends ChangeNotifier {
 
 SortType _sortTypeFromJson(String? json) =>
     json != null ? SortType.fromJson(json) : SortType.hot;
-// String _sortType
 PostListingType _postListingTypeFromJson(String? json) =>
     json != null ? PostListingType.fromJson(json) : PostListingType.all;
