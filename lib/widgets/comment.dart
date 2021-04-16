@@ -93,6 +93,8 @@ class CommentWidget extends HookWidget {
     final theme = Theme.of(context);
 
     final accStore = useAccountsStore();
+    final showScores =
+        useConfigStoreSelect((configStore) => configStore.showScores);
 
     final isMine = commentTree.comment.comment.creatorId ==
         accStore.defaultUserDataFor(commentTree.comment.instanceHost)?.userId;
@@ -387,10 +389,13 @@ class CommentWidget extends HookWidget {
                           SizedBox.fromSize(
                               size: const Size.square(16),
                               child: const CircularProgressIndicator())
-                        else
+                        else if (showScores)
                           Text(compactNumber(comment.counts.score +
                               (wasVoted ? 0 : myVote.value.value))),
-                        const Text(' · '),
+                        if (showScores)
+                          const Text(' · ')
+                        else
+                          const SizedBox(width: 4),
                         Text(comment.comment.published.fancy),
                       ],
                     ),
