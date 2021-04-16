@@ -14,7 +14,10 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) {
     ..locale = LocaleSerde.fromJson(json['locale'] as String?)
     ..showAvatars = json['showAvatars'] as bool? ?? true
     ..showNsfw = json['showNsfw'] as bool? ?? false
-    ..showScores = json['showScores'] as bool? ?? true;
+    ..showScores = json['showScores'] as bool? ?? true
+    ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
+    ..defaultListingType =
+        _postListingTypeFromJson(json['defaultListingType'] as String?);
 }
 
 Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
@@ -25,6 +28,8 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'showAvatars': instance.showAvatars,
       'showNsfw': instance.showNsfw,
       'showScores': instance.showScores,
+      'defaultSortType': instance.defaultSortType,
+      'defaultListingType': instance.defaultListingType,
     };
 
 K _$enumDecode<K, V>(

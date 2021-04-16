@@ -72,6 +72,24 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
+  late SortType _defaultSortType;
+  @JsonKey(fromJson: _sortTypeFromJson)
+  SortType get defaultSortType => _defaultSortType;
+  set defaultSortType(SortType defaultSortType) {
+    _defaultSortType = defaultSortType;
+    notifyListeners();
+    save();
+  }
+
+  late PostListingType _defaultListingType;
+  @JsonKey(fromJson: _postListingTypeFromJson)
+  PostListingType get defaultListingType => _defaultListingType;
+  set defaultListingType(PostListingType defaultListingType) {
+    _defaultListingType = defaultListingType;
+    notifyListeners();
+    save();
+  }
+
   /// Copies over settings from lemmy to [ConfigStore]
   void copyLemmyUserSettings(LocalUserSettings localUserSettings) {
     // themes from lemmy-ui that are dark mode
@@ -95,10 +113,8 @@ class ConfigStore extends ChangeNotifier {
     //     : _locale;
     // TODO: add when it is released
     // _showScores = localUserSettings.showScores;
-
-    // TODO: should these even be supported? Or we should use our own per-community setting
-    // SortType defaultSortType
-    // PostListingType defaultListingType
+    _defaultSortType = localUserSettings.defaultSortType;
+    _defaultListingType = localUserSettings.defaultListingType;
 
     notifyListeners();
     save();
@@ -125,3 +141,9 @@ class ConfigStore extends ChangeNotifier {
     await prefs.setString(prefsKey, jsonEncode(_$ConfigStoreToJson(this)));
   }
 }
+
+SortType _sortTypeFromJson(String? json) =>
+    json != null ? SortType.fromJson(json) : SortType.hot;
+// String _sortType
+PostListingType _postListingTypeFromJson(String? json) =>
+    json != null ? PostListingType.fromJson(json) : PostListingType.all;
