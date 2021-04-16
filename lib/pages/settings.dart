@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
@@ -113,6 +114,34 @@ class AppearanceConfigPage extends HookWidget {
                 onChanged: (selected) {
                   configStore.locale = selected;
                 },
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text(L10n.of(context)!.type),
+            trailing: SizedBox(
+              width: 120,
+              child: RadioPicker<PostListingType>(
+                values: const [
+                  PostListingType.all,
+                  PostListingType.local,
+                  PostListingType.subscribed,
+                ],
+                groupValue: configStore.defaultListingType,
+                onChanged: (value) => configStore.defaultListingType = value,
+                mapValueToString: (value) => value.value,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text(L10n.of(context)!.sort_type),
+            trailing: SizedBox(
+              width: 120,
+              child: RadioPicker<SortType>(
+                values: SortType.values,
+                groupValue: configStore.defaultSortType,
+                onChanged: (value) => configStore.defaultSortType = value,
+                mapValueToString: (value) => value.value,
               ),
             ),
           ),
