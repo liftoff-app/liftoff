@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -120,6 +122,96 @@ class AppearanceConfigPage extends HookWidget {
   }
 }
 
+/// Popup for an account
+class _AccountOptions extends HookWidget {
+  final String instanceHost;
+  final String username;
+
+  const _AccountOptions({
+    Key? key,
+    required this.instanceHost,
+    required this.username,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final accountsStore = useAccountsStore();
+    final configStore = useConfigStore();
+    final loading = useState(false);
+    final error = useState(false);
+
+    Future<void> removeUserDialog(String instanceHost, String username) async {
+      if (await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Remove user?'),
+              content: Text(
+                  'Are you sure you want to remove $username@$instanceHost?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(L10n.of(context)!.no),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(L10n.of(context)!.yes),
+                ),
+              ],
+            ),
+          ) ??
+          false) {
+        await accountsStore.removeAccount(instanceHost, username);
+        Navigator.of(context).pop();
+      }
+    }
+
+    return Column(
+      children: [
+        if (accountsStore.defaultUsernameFor(instanceHost) != username)
+          ListTile(
+            leading: const Icon(Icons.check_circle_outline),
+            title: const Text('Set as default'),
+            onTap: () {
+              accountsStore.setDefaultAccountFor(instanceHost, username);
+              Navigator.of(context).pop();
+            },
+          ),
+        ListTile(
+          leading: const Icon(Icons.delete),
+          title: const Text('Remove account'),
+          onTap: () => removeUserDialog(instanceHost, username),
+        ),
+        ListTile(
+            leading: loading.value
+                ? const SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: CircularProgressIndicator(),
+                  )
+                : error.value
+                    ? Icon(
+                        Icons.error,
+                        color: Theme.of(context).errorColor,
+                      )
+                    : const Icon(Icons.cloud_download),
+            title: const Text('Import settings to lemmur'),
+            onTap: () async {
+              loading.value = true;
+              error.value = false;
+              try {
+                await configStore.importLemmyUserSettings(
+                  accountsStore.userDataFor(instanceHost, username)!.jwt,
+                );
+              } on SocketException {
+                error.value = true;
+              }
+              loading.value = false;
+            }),
+      ],
+    );
+  }
+}
+
 /// Settings for managing accounts
 class AccountsConfigPage extends HookWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -153,51 +245,12 @@ class AccountsConfigPage extends HookWidget {
       }
     }
 
-    Future<void> removeUserDialog(String instanceHost, String username) async {
-      if (await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Remove user?'),
-              content: Text(
-                  'Are you sure you want to remove $username@$instanceHost?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(L10n.of(context)!.no),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(L10n.of(context)!.yes),
-                ),
-              ],
-            ),
-          ) ??
-          false) {
-        await accountsStore.removeAccount(instanceHost, username);
-        Navigator.of(context).pop();
-      }
-    }
-
     void accountActions(String instanceHost, String username) {
       showBottomModal(
         context: context,
-        builder: (context) => Column(
-          children: [
-            if (accountsStore.defaultUsernameFor(instanceHost) != username)
-              ListTile(
-                leading: const Icon(Icons.check_circle_outline),
-                title: const Text('Set as default'),
-                onTap: () {
-                  accountsStore.setDefaultAccountFor(instanceHost, username);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ListTile(
-              leading: const Icon(Icons.delete),
-              title: const Text('Remove account'),
-              onTap: () => removeUserDialog(instanceHost, username),
-            ),
-          ],
+        builder: (context) => _AccountOptions(
+          instanceHost: instanceHost,
+          username: username,
         ),
       );
     }

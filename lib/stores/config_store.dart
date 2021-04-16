@@ -72,7 +72,8 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
-  void importLemmyUserSettings(LocalUserSettings localUserSettings) {
+  /// Copies over settings from lemmy to [ConfigStore]
+  void copyLemmyUserSettings(LocalUserSettings localUserSettings) {
     // themes from lemmy-ui that are dark mode
     // const darkModeLemmyUiThemes = {
     //   'solar',
@@ -101,6 +102,13 @@ class ConfigStore extends ChangeNotifier {
 
     notifyListeners();
     save();
+  }
+
+  /// Fetches [LocalUserSettings] and imports them with [.copyLemmyUserSettings]
+  Future<void> importLemmyUserSettings(Jwt token) async {
+    final site =
+        await LemmyApiV3(token.payload.iss).run(GetSite(auth: token.raw));
+    copyLemmyUserSettings(site.myUser!.localUser);
   }
 
   static Future<ConfigStore> load() async {
