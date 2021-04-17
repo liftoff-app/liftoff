@@ -14,7 +14,7 @@ class RadioPicker<T> extends StatelessWidget {
 
   /// custom button builder. When null, an OutlinedButton is used
   final Widget Function(
-          BuildContext context, String displayValue, VoidCallback onPressed)?
+          BuildContext context, String displayValue, VoidCallback? onPressed)?
       buttonBuilder;
 
   final Widget? trailing;
@@ -71,6 +71,10 @@ class RadioPicker<T> extends StatelessWidget {
       }
     }
 
-    return buttonBuilder(context, mapValueToString(groupValue), onPressed);
+    return buttonBuilder(
+      context,
+      mapValueToString(groupValue),
+      onChanged == null ? null : onPressed,
+    );
   }
 }

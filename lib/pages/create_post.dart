@@ -46,20 +46,35 @@ class CreatePostFab extends HookWidget {
 class CreatePostPage extends HookWidget {
   final CommunityView? community;
 
-  const CreatePostPage() : community = null;
-  const CreatePostPage.toCommunity(CommunityView this.community);
+  final bool _isEdit;
+  final Post? post;
+
+  const CreatePostPage()
+      : community = null,
+        _isEdit = false,
+        post = null;
+  const CreatePostPage.toCommunity(CommunityView this.community)
+      : _isEdit = false,
+        post = null;
+  const CreatePostPage.edit(this.post)
+      : _isEdit = true,
+        community = null;
 
   @override
   Widget build(BuildContext context) {
-    final urlController = useTextEditingController();
-    final titleController = useTextEditingController();
-    final bodyController = useTextEditingController();
+    final urlController =
+        useTextEditingController(text: _isEdit ? post?.url : null);
+    final titleController =
+        useTextEditingController(text: _isEdit ? post?.name : null);
+    final bodyController =
+        useTextEditingController(text: _isEdit ? post?.body : null);
     final accStore = useAccountsStore();
-    final selectedInstance =
-        useState(community?.instanceHost ?? accStore.loggedInInstances.first);
+    final selectedInstance = useState(_isEdit
+        ? post!.instanceHost
+        : community?.instanceHost ?? accStore.loggedInInstances.first);
     final selectedCommunity = useState(community);
     final showFancy = useState(false);
-    final nsfw = useState(false);
+    final nsfw = useState(_isEdit && post!.nsfw);
     final delayed = useDelayedLoading();
     final imagePicker = useImagePicker();
     final imageUploadLoading = useState(false);
@@ -100,7 +115,6 @@ class CreatePostPage extends HookWidget {
           urlController.text =
               pathToPictrs(selectedInstance.value, upload.files[0].file);
         }
-        print(urlController.text);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -120,7 +134,7 @@ class CreatePostPage extends HookWidget {
     final instanceDropdown = RadioPicker<String>(
       values: accStore.loggedInInstances.toList(),
       groupValue: selectedInstance.value,
-      onChanged: (value) => selectedInstance.value = value,
+      onChanged: _isEdit ? null : (value) => selectedInstance.value = value,
       buttonBuilder: (context, displayValue, onPressed) => TextButton(
         onPressed: onPressed,
         child: Row(
@@ -159,7 +173,8 @@ class CreatePostPage extends HookWidget {
     }
 
     handleSubmit(Jwt token) async {
-      if (selectedCommunity.value == null || titleController.text.isEmpty) {
+      if ((!_isEdit && selectedCommunity.value == null) ||
+          titleController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Choosing a community and a title is required'),
         ));
@@ -170,14 +185,27 @@ class CreatePostPage extends HookWidget {
 
       delayed.start();
       try {
-        final res = await api.run(CreatePost(
-          url: urlController.text.isEmpty ? null : urlController.text,
-          body: bodyController.text.isEmpty ? null : bodyController.text,
-          nsfw: nsfw.value,
-          name: titleController.text,
-          communityId: selectedCommunity.value!.community.id,
-          auth: token.raw,
-        ));
+        final res = await () {
+          if (_isEdit) {
+            return api.run(EditPost(
+              url: urlController.text.isEmpty ? null : urlController.text,
+              body: bodyController.text.isEmpty ? null : bodyController.text,
+              nsfw: nsfw.value,
+              name: titleController.text,
+              postId: post!.id,
+              auth: token.raw,
+            ));
+          } else {
+            return api.run(CreatePost(
+              url: urlController.text.isEmpty ? null : urlController.text,
+              body: bodyController.text.isEmpty ? null : bodyController.text,
+              nsfw: nsfw.value,
+              name: titleController.text,
+              communityId: selectedCommunity.value!.community.id,
+              auth: token.raw,
+            ));
+          }
+        }();
         unawaited(goToReplace(context, (_) => FullPostPage.fromPostView(res)));
         return;
         // ignore: avoid_catches_without_on_clauses
@@ -191,27 +219,34 @@ class CreatePostPage extends HookWidget {
     // TODO: use lazy autocomplete
     final communitiesDropdown = InputDecorator(
       decoration: const InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)))),
+        contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: selectedCommunity.value?.community.id,
           hint: Text(L10n.of(context)!.community),
-          onChanged: (communityId) => selectedCommunity.value =
-              allCommunitiesSnap.data
-                  ?.firstWhere((e) => e.community.id == communityId),
+          onChanged: _isEdit
+              ? null
+              : (communityId) {
+                  selectedCommunity.value = allCommunitiesSnap.data
+                      ?.firstWhere((e) => e.community.id == communityId);
+                },
           items: communitiesList(),
         ),
       ),
     );
 
+    final enabledUrlField = pictrsDeleteToken.value == null;
+
     final url = Row(children: [
       Expanded(
         child: TextField(
-          enabled: pictrsDeleteToken.value == null,
+          enabled: enabledUrlField,
           controller: urlController,
-          autofillHints: const [AutofillHints.url],
+          autofillHints: enabledUrlField ? const [AutofillHints.url] : null,
           keyboardType: TextInputType.url,
           onSubmitted: (_) => titleFocusNode.requestFocus(),
           decoration: InputDecoration(
@@ -311,7 +346,9 @@ class CreatePostPage extends HookWidget {
                       delayed.pending ? () {} : loggedInAction(handleSubmit),
                   child: delayed.loading
                       ? const CircularProgressIndicator()
-                      : Text(L10n.of(context)!.post),
+                      : Text(_isEdit
+                          ? L10n.of(context)!.edit
+                          : L10n.of(context)!.post),
                 )
               ],
             ),
