@@ -73,6 +73,7 @@ class ConfigStore extends ChangeNotifier {
   }
 
   late SortType _defaultSortType;
+  // default is set in fromJson
   @JsonKey(fromJson: _sortTypeFromJson)
   SortType get defaultSortType => _defaultSortType;
   set defaultSortType(SortType defaultSortType) {
@@ -82,6 +83,7 @@ class ConfigStore extends ChangeNotifier {
   }
 
   late PostListingType _defaultListingType;
+  // default is set in fromJson
   @JsonKey(fromJson: _postListingTypeFromJson)
   PostListingType get defaultListingType => _defaultListingType;
   set defaultListingType(PostListingType defaultListingType) {
