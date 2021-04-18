@@ -67,6 +67,7 @@ class AppearanceConfigPage extends HookWidget {
       appBar: AppBar(title: const Text('Appearance')),
       body: ListView(
         children: [
+          const _SectionHeading('Theme'),
           for (final theme in ThemeMode.values)
             RadioListTile<ThemeMode>(
               value: theme,
@@ -81,6 +82,22 @@ class AppearanceConfigPage extends HookWidget {
             value: configStore.amoledDarkMode,
             onChanged: (checked) {
               configStore.amoledDarkMode = checked;
+            },
+          ),
+          const SizedBox(height: 12),
+          const _SectionHeading('Other'),
+          SwitchListTile.adaptive(
+            title: Text(L10n.of(context)!.show_avatars),
+            value: configStore.showAvatars,
+            onChanged: (checked) {
+              configStore.showAvatars = checked;
+            },
+          ),
+          SwitchListTile.adaptive(
+            title: const Text('Show scores'),
+            value: configStore.showScores,
+            onChanged: (checked) {
+              configStore.showScores = checked;
             },
           ),
         ],
@@ -106,20 +123,6 @@ class GeneralConfigPage extends HookWidget {
             value: configStore.showNsfw,
             onChanged: (checked) {
               configStore.showNsfw = checked;
-            },
-          ),
-          SwitchListTile.adaptive(
-            title: Text(L10n.of(context)!.show_avatars),
-            value: configStore.showAvatars,
-            onChanged: (checked) {
-              configStore.showAvatars = checked;
-            },
-          ),
-          SwitchListTile.adaptive(
-            title: const Text('Show scores'),
-            value: configStore.showScores,
-            onChanged: (checked) {
-              configStore.showScores = checked;
             },
           ),
           ListTile(
