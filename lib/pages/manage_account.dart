@@ -293,16 +293,7 @@ class _ManageAccount extends HookWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(L10n.of(context)!.type),
-                const Text(
-                  'This has currently no effect on lemmur',
-                  style: TextStyle(fontSize: 10),
-                )
-              ],
-            ),
+            Text(L10n.of(context)!.type),
             RadioPicker<PostListingType>(
               values: const [
                 PostListingType.all,
@@ -319,16 +310,7 @@ class _ManageAccount extends HookWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(L10n.of(context)!.sort_type),
-                const Text(
-                  'This has currently no effect on lemmur',
-                  style: TextStyle(fontSize: 10),
-                )
-              ],
-            ),
+            Text(L10n.of(context)!.sort_type),
             RadioPicker<SortType>(
               values: SortType.values,
               groupValue: defaultSortType.value,
@@ -338,30 +320,28 @@ class _ManageAccount extends HookWidget {
           ],
         ),
         const SizedBox(height: 8),
-        CheckboxListTile(
+        SwitchListTile.adaptive(
           value: showAvatars.value,
           onChanged: (checked) {
-            if (checked != null) showAvatars.value = checked;
+            showAvatars.value = checked;
           },
           title: Text(L10n.of(context)!.show_avatars),
-          subtitle: const Text('This has currently no effect on lemmur'),
           dense: true,
         ),
         const SizedBox(height: 8),
-        CheckboxListTile(
+        SwitchListTile.adaptive(
           value: showNsfw.value,
           onChanged: (checked) {
-            if (checked != null) showNsfw.value = checked;
+            showNsfw.value = checked;
           },
           title: Text(L10n.of(context)!.show_nsfw),
-          subtitle: const Text('This has currently no effect on lemmur'),
           dense: true,
         ),
         const SizedBox(height: 8),
-        CheckboxListTile(
+        SwitchListTile.adaptive(
           value: sendNotificationsToEmail.value,
           onChanged: (checked) {
-            if (checked != null) sendNotificationsToEmail.value = checked;
+            sendNotificationsToEmail.value = checked;
           },
           title: Text(L10n.of(context)!.send_notifications_to_email),
           dense: true,

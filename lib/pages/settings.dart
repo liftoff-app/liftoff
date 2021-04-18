@@ -42,6 +42,13 @@ class SettingsPage extends StatelessWidget {
                 goTo(context, (_) => const AppearanceConfigPage());
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('General'),
+              onTap: () {
+                goTo(context, (_) => const GeneralConfigPage());
+              },
+            ),
             const AboutTile()
           ],
         ),
@@ -57,12 +64,9 @@ class AppearanceConfigPage extends HookWidget {
     final configStore = useConfigStore();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Appearance'),
-      ),
+      appBar: AppBar(title: const Text('Appearance')),
       body: ListView(
         children: [
-          const _SectionHeading('Theme'),
           for (final theme in ThemeMode.values)
             RadioListTile<ThemeMode>(
               value: theme,
@@ -79,8 +83,24 @@ class AppearanceConfigPage extends HookWidget {
               configStore.amoledDarkMode = checked;
             },
           ),
-          const SizedBox(height: 12),
-          const _SectionHeading('General'),
+        ],
+      ),
+    );
+  }
+}
+
+/// General settings
+class GeneralConfigPage extends HookWidget {
+  const GeneralConfigPage();
+
+  @override
+  Widget build(BuildContext context) {
+    final configStore = useConfigStore();
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('General')),
+      body: ListView(
+        children: [
           SwitchListTile.adaptive(
             title: Text(L10n.of(context)!.show_nsfw),
             value: configStore.showNsfw,
