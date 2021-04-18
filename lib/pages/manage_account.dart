@@ -12,7 +12,6 @@ import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_safe.dart';
-import '../widgets/radio_picker.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
@@ -76,12 +75,8 @@ class _ManageAccount extends HookWidget {
         useTextEditingController(text: user.person.matrixUserId);
     final avatar = useRef(user.person.avatar);
     final banner = useRef(user.person.banner);
-    final showAvatars = useState(user.localUser.showAvatars);
-    final showNsfw = useState(user.localUser.showNsfw);
     final sendNotificationsToEmail =
         useState(user.localUser.sendNotificationsToEmail);
-    final defaultListingType = useState(user.localUser.defaultListingType);
-    final defaultSortType = useState(user.localUser.defaultSortType);
     final newPasswordController = useTextEditingController();
     final newPasswordVerifyController = useTextEditingController();
     final oldPasswordController = useTextEditingController();
@@ -106,12 +101,12 @@ class _ManageAccount extends HookWidget {
 
       try {
         await LemmyApiV3(user.instanceHost).run(SaveUserSettings(
-          showNsfw: showNsfw.value,
+          showNsfw: user.localUser.showNsfw,
           theme: user.localUser.theme,
-          defaultSortType: defaultSortType.value,
-          defaultListingType: defaultListingType.value,
+          defaultSortType: user.localUser.defaultSortType,
+          defaultListingType: user.localUser.defaultListingType,
           lang: user.localUser.lang,
-          showAvatars: showAvatars.value,
+          showAvatars: user.localUser.showAvatars,
           sendNotificationsToEmail: sendNotificationsToEmail.value,
           auth: token.raw,
           avatar: avatar.current,
@@ -288,54 +283,6 @@ class _ManageAccount extends HookWidget {
           autofillHints: const [AutofillHints.password],
           keyboardType: TextInputType.visiblePassword,
           obscureText: true,
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(L10n.of(context)!.type),
-            RadioPicker<PostListingType>(
-              values: const [
-                PostListingType.all,
-                PostListingType.local,
-                PostListingType.subscribed,
-              ],
-              groupValue: defaultListingType.value,
-              onChanged: (value) => defaultListingType.value = value,
-              mapValueToString: (value) => value.value,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(L10n.of(context)!.sort_type),
-            RadioPicker<SortType>(
-              values: SortType.values,
-              groupValue: defaultSortType.value,
-              onChanged: (value) => defaultSortType.value = value,
-              mapValueToString: (value) => value.value,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        SwitchListTile.adaptive(
-          value: showAvatars.value,
-          onChanged: (checked) {
-            showAvatars.value = checked;
-          },
-          title: Text(L10n.of(context)!.show_avatars),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        SwitchListTile.adaptive(
-          value: showNsfw.value,
-          onChanged: (checked) {
-            showNsfw.value = checked;
-          },
-          title: Text(L10n.of(context)!.show_nsfw),
-          dense: true,
         ),
         const SizedBox(height: 8),
         SwitchListTile.adaptive(
