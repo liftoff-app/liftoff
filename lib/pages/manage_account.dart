@@ -4,13 +4,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lemmy_api_client/pictrs.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/image_picker.dart';
 import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../util/more_icon.dart';
 import '../util/pictrs.dart';
+import '../widgets/bottom_modal.dart';
 import '../widgets/bottom_safe.dart';
 
 /// Page for managing things like username, email, avatar etc
@@ -33,9 +36,38 @@ class ManageAccountPage extends HookWidget {
       return site.myUser!;
     });
 
+    void _openMoreMenu() {
+      showBottomModal(
+        context: context,
+        builder: (context) => Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.open_in_browser),
+              title: const Text('Open in browser'),
+              onTap: () async {
+                final userProfileUrl =
+                    await userFuture.then((e) => e.person.actorId);
+
+                if (await ul.canLaunch(userProfileUrl)) {
+                  await ul.launch(userProfileUrl);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("can't open in browser")),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('$username@$instanceHost'),
+        actions: [
+          IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
+        ],
       ),
       body: FutureBuilder<LocalUserSettingsView>(
         future: userFuture,
