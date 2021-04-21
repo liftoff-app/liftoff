@@ -180,7 +180,10 @@ class CommunitiesTab extends HookWidget {
                           onTap: () => goToInstance(context,
                               accountsStore.loggedInInstances.elementAt(i)),
                           onLongPress: () => toggleCollapse(i),
-                          leading: Avatar(url: instances[i].icon),
+                          leading: Avatar(
+                            url: instances[i].icon,
+                            alwaysShow: true,
+                          ),
                           title: Text(
                             instances[i].name,
                             style: theme.textTheme.headline6,
@@ -211,6 +214,7 @@ class CommunitiesTab extends HookWidget {
                                     Avatar(
                                       radius: 15,
                                       url: comm.community.icon,
+                                      alwaysShow: true,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(comm.community.originDisplayName),

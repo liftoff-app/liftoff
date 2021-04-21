@@ -4,15 +4,17 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lemmy_api_client/pictrs.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/image_picker.dart';
 import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../util/more_icon.dart';
 import '../util/pictrs.dart';
+import '../widgets/bottom_modal.dart';
 import '../widgets/bottom_safe.dart';
-import '../widgets/radio_picker.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
@@ -34,9 +36,39 @@ class ManageAccountPage extends HookWidget {
       return site.myUser!;
     });
 
+    void _openMoreMenu() {
+      showBottomModal(
+        context: context,
+        builder: (context) => Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.open_in_browser),
+              title: const Text('Open in browser'),
+              onTap: () async {
+                final userProfileUrl =
+                    await userFuture.then((e) => e.person.actorId);
+
+                if (await ul.canLaunch(userProfileUrl)) {
+                  await ul.launch(userProfileUrl);
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("can't open in browser")),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('$username@$instanceHost'),
+        actions: [
+          IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
+        ],
       ),
       body: FutureBuilder<LocalUserSettingsView>(
         future: userFuture,
@@ -76,12 +108,8 @@ class _ManageAccount extends HookWidget {
         useTextEditingController(text: user.person.matrixUserId);
     final avatar = useRef(user.person.avatar);
     final banner = useRef(user.person.banner);
-    final showAvatars = useState(user.localUser.showAvatars);
-    final showNsfw = useState(user.localUser.showNsfw);
     final sendNotificationsToEmail =
         useState(user.localUser.sendNotificationsToEmail);
-    final defaultListingType = useState(user.localUser.defaultListingType);
-    final defaultSortType = useState(user.localUser.defaultSortType);
     final newPasswordController = useTextEditingController();
     final newPasswordVerifyController = useTextEditingController();
     final oldPasswordController = useTextEditingController();
@@ -106,12 +134,12 @@ class _ManageAccount extends HookWidget {
 
       try {
         await LemmyApiV3(user.instanceHost).run(SaveUserSettings(
-          showNsfw: showNsfw.value,
+          showNsfw: user.localUser.showNsfw,
           theme: user.localUser.theme,
-          defaultSortType: defaultSortType.value,
-          defaultListingType: defaultListingType.value,
+          defaultSortType: user.localUser.defaultSortType,
+          defaultListingType: user.localUser.defaultListingType,
           lang: user.localUser.lang,
-          showAvatars: showAvatars.value,
+          showAvatars: user.localUser.showAvatars,
           sendNotificationsToEmail: sendNotificationsToEmail.value,
           auth: token.raw,
           avatar: avatar.current,
@@ -290,78 +318,10 @@ class _ManageAccount extends HookWidget {
           obscureText: true,
         ),
         const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(L10n.of(context)!.type),
-                const Text(
-                  'This has currently no effect on lemmur',
-                  style: TextStyle(fontSize: 10),
-                )
-              ],
-            ),
-            RadioPicker<PostListingType>(
-              values: const [
-                PostListingType.all,
-                PostListingType.local,
-                PostListingType.subscribed,
-              ],
-              groupValue: defaultListingType.value,
-              onChanged: (value) => defaultListingType.value = value,
-              mapValueToString: (value) => value.value,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(L10n.of(context)!.sort_type),
-                const Text(
-                  'This has currently no effect on lemmur',
-                  style: TextStyle(fontSize: 10),
-                )
-              ],
-            ),
-            RadioPicker<SortType>(
-              values: SortType.values,
-              groupValue: defaultSortType.value,
-              onChanged: (value) => defaultSortType.value = value,
-              mapValueToString: (value) => value.value,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        CheckboxListTile(
-          value: showAvatars.value,
-          onChanged: (checked) {
-            if (checked != null) showAvatars.value = checked;
-          },
-          title: Text(L10n.of(context)!.show_avatars),
-          subtitle: const Text('This has currently no effect on lemmur'),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        CheckboxListTile(
-          value: showNsfw.value,
-          onChanged: (checked) {
-            if (checked != null) showNsfw.value = checked;
-          },
-          title: Text(L10n.of(context)!.show_nsfw),
-          subtitle: const Text('This has currently no effect on lemmur'),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        CheckboxListTile(
+        SwitchListTile.adaptive(
           value: sendNotificationsToEmail.value,
           onChanged: (checked) {
-            if (checked != null) sendNotificationsToEmail.value = checked;
+            sendNotificationsToEmail.value = checked;
           },
           title: Text(L10n.of(context)!.send_notifications_to_email),
           dense: true,

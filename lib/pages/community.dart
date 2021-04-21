@@ -257,6 +257,7 @@ class _CommunityOverview extends StatelessWidget {
                 child: Avatar(
                   url: community.community.icon,
                   radius: 83 / 2,
+                  alwaysShow: true,
                 ),
               ),
             ],

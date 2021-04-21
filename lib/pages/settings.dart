@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
@@ -25,6 +26,13 @@ class SettingsPage extends StatelessWidget {
         ),
         body: ListView(
           children: [
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('General'),
+              onTap: () {
+                goTo(context, (_) => const GeneralConfigPage());
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Accounts'),
@@ -54,9 +62,7 @@ class AppearanceConfigPage extends HookWidget {
     final configStore = useConfigStore();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Appearance'),
-      ),
+      appBar: AppBar(title: const Text('Appearance')),
       body: ListView(
         children: [
           const _SectionHeading('Theme'),
@@ -69,7 +75,7 @@ class AppearanceConfigPage extends HookWidget {
                 if (selected != null) configStore.theme = selected;
               },
             ),
-          SwitchListTile(
+          SwitchListTile.adaptive(
             title: const Text('AMOLED dark mode'),
             value: configStore.amoledDarkMode,
             onChanged: (checked) {
@@ -77,7 +83,67 @@ class AppearanceConfigPage extends HookWidget {
             },
           ),
           const SizedBox(height: 12),
-          const _SectionHeading('General'),
+          const _SectionHeading('Other'),
+          SwitchListTile.adaptive(
+            title: Text(L10n.of(context)!.show_avatars),
+            value: configStore.showAvatars,
+            onChanged: (checked) {
+              configStore.showAvatars = checked;
+            },
+          ),
+          SwitchListTile.adaptive(
+            title: const Text('Show scores'),
+            value: configStore.showScores,
+            onChanged: (checked) {
+              configStore.showScores = checked;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// General settings
+class GeneralConfigPage extends HookWidget {
+  const GeneralConfigPage();
+
+  @override
+  Widget build(BuildContext context) {
+    final configStore = useConfigStore();
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('General')),
+      body: ListView(
+        children: [
+          ListTile(
+            title: Text(L10n.of(context)!.sort_type),
+            trailing: SizedBox(
+              width: 120,
+              child: RadioPicker<SortType>(
+                values: SortType.values,
+                groupValue: configStore.defaultSortType,
+                onChanged: (value) => configStore.defaultSortType = value,
+                mapValueToString: (value) => value.value,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text(L10n.of(context)!.type),
+            trailing: SizedBox(
+              width: 120,
+              child: RadioPicker<PostListingType>(
+                values: const [
+                  PostListingType.all,
+                  PostListingType.local,
+                  PostListingType.subscribed,
+                ],
+                groupValue: configStore.defaultListingType,
+                onChanged: (value) => configStore.defaultListingType = value,
+                mapValueToString: (value) => value.value,
+              ),
+            ),
+          ),
           ListTile(
             title: Text(L10n.of(context)!.language),
             trailing: SizedBox(
@@ -93,8 +159,106 @@ class AppearanceConfigPage extends HookWidget {
               ),
             ),
           ),
+          SwitchListTile.adaptive(
+            title: Text(L10n.of(context)!.show_nsfw),
+            value: configStore.showNsfw,
+            onChanged: (checked) {
+              configStore.showNsfw = checked;
+            },
+          ),
         ],
       ),
+    );
+  }
+}
+
+/// Popup for an account
+class _AccountOptions extends HookWidget {
+  final String instanceHost;
+  final String username;
+
+  const _AccountOptions({
+    Key? key,
+    required this.instanceHost,
+    required this.username,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final accountsStore = useAccountsStore();
+    final configStore = useConfigStore();
+    final importLoading = useState(false);
+
+    Future<void> removeUserDialog(String instanceHost, String username) async {
+      if (await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Remove user?'),
+              content: Text(
+                  'Are you sure you want to remove $username@$instanceHost?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(L10n.of(context)!.no),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(L10n.of(context)!.yes),
+                ),
+              ],
+            ),
+          ) ??
+          false) {
+        await accountsStore.removeAccount(instanceHost, username);
+        Navigator.of(context).pop();
+      }
+    }
+
+    return Column(
+      children: [
+        if (accountsStore.defaultUsernameFor(instanceHost) != username)
+          ListTile(
+            leading: const Icon(Icons.check_circle_outline),
+            title: const Text('Set as default'),
+            onTap: () {
+              accountsStore.setDefaultAccountFor(instanceHost, username);
+              Navigator.of(context).pop();
+            },
+          ),
+        ListTile(
+          leading: const Icon(Icons.delete),
+          title: const Text('Remove account'),
+          onTap: () => removeUserDialog(instanceHost, username),
+        ),
+        ListTile(
+            leading: importLoading.value
+                ? const SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: CircularProgressIndicator(),
+                  )
+                : const Icon(Icons.cloud_download),
+            title: const Text('Import settings to lemmur'),
+            onTap: () async {
+              importLoading.value = true;
+              try {
+                await configStore.importLemmyUserSettings(
+                  accountsStore.userDataFor(instanceHost, username)!.jwt,
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Import successful'),
+                ));
+              } on Exception catch (err) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(err.toString()),
+                ));
+              } finally {
+                Navigator.of(context).pop();
+                importLoading.value = false;
+              }
+            }),
+      ],
     );
   }
 }
@@ -132,51 +296,12 @@ class AccountsConfigPage extends HookWidget {
       }
     }
 
-    Future<void> removeUserDialog(String instanceHost, String username) async {
-      if (await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Remove user?'),
-              content: Text(
-                  'Are you sure you want to remove $username@$instanceHost?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(L10n.of(context)!.no),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(L10n.of(context)!.yes),
-                ),
-              ],
-            ),
-          ) ??
-          false) {
-        await accountsStore.removeAccount(instanceHost, username);
-        Navigator.of(context).pop();
-      }
-    }
-
     void accountActions(String instanceHost, String username) {
       showBottomModal(
         context: context,
-        builder: (context) => Column(
-          children: [
-            if (accountsStore.defaultUsernameFor(instanceHost) != username)
-              ListTile(
-                leading: const Icon(Icons.check_circle_outline),
-                title: const Text('Set as default'),
-                onTap: () {
-                  accountsStore.setDefaultAccountFor(instanceHost, username);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ListTile(
-              leading: const Icon(Icons.delete),
-              title: const Text('Remove account'),
-              onTap: () => removeUserDialog(instanceHost, username),
-            ),
-          ],
+        builder: (context) => _AccountOptions(
+          instanceHost: instanceHost,
+          username: username,
         ),
       );
     }

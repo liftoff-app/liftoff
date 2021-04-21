@@ -11,7 +11,13 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) {
     ..theme = _$enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ??
         ThemeMode.system
     ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
-    ..locale = LocaleSerde.fromJson(json['locale'] as String?);
+    ..locale = LocaleSerde.fromJson(json['locale'] as String?)
+    ..showAvatars = json['showAvatars'] as bool? ?? true
+    ..showNsfw = json['showNsfw'] as bool? ?? false
+    ..showScores = json['showScores'] as bool? ?? true
+    ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
+    ..defaultListingType =
+        _postListingTypeFromJson(json['defaultListingType'] as String?);
 }
 
 Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
@@ -19,6 +25,11 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'theme': _$ThemeModeEnumMap[instance.theme],
       'amoledDarkMode': instance.amoledDarkMode,
       'locale': LocaleSerde.toJson(instance.locale),
+      'showAvatars': instance.showAvatars,
+      'showNsfw': instance.showNsfw,
+      'showScores': instance.showScores,
+      'defaultSortType': instance.defaultSortType,
+      'defaultListingType': instance.defaultListingType,
     };
 
 K _$enumDecode<K, V>(

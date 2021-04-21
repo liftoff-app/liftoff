@@ -2,6 +2,10 @@
 
 ### Added
 
+- Show avatars setting toggle
+- Show scores setting toggle
+- Default listing type for the home tab setting
+- Import Lemmy settings: long press an account in account settings then choose the import option
 - Editing posts
 - Editing comments
 

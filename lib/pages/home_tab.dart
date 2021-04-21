@@ -25,10 +25,13 @@ class HomeTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
+    final defaultListingType =
+        useConfigStoreSelect((configStore) => configStore.defaultListingType);
     final selectedList = useState(_SelectedList(
-        listingType: accStore.hasNoAccount
+        listingType: accStore.hasNoAccount &&
+                defaultListingType == PostListingType.subscribed
             ? PostListingType.all
-            : PostListingType.subscribed));
+            : defaultListingType));
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
     final instancesIcons = useMemoFuture(() async {
@@ -54,9 +57,10 @@ class HomeTab extends HookWidget {
               selectedList.value.listingType == PostListingType.subscribed ||
           !accStore.instances.contains(selectedList.value.instanceHost)) {
         selectedList.value = _SelectedList(
-          listingType: accStore.hasNoAccount
+          listingType: accStore.hasNoAccount &&
+                  defaultListingType == PostListingType.subscribed
               ? PostListingType.all
-              : PostListingType.subscribed,
+              : defaultListingType,
         );
       }
 
