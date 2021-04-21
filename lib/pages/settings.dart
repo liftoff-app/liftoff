@@ -29,6 +29,13 @@ class SettingsPage extends StatelessWidget {
         body: ListView(
           children: [
             ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('General'),
+              onTap: () {
+                goTo(context, (_) => const GeneralConfigPage());
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Accounts'),
               onTap: () {
@@ -40,13 +47,6 @@ class SettingsPage extends StatelessWidget {
               title: const Text('Appearance'),
               onTap: () {
                 goTo(context, (_) => const AppearanceConfigPage());
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('General'),
-              onTap: () {
-                goTo(context, (_) => const GeneralConfigPage());
               },
             ),
             const AboutTile()
@@ -118,25 +118,15 @@ class GeneralConfigPage extends HookWidget {
       appBar: AppBar(title: const Text('General')),
       body: ListView(
         children: [
-          SwitchListTile.adaptive(
-            title: Text(L10n.of(context)!.show_nsfw),
-            value: configStore.showNsfw,
-            onChanged: (checked) {
-              configStore.showNsfw = checked;
-            },
-          ),
           ListTile(
-            title: Text(L10n.of(context)!.language),
+            title: Text(L10n.of(context)!.sort_type),
             trailing: SizedBox(
               width: 120,
-              child: RadioPicker<Locale>(
-                title: 'Choose language',
-                groupValue: configStore.locale,
-                values: L10n.supportedLocales,
-                mapValueToString: (locale) => locale.languageName,
-                onChanged: (selected) {
-                  configStore.locale = selected;
-                },
+              child: RadioPicker<SortType>(
+                values: SortType.values,
+                groupValue: configStore.defaultSortType,
+                onChanged: (value) => configStore.defaultSortType = value,
+                mapValueToString: (value) => value.value,
               ),
             ),
           ),
@@ -157,16 +147,26 @@ class GeneralConfigPage extends HookWidget {
             ),
           ),
           ListTile(
-            title: Text(L10n.of(context)!.sort_type),
+            title: Text(L10n.of(context)!.language),
             trailing: SizedBox(
               width: 120,
-              child: RadioPicker<SortType>(
-                values: SortType.values,
-                groupValue: configStore.defaultSortType,
-                onChanged: (value) => configStore.defaultSortType = value,
-                mapValueToString: (value) => value.value,
+              child: RadioPicker<Locale>(
+                title: 'Choose language',
+                groupValue: configStore.locale,
+                values: L10n.supportedLocales,
+                mapValueToString: (locale) => locale.languageName,
+                onChanged: (selected) {
+                  configStore.locale = selected;
+                },
               ),
             ),
+          ),
+          SwitchListTile.adaptive(
+            title: Text(L10n.of(context)!.show_nsfw),
+            value: configStore.showNsfw,
+            onChanged: (checked) {
+              configStore.showNsfw = checked;
+            },
           ),
         ],
       ),
@@ -254,6 +254,7 @@ class _AccountOptions extends HookWidget {
                 await configStore.importLemmyUserSettings(
                   accountsStore.userDataFor(instanceHost, username)!.jwt,
                 );
+                Navigator.of(context).pop();
               } on SocketException {
                 error.value = true;
               }

@@ -50,6 +50,7 @@ class ManageAccountPage extends HookWidget {
 
                 if (await ul.canLaunch(userProfileUrl)) {
                   await ul.launch(userProfileUrl);
+                  Navigator.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("can't open in browser")),
