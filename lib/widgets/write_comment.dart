@@ -8,22 +8,30 @@ import '../l10n/l10n.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
 
-/// Modal for writing a comment to a given post/comment (aka reply)
+/// Modal for writing/editing a comment to a given post/comment (aka reply)
 /// on submit pops the navigator stack with a [CommentView]
 /// or `null` if cancelled
 class WriteComment extends HookWidget {
   final Post post;
   final Comment? comment;
+  final bool _isEdit;
 
-  const WriteComment.toPost(this.post) : comment = null;
+  const WriteComment.toPost(this.post)
+      : comment = null,
+        _isEdit = false;
   const WriteComment.toComment({
     required Comment this.comment,
     required this.post,
-  });
+  }) : _isEdit = false;
+  const WriteComment.edit({
+    required Comment this.comment,
+    required this.post,
+  }) : _isEdit = true;
 
   @override
   Widget build(BuildContext context) {
-    final controller = useTextEditingController();
+    final controller =
+        useTextEditingController(text: _isEdit ? comment?.content : null);
     final showFancy = useState(false);
     final delayed = useDelayedLoading();
     final loggedInAction = useLoggedInAction(post.instanceHost);
@@ -56,12 +64,22 @@ class WriteComment extends HookWidget {
 
       delayed.start();
       try {
-        final res = await api.run(CreateComment(
-          content: controller.text,
-          postId: post.id,
-          parentId: comment?.id,
-          auth: token.raw,
-        ));
+        final res = await () {
+          if (_isEdit) {
+            return api.run(EditComment(
+              commentId: comment!.id,
+              content: controller.text,
+              auth: token.raw,
+            ));
+          } else {
+            return api.run(CreateComment(
+              content: controller.text,
+              postId: post.id,
+              parentId: comment?.id,
+              auth: token.raw,
+            ));
+          }
+        }();
         Navigator.of(context).pop(res.commentView);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
@@ -120,7 +138,9 @@ class WriteComment extends HookWidget {
                     delayed.pending ? () {} : loggedInAction(handleSubmit),
                 child: delayed.loading
                     ? const CircularProgressIndicator()
-                    : Text(L10n.of(context)!.post),
+                    : Text(_isEdit
+                        ? L10n.of(context)!.edit
+                        : L10n.of(context)!.post),
               )
             ],
           ),
