@@ -3,6 +3,7 @@
 ### Added
 
 - Editing posts
+- Editing comments
 
 ### Fixed
 

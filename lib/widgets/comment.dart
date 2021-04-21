@@ -130,6 +130,25 @@ class CommentWidget extends HookWidget {
       );
     }
 
+    handleEdit() async {
+      final editedComment = await showCupertinoModalPopup<CommentView>(
+        context: context,
+        builder: (_) => WriteComment.edit(
+          comment: comment.comment,
+          post: comment.post,
+        ),
+      );
+
+      if (editedComment != null) {
+        commentTree.comment = editedComment;
+        // TODO: workaround to force this widget to rebuild
+        // TODO: These problems should go away once we move to an actual state management lib
+        // TODO: work being done here should also help: https://github.com/krawieck/lemmur/tree/fix/better-local-updates
+        (context as Element).markNeedsBuild();
+        Navigator.of(context).pop();
+      }
+    }
+
     void _openMoreMenu(BuildContext context) {
       pop() => Navigator.of(context).pop();
 
@@ -174,6 +193,12 @@ class CommentWidget extends HookWidget {
                 pop();
               },
             ),
+            if (isMine)
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit'),
+                onTap: handleEdit,
+              ),
             if (isMine)
               ListTile(
                 leading: Icon(isDeleted.value ? Icons.restore : Icons.delete),
