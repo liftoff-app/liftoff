@@ -6,7 +6,12 @@
 - Show scores setting toggle
 - Default listing type for the home tab setting
 - Import Lemmy settings: long press an account in account settings then choose the import option
+- Editing posts
 - Editing comments
+
+### Fixed
+
+- Fixed bug where creating post would crash after uploading a picture
 
 ## v0.4.2 - 2021-04-12
 

@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../pages/create_post.dart';
 import '../pages/full_post.dart';
+import '../stores/accounts_store.dart';
 import '../url_launcher.dart';
 import '../util/cleanup_url.dart';
 import '../util/extensions/api.dart';
@@ -61,7 +64,17 @@ class PostWidget extends HookWidget {
 
   // == ACTIONS ==
 
-  static void showMoreMenu(BuildContext context, PostView post) {
+  static void showMoreMenu({
+    required BuildContext context,
+    required PostView post,
+    bool fullPost = false,
+  }) {
+    final isMine = context
+            .read<AccountsStore>()
+            .defaultUserDataFor(post.instanceHost)
+            ?.userId ==
+        post.creator.id;
+
     showBottomModal(
       context: context,
       builder: (context) => Column(
@@ -85,6 +98,32 @@ class PostWidget extends HookWidget {
               });
             },
           ),
+          if (isMine)
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Edit'),
+              onTap: () async {
+                final postView = await showCupertinoModalPopup<PostView>(
+                  context: context,
+                  builder: (_) => CreatePostPage.edit(post.post),
+                );
+
+                if (postView != null) {
+                  Navigator.of(context).pop();
+                  if (fullPost) {
+                    await goToReplace(
+                      context,
+                      (_) => FullPostPage.fromPostView(postView),
+                    );
+                  } else {
+                    await goTo(
+                      context,
+                      (_) => FullPostPage.fromPostView(postView),
+                    );
+                  }
+                }
+              },
+            ),
         ],
       ),
     );
@@ -228,7 +267,8 @@ class PostWidget extends HookWidget {
                     Column(
                       children: [
                         IconButton(
-                          onPressed: () => showMoreMenu(context, post),
+                          onPressed: () =>
+                              showMoreMenu(context: context, post: post),
                           icon: Icon(moreIcon),
                           padding: const EdgeInsets.all(0),
                           visualDensity: VisualDensity.compact,
