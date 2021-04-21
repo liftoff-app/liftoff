@@ -15,8 +15,8 @@ import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
+import '../widgets/editor.dart';
 import '../widgets/markdown_mode_icon.dart';
-import '../widgets/markdown_text.dart';
 import '../widgets/radio_picker.dart';
 import 'full_post.dart';
 
@@ -292,28 +292,14 @@ class CreatePostPage extends HookWidget {
       decoration: InputDecoration(labelText: L10n.of(context)!.title),
     );
 
-    final body = IndexedStack(
-      index: showFancy.value ? 1 : 0,
-      children: [
-        TextField(
-          controller: bodyController,
-          focusNode: bodyFocusNode,
-          keyboardType: TextInputType.multiline,
-          textCapitalization: TextCapitalization.sentences,
-          onSubmitted: (_) =>
-              delayed.pending ? () {} : loggedInAction(handleSubmit),
-          maxLines: null,
-          minLines: 5,
-          decoration: InputDecoration(labelText: L10n.of(context)!.body),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: MarkdownText(
-            bodyController.text,
-            instanceHost: selectedInstance.value,
-          ),
-        ),
-      ],
+    final body = Editor(
+      controller: bodyController,
+      focusNode: bodyFocusNode,
+      onSubmitted: (_) =>
+          delayed.pending ? () {} : loggedInAction(handleSubmit),
+      labelText: L10n.of(context)!.body,
+      instanceHost: selectedInstance.value,
+      fancy: showFancy.value,
     );
 
     return Scaffold(
