@@ -317,7 +317,7 @@ class CreatePostPage extends HookWidget {
           padding: const EdgeInsets.all(5),
           children: [
             instanceDropdown,
-            communitiesDropdown,
+            if (!_isEdit) communitiesDropdown,
             url,
             title,
             body,
