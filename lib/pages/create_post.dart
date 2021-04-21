@@ -15,13 +15,13 @@ import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
-import '../util/unawaited.dart';
 import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/radio_picker.dart';
 import 'full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
+/// After creation it will navigate to the newly created post
 class CreatePostFab extends HookWidget {
   final CommunityView? community;
 
@@ -32,17 +32,28 @@ class CreatePostFab extends HookWidget {
     final loggedInAction = useAnyLoggedInAction();
 
     return FloatingActionButton(
-      onPressed: loggedInAction((_) => showCupertinoModalPopup(
+      onPressed: loggedInAction((_) async {
+        final postView = await showCupertinoModalPopup<PostView>(
           context: context,
           builder: (_) => community == null
               ? const CreatePostPage()
-              : CreatePostPage.toCommunity(community!))),
+              : CreatePostPage.toCommunity(community!),
+        );
+
+        if (postView != null) {
+          await goTo(
+            context,
+            (_) => FullPostPage.fromPostView(postView),
+          );
+        }
+      }),
       child: const Icon(Icons.add),
     );
   }
 }
 
 /// Modal for creating a post to some community in some instance
+/// Pops the navigator stack with a [PostView]
 class CreatePostPage extends HookWidget {
   final CommunityView? community;
 
@@ -206,7 +217,7 @@ class CreatePostPage extends HookWidget {
             ));
           }
         }();
-        unawaited(goToReplace(context, (_) => FullPostPage.fromPostView(res)));
+        Navigator.of(context).pop(res);
         return;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {

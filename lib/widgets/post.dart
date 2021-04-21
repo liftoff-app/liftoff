@@ -63,7 +63,11 @@ class PostWidget extends HookWidget {
 
   // == ACTIONS ==
 
-  static void showMoreMenu(BuildContext context, PostView post) {
+  static void showMoreMenu({
+    required BuildContext context,
+    required PostView post,
+    bool fullPost = false,
+  }) {
     final isMine = context
             .read<AccountsStore>()
             .defaultUserDataFor(post.instanceHost)
@@ -97,11 +101,26 @@ class PostWidget extends HookWidget {
             ListTile(
               leading: const Icon(Icons.edit),
               title: const Text('Edit'),
-              onTap: () {
-                showCupertinoModalPopup(
+              onTap: () async {
+                final postView = await showCupertinoModalPopup<PostView>(
                   context: context,
                   builder: (_) => CreatePostPage.edit(post.post),
                 );
+
+                if (postView != null) {
+                  Navigator.of(context).pop();
+                  if (fullPost) {
+                    await goToReplace(
+                      context,
+                      (_) => FullPostPage.fromPostView(postView),
+                    );
+                  } else {
+                    await goTo(
+                      context,
+                      (_) => FullPostPage.fromPostView(postView),
+                    );
+                  }
+                }
               },
             ),
         ],
@@ -247,7 +266,8 @@ class PostWidget extends HookWidget {
                     Column(
                       children: [
                         IconButton(
-                          onPressed: () => showMoreMenu(context, post),
+                          onPressed: () =>
+                              showMoreMenu(context: context, post: post),
                           icon: Icon(moreIcon),
                           padding: const EdgeInsets.all(0),
                           visualDensity: VisualDensity.compact,
