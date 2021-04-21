@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
+import 'editor.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
 
@@ -110,25 +111,11 @@ class WriteComment extends HookWidget {
             ),
           ),
           const Divider(),
-          IndexedStack(
-            index: showFancy.value ? 1 : 0,
-            children: [
-              TextField(
-                controller: controller,
-                keyboardType: TextInputType.multiline,
-                textCapitalization: TextCapitalization.sentences,
-                autofocus: true,
-                minLines: 5,
-                maxLines: null,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: MarkdownText(
-                  controller.text,
-                  instanceHost: post.instanceHost,
-                ),
-              )
-            ],
+          Editor(
+            instanceHost: post.instanceHost,
+            controller: controller,
+            autofocus: true,
+            fancy: showFancy.value,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

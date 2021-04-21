@@ -109,8 +109,13 @@ class FullPostPage extends HookWidget {
             IconButton(icon: const Icon(Icons.share), onPressed: sharePost),
             SavePostButton(post),
             IconButton(
-                icon: Icon(moreIcon),
-                onPressed: () => PostWidget.showMoreMenu(context, post)),
+              icon: Icon(moreIcon),
+              onPressed: () => PostWidget.showMoreMenu(
+                context: context,
+                post: post,
+                fullPost: true,
+              ),
+            ),
           ],
         ),
         floatingActionButton: post.post.locked

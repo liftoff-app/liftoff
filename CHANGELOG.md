@@ -2,7 +2,12 @@
 
 ### Added
 
+- Editing posts
 - Editing comments
+
+### Fixed
+
+- Fixed bug where creating post would crash after uploading a picture
 
 ## v0.4.2 - 2021-04-12
 
