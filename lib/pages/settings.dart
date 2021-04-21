@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -189,8 +187,7 @@ class _AccountOptions extends HookWidget {
   Widget build(BuildContext context) {
     final accountsStore = useAccountsStore();
     final configStore = useConfigStore();
-    final loading = useState(false);
-    final error = useState(false);
+    final importLoading = useState(false);
 
     Future<void> removeUserDialog(String instanceHost, String username) async {
       if (await showDialog<bool>(
@@ -234,31 +231,32 @@ class _AccountOptions extends HookWidget {
           onTap: () => removeUserDialog(instanceHost, username),
         ),
         ListTile(
-            leading: loading.value
+            leading: importLoading.value
                 ? const SizedBox(
                     height: 25,
                     width: 25,
                     child: CircularProgressIndicator(),
                   )
-                : error.value
-                    ? Icon(
-                        Icons.error,
-                        color: Theme.of(context).errorColor,
-                      )
-                    : const Icon(Icons.cloud_download),
+                : const Icon(Icons.cloud_download),
             title: const Text('Import settings to lemmur'),
             onTap: () async {
-              loading.value = true;
-              error.value = false;
+              importLoading.value = true;
               try {
                 await configStore.importLemmyUserSettings(
                   accountsStore.userDataFor(instanceHost, username)!.jwt,
                 );
+
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Import successful'),
+                ));
+              } on Exception catch (err) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(err.toString()),
+                ));
+              } finally {
                 Navigator.of(context).pop();
-              } on SocketException {
-                error.value = true;
+                importLoading.value = false;
               }
-              loading.value = false;
             }),
       ],
     );
