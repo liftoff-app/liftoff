@@ -75,7 +75,7 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
           fetcher: fetcher,
           controller: controller,
           noItems: const Text('there are no posts'),
-          uniqueProp: (item) => item.post.id,
+          uniqueProp: (item) => item.post.apId,
         );
 }
 
@@ -91,6 +91,6 @@ class InfiniteCommentList extends SortableInfiniteList<CommentView> {
           fetcher: fetcher,
           controller: controller,
           noItems: const Text('there are no comments'),
-          uniqueProp: (item) => item.comment.id,
+          uniqueProp: (item) => item.comment.apId,
         );
 }

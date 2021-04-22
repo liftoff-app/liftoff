@@ -68,25 +68,30 @@ class InfiniteScroll<T> extends HookWidget {
     // holds unique props of the data
     final dataSet = useRef(HashSet<Object>());
     final hasMore = useRef(true);
+    final page = useRef(1);
     final isFetching = useRef(false);
+
+    final uniquePropFunc = uniqueProp ?? (e) => e as Object;
 
     useEffect(() {
       if (controller != null) {
         controller?.clear = () {
           data.value = [];
           hasMore.current = true;
+          page.current = 1;
+          dataSet.current.clear();
         };
       }
 
       return null;
     }, []);
 
-    final page = data.value.length ~/ batchSize + 1;
-
     return RefreshIndicator(
       onRefresh: () async {
         data.value = [];
         hasMore.current = true;
+        page.current = 1;
+        dataSet.current.clear();
 
         await HapticFeedback.mediumImpact();
         await Future.delayed(const Duration(seconds: 1));
@@ -116,20 +121,20 @@ class InfiniteScroll<T> extends HookWidget {
             // if it's already fetching more, skip
             if (!isFetching.current) {
               isFetching.current = true;
-              fetcher(page, batchSize).then((incoming) {
+              fetcher(page.current, batchSize).then((incoming) {
                 // if got less than the batchSize, mark the list as done
                 if (incoming.length < batchSize) {
                   hasMore.current = false;
                 }
 
                 final newData = incoming.where(
-                  (e) => !dataSet.current.contains(uniqueProp?.call(e) ?? e),
+                  (e) => !dataSet.current.contains(uniquePropFunc(e)),
                 );
 
                 // append new data
                 data.value = [...data.value, ...newData];
-                dataSet.current
-                    .addAll(newData.map(uniqueProp ?? (e) => e as Object));
+                dataSet.current.addAll(newData.map(uniquePropFunc));
+                page.current += 1;
               }).whenComplete(() => isFetching.current = false);
             }
 

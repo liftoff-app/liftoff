@@ -119,13 +119,13 @@ class _SearchResultsList extends HookWidget {
       uniqueProp: (item) {
         switch (type) {
           case SearchType.comments:
-            return (item as CommentView).comment.id;
+            return (item as CommentView).comment.apId;
           case SearchType.communities:
-            return (item as CommunityView).community.id;
+            return (item as CommunityView).community.actorId;
           case SearchType.posts:
-            return (item as PostView).post.id;
+            return (item as PostView).post.apId;
           case SearchType.users:
-            return (item as PersonViewSafe).person.id;
+            return (item as PersonViewSafe).person.actorId;
           default:
             return item;
         }

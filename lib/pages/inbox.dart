@@ -120,7 +120,7 @@ class InboxPage extends HookWidget {
                 canBeMarkedAsRead: true,
                 hideOnRead: unreadOnly.value,
               ),
-              uniqueProp: (item) => item.comment.id,
+              uniqueProp: (item) => item.comment.apId,
             ),
             SortableInfiniteList<PersonMentionView>(
               noItems: const Text('no mentions'),
@@ -158,7 +158,7 @@ class InboxPage extends HookWidget {
                 privateMessageView: mv,
                 hideOnRead: unreadOnly.value,
               ),
-              uniqueProp: (item) => item.privateMessage.id,
+              uniqueProp: (item) => item.privateMessage.apId,
             ),
           ],
         ),
