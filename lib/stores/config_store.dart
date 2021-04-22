@@ -54,15 +54,6 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
-  late bool _showNsfw;
-  @JsonKey(defaultValue: false)
-  bool get showNsfw => _showNsfw;
-  set showNsfw(bool showNsfw) {
-    _showNsfw = showNsfw;
-    notifyListeners();
-    save();
-  }
-
   late bool _showScores;
   @JsonKey(defaultValue: true)
   bool get showScores => _showScores;
@@ -105,7 +96,6 @@ class ConfigStore extends ChangeNotifier {
     // };
 
     _showAvatars = localUserSettings.showAvatars;
-    _showNsfw = localUserSettings.showNsfw;
     // TODO: should these also be imported? If so, how?
     // _theme = darkModeLemmyUiThemes.contains(localUserSettings.theme)
     //     ? ThemeMode.dark

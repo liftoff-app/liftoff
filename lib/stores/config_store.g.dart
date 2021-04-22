@@ -13,7 +13,6 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) {
     ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
     ..locale = LocaleSerde.fromJson(json['locale'] as String?)
     ..showAvatars = json['showAvatars'] as bool? ?? true
-    ..showNsfw = json['showNsfw'] as bool? ?? false
     ..showScores = json['showScores'] as bool? ?? true
     ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
     ..defaultListingType =
@@ -26,7 +25,6 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'amoledDarkMode': instance.amoledDarkMode,
       'locale': LocaleSerde.toJson(instance.locale),
       'showAvatars': instance.showAvatars,
-      'showNsfw': instance.showNsfw,
       'showScores': instance.showScores,
       'defaultSortType': instance.defaultSortType,
       'defaultListingType': instance.defaultListingType,
