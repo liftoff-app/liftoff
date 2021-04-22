@@ -28,6 +28,6 @@
   },
   "L10n string": {
     "prefix": "l10n",
-    "body": ["L10n.of(context).$0"]
+    "body": ["L10n.of(context)!.$0"]
   }
 }

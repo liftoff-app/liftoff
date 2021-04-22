@@ -7,6 +7,7 @@ import 'package:fuzzy/fuzzy.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/delayed_loading.dart';
+import '../hooks/logged_in_action.dart';
 import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
@@ -37,7 +38,7 @@ class CommunitiesTab extends HookWidget {
           .map(
             (instanceHost) => LemmyApiV3(instanceHost)
                 .run(const GetSite())
-                .then((e) => e.siteView.site),
+                .then((e) => e.siteView!.site),
           )
           .toList();
 
@@ -52,8 +53,8 @@ class CommunitiesTab extends HookWidget {
                   sort: SortType.active,
                   savedOnly: false,
                   personId:
-                      accountsStore.defaultTokenFor(instanceHost).payload.sub,
-                  auth: accountsStore.defaultTokenFor(instanceHost).raw,
+                      accountsStore.defaultUserDataFor(instanceHost)!.userId,
+                  auth: accountsStore.defaultUserDataFor(instanceHost)!.jwt.raw,
                 ))
                 .then((e) => e.follows),
           )
@@ -84,7 +85,7 @@ class CommunitiesTab extends HookWidget {
                 padding: const EdgeInsets.all(8),
                 child: Text(
                   communitiesRefreshable.snapshot.error?.toString() ??
-                      instancesRefreshable.snapshot.error?.toString(),
+                      instancesRefreshable.snapshot.error!.toString(),
                 ),
               )
             ],
@@ -115,8 +116,8 @@ class CommunitiesTab extends HookWidget {
       }
     }
 
-    final instances = instancesRefreshable.snapshot.data;
-    final communities = communitiesRefreshable.snapshot.data
+    final instances = instancesRefreshable.snapshot.data!;
+    final communities = communitiesRefreshable.snapshot.data!
       ..forEach((e) =>
           e.sort((a, b) => a.community.name.compareTo(b.community.name)));
 
@@ -128,7 +129,7 @@ class CommunitiesTab extends HookWidget {
       return IconButton(
         onPressed: () {
           filterController.clear();
-          primaryFocus.unfocus();
+          primaryFocus?.unfocus();
         },
         icon: const Icon(Icons.clear),
       );
@@ -179,7 +180,10 @@ class CommunitiesTab extends HookWidget {
                           onTap: () => goToInstance(context,
                               accountsStore.loggedInInstances.elementAt(i)),
                           onLongPress: () => toggleCollapse(i),
-                          leading: Avatar(url: instances[i].icon),
+                          leading: Avatar(
+                            url: instances[i].icon,
+                            alwaysShow: true,
+                          ),
                           title: Text(
                             instances[i].name,
                             style: theme.textTheme.headline6,
@@ -210,6 +214,7 @@ class CommunitiesTab extends HookWidget {
                                     Avatar(
                                       radius: 15,
                                       url: comm.community.icon,
+                                      alwaysShow: true,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(comm.community.originDisplayName),
@@ -236,26 +241,24 @@ class _CommunitySubscribeToggle extends HookWidget {
   final String instanceHost;
 
   const _CommunitySubscribeToggle(
-      {@required this.instanceHost, @required this.communityId, Key key})
-      : assert(instanceHost != null),
-        assert(communityId != null),
-        super(key: key);
+      {required this.instanceHost, required this.communityId, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final subbed = useState(true);
     final delayed = useDelayedLoading();
-    final accountsStore = useAccountsStore();
+    final loggedInAction = useLoggedInAction(instanceHost);
 
-    handleTap() async {
+    handleTap(Jwt token) async {
       delayed.start();
 
       try {
         await LemmyApiV3(instanceHost).run(FollowCommunity(
           communityId: communityId,
           follow: !subbed.value,
-          auth: accountsStore.defaultTokenFor(instanceHost).raw,
+          auth: token.raw,
         ));
         subbed.value = !subbed.value;
       } on Exception catch (err) {
@@ -268,7 +271,7 @@ class _CommunitySubscribeToggle extends HookWidget {
     }
 
     return InkWell(
-      onTap: delayed.pending ? () {} : handleTap,
+      onTap: delayed.pending ? () {} : loggedInAction(handleTap),
       child: Container(
         decoration: delayed.loading
             ? null

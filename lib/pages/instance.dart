@@ -30,9 +30,8 @@ class InstancePage extends HookWidget {
   final Future<FullSiteView> siteFuture;
   final Future<List<CommunityView>> communitiesFuture;
 
-  InstancePage({@required this.instanceHost})
-      : assert(instanceHost != null),
-        siteFuture = LemmyApiV3(instanceHost).run(const GetSite()),
+  InstancePage({required this.instanceHost})
+      : siteFuture = LemmyApiV3(instanceHost).run(const GetSite()),
         communitiesFuture = LemmyApiV3(instanceHost).run(const ListCommunities(
             type: PostListingType.local, sort: SortType.hot, limit: 6));
 
@@ -44,7 +43,7 @@ class InstancePage extends HookWidget {
     final accStore = useAccountsStore();
     final scrollController = useScrollController();
 
-    if (!siteSnap.hasData) {
+    if (!siteSnap.hasData || siteSnap.data!.siteView == null) {
       return Scaffold(
         appBar: AppBar(),
         body: Center(
@@ -57,7 +56,9 @@ class InstancePage extends HookWidget {
                   padding: const EdgeInsets.all(8),
                   child: Text('ERROR: ${siteSnap.error}'),
                 )
-              ] else
+              ] else if (siteSnap.hasData && siteSnap.data!.siteView == null)
+                const Text('ERROR')
+              else
                 const CircularProgressIndicator(semanticsLabel: 'loading')
             ],
           ),
@@ -65,11 +66,12 @@ class InstancePage extends HookWidget {
       );
     }
 
-    final site = siteSnap.data;
+    final site = siteSnap.data!;
+    final siteView = site.siteView!;
 
     void _share() => share('https://$instanceHost', context: context);
 
-    void _openMoreMenu(BuildContext c) {
+    void _openMoreMenu() {
       showBottomModal(
         context: context,
         builder: (context) => Column(
@@ -110,23 +112,21 @@ class InstancePage extends HookWidget {
                 fade: true,
                 scrollController: scrollController,
                 child: Text(
-                  site.siteView.site.name,
+                  siteView.site.name,
                   style: TextStyle(color: colorOnCard),
                 ),
               ),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: _share),
-                IconButton(
-                    icon: Icon(moreIcon),
-                    onPressed: () => _openMoreMenu(context)),
+                IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(children: [
-                  if (site.siteView.site.banner != null)
+                  if (siteView.site.banner != null)
                     FullscreenableImage(
-                      url: site.siteView.site.banner,
+                      url: siteView.site.banner!,
                       child: CachedNetworkImage(
-                        imageUrl: site.siteView.site.banner,
+                        imageUrl: siteView.site.banner!,
                         errorWidget: (_, __, ___) => const SizedBox.shrink(),
                       ),
                     ),
@@ -136,20 +136,20 @@ class InstancePage extends HookWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 40),
-                            child: site.siteView.site.icon == null
+                            child: siteView.site.icon == null
                                 ? const SizedBox(height: 100, width: 100)
                                 : FullscreenableImage(
-                                    url: site.siteView.site.icon,
+                                    url: siteView.site.icon!,
                                     child: CachedNetworkImage(
                                       width: 100,
                                       height: 100,
-                                      imageUrl: site.siteView.site.icon,
+                                      imageUrl: siteView.site.icon!,
                                       errorWidget: (_, __, ___) =>
                                           const Icon(Icons.warning),
                                     ),
                                   ),
                           ),
-                          Text(site.siteView.site.name,
+                          Text(siteView.site.name,
                               style: theme.textTheme.headline6),
                           Text(instanceHost, style: theme.textTheme.caption)
                         ],
@@ -164,8 +164,8 @@ class InstancePage extends HookWidget {
                   color: theme.cardColor,
                   child: TabBar(
                     tabs: [
-                      Tab(text: L10n.of(context).posts),
-                      Tab(text: L10n.of(context).comments),
+                      Tab(text: L10n.of(context)!.posts),
+                      Tab(text: L10n.of(context)!.comments),
                       const Tab(text: 'About'),
                     ],
                   ),
@@ -184,7 +184,8 @@ class InstancePage extends HookWidget {
                         limit: batchSize,
                         page: page,
                         savedOnly: false,
-                        auth: accStore.defaultTokenFor(instanceHost)?.raw,
+                        auth:
+                            accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
                       ))),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sort) =>
@@ -194,7 +195,8 @@ class InstancePage extends HookWidget {
                         limit: batchSize,
                         page: page,
                         savedOnly: false,
-                        auth: accStore.defaultTokenFor(instanceHost)?.raw,
+                        auth:
+                            accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
                       ))),
               _AboutTab(site,
                   communitiesFuture: communitiesFuture,
@@ -212,17 +214,18 @@ class _AboutTab extends HookWidget {
   final Future<List<CommunityView>> communitiesFuture;
   final String instanceHost;
 
-  const _AboutTab(this.site,
-      {@required this.communitiesFuture, @required this.instanceHost})
-      : assert(communitiesFuture != null),
-        assert(instanceHost != null);
+  const _AboutTab(
+    this.site, {
+    required this.communitiesFuture,
+    required this.instanceHost,
+  });
 
   void goToBannedUsers(BuildContext context) {
     goTo(
       context,
       (_) => UsersListPage(
         users: site.banned.reversed.toList(),
-        title: L10n.of(context).banned_users,
+        title: L10n.of(context)!.banned_users,
       ),
     );
   }
@@ -243,12 +246,23 @@ class _AboutTab extends HookWidget {
               sort: sortType,
               limit: batchSize,
               page: page,
-              auth: accStore.defaultTokenFor(instanceHost)?.raw,
+              auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
             ),
           ),
-          title: 'Communities of ${site.siteView.site.name}',
+          title: 'Communities of ${site.siteView?.site.name}',
         ),
       );
+    }
+
+    final siteView = site.siteView;
+
+    if (siteView == null) {
+      return const SingleChildScrollView(
+          child: Center(
+              child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Text('error'),
+      )));
     }
 
     return SingleChildScrollView(
@@ -256,14 +270,17 @@ class _AboutTab extends HookWidget {
         top: false,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: MarkdownText(
-                site.siteView.site.description,
-                instanceHost: instanceHost,
+            if (siteView.site.description != null) ...[
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                child: MarkdownText(
+                  siteView.site.description!,
+                  instanceHost: instanceHost,
+                ),
               ),
-            ),
-            const _Divider(),
+              const _Divider(),
+            ],
             SizedBox(
               height: 32,
               child: ListView(
@@ -271,17 +288,16 @@ class _AboutTab extends HookWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 children: [
                   Chip(
-                      label: Text(L10n.of(context)
+                      label: Text(L10n.of(context)!
                           .number_of_users_online(site.online))),
                   Chip(
-                      label: Text(L10n.of(context)
-                          .number_of_users(site.siteView.counts.users))),
+                      label: Text(L10n.of(context)!
+                          .number_of_users(siteView.counts.users))),
                   Chip(
-                      label: Text(
-                          '${site.siteView.counts.communities} communities')),
-                  Chip(label: Text('${site.siteView.counts.posts} posts')),
-                  Chip(
-                      label: Text('${site.siteView.counts.comments} comments')),
+                      label:
+                          Text('${siteView.counts.communities} communities')),
+                  Chip(label: Text('${siteView.counts.posts} posts')),
+                  Chip(label: Text('${siteView.counts.comments} comments')),
                 ].spaced(8),
               ),
             ),
@@ -290,12 +306,12 @@ class _AboutTab extends HookWidget {
               title: Center(
                 child: Text(
                   'Trending communities:',
-                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                  style: theme.textTheme.headline6?.copyWith(fontSize: 18),
                 ),
               ),
             ),
             if (commSnap.hasData)
-              for (final c in commSnap.data)
+              for (final c in commSnap.data!)
                 ListTile(
                   onTap: () => goToCommunity.byId(
                       context, c.instanceHost, c.community.id),
@@ -321,7 +337,7 @@ class _AboutTab extends HookWidget {
               title: Center(
                 child: Text(
                   'Admins:',
-                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                  style: theme.textTheme.headline6?.copyWith(fontSize: 18),
                 ),
               ),
             ),
@@ -329,18 +345,18 @@ class _AboutTab extends HookWidget {
               ListTile(
                 title: Text(u.person.originDisplayName),
                 subtitle: u.person.bio != null
-                    ? MarkdownText(u.person.bio, instanceHost: instanceHost)
+                    ? MarkdownText(u.person.bio!, instanceHost: instanceHost)
                     : null,
                 onTap: () => goToUser.fromPersonSafe(context, u.person),
                 leading: Avatar(url: u.person.avatar),
               ),
             const _Divider(),
             ListTile(
-              title: Center(child: Text(L10n.of(context).banned_users)),
+              title: Center(child: Text(L10n.of(context)!.banned_users)),
               onTap: () => goToBannedUsers(context),
             ),
             ListTile(
-              title: Center(child: Text(L10n.of(context).modlog)),
+              title: Center(child: Text(L10n.of(context)!.modlog)),
               onTap: () => goTo(
                 context,
                 (context) => ModlogPage.forInstance(instanceHost: instanceHost),

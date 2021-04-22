@@ -15,53 +15,85 @@ import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
-import '../util/unawaited.dart';
+import '../widgets/editor.dart';
 import '../widgets/markdown_mode_icon.dart';
-import '../widgets/markdown_text.dart';
 import '../widgets/radio_picker.dart';
 import 'full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
+/// After creation it will navigate to the newly created post
 class CreatePostFab extends HookWidget {
-  final CommunityView community;
+  final CommunityView? community;
 
   const CreatePostFab({this.community});
 
   @override
   Widget build(BuildContext context) {
-    final loggedInAction = useLoggedInAction(null, any: true);
+    final loggedInAction = useAnyLoggedInAction();
 
     return FloatingActionButton(
-      onPressed: loggedInAction((_) => showCupertinoModalPopup(
+      onPressed: loggedInAction((_) async {
+        final postView = await showCupertinoModalPopup<PostView>(
           context: context,
-          builder: (_) => CreatePostPage.toCommunity(community))),
+          builder: (_) => community == null
+              ? const CreatePostPage()
+              : CreatePostPage.toCommunity(community!),
+        );
+
+        if (postView != null) {
+          await goTo(
+            context,
+            (_) => FullPostPage.fromPostView(postView),
+          );
+        }
+      }),
       child: const Icon(Icons.add),
     );
   }
 }
 
 /// Modal for creating a post to some community in some instance
+/// Pops the navigator stack with a [PostView]
 class CreatePostPage extends HookWidget {
-  final CommunityView community;
+  final CommunityView? community;
 
-  const CreatePostPage() : community = null;
-  const CreatePostPage.toCommunity(this.community);
+  final bool _isEdit;
+  final Post? post;
+
+  const CreatePostPage()
+      : community = null,
+        _isEdit = false,
+        post = null;
+  const CreatePostPage.toCommunity(CommunityView this.community)
+      : _isEdit = false,
+        post = null;
+  const CreatePostPage.edit(this.post)
+      : _isEdit = true,
+        community = null;
 
   @override
   Widget build(BuildContext context) {
-    final urlController = useTextEditingController();
-    final titleController = useTextEditingController();
-    final bodyController = useTextEditingController();
+    final urlController =
+        useTextEditingController(text: _isEdit ? post?.url : null);
+    final titleController =
+        useTextEditingController(text: _isEdit ? post?.name : null);
+    final bodyController =
+        useTextEditingController(text: _isEdit ? post?.body : null);
     final accStore = useAccountsStore();
-    final selectedInstance =
-        useState(community?.instanceHost ?? accStore.loggedInInstances.first);
+    final selectedInstance = useState(_isEdit
+        ? post!.instanceHost
+        : community?.instanceHost ?? accStore.loggedInInstances.first);
     final selectedCommunity = useState(community);
     final showFancy = useState(false);
-    final nsfw = useState(false);
+    final nsfw = useState(_isEdit && post!.nsfw);
     final delayed = useDelayedLoading();
     final imagePicker = useImagePicker();
     final imageUploadLoading = useState(false);
-    final pictrsDeleteToken = useState<PictrsUploadFile>(null);
+    final pictrsDeleteToken = useState<PictrsUploadFile?>(null);
+    final loggedInAction = useLoggedInAction(selectedInstance.value);
+
+    final titleFocusNode = useFocusNode();
+    final bodyFocusNode = useFocusNode();
 
     final allCommunitiesSnap = useMemoFuture(
       () => LemmyApiV3(selectedInstance.value)
@@ -69,7 +101,7 @@ class CreatePostPage extends HookWidget {
         type: PostListingType.all,
         sort: SortType.hot,
         limit: 9999,
-        auth: accStore.defaultTokenFor(selectedInstance.value).raw,
+        auth: accStore.defaultUserDataFor(selectedInstance.value)?.jwt.raw,
       ))
           .then(
         (value) {
@@ -80,14 +112,13 @@ class CreatePostPage extends HookWidget {
       [selectedInstance.value],
     );
 
-    uploadPicture() async {
+    uploadPicture(Jwt token) async {
       try {
         final pic = await imagePicker.getImage(source: ImageSource.gallery);
         // pic is null when the picker was cancelled
         if (pic != null) {
           imageUploadLoading.value = true;
 
-          final token = accStore.defaultTokenFor(selectedInstance.value);
           final pictrs = PictrsApi(selectedInstance.value);
           final upload =
               await pictrs.upload(filePath: pic.path, auth: token.raw);
@@ -95,7 +126,6 @@ class CreatePostPage extends HookWidget {
           urlController.text =
               pathToPictrs(selectedInstance.value, upload.files[0].file);
         }
-        print(urlController.text);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -105,10 +135,8 @@ class CreatePostPage extends HookWidget {
       }
     }
 
-    removePicture() {
-      PictrsApi(selectedInstance.value)
-          .delete(pictrsDeleteToken.value)
-          .catchError((_) {});
+    removePicture(PictrsUploadFile deleteToken) {
+      PictrsApi(selectedInstance.value).delete(deleteToken).catchError((_) {});
 
       pictrsDeleteToken.value = null;
       urlController.text = '';
@@ -117,7 +145,7 @@ class CreatePostPage extends HookWidget {
     final instanceDropdown = RadioPicker<String>(
       values: accStore.loggedInInstances.toList(),
       groupValue: selectedInstance.value,
-      onChanged: (value) => selectedInstance.value = value,
+      onChanged: _isEdit ? null : (value) => selectedInstance.value = value,
       buttonBuilder: (context, displayValue, onPressed) => TextButton(
         onPressed: onPressed,
         child: Row(
@@ -140,10 +168,10 @@ class CreatePostPage extends HookWidget {
 
     List<DropdownMenuItem<int>> communitiesList() {
       if (allCommunitiesSnap.hasData) {
-        return allCommunitiesSnap.data.map(communityDropDownItem).toList();
+        return allCommunitiesSnap.data!.map(communityDropDownItem).toList();
       } else {
         if (selectedCommunity.value != null) {
-          return [communityDropDownItem(selectedCommunity.value)];
+          return [communityDropDownItem(selectedCommunity.value!)];
         } else {
           return const [
             DropdownMenuItem(
@@ -155,31 +183,85 @@ class CreatePostPage extends HookWidget {
       }
     }
 
+    handleSubmit(Jwt token) async {
+      if ((!_isEdit && selectedCommunity.value == null) ||
+          titleController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Choosing a community and a title is required'),
+        ));
+        return;
+      }
+
+      final api = LemmyApiV3(selectedInstance.value);
+
+      delayed.start();
+      try {
+        final res = await () {
+          if (_isEdit) {
+            return api.run(EditPost(
+              url: urlController.text.isEmpty ? null : urlController.text,
+              body: bodyController.text.isEmpty ? null : bodyController.text,
+              nsfw: nsfw.value,
+              name: titleController.text,
+              postId: post!.id,
+              auth: token.raw,
+            ));
+          } else {
+            return api.run(CreatePost(
+              url: urlController.text.isEmpty ? null : urlController.text,
+              body: bodyController.text.isEmpty ? null : bodyController.text,
+              nsfw: nsfw.value,
+              name: titleController.text,
+              communityId: selectedCommunity.value!.community.id,
+              auth: token.raw,
+            ));
+          }
+        }();
+        Navigator.of(context).pop(res);
+        return;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Failed to post')));
+      }
+      delayed.cancel();
+    }
+
     // TODO: use lazy autocomplete
     final communitiesDropdown = InputDecorator(
       decoration: const InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)))),
+        contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
-          value: selectedCommunity.value?.community?.id,
-          hint: Text(L10n.of(context).community),
-          onChanged: (communityId) => selectedCommunity.value =
-              allCommunitiesSnap.data
-                  ?.firstWhere((e) => e.community.id == communityId),
+          value: selectedCommunity.value?.community.id,
+          hint: Text(L10n.of(context)!.community),
+          onChanged: _isEdit
+              ? null
+              : (communityId) {
+                  selectedCommunity.value = allCommunitiesSnap.data
+                      ?.firstWhere((e) => e.community.id == communityId);
+                },
           items: communitiesList(),
         ),
       ),
     );
 
+    final enabledUrlField = pictrsDeleteToken.value == null;
+
     final url = Row(children: [
       Expanded(
         child: TextField(
-          enabled: pictrsDeleteToken.value == null,
+          enabled: enabledUrlField,
           controller: urlController,
+          autofillHints: enabledUrlField ? const [AutofillHints.url] : null,
+          keyboardType: TextInputType.url,
+          onSubmitted: (_) => titleFocusNode.requestFocus(),
           decoration: InputDecoration(
-            labelText: L10n.of(context).url,
+            labelText: L10n.of(context)!.url,
             suffixIcon: const Icon(Icons.link),
           ),
         ),
@@ -191,8 +273,9 @@ class CreatePostPage extends HookWidget {
             : Icon(pictrsDeleteToken.value == null
                 ? Icons.add_photo_alternate
                 : Icons.close),
-        onPressed:
-            pictrsDeleteToken.value == null ? uploadPicture : removePicture,
+        onPressed: pictrsDeleteToken.value == null
+            ? loggedInAction(uploadPicture)
+            : () => removePicture(pictrsDeleteToken.value!),
         tooltip:
             pictrsDeleteToken.value == null ? 'Add picture' : 'Delete picture',
       )
@@ -200,62 +283,24 @@ class CreatePostPage extends HookWidget {
 
     final title = TextField(
       controller: titleController,
+      focusNode: titleFocusNode,
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.sentences,
+      onSubmitted: (_) => bodyFocusNode.requestFocus(),
       minLines: 1,
       maxLines: 2,
-      decoration: InputDecoration(labelText: L10n.of(context).title),
+      decoration: InputDecoration(labelText: L10n.of(context)!.title),
     );
 
-    final body = IndexedStack(
-      index: showFancy.value ? 1 : 0,
-      children: [
-        TextField(
-          controller: bodyController,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          minLines: 5,
-          decoration: InputDecoration(labelText: L10n.of(context).body),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: MarkdownText(
-            bodyController.text,
-            instanceHost: selectedInstance.value,
-          ),
-        ),
-      ],
+    final body = Editor(
+      controller: bodyController,
+      focusNode: bodyFocusNode,
+      onSubmitted: (_) =>
+          delayed.pending ? () {} : loggedInAction(handleSubmit),
+      labelText: L10n.of(context)!.body,
+      instanceHost: selectedInstance.value,
+      fancy: showFancy.value,
     );
-
-    handleSubmit() async {
-      if (selectedCommunity.value == null || titleController.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Choosing a community and a title is required'),
-        ));
-        return;
-      }
-
-      final api = LemmyApiV3(selectedInstance.value);
-
-      final token = accStore.defaultTokenFor(selectedInstance.value);
-
-      delayed.start();
-      try {
-        final res = await api.run(CreatePost(
-          url: urlController.text.isEmpty ? null : urlController.text,
-          body: bodyController.text.isEmpty ? null : bodyController.text,
-          nsfw: nsfw.value,
-          name: titleController.text,
-          communityId: selectedCommunity.value.community.id,
-          auth: token.raw,
-        ));
-        unawaited(goToReplace(context, (_) => FullPostPage.fromPostView(res)));
-        return;
-        // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Failed to post')));
-      }
-      delayed.cancel();
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -272,7 +317,7 @@ class CreatePostPage extends HookWidget {
           padding: const EdgeInsets.all(5),
           children: [
             instanceDropdown,
-            communitiesDropdown,
+            if (!_isEdit) communitiesDropdown,
             url,
             title,
             body,
@@ -285,17 +330,22 @@ class CreatePostPage extends HookWidget {
                     children: [
                       Checkbox(
                         value: nsfw.value,
-                        onChanged: (val) => nsfw.value = val,
+                        onChanged: (val) {
+                          if (val != null) nsfw.value = val;
+                        },
                       ),
-                      Text(L10n.of(context).nsfw)
+                      Text(L10n.of(context)!.nsfw)
                     ],
                   ),
                 ),
                 TextButton(
-                  onPressed: delayed.pending ? () {} : handleSubmit,
+                  onPressed:
+                      delayed.pending ? () {} : loggedInAction(handleSubmit),
                   child: delayed.loading
                       ? const CircularProgressIndicator()
-                      : Text(L10n.of(context).post),
+                      : Text(_isEdit
+                          ? L10n.of(context)!.edit
+                          : L10n.of(context)!.post),
                 )
               ],
             ),

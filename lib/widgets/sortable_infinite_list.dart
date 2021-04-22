@@ -16,23 +16,21 @@ typedef FetcherWithSorting<T> = Future<List<T>> Function(
 class SortableInfiniteList<T> extends HookWidget {
   final FetcherWithSorting<T> fetcher;
   final Widget Function(T) itemBuilder;
-  final InfiniteScrollController controller;
-  final Function onStyleChange;
+  final InfiniteScrollController? controller;
+  final Function? onStyleChange;
   final Widget noItems;
   final SortType defaultSort;
-  final Object Function(T item) uniqueProp;
+  final Object Function(T item)? uniqueProp;
 
   const SortableInfiniteList({
-    @required this.fetcher,
-    @required this.itemBuilder,
+    required this.fetcher,
+    required this.itemBuilder,
     this.controller,
     this.onStyleChange,
-    this.noItems,
+    this.noItems = const SizedBox.shrink(),
     this.defaultSort = SortType.active,
     this.uniqueProp,
-  })  : assert(fetcher != null),
-        assert(itemBuilder != null),
-        assert(defaultSort != null);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +63,8 @@ class SortableInfiniteList<T> extends HookWidget {
 
 class InfinitePostList extends SortableInfiniteList<PostView> {
   InfinitePostList({
-    @required FetcherWithSorting<PostView> fetcher,
-    InfiniteScrollController controller,
+    required FetcherWithSorting<PostView> fetcher,
+    InfiniteScrollController? controller,
   }) : super(
           itemBuilder: (post) => Column(
             children: [
@@ -83,8 +81,8 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
 
 class InfiniteCommentList extends SortableInfiniteList<CommentView> {
   InfiniteCommentList({
-    @required FetcherWithSorting<CommentView> fetcher,
-    InfiniteScrollController controller,
+    required FetcherWithSorting<CommentView> fetcher,
+    InfiniteScrollController? controller,
   }) : super(
           itemBuilder: (comment) => CommentWidget(
             CommentTree(comment),

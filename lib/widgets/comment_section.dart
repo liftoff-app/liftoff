@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -26,13 +25,12 @@ class CommentSection extends HookWidget {
 
   CommentSection(
     List<CommentView> rawComments, {
-    @required this.postCreatorId,
+    required this.postCreatorId,
     this.sortType = CommentSortType.hot,
   })  : comments =
             CommentTree.sortList(sortType, CommentTree.fromList(rawComments)),
         rawComments = rawComments
-          ..sort((b, a) => a.comment.published.compareTo(b.comment.published)),
-        assert(postCreatorId != null);
+          ..sort((b, a) => a.comment.published.compareTo(b.comment.published));
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +74,7 @@ class CommentSection extends HookWidget {
               },
               child: Row(
                 children: [
-                  Text((sortPairs[sorting.value][1] as String).tr(context)),
+                  Text((sortPairs[sorting.value]![1] as String).tr(context)),
                   const Icon(Icons.arrow_drop_down),
                 ],
               ),

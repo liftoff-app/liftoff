@@ -6,31 +6,29 @@ import 'bottom_modal.dart';
 class RadioPicker<T> extends StatelessWidget {
   final List<T> values;
   final T groupValue;
-  final ValueChanged<T> onChanged;
+  final ValueChanged<T>? onChanged;
 
   /// Map a given value to a string for display
-  final String Function(T) mapValueToString;
-  final String title;
+  final String Function(T)? mapValueToString;
+  final String? title;
 
   /// custom button builder. When null, an OutlinedButton is used
   final Widget Function(
-          BuildContext context, String displayValue, VoidCallback onPressed)
+          BuildContext context, String displayValue, VoidCallback? onPressed)?
       buttonBuilder;
 
-  final Widget trailing;
+  final Widget? trailing;
 
   const RadioPicker({
-    Key key,
-    @required this.values,
-    @required this.groupValue,
-    @required this.onChanged,
+    Key? key,
+    required this.values,
+    required this.groupValue,
+    required this.onChanged,
     this.mapValueToString,
     this.buttonBuilder,
     this.title,
     this.trailing,
-  })  : assert(values != null),
-        assert(groupValue != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +61,7 @@ class RadioPicker<T> extends StatelessWidget {
                 title: Text(mapValueToString(value)),
                 onChanged: (value) => Navigator.of(context).pop(value),
               ),
-            if (trailing != null) trailing
+            if (trailing != null) trailing!
           ],
         ),
       );
@@ -73,6 +71,10 @@ class RadioPicker<T> extends StatelessWidget {
       }
     }
 
-    return buttonBuilder(context, mapValueToString(groupValue), onPressed);
+    return buttonBuilder(
+      context,
+      mapValueToString(groupValue),
+      onChanged == null ? null : onPressed,
+    );
   }
 }

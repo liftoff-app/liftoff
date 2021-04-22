@@ -16,8 +16,7 @@ import 'add_instance.dart';
 class AddAccountPage extends HookWidget {
   final String instanceHost;
 
-  const AddAccountPage({@required this.instanceHost})
-      : assert(instanceHost != null);
+  const AddAccountPage({required this.instanceHost});
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +24,17 @@ class AddAccountPage extends HookWidget {
 
     final usernameController = useListenable(useTextEditingController());
     final passwordController = useListenable(useTextEditingController());
+    final passwordFocusNode = useFocusNode();
     final accountsStore = useAccountsStore();
 
     final loading = useDelayedLoading();
     final selectedInstance = useState(instanceHost);
-    final icon = useState<String>(null);
+    final icon = useState<String?>(null);
 
     useEffect(() {
       LemmyApiV3(selectedInstance.value)
           .run(const GetSite())
-          .then((site) => icon.value = site.siteView.site.icon);
+          .then((site) => icon.value = site.siteView?.site.icon);
       return null;
     }, [selectedInstance.value]);
 
@@ -55,96 +55,109 @@ class AddAccountPage extends HookWidget {
       loading.cancel();
     }
 
+    final handleSubmit =
+        usernameController.text.isEmpty || passwordController.text.isEmpty
+            ? null
+            : loading.pending
+                ? () {}
+                : handleOnAdd;
+
     return Scaffold(
       appBar: AppBar(
         leading: const CloseButton(),
         title: const Text('Add account'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(15),
-        children: [
-          if (icon.value == null)
-            const SizedBox(height: 150)
-          else
-            SizedBox(
-              height: 150,
-              child: FullscreenableImage(
-                url: icon.value,
-                child: CachedNetworkImage(
-                  imageUrl: icon.value,
-                  errorWidget: (_, __, ___) => const SizedBox.shrink(),
+      body: AutofillGroup(
+        child: ListView(
+          padding: const EdgeInsets.all(15),
+          children: [
+            if (icon.value == null)
+              const SizedBox(height: 150)
+            else
+              SizedBox(
+                height: 150,
+                child: FullscreenableImage(
+                  url: icon.value!,
+                  child: CachedNetworkImage(
+                    imageUrl: icon.value!,
+                    errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                  ),
                 ),
               ),
-            ),
-          RadioPicker<String>(
-            title: 'select instance',
-            values: accountsStore.instances.toList(),
-            groupValue: selectedInstance.value,
-            onChanged: (value) => selectedInstance.value = value,
-            buttonBuilder: (context, displayValue, onPressed) => TextButton(
-              onPressed: onPressed,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(displayValue),
-                  const Icon(Icons.arrow_drop_down),
-                ],
+            RadioPicker<String>(
+              title: 'select instance',
+              values: accountsStore.instances.toList(),
+              groupValue: selectedInstance.value,
+              onChanged: (value) => selectedInstance.value = value,
+              buttonBuilder: (context, displayValue, onPressed) => TextButton(
+                onPressed: onPressed,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(displayValue),
+                    const Icon(Icons.arrow_drop_down),
+                  ],
+                ),
+              ),
+              trailing: ListTile(
+                leading: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.add),
+                ),
+                title: const Text('Add instance'),
+                onTap: () async {
+                  final value = await showCupertinoModalPopup<String>(
+                    context: context,
+                    builder: (context) => const AddInstancePage(),
+                  );
+                  Navigator.of(context).pop(value);
+                },
               ),
             ),
-            trailing: ListTile(
-              leading: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.add),
-              ),
-              title: const Text('Add instance'),
-              onTap: () async {
-                final value = await showCupertinoModalPopup<String>(
-                  context: context,
-                  builder: (context) => const AddInstancePage(),
-                );
-                Navigator.of(context).pop(value);
-              },
+            TextField(
+              autofocus: true,
+              controller: usernameController,
+              autofillHints: const [
+                AutofillHints.email,
+                AutofillHints.username
+              ],
+              onSubmitted: (_) => passwordFocusNode.requestFocus(),
+              decoration: InputDecoration(
+                  labelText: L10n.of(context)!.email_or_username),
             ),
-          ),
-          // TODO: add support for password managers
-          TextField(
-            autofocus: true,
-            controller: usernameController,
-            decoration:
-                InputDecoration(labelText: L10n.of(context).email_or_username),
-          ),
-          const SizedBox(height: 5),
-          TextField(
-            controller: passwordController,
-            obscureText: true,
-            decoration: InputDecoration(labelText: L10n.of(context).password),
-          ),
-          ElevatedButton(
-            onPressed: usernameController.text.isEmpty ||
-                    passwordController.text.isEmpty
-                ? null
-                : loading.pending
-                    ? () {}
-                    : handleOnAdd,
-            child: !loading.loading
-                ? const Text('Sign in')
-                : SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(theme.canvasColor),
+            const SizedBox(height: 5),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              focusNode: passwordFocusNode,
+              onSubmitted: (_) => handleSubmit?.call(),
+              autofillHints: const [AutofillHints.password],
+              keyboardType: TextInputType.visiblePassword,
+              decoration:
+                  InputDecoration(labelText: L10n.of(context)!.password),
+            ),
+            ElevatedButton(
+              onPressed: handleSubmit,
+              child: !loading.loading
+                  ? const Text('Sign in')
+                  : SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(theme.canvasColor),
+                      ),
                     ),
-                  ),
-          ),
-          TextButton(
-            onPressed: () {
-              // TODO: extract to LemmyUrls or something
-              ul.launch('https://${selectedInstance.value}/login');
-            },
-            child: const Text('Register'),
-          ),
-        ],
+            ),
+            TextButton(
+              onPressed: () {
+                // TODO: extract to LemmyUrls or something
+                ul.launch('https://${selectedInstance.value}/login');
+              },
+              child: const Text('Register'),
+            ),
+          ],
+        ),
       ),
     );
   }

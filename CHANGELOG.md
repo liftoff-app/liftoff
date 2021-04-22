@@ -1,13 +1,38 @@
 ## Unreleased
 
-### Changed
+### Added
 
-- Disable commenting on locked posts
+- Show avatars setting toggle
+- Show scores setting toggle
+- Default listing type for the home tab setting
+- Import Lemmy settings: long press an account in account settings then choose the import option
+- Editing posts
+- Editing comments
 
 ### Fixed
 
-- When writing a comment the parent text is now selectable
+- Fixed bug where creating post would crash after uploading a picture
+
+## v0.4.2 - 2021-04-12
+
+### Changed
+
+- Disable commenting on locked posts
+- Enhanced keyboard experience
+  - appropriate keyboard types are opened
+  - correct capitalization
+  - added text input hints for things like password managers
+- Account actions in settings are more obvious to access: long press an account/instance to see possible actions such as setting as default or removal
+
+### Added
+
+- When writing a comment, the parent text is now selectable
 - Text of a post is now selectable
+- Tapping outside of a text input hides the keyboard
+
+### Fixed
+
+- Actually fixed the thing that v0.4.1 supposedly fixed
 
 ## v0.4.1 - 2021-04-06
 

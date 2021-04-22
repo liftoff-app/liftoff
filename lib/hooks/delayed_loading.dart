@@ -12,10 +12,10 @@ class DelayedLoading {
   final VoidCallback cancel;
 
   const DelayedLoading({
-    @required this.pending,
-    @required this.loading,
-    @required this.start,
-    @required this.cancel,
+    required this.pending,
+    required this.loading,
+    required this.start,
+    required this.cancel,
   });
 }
 
@@ -26,7 +26,7 @@ DelayedLoading useDelayedLoading(
     [Duration delayDuration = const Duration(milliseconds: 500)]) {
   final loading = useState(false);
   final pending = useState(false);
-  final timerHandle = useRef<Timer>(null);
+  final timerHandle = useRef<Timer?>(null);
 
   return DelayedLoading(
     loading: loading.value,

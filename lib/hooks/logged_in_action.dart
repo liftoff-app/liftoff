@@ -14,14 +14,13 @@ import 'stores.dart';
 
 VoidCallback Function(
   void Function(Jwt token) action, [
-  String message,
-]) useLoggedInAction(String instanceHost, {bool any = false}) {
+  String? message,
+]) useAnyLoggedInAction() {
   final context = useContext();
   final store = useAccountsStore();
 
   return (action, [message]) {
-    if (any && store.hasNoAccount ||
-        !any && store.isAnonymousFor(instanceHost)) {
+    if (store.hasNoAccount) {
       return () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(message ?? 'you have to be logged in to do that'),
@@ -31,7 +30,29 @@ VoidCallback Function(
         ));
       };
     }
-    final token = store.defaultTokenFor(instanceHost);
+    return () => action(store.defaultUserData!.jwt);
+  };
+}
+
+VoidCallback Function(
+  void Function(Jwt token) action, [
+  String? message,
+]) useLoggedInAction(String instanceHost) {
+  final context = useContext();
+  final store = useAccountsStore();
+
+  return (action, [message]) {
+    if (store.isAnonymousFor(instanceHost)) {
+      return () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(message ?? 'you have to be logged in to do that'),
+          action: SnackBarAction(
+              label: 'log in',
+              onPressed: () => goTo(context, (_) => AccountsConfigPage())),
+        ));
+      };
+    }
+    final token = store.defaultUserDataFor(instanceHost)!.jwt;
     return () => action(token);
   };
 }

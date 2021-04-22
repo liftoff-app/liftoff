@@ -12,10 +12,10 @@ class PostListOptions extends StatelessWidget {
   final bool styleButton;
 
   const PostListOptions({
-    @required this.onSortChanged,
-    @required this.sortValue,
+    required this.onSortChanged,
+    required this.sortValue,
     this.styleButton = true,
-  }) : assert(sortValue != null);
+  });
 
   @override
   Widget build(BuildContext context) => Padding(

@@ -13,9 +13,9 @@ import 'util/goto.dart';
 /// Decides where does a link link to. Either somewhere in-app:
 /// opens the correct page, or outside of the app: opens in a browser
 Future<void> linkLauncher({
-  @required BuildContext context,
-  @required String url,
-  @required String instanceHost,
+  required BuildContext context,
+  required String url,
+  required String instanceHost,
 }) async {
   push(Widget Function() builder) {
     goTo(context, (c) => builder());
@@ -46,8 +46,8 @@ Future<void> linkLauncher({
   final matchedInstance = match?.group(1);
   final rest = match?.group(2);
 
-  if (matchedInstance != null && instances.any((e) => e == match.group(1))) {
-    if (rest.isEmpty || rest == '/') {
+  if (matchedInstance != null && instances.any((e) => e == match?.group(1))) {
+    if (rest == null || rest.isEmpty || rest == '/') {
       return push(() => InstancePage(instanceHost: matchedInstance));
     }
     final split = rest.split('/');
@@ -107,7 +107,7 @@ Future<void> linkLauncher({
 
 Future<void> openInBrowser(String url) async {
   if (await ul.canLaunch(url)) {
-    return await ul.launch(url);
+    await ul.launch(url);
   } else {
     throw Exception();
     // TODO: handle opening links to stuff in app

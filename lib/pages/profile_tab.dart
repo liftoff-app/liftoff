@@ -80,7 +80,7 @@ class UserProfileTab extends HookWidget {
                 Text(
                   // TODO: fix overflow issues
                   displayValue,
-                  style: theme.appBarTheme.textTheme.headline6,
+                  style: theme.appBarTheme.textTheme?.headline6,
                   overflow: TextOverflow.fade,
                 ),
                 const Icon(Icons.expand_more),
@@ -91,8 +91,8 @@ class UserProfileTab extends HookWidget {
         actions: actions,
       ),
       body: UserProfile(
-        userId: accountsStore.defaultToken.payload.sub,
-        instanceHost: accountsStore.defaultInstanceHost,
+        userId: accountsStore.defaultUserData!.userId,
+        instanceHost: accountsStore.defaultInstanceHost!,
       ),
     );
   }

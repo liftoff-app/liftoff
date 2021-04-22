@@ -12,7 +12,7 @@ Future<void> main(List<String> args) async {
   final keys = strings.keys.where((key) => !key.startsWith('@')).toSet();
   final keysWithoutVariables = keys.where((key) {
     final metadata = strings['@$key'] as Map<String, dynamic>;
-    final placeholders = metadata['placeholders'] as Map<String, dynamic>;
+    final placeholders = metadata['placeholders'] as Map<String, dynamic>?;
 
     return placeholders?.isEmpty ?? true;
   }).toSet();
@@ -30,7 +30,7 @@ ${keys.map((key) => "  static const $key = '$key';").join('\n')}
 extension L10nFromString on String {
   String tr(BuildContext context) {
     switch (this) {
-${keysWithoutVariables.map((key) => "      case L10nStrings.$key:\n        return L10n.of(context).$key;").join('\n')}
+${keysWithoutVariables.map((key) => "      case L10nStrings.$key:\n        return L10n.of(context)!.$key;").join('\n')}
 
       default:
         return this;

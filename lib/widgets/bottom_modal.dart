@@ -3,16 +3,15 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 /// Should be spawned with a [showBottomModal], not routed to.
 class BottomModal extends StatelessWidget {
-  final String title;
+  final String? title;
   final EdgeInsets padding;
   final Widget child;
 
   const BottomModal({
     this.title,
     this.padding = EdgeInsets.zero,
-    @required this.child,
-  })  : assert(padding != null),
-        assert(child != null);
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,7 @@ class BottomModal extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 70),
                       child: Text(
-                        title,
+                        title!,
                         style: theme.textTheme.subtitle2,
                         textAlign: TextAlign.left,
                       ),
@@ -65,10 +64,10 @@ class BottomModal extends StatelessWidget {
 }
 
 /// Helper function for showing a [BottomModal]
-Future<T> showBottomModal<T>({
-  @required BuildContext context,
-  @required WidgetBuilder builder,
-  String title,
+Future<T?> showBottomModal<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  String? title,
   EdgeInsets padding = EdgeInsets.zero,
 }) =>
     showCustomModalBottomSheet<T>(

@@ -19,8 +19,8 @@ class AddInstancePage extends HookWidget {
     useValueListenable(instanceController);
     final accountsStore = useAccountsStore();
 
-    final isSite = useState<bool>(null);
-    final icon = useState<String>(null);
+    final isSite = useState<bool?>(null);
+    final icon = useState<String?>(null);
     final prevInput = usePrevious(instanceController.text);
     final debounce = useDebounce(() async {
       if (prevInput == instanceController.text) return;
@@ -32,7 +32,7 @@ class AddInstancePage extends HookWidget {
       }
       try {
         icon.value =
-            (await LemmyApiV3(inst).run(const GetSite())).siteView.site.icon;
+            (await LemmyApiV3(inst).run(const GetSite())).siteView?.site.icon;
         isSite.value = true;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
@@ -47,7 +47,9 @@ class AddInstancePage extends HookWidget {
         instanceController.removeListener(debounce);
       };
     }, []);
+
     final inst = normalizeInstanceHost(instanceController.text);
+
     handleOnAdd() async {
       try {
         await accountsStore.addInstance(inst, assumeValid: true);
@@ -58,6 +60,8 @@ class AddInstancePage extends HookWidget {
         ));
       }
     }
+
+    final handleAdd = isSite.value == true ? handleOnAdd : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,9 +74,9 @@ class AddInstancePage extends HookWidget {
             SizedBox(
                 height: 150,
                 child: FullscreenableImage(
-                  url: icon.value,
+                  url: icon.value!,
                   child: CachedNetworkImage(
-                    imageUrl: icon.value,
+                    imageUrl: icon.value!,
                     errorWidget: (_, __, ___) => const SizedBox.shrink(),
                   ),
                 ))
@@ -97,6 +101,9 @@ class AddInstancePage extends HookWidget {
               child: TextField(
                 autofocus: true,
                 controller: instanceController,
+                autofillHints: const [AutofillHints.url],
+                keyboardType: TextInputType.url,
+                onSubmitted: (_) => handleAdd?.call(),
                 autocorrect: false,
                 decoration: const InputDecoration(labelText: 'instance url'),
               ),
@@ -108,7 +115,7 @@ class AddInstancePage extends HookWidget {
             child: SizedBox(
               height: 40,
               child: ElevatedButton(
-                onPressed: isSite.value == true ? handleOnAdd : null,
+                onPressed: handleAdd,
                 child: !debounce.loading
                     ? const Text('Add')
                     : SizedBox(

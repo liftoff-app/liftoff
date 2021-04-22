@@ -45,6 +45,8 @@ class InboxPage extends HookWidget {
       );
     }
 
+    final selectedInstance = selected.value!;
+
     toggleUnreadOnly() {
       unreadOnly.value = !unreadOnly.value;
       isc.clear();
@@ -60,7 +62,7 @@ class InboxPage extends HookWidget {
               isc.clear();
             },
             title: 'select instance',
-            groupValue: selected.value,
+            groupValue: selectedInstance,
             buttonBuilder: (context, displayString, onPressed) => TextButton(
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -73,7 +75,7 @@ class InboxPage extends HookWidget {
                   Flexible(
                     child: Text(
                       displayString,
-                      style: theme.appBarTheme.textTheme.headline6,
+                      style: theme.appBarTheme.textTheme?.headline6,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
@@ -93,9 +95,9 @@ class InboxPage extends HookWidget {
           ],
           bottom: TabBar(
             tabs: [
-              Tab(text: L10n.of(context).replies),
-              Tab(text: L10n.of(context).mentions),
-              Tab(text: L10n.of(context).messages),
+              Tab(text: L10n.of(context)!.replies),
+              Tab(text: L10n.of(context)!.mentions),
+              Tab(text: L10n.of(context)!.messages),
             ],
           ),
         ),
@@ -106,8 +108,8 @@ class InboxPage extends HookWidget {
               controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(selected.value).run(GetReplies(
-                auth: accStore.defaultTokenFor(selected.value).raw,
+                  LemmyApiV3(selectedInstance).run(GetReplies(
+                auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                 sort: sortType,
                 limit: batchSize,
                 page: page,
@@ -125,8 +127,8 @@ class InboxPage extends HookWidget {
               controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(selected.value).run(GetPersonMentions(
-                auth: accStore.defaultTokenFor(selected.value).raw,
+                  LemmyApiV3(selectedInstance).run(GetPersonMentions(
+                auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                 sort: sortType,
                 limit: batchSize,
                 page: page,
@@ -144,9 +146,9 @@ class InboxPage extends HookWidget {
                 child: Text('no messages'),
               ),
               controller: isc,
-              fetcher: (page, batchSize) => LemmyApiV3(selected.value).run(
+              fetcher: (page, batchSize) => LemmyApiV3(selectedInstance).run(
                 GetPrivateMessages(
-                  auth: accStore.defaultTokenFor(selected.value).raw,
+                  auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                   limit: batchSize,
                   page: page,
                   unreadOnly: unreadOnly.value,
@@ -170,10 +172,9 @@ class PrivateMessageTile extends HookWidget {
   final bool hideOnRead;
 
   const PrivateMessageTile({
-    @required this.privateMessageView,
+    required this.privateMessageView,
     this.hideOnRead = false,
-  })  : assert(privateMessageView != null),
-        assert(hideOnRead != null);
+  });
   static const double _iconSize = 16;
 
   @override
@@ -192,7 +193,7 @@ class PrivateMessageTile extends HookWidget {
     final toMe = useMemoized(() =>
         pmv.value.recipient.originInstanceHost == pmv.value.instanceHost &&
         pmv.value.recipient.id ==
-            accStore.defaultTokenFor(pmv.value.instanceHost)?.payload?.sub);
+            accStore.defaultUserDataFor(pmv.value.instanceHost)?.userId);
 
     final otherSide =
         useMemoized(() => toMe ? pmv.value.creator : pmv.value.recipient);
@@ -242,7 +243,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: DeletePrivateMessage(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultTokenFor(pmv.value.instanceHost)?.raw,
+            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
             deleted: !deleted.value,
           ),
           onSuccess: (val) => deleted.value = val.privateMessage.deleted,
@@ -254,7 +255,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: MarkPrivateMessageAsRead(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultTokenFor(pmv.value.instanceHost)?.raw,
+            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
             read: !read.value,
           ),
           // TODO: add notification for notifying parent list
@@ -283,8 +284,8 @@ class PrivateMessageTile extends HookWidget {
           Row(
             children: [
               Text(
-                '${toMe ? L10n.of(context).from : L10n.of(context).to} ',
-                style: TextStyle(color: theme.textTheme.caption.color),
+                '${toMe ? L10n.of(context)!.from : L10n.of(context)!.to} ',
+                style: TextStyle(color: theme.textTheme.caption?.color),
               ),
               InkWell(
                 borderRadius: BorderRadius.circular(10),
@@ -295,7 +296,7 @@ class PrivateMessageTile extends HookWidget {
                       Padding(
                         padding: const EdgeInsets.only(right: 5),
                         child: CachedNetworkImage(
-                          imageUrl: otherSide.avatar,
+                          imageUrl: otherSide.avatar!,
                           height: 20,
                           width: 20,
                           imageBuilder: (context, imageProvider) => Container(
@@ -339,7 +340,7 @@ class PrivateMessageTile extends HookWidget {
           const SizedBox(height: 5),
           if (pmv.value.privateMessage.deleted)
             Text(
-              L10n.of(context).deleted_by_creator,
+              L10n.of(context)!.deleted_by_creator,
               style: const TextStyle(fontStyle: FontStyle.italic),
             )
           else
@@ -349,19 +350,19 @@ class PrivateMessageTile extends HookWidget {
             TileAction(
               icon: moreIcon,
               onPressed: showMoreMenu,
-              tooltip: L10n.of(context).more,
+              tooltip: L10n.of(context)!.more,
             ),
             if (toMe) ...[
               TileAction(
                 iconColor: read.value ? theme.accentColor : null,
                 icon: Icons.check,
-                tooltip: L10n.of(context).mark_as_read,
+                tooltip: L10n.of(context)!.mark_as_read,
                 onPressed: handleRead,
                 delayedLoading: readDelayed,
               ),
               TileAction(
                 icon: Icons.reply,
-                tooltip: L10n.of(context).reply,
+                tooltip: L10n.of(context)!.reply,
                 onPressed: () {
                   showCupertinoModalPopup(
                       context: context,
@@ -374,7 +375,7 @@ class PrivateMessageTile extends HookWidget {
             ] else ...[
               TileAction(
                 icon: Icons.edit,
-                tooltip: L10n.of(context).edit,
+                tooltip: L10n.of(context)!.edit,
                 onPressed: () async {
                   final val = await showCupertinoModalPopup<PrivateMessageView>(
                       context: context,
@@ -386,8 +387,8 @@ class PrivateMessageTile extends HookWidget {
                 delayedLoading: deleteDelayed,
                 icon: deleted.value ? Icons.restore : Icons.delete,
                 tooltip: deleted.value
-                    ? L10n.of(context).restore
-                    : L10n.of(context).delete,
+                    ? L10n.of(context)!.restore
+                    : L10n.of(context)!.delete,
                 onPressed: handleDelete,
               ),
             ]

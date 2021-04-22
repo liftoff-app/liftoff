@@ -10,8 +10,8 @@ class Debounce {
   final VoidCallback callback;
 
   const Debounce({
-    @required this.loading,
-    @required this.callback,
+    required this.loading,
+    required this.callback,
   });
 
   void call() => callback();
@@ -24,7 +24,7 @@ Debounce useDebounce(
   Duration delayDuration = const Duration(seconds: 1),
 ]) {
   final loading = useState(false);
-  final timerHandle = useRef<Timer>(null);
+  final timerHandle = useRef<Timer?>(null);
 
   cancel() {
     timerHandle.current?.cancel();

@@ -9,20 +9,17 @@ class TileAction extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
   final String tooltip;
-  final DelayedLoading delayedLoading;
-  final Color iconColor;
+  final DelayedLoading? delayedLoading;
+  final Color? iconColor;
 
   const TileAction({
-    Key key,
+    Key? key,
     this.delayedLoading,
     this.iconColor,
-    @required this.icon,
-    @required this.onPressed,
-    @required this.tooltip,
-  })  : assert(icon != null),
-        assert(onPressed != null),
-        assert(tooltip != null),
-        super(key: key);
+    required this.icon,
+    required this.onPressed,
+    required this.tooltip,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -34,7 +31,7 @@ class TileAction extends StatelessWidget {
             : Icon(
                 icon,
                 color: iconColor ??
-                    Theme.of(context).iconTheme.color.withAlpha(190),
+                    Theme.of(context).iconTheme.color?.withAlpha(190),
               ),
         splashRadius: 25,
         onPressed: delayedLoading?.pending ?? false ? () {} : onPressed,

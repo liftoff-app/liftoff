@@ -28,26 +28,22 @@ import 'modlog_page.dart';
 
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
-  final CommunityView _community;
+  final CommunityView? _community;
   final String instanceHost;
-  final String communityName;
-  final int communityId;
+  final String? communityName;
+  final int? communityId;
 
   const CommunityPage.fromName({
-    @required this.communityName,
-    @required this.instanceHost,
-  })  : assert(communityName != null),
-        assert(instanceHost != null),
-        communityId = null,
+    required String this.communityName,
+    required this.instanceHost,
+  })   : communityId = null,
         _community = null;
   const CommunityPage.fromId({
-    @required this.communityId,
-    @required this.instanceHost,
-  })  : assert(communityId != null),
-        assert(instanceHost != null),
-        communityName = null,
+    required int this.communityId,
+    required this.instanceHost,
+  })   : communityName = null,
         _community = null;
-  CommunityPage.fromCommunityView(this._community)
+  CommunityPage.fromCommunityView(CommunityView this._community)
       : instanceHost = _community.instanceHost,
         communityId = _community.community.id,
         communityName = _community.community.name;
@@ -59,7 +55,7 @@ class CommunityPage extends HookWidget {
     final scrollController = useScrollController();
 
     final fullCommunitySnap = useMemoFuture(() {
-      final token = accountsStore.defaultTokenFor(instanceHost);
+      final token = accountsStore.defaultUserDataFor(instanceHost)?.jwt;
 
       if (communityId != null) {
         return LemmyApiV3(instanceHost).run(GetCommunity(
@@ -76,7 +72,7 @@ class CommunityPage extends HookWidget {
 
     final community = () {
       if (fullCommunitySnap.hasData) {
-        return fullCommunitySnap.data.communityView;
+        return fullCommunitySnap.data!.communityView;
       } else if (_community != null) {
         return _community;
       } else {
@@ -173,8 +169,8 @@ class CommunityPage extends HookWidget {
                   color: theme.cardColor,
                   child: TabBar(
                     tabs: [
-                      Tab(text: L10n.of(context).posts),
-                      Tab(text: L10n.of(context).comments),
+                      Tab(text: L10n.of(context)!.posts),
+                      Tab(text: L10n.of(context)!.comments),
                       const Tab(text: 'About'),
                     ],
                   ),
@@ -200,8 +196,9 @@ class CommunityPage extends HookWidget {
                       LemmyApiV3(community.instanceHost).run(GetComments(
                         communityId: community.community.id,
                         auth: accountsStore
-                            .defaultTokenFor(community.instanceHost)
-                            ?.raw,
+                            .defaultUserDataFor(community.instanceHost)
+                            ?.jwt
+                            .raw,
                         type: CommentListingType.community,
                         sort: sortType,
                         limit: batchSize,
@@ -224,14 +221,13 @@ class CommunityPage extends HookWidget {
 class _CommunityOverview extends StatelessWidget {
   final CommunityView community;
   final String instanceHost;
-  final int onlineUsers;
+  final int? onlineUsers;
 
   const _CommunityOverview({
-    @required this.community,
-    @required this.instanceHost,
-    @required this.onlineUsers,
-  })  : assert(instanceHost != null),
-        assert(goToInstance != null);
+    required this.community,
+    required this.instanceHost,
+    required this.onlineUsers,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -257,10 +253,11 @@ class _CommunityOverview extends StatelessWidget {
                 ),
               ),
               FullscreenableImage(
-                url: community.community.icon,
+                url: community.community.icon!,
                 child: Avatar(
                   url: community.community.icon,
                   radius: 83 / 2,
+                  alwaysShow: true,
                 ),
               ),
             ],
@@ -270,9 +267,9 @@ class _CommunityOverview extends StatelessWidget {
     return Stack(children: [
       if (community.community.banner != null)
         FullscreenableImage(
-          url: community.community.banner,
+          url: community.community.banner!,
           child: CachedNetworkImage(
-            imageUrl: community.community.banner,
+            imageUrl: community.community.banner!,
             errorWidget: (_, __, ___) => const SizedBox.shrink(),
           ),
         ),
@@ -280,7 +277,7 @@ class _CommunityOverview extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 45),
           child: Column(children: [
-            if (community.community.icon != null) icon,
+            if (icon != null) icon,
             // NAME
             Center(
               child: Padding(
@@ -289,7 +286,7 @@ class _CommunityOverview extends StatelessWidget {
                   overflow: TextOverflow.ellipsis, // TODO: fix overflowing
                   text: TextSpan(
                     style:
-                        theme.textTheme.subtitle1.copyWith(shadows: [shadow]),
+                        theme.textTheme.subtitle1?.copyWith(shadows: [shadow]),
                     children: [
                       const TextSpan(
                           text: '!',
@@ -346,7 +343,7 @@ class _CommunityOverview extends StatelessWidget {
                         ),
                         Text(onlineUsers == null
                             ? 'xx'
-                            : compactNumber(onlineUsers)),
+                            : compactNumber(onlineUsers!)),
                         const Spacer(),
                       ],
                     ),
@@ -364,14 +361,14 @@ class _CommunityOverview extends StatelessWidget {
 
 class _AboutTab extends StatelessWidget {
   final CommunityView community;
-  final List<CommunityModeratorView> moderators;
-  final int onlineUsers;
+  final List<CommunityModeratorView>? moderators;
+  final int? onlineUsers;
 
   const _AboutTab({
-    Key key,
-    @required this.community,
-    @required this.moderators,
-    @required this.onlineUsers,
+    Key? key,
+    required this.community,
+    required this.moderators,
+    required this.onlineUsers,
   }) : super(key: key);
 
   @override
@@ -384,7 +381,7 @@ class _AboutTab extends StatelessWidget {
         if (community.community.description != null) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: MarkdownText(community.community.description,
+            child: MarkdownText(community.community.description!,
                 instanceHost: community.instanceHost),
           ),
           const _Divider(),
@@ -396,10 +393,10 @@ class _AboutTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             children: [
               Chip(
-                  label: Text(L10n.of(context)
+                  label: Text(L10n.of(context)!
                       .number_of_users_online(onlineUsers ?? 0))),
               Chip(
-                  label: Text(L10n.of(context)
+                  label: Text(L10n.of(context)!
                       .number_of_subscribers(community.counts.subscribers))),
               Chip(
                   label: Text(
@@ -422,16 +419,16 @@ class _AboutTab extends StatelessWidget {
                 communityName: community.community.name,
               ),
             ),
-            child: Text(L10n.of(context).modlog),
+            child: Text(L10n.of(context)!.modlog),
           ),
         ),
         const _Divider(),
-        if (moderators != null && moderators.isNotEmpty) ...[
+        if (moderators != null && moderators!.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text('Mods:', style: theme.textTheme.subtitle2),
           ),
-          for (final mod in moderators)
+          for (final mod in moderators!)
             // TODO: add user picture, maybe make it into reusable component
             ListTile(
               title: Text(
@@ -463,7 +460,7 @@ class _FollowButton extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final isSubbed = useState(community.subscribed ?? false);
+    final isSubbed = useState(community.subscribed);
     final delayed = useDelayedLoading(Duration.zero);
     final loggedInAction = useLoggedInAction(community.instanceHost);
 
@@ -493,7 +490,7 @@ class _FollowButton extends HookWidget {
 
     return ElevatedButtonTheme(
       data: ElevatedButtonThemeData(
-        style: theme.elevatedButtonTheme.style.copyWith(
+        style: theme.elevatedButtonTheme.style?.copyWith(
           shape: MaterialStateProperty.all(const StadiumBorder()),
           textStyle: MaterialStateProperty.all(theme.textTheme.subtitle1),
         ),
@@ -518,8 +515,8 @@ class _FollowButton extends HookWidget {
                       ? const Icon(Icons.remove, size: 18)
                       : const Icon(Icons.add, size: 18),
                   label: Text(isSubbed.value
-                      ? L10n.of(context).unsubscribe
-                      : L10n.of(context).subscribe),
+                      ? L10n.of(context)!.unsubscribe
+                      : L10n.of(context)!.subscribe),
                 ),
         ),
       ),
