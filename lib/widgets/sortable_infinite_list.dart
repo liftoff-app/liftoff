@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
+import '../hooks/stores.dart';
 import 'comment.dart';
 import 'infinite_scroll.dart';
 import 'post.dart';
@@ -19,7 +20,10 @@ class SortableInfiniteList<T> extends HookWidget {
   final InfiniteScrollController? controller;
   final Function? onStyleChange;
   final Widget noItems;
-  final SortType defaultSort;
+
+  /// if no defaultSort is provided, the defaultSortType
+  /// from the configStore will be used
+  final SortType? defaultSort;
   final Object Function(T item)? uniqueProp;
 
   const SortableInfiniteList({
@@ -28,16 +32,18 @@ class SortableInfiniteList<T> extends HookWidget {
     this.controller,
     this.onStyleChange,
     this.noItems = const SizedBox.shrink(),
-    this.defaultSort = SortType.active,
+    this.defaultSort,
     this.uniqueProp,
   });
 
   @override
   Widget build(BuildContext context) {
+    final defaultSortType =
+        useConfigStoreSelect((store) => store.defaultSortType);
     final defaultController = useInfiniteScrollController();
     final isc = controller ?? defaultController;
 
-    final sort = useState(defaultSort);
+    final sort = useState(defaultSort ?? defaultSortType);
 
     void changeSorting(SortType newSort) {
       sort.value = newSort;
