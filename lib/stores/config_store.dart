@@ -86,23 +86,21 @@ class ConfigStore extends ChangeNotifier {
   /// Copies over settings from lemmy to [ConfigStore]
   void copyLemmyUserSettings(LocalUserSettings localUserSettings) {
     // themes from lemmy-ui that are dark mode
-    // const darkModeLemmyUiThemes = {
-    //   'solar',
-    //   'cyborg',
-    //   'darkly',
-    //   'vaporwave-dark',
-    //   // TODO: is it dark theme?
-    //   'i386',
-    // };
+    const darkModeLemmyUiThemes = {
+      'solar',
+      'cyborg',
+      'darkly',
+      'vaporwave-dark',
+      'i386',
+    };
 
     _showAvatars = localUserSettings.showAvatars;
-    // TODO: should these also be imported? If so, how?
-    // _theme = darkModeLemmyUiThemes.contains(localUserSettings.theme)
-    //     ? ThemeMode.dark
-    //     : ThemeMode.light;
-    // _locale = L10n.supportedLocales.contains(Locale(localUserSettings.lang))
-    //     ? Locale(localUserSettings.lang)
-    //     : _locale;
+    _theme = darkModeLemmyUiThemes.contains(localUserSettings.theme)
+        ? ThemeMode.dark
+        : ThemeMode.light;
+    _locale = L10n.supportedLocales.contains(Locale(localUserSettings.lang))
+        ? Locale(localUserSettings.lang)
+        : _locale;
     // TODO: add when it is released
     // _showScores = localUserSettings.showScores;
     _defaultSortType = localUserSettings.defaultSortType;
