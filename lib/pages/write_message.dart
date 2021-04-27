@@ -116,7 +116,7 @@ class WriteMessagePage extends HookWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            Text('to ${recipient.displayName}'),
+            Text('to ${recipient.presentName}'),
             const SizedBox(height: 16),
             body,
             Align(

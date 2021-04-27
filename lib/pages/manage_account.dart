@@ -100,7 +100,7 @@ class _ManageAccount extends HookWidget {
     final deleteDelayedLoading = useDelayedLoading();
 
     final displayNameController =
-        useTextEditingController(text: user.person.preferredUsername);
+        useTextEditingController(text: user.person.displayName);
     final bioController = useTextEditingController(text: user.person.bio);
     final emailController =
         useTextEditingController(text: user.localUser.email);
@@ -145,19 +145,10 @@ class _ManageAccount extends HookWidget {
           auth: token.raw,
           avatar: avatar.current,
           banner: banner.current,
-          newPassword: newPasswordController.text.isEmpty
-              ? null
-              : newPasswordController.text,
-          newPasswordVerify: newPasswordVerifyController.text.isEmpty
-              ? null
-              : newPasswordVerifyController.text,
-          oldPassword: oldPasswordController.text.isEmpty
-              ? null
-              : oldPasswordController.text,
           matrixUserId: matrixUserController.text.isEmpty
               ? null
               : matrixUserController.text,
-          preferredUsername: displayNameController.text.isEmpty
+          displayName: displayNameController.text.isEmpty
               ? null
               : displayNameController.text,
           bio: bioController.text.isEmpty ? null : bioController.text,

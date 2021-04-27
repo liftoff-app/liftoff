@@ -385,7 +385,7 @@ class CommentWidget extends HookWidget {
                   InkWell(
                     onTap: () =>
                         goToUser.fromPersonSafe(context, comment.creator),
-                    child: Text(comment.creator.originDisplayName,
+                    child: Text(comment.creator.originPresentName,
                         style: TextStyle(
                           color: theme.accentColor,
                         )),

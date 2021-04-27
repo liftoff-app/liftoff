@@ -218,7 +218,7 @@ class _UserOverview extends HookWidget {
               else
                 const SizedBox(height: 80),
               Text(
-                userView.person.displayName,
+                userView.person.presentName,
                 style: theme.textTheme.headline6,
               ),
               const SizedBox(height: 4),
