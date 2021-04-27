@@ -101,8 +101,7 @@ class ConfigStore extends ChangeNotifier {
     _locale = L10n.supportedLocales.contains(Locale(localUserSettings.lang))
         ? Locale(localUserSettings.lang)
         : _locale;
-    // TODO: add when it is released
-    // _showScores = localUserSettings.showScores;
+    _showScores = localUserSettings.showScores;
     _defaultSortType = localUserSettings.defaultSortType;
     _defaultListingType = localUserSettings.defaultListingType;
 
