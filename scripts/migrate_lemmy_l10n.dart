@@ -174,6 +174,9 @@ const toMigrate = <_>[
   _('most_comments'),
   _('new_comments'),
   _('active'),
+  _('bot_account'),
+  _('show_bot_accounts'),
+  _('show_read_posts'),
 ];
 
 const repoName = 'lemmy-translations';

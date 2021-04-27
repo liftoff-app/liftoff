@@ -141,6 +141,9 @@ abstract class L10nStrings {
   static const most_comments = 'most_comments';
   static const new_comments = 'new_comments';
   static const active = 'active';
+  static const bot_account = 'bot_account';
+  static const show_bot_accounts = 'show_bot_accounts';
+  static const show_read_posts = 'show_read_posts';
 }
 
 extension L10nFromString on String {
@@ -396,6 +399,12 @@ extension L10nFromString on String {
         return L10n.of(context)!.new_comments;
       case L10nStrings.active:
         return L10n.of(context)!.active;
+      case L10nStrings.bot_account:
+        return L10n.of(context)!.bot_account;
+      case L10nStrings.show_bot_accounts:
+        return L10n.of(context)!.show_bot_accounts;
+      case L10nStrings.show_read_posts:
+        return L10n.of(context)!.show_read_posts;
 
       default:
         return this;

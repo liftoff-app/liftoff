@@ -53,6 +53,11 @@ const _languageNames = {
   'ru': 'Русский',
   'nl': 'Nederlands',
   'it': 'Italiano',
+  'sr': 'Српски',
+  'zh_Hant': '繁體中文',
+  'nb': 'Norwegian',
+  'nb_NO': 'Norwegian Bokmål',
+  'bg': 'български',
 };
 
 extension LanguageName on Locale {

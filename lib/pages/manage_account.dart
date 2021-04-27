@@ -331,7 +331,7 @@ class _ManageAccount extends HookWidget {
           onChanged: (checked) {
             botAccount.value = checked;
           },
-          title: Text('TODO'),
+          title: Text(L10n.of(context)!.bot_account),
           dense: true,
         ),
         const SizedBox(height: 8),
@@ -340,7 +340,7 @@ class _ManageAccount extends HookWidget {
           onChanged: (checked) {
             showBotAccounts.value = checked;
           },
-          title: Text('TODO'),
+          title: Text(L10n.of(context)!.show_bot_accounts),
           dense: true,
         ),
         const SizedBox(height: 8),
@@ -349,7 +349,7 @@ class _ManageAccount extends HookWidget {
           onChanged: (checked) {
             showReadPosts.value = checked;
           },
-          title: Text('TODO'),
+          title: Text(L10n.of(context)!.show_read_posts),
           dense: true,
         ),
         const SizedBox(height: 8),

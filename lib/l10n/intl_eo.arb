@@ -128,5 +128,6 @@
   "top_all": "Supraj ĉiamaj",
   "most_comments": "Plej komentitaj",
   "new_comments": "Nove komentitaj",
-  "active": "Aktiva"
+  "active": "Aktiva",
+  "not_a_mod_or_admin": "Nek reguligisto nek administranto."
 }

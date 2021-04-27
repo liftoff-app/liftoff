@@ -128,5 +128,6 @@
   "most_comments": "Plus commentés",
   "new_comments": "Nouveaux commentaires",
   "active": "Actif",
-  "report_too_long": "Rapport trop long."
+  "report_too_long": "Rapport trop long.",
+  "not_a_mod_or_admin": "Pas un modérateur ou un administrateur."
 }

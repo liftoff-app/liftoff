@@ -109,5 +109,6 @@
   "search": "検索",
   "send_message": "メッセージを送信",
   "top_day": "日間トップ",
-  "active": "活発さ"
+  "active": "活発さ",
+  "invalid_community_name": "無効な名前です。"
 }
