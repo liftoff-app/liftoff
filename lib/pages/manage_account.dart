@@ -15,6 +15,7 @@ import '../util/more_icon.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/bottom_safe.dart';
+import '../widgets/editor.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
@@ -109,11 +110,15 @@ class _ManageAccount extends HookWidget {
     final avatar = useRef(user.person.avatar);
     final banner = useRef(user.person.banner);
     final showNsfw = useState(user.localUser.showNsfw);
+    final botAccount = useState(user.person.botAccount);
+    final showBotAccounts = useState(user.localUser.showBotAccounts);
+    final showReadPosts = useState(user.localUser.showReadPosts);
     final sendNotificationsToEmail =
         useState(user.localUser.sendNotificationsToEmail);
-    final newPasswordController = useTextEditingController();
-    final newPasswordVerifyController = useTextEditingController();
-    final oldPasswordController = useTextEditingController();
+    // TODO: bring back changing password
+    // final newPasswordController = useTextEditingController();
+    // final newPasswordVerifyController = useTextEditingController();
+    // final oldPasswordController = useTextEditingController();
 
     final informAcceptedAvatarRef = useRef<VoidCallback?>(null);
     final informAcceptedBannerRef = useRef<VoidCallback?>(null);
@@ -124,8 +129,8 @@ class _ManageAccount extends HookWidget {
     final emailFocusNode = useFocusNode();
     final matrixUserFocusNode = useFocusNode();
     final newPasswordFocusNode = useFocusNode();
-    final verifyPasswordFocusNode = useFocusNode();
-    final oldPasswordFocusNode = useFocusNode();
+    // final verifyPasswordFocusNode = useFocusNode();
+    // final oldPasswordFocusNode = useFocusNode();
 
     final token =
         accountsStore.userDataFor(user.instanceHost, user.person.name)!.jwt;
@@ -141,6 +146,9 @@ class _ManageAccount extends HookWidget {
           defaultListingType: user.localUser.defaultListingType,
           lang: user.localUser.lang,
           showAvatars: user.localUser.showAvatars,
+          botAccount: botAccount.value,
+          showBotAccounts: showBotAccounts.value,
+          showReadPosts: showReadPosts.value,
           sendNotificationsToEmail: sendNotificationsToEmail.value,
           auth: token.raw,
           avatar: avatar.current,
@@ -255,12 +263,11 @@ class _ManageAccount extends HookWidget {
         ),
         const SizedBox(height: 8),
         Text(L10n.of(context)!.bio, style: theme.textTheme.headline6),
-        TextField(
+        Editor(
           controller: bioController,
           focusNode: bioFocusNode,
-          textCapitalization: TextCapitalization.sentences,
           onSubmitted: (_) => emailFocusNode.requestFocus(),
-          minLines: 4,
+          instanceHost: user.instanceHost,
           maxLines: 10,
         ),
         const SizedBox(height: 8),
@@ -280,42 +287,69 @@ class _ManageAccount extends HookWidget {
           onSubmitted: (_) => newPasswordFocusNode.requestFocus(),
         ),
         const SizedBox(height: 8),
-        Text(L10n.of(context)!.new_password, style: theme.textTheme.headline6),
-        TextField(
-          focusNode: newPasswordFocusNode,
-          controller: newPasswordController,
-          autofillHints: const [AutofillHints.newPassword],
-          keyboardType: TextInputType.visiblePassword,
-          obscureText: true,
-          onSubmitted: (_) => verifyPasswordFocusNode.requestFocus(),
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context)!.verify_password,
-            style: theme.textTheme.headline6),
-        TextField(
-          focusNode: verifyPasswordFocusNode,
-          controller: newPasswordVerifyController,
-          autofillHints: const [AutofillHints.newPassword],
-          keyboardType: TextInputType.visiblePassword,
-          obscureText: true,
-          onSubmitted: (_) => oldPasswordFocusNode.requestFocus(),
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context)!.old_password, style: theme.textTheme.headline6),
-        TextField(
-          focusNode: oldPasswordFocusNode,
-          controller: oldPasswordController,
-          autofillHints: const [AutofillHints.password],
-          keyboardType: TextInputType.visiblePassword,
-          obscureText: true,
-        ),
-        const SizedBox(height: 8),
+        // Text(L10n.of(context)!.new_password, style: theme.textTheme.headline6),
+        // TextField(
+        //   focusNode: newPasswordFocusNode,
+        //   controller: newPasswordController,
+        //   autofillHints: const [AutofillHints.newPassword],
+        //   keyboardType: TextInputType.visiblePassword,
+        //   obscureText: true,
+        //   onSubmitted: (_) => verifyPasswordFocusNode.requestFocus(),
+        // ),
+        // const SizedBox(height: 8),
+        // Text(L10n.of(context)!.verify_password,
+        //     style: theme.textTheme.headline6),
+        // TextField(
+        //   focusNode: verifyPasswordFocusNode,
+        //   controller: newPasswordVerifyController,
+        //   autofillHints: const [AutofillHints.newPassword],
+        //   keyboardType: TextInputType.visiblePassword,
+        //   obscureText: true,
+        //   onSubmitted: (_) => oldPasswordFocusNode.requestFocus(),
+        // ),
+        // const SizedBox(height: 8),
+        // Text(L10n.of(context)!.old_password, style: theme.textTheme.headline6),
+        // TextField(
+        //   focusNode: oldPasswordFocusNode,
+        //   controller: oldPasswordController,
+        //   autofillHints: const [AutofillHints.password],
+        //   keyboardType: TextInputType.visiblePassword,
+        //   obscureText: true,
+        // ),
+        // const SizedBox(height: 8),
         SwitchListTile.adaptive(
           value: showNsfw.value,
           onChanged: (checked) {
             showNsfw.value = checked;
           },
           title: Text(L10n.of(context)!.show_nsfw),
+          dense: true,
+        ),
+        const SizedBox(height: 8),
+        SwitchListTile.adaptive(
+          value: botAccount.value,
+          onChanged: (checked) {
+            botAccount.value = checked;
+          },
+          title: Text('TODO'),
+          dense: true,
+        ),
+        const SizedBox(height: 8),
+        SwitchListTile.adaptive(
+          value: showBotAccounts.value,
+          onChanged: (checked) {
+            showBotAccounts.value = checked;
+          },
+          title: Text('TODO'),
+          dense: true,
+        ),
+        const SizedBox(height: 8),
+        SwitchListTile.adaptive(
+          value: showReadPosts.value,
+          onChanged: (checked) {
+            showReadPosts.value = checked;
+          },
+          title: Text('TODO'),
           dense: true,
         ),
         const SizedBox(height: 8),
