@@ -2,18 +2,19 @@
 
 ### Added
 
+- Editing posts
+- Editing comments
 - Show avatars setting toggle
 - Show scores setting toggle
 - Default sort type setting
-- Default listing type for the home tab setting
+- Default listing type setting
 - Import Lemmy settings: long press an account in account settings then choose the import option
-- Editing posts
-- Editing comments
+- Support lemmy v0.11.0
 
 ### Fixed
 
-- Fixed bug where creating post would crash after uploading a picture
 - Added deduplication in infinite scrolls
+- Fixed bug where creating post would crash after uploading a picture
 
 ## v0.4.2 - 2021-04-12
 
