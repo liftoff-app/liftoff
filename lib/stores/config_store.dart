@@ -54,15 +54,6 @@ class ConfigStore extends ChangeNotifier {
     save();
   }
 
-  late bool _showNsfw;
-  @JsonKey(defaultValue: false)
-  bool get showNsfw => _showNsfw;
-  set showNsfw(bool showNsfw) {
-    _showNsfw = showNsfw;
-    notifyListeners();
-    save();
-  }
-
   late bool _showScores;
   @JsonKey(defaultValue: true)
   bool get showScores => _showScores;
@@ -95,24 +86,27 @@ class ConfigStore extends ChangeNotifier {
   /// Copies over settings from lemmy to [ConfigStore]
   void copyLemmyUserSettings(LocalUserSettings localUserSettings) {
     // themes from lemmy-ui that are dark mode
-    // const darkModeLemmyUiThemes = {
-    //   'solar',
-    //   'cyborg',
-    //   'darkly',
-    //   'vaporwave-dark',
-    //   // TODO: is it dark theme?
-    //   'i386',
-    // };
+    const darkModeLemmyUiThemes = {
+      'solar',
+      'cyborg',
+      'darkly',
+      'vaporwave-dark',
+      'i386',
+    };
 
     _showAvatars = localUserSettings.showAvatars;
-    _showNsfw = localUserSettings.showNsfw;
-    // TODO: should these also be imported? If so, how?
-    // _theme = darkModeLemmyUiThemes.contains(localUserSettings.theme)
-    //     ? ThemeMode.dark
-    //     : ThemeMode.light;
-    // _locale = L10n.supportedLocales.contains(Locale(localUserSettings.lang))
-    //     ? Locale(localUserSettings.lang)
-    //     : _locale;
+    _theme = () {
+      if (localUserSettings.theme == 'browser') return ThemeMode.system;
+
+      if (darkModeLemmyUiThemes.contains(localUserSettings.theme)) {
+        return ThemeMode.dark;
+      }
+
+      return ThemeMode.light;
+    }();
+    _locale = L10n.supportedLocales.contains(Locale(localUserSettings.lang))
+        ? Locale(localUserSettings.lang)
+        : _locale;
     // TODO: add when it is released
     // _showScores = localUserSettings.showScores;
     _defaultSortType = localUserSettings.defaultSortType;

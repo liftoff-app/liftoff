@@ -159,13 +159,6 @@ class GeneralConfigPage extends HookWidget {
               ),
             ),
           ),
-          SwitchListTile.adaptive(
-            title: Text(L10n.of(context)!.show_nsfw),
-            value: configStore.showNsfw,
-            onChanged: (checked) {
-              configStore.showNsfw = checked;
-            },
-          ),
         ],
       ),
     );

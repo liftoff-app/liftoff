@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
+import '../hooks/stores.dart';
 import 'comment.dart';
 import 'infinite_scroll.dart';
 import 'post.dart';
@@ -19,7 +20,11 @@ class SortableInfiniteList<T> extends HookWidget {
   final InfiniteScrollController? controller;
   final Function? onStyleChange;
   final Widget noItems;
-  final SortType defaultSort;
+
+  /// if no defaultSort is provided, the defaultSortType
+  /// from the configStore will be used
+  final SortType? defaultSort;
+  final Object Function(T item)? uniqueProp;
 
   const SortableInfiniteList({
     required this.fetcher,
@@ -27,15 +32,18 @@ class SortableInfiniteList<T> extends HookWidget {
     this.controller,
     this.onStyleChange,
     this.noItems = const SizedBox.shrink(),
-    this.defaultSort = SortType.active,
+    this.defaultSort,
+    this.uniqueProp,
   });
 
   @override
   Widget build(BuildContext context) {
+    final defaultSortType =
+        useConfigStoreSelect((store) => store.defaultSortType);
     final defaultController = useInfiniteScrollController();
     final isc = controller ?? defaultController;
 
-    final sort = useState(defaultSort);
+    final sort = useState(defaultSort ?? defaultSortType);
 
     void changeSorting(SortType newSort) {
       sort.value = newSort;
@@ -54,49 +62,41 @@ class SortableInfiniteList<T> extends HookWidget {
       controller: isc,
       batchSize: 20,
       noItems: noItems,
+      uniqueProp: uniqueProp,
     );
   }
 }
 
-class InfinitePostList extends StatelessWidget {
-  final FetcherWithSorting<PostView> fetcher;
-  final InfiniteScrollController? controller;
-
-  const InfinitePostList({
-    required this.fetcher,
-    this.controller,
-  });
-
-  Widget build(BuildContext context) => SortableInfiniteList<PostView>(
-        onStyleChange: () {},
-        itemBuilder: (post) => Column(
-          children: [
-            PostWidget(post),
-            const SizedBox(height: 20),
-          ],
-        ),
-        fetcher: fetcher,
-        controller: controller,
-        noItems: const Text('there are no posts'),
-      );
+class InfinitePostList extends SortableInfiniteList<PostView> {
+  InfinitePostList({
+    required FetcherWithSorting<PostView> fetcher,
+    InfiniteScrollController? controller,
+  }) : super(
+          itemBuilder: (post) => Column(
+            children: [
+              PostWidget(post),
+              const SizedBox(height: 20),
+            ],
+          ),
+          fetcher: fetcher,
+          controller: controller,
+          noItems: const Text('there are no posts'),
+          uniqueProp: (item) => item.post.apId,
+        );
 }
 
-class InfiniteCommentList extends StatelessWidget {
-  final FetcherWithSorting<CommentView> fetcher;
-  final InfiniteScrollController? controller;
-
-  const InfiniteCommentList({
-    required this.fetcher,
-    this.controller,
-  });
-
-  Widget build(BuildContext context) => SortableInfiniteList<CommentView>(
-        itemBuilder: (comment) => CommentWidget(
-          CommentTree(comment),
-          detached: true,
-        ),
-        fetcher: fetcher,
-        controller: controller,
-        noItems: const Text('there are no comments'),
-      );
+class InfiniteCommentList extends SortableInfiniteList<CommentView> {
+  InfiniteCommentList({
+    required FetcherWithSorting<CommentView> fetcher,
+    InfiniteScrollController? controller,
+  }) : super(
+          itemBuilder: (comment) => CommentWidget(
+            CommentTree(comment),
+            detached: true,
+          ),
+          fetcher: fetcher,
+          controller: controller,
+          noItems: const Text('there are no comments'),
+          uniqueProp: (item) => item.comment.apId,
+        );
 }

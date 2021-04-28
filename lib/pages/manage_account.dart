@@ -108,6 +108,7 @@ class _ManageAccount extends HookWidget {
         useTextEditingController(text: user.person.matrixUserId);
     final avatar = useRef(user.person.avatar);
     final banner = useRef(user.person.banner);
+    final showNsfw = useState(user.localUser.showNsfw);
     final sendNotificationsToEmail =
         useState(user.localUser.sendNotificationsToEmail);
     final newPasswordController = useTextEditingController();
@@ -134,7 +135,7 @@ class _ManageAccount extends HookWidget {
 
       try {
         await LemmyApiV3(user.instanceHost).run(SaveUserSettings(
-          showNsfw: user.localUser.showNsfw,
+          showNsfw: showNsfw.value,
           theme: user.localUser.theme,
           defaultSortType: user.localUser.defaultSortType,
           defaultListingType: user.localUser.defaultListingType,
@@ -316,6 +317,15 @@ class _ManageAccount extends HookWidget {
           autofillHints: const [AutofillHints.password],
           keyboardType: TextInputType.visiblePassword,
           obscureText: true,
+        ),
+        const SizedBox(height: 8),
+        SwitchListTile.adaptive(
+          value: showNsfw.value,
+          onChanged: (checked) {
+            showNsfw.value = checked;
+          },
+          title: Text(L10n.of(context)!.show_nsfw),
+          dense: true,
         ),
         const SizedBox(height: 8),
         SwitchListTile.adaptive(
