@@ -95,9 +95,15 @@ class ConfigStore extends ChangeNotifier {
     };
 
     _showAvatars = localUserSettings.showAvatars;
-    _theme = darkModeLemmyUiThemes.contains(localUserSettings.theme)
-        ? ThemeMode.dark
-        : ThemeMode.light;
+    _theme = () {
+      if (localUserSettings.theme == 'browser') return ThemeMode.system;
+
+      if (darkModeLemmyUiThemes.contains(localUserSettings.theme)) {
+        return ThemeMode.dark;
+      }
+
+      return ThemeMode.light;
+    }();
     _locale = L10n.supportedLocales.contains(Locale(localUserSettings.lang))
         ? Locale(localUserSettings.lang)
         : _locale;
