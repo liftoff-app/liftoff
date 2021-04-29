@@ -39,7 +39,7 @@ class UsersListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        title: Text(user.person.originPresentName),
+        title: Text(user.person.originPreferredName),
         subtitle: user.person.bio != null
             ? Opacity(
                 opacity: 0.5,

@@ -101,7 +101,7 @@ class FullPostPage extends HookWidget {
             scrollController: scrollController,
             after: 65,
             child: Text(
-              post.community.originPresentName,
+              post.community.originPreferredName,
               overflow: TextOverflow.fade,
             ),
           ),
