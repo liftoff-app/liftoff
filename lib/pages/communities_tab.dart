@@ -217,7 +217,7 @@ class CommunitiesTab extends HookWidget {
                                       alwaysShow: true,
                                     ),
                                     const SizedBox(width: 10),
-                                    Text(comm.community.originDisplayName),
+                                    Text(comm.community.originPreferredName),
                                   ],
                                 ),
                                 trailing: _CommunitySubscribeToggle(

@@ -343,7 +343,7 @@ class _AboutTab extends HookWidget {
             ),
             for (final u in site.admins)
               ListTile(
-                title: Text(u.person.originDisplayName),
+                title: Text(u.person.originPreferredName),
                 subtitle: u.person.bio != null
                     ? MarkdownText(u.person.bio!, instanceHost: instanceHost)
                     : null,

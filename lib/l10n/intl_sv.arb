@@ -127,5 +127,7 @@
   "top_year": "Årstoppen",
   "top_all": "Totaltoppen",
   "most_comments": "Flest kommentarer",
-  "active": "Aktivt"
+  "active": "Aktivt",
+  "not_a_mod_or_admin": "Inte en moderator eller administratör.",
+  "new_comments": "Nya kommentarer"
 }

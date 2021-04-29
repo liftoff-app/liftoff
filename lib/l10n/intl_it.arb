@@ -128,5 +128,6 @@
   "top_all": "Migliori di sempre",
   "most_comments": "Più commenti",
   "new_comments": "Nuovi Commenti",
-  "active": "Attivi"
+  "active": "Attivi",
+  "not_a_mod_or_admin": "Non moderatore o amministratore."
 }

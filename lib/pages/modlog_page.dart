@@ -132,7 +132,7 @@ class _ModlogTable extends StatelessWidget {
               ),
             ),
             TextSpan(
-              text: ' ${user.displayName}',
+              text: ' ${user.preferredName}',
               style: TextStyle(color: theme.accentColor),
               recognizer: TapGestureRecognizer()
                 ..onTap = () => goToUser.byId(
@@ -524,7 +524,7 @@ class _ModlogEntry {
                   radius: 10,
                 ),
                 Text(
-                  ' ${mod.displayName}',
+                  ' ${mod.preferredName}',
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
               ],

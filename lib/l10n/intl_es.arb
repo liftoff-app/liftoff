@@ -2,7 +2,7 @@
   "@@locale": "es",
   "settings": "Configuración",
   "password": "Contraseña",
-  "email_or_username": "Correo o usuario",
+  "email_or_username": "Correo o nombre de usuario",
   "posts": "Publicaciones",
   "comments": "Comentarios",
   "modlog": "Historial de moderación",
@@ -126,7 +126,7 @@
   "top_month": "Lo mejor del mes",
   "top_year": "Lo mejor del año",
   "top_all": "Lo mejor de todos los tiempos",
-  "most_comments": "La mayoría de los comentarios",
+  "most_comments": "Más comentados",
   "new_comments": "Nuevos Comentarios",
   "active": "Activo",
   "not_a_mod_or_admin": "No eres un moderador ni un administrador."

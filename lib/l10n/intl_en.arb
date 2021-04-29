@@ -285,5 +285,11 @@
   "new_comments": "New Comments",
   "@new_comments": {},
   "active": "Active",
-  "@active": {}
+  "@active": {},
+  "bot_account": "Bot Account",
+  "@bot_account": {},
+  "show_bot_accounts": "Show Bot Accounts",
+  "@show_bot_accounts": {},
+  "show_read_posts": "Show Read Posts",
+  "@show_read_posts": {}
 }

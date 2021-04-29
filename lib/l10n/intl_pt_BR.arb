@@ -80,7 +80,7 @@
   "community_already_exists": "Esta comunidade já existe.",
   "community_moderator_already_exists": "Este moderador da comunidade já existe.",
   "community_follower_already_exists": "Este seguidor da comunidade já existe.",
-  "not_a_moderator": "Não é da moderação.",
+  "not_a_moderator": "Não é um(a) moderador(a).",
   "couldnt_update_community": "Não foi possível atualizar a comunidade.",
   "no_community_edit_allowed": "Sem permissão para editar comunidade.",
   "system_err_login": "Erro no sistema. Tente sair e autenticar-se outra vez.",
@@ -117,6 +117,12 @@
   "show_avatars": "Mostrar Avatares",
   "search": "Busca",
   "send_message": "Enviar mensagem",
-  "top_day": "Top do dia",
-  "active": "Ativo"
+  "top_day": "Melhor do dia",
+  "active": "Ativo",
+  "not_a_mod_or_admin": "Não é moderador ou administrador.",
+  "top_week": "Melhor da semana",
+  "top_month": "Melhor do mês",
+  "top_year": "Melhor do ano",
+  "most_comments": "Mais comentados",
+  "new_comments": "Novos comentários"
 }

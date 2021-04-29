@@ -147,7 +147,7 @@ class CommunityPage extends HookWidget {
                 after: community.community.icon == null ? 110 : 190,
                 fade: true,
                 child: Text(
-                  community.community.displayName,
+                  community.community.preferredName,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                 ),
@@ -431,8 +431,7 @@ class _AboutTab extends StatelessWidget {
           for (final mod in moderators!)
             // TODO: add user picture, maybe make it into reusable component
             ListTile(
-              title: Text(
-                  mod.moderator.preferredUsername ?? '@${mod.moderator.name}'),
+              title: Text(mod.moderator.preferredName),
               onTap: () => goToUser.fromPersonSafe(context, mod.moderator),
             ),
         ]

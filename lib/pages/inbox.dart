@@ -312,7 +312,7 @@ class PrivateMessageTile extends HookWidget {
                         ),
                       ),
                     Text(
-                      otherSide.originDisplayName,
+                      otherSide.originPreferredName,
                       style: TextStyle(color: theme.accentColor),
                     ),
                   ],

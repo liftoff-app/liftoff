@@ -128,5 +128,6 @@
   "top_all": "El millor de tots els temps",
   "most_comments": "Més comentaris",
   "new_comments": "Comentaris nous",
-  "active": "Actiu"
+  "active": "Actiu",
+  "not_a_mod_or_admin": "No ets un moderador ni un administrador."
 }

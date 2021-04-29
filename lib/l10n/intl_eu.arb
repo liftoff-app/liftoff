@@ -128,5 +128,6 @@
   "top_all": "Onena",
   "most_comments": "Iruzkin gehienak",
   "new_comments": "Iruzkin berriak",
-  "active": "Aktibo"
+  "active": "Aktibo",
+  "not_a_mod_or_admin": "Ez zara moderatzaile bat, ezta administratzaile bat ere."
 }
