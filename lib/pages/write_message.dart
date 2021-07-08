@@ -21,7 +21,7 @@ class WriteMessagePage extends HookWidget {
   const WriteMessagePage.send({
     required this.recipient,
     required this.instanceHost,
-  })   : privateMessage = null,
+  })  : privateMessage = null,
         _isEdit = false;
 
   WriteMessagePage.edit(PrivateMessageView pmv)
