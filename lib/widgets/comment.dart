@@ -12,6 +12,7 @@ import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../util/delayed_action.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/cake_day.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
@@ -390,6 +391,7 @@ class CommentWidget extends HookWidget {
                           color: theme.accentColor,
                         )),
                   ),
+                  if (comment.creator.isCakeDay) const Text(' 🍰'),
                   if (isOP) _CommentTag('OP', theme.accentColor),
                   if (comment.creator.admin)
                     _CommentTag(

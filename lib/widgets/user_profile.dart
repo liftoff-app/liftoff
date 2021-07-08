@@ -9,6 +9,7 @@ import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../pages/manage_account.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/cake_day.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
@@ -218,7 +219,7 @@ class _UserOverview extends HookWidget {
               else
                 const SizedBox(height: 80),
               Text(
-                userView.person.preferredName,
+                '${userView.person.preferredName}${userView.person.isCakeDay ? ' 🍰' : ''}',
                 style: theme.textTheme.headline6,
               ),
               const SizedBox(height: 4),
