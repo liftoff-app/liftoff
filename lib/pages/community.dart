@@ -36,12 +36,12 @@ class CommunityPage extends HookWidget {
   const CommunityPage.fromName({
     required String this.communityName,
     required this.instanceHost,
-  })   : communityId = null,
+  })  : communityId = null,
         _community = null;
   const CommunityPage.fromId({
     required int this.communityId,
     required this.instanceHost,
-  })   : communityName = null,
+  })  : communityName = null,
         _community = null;
   CommunityPage.fromCommunityView(CommunityView this._community)
       : instanceHost = _community.instanceHost,

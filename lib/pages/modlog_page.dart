@@ -16,7 +16,7 @@ class ModlogPage extends HookWidget {
 
   const ModlogPage.forInstance({
     required this.instanceHost,
-  })   : communityId = null,
+  })  : communityId = null,
         name = instanceHost;
 
   const ModlogPage.forCommunity({
