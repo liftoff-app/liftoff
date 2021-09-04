@@ -119,7 +119,7 @@ class ConfigStore extends ChangeNotifier {
   Future<void> importLemmyUserSettings(Jwt token) async {
     final site =
         await LemmyApiV3(token.payload.iss).run(GetSite(auth: token.raw));
-    copyLemmyUserSettings(site.myUser!.localUser);
+    copyLemmyUserSettings(site.myUser!.localUserView.localUser);
   }
 
   static Future<ConfigStore> load() async {

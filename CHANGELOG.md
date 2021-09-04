@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- Support for Lemmy v0.12.0
+
 ## v0.5.0 - 2021-04-29
 
 ### Added

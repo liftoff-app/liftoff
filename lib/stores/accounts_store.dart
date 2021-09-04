@@ -191,12 +191,13 @@ class AccountsStore extends ChangeNotifier {
       usernameOrEmail: usernameOrEmail,
       password: password,
     ));
-    final userData =
-        await lemmy.run(GetSite(auth: jwt.raw)).then((value) => value.myUser!);
+    final userData = await lemmy
+        .run(GetSite(auth: jwt.raw))
+        .then((value) => value.myUser!.localUserView.person);
 
-    accounts[instanceHost]![userData.person.name] = UserData(
+    accounts[instanceHost]![userData.name] = UserData(
       jwt: jwt,
-      userId: userData.person.id,
+      userId: userData.id,
     );
 
     await _assignDefaultAccounts();

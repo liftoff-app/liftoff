@@ -322,17 +322,27 @@ class _AboutTab extends HookWidget {
     final instanceHost = userDetails.personView.person.instanceHost;
 
     final accStore = useAccountsStore();
+    final token = accStore
+        .userDataFor(instanceHost, userDetails.personView.person.name)
+        ?.jwt;
 
-    final isOwnedAccount = accStore.loggedInInstances.contains(instanceHost) &&
-        accStore
-            .usernamesFor(instanceHost)
-            .contains(userDetails.personView.person.name);
+    final isOwnedAccount = token != null;
+
+    final followsSnap = useMemoFuture<List<CommunityFollowerView>>(() async {
+      if (token == null) return const [];
+
+      return LemmyApiV3(instanceHost)
+          .run(GetSite(auth: token.raw))
+          .then((value) => value.myUser!.follows);
+    }, [token]);
 
     const wallPadding = EdgeInsets.symmetric(horizontal: 15);
 
     final divider = Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: wallPadding.horizontal / 2, vertical: 10),
+        horizontal: wallPadding.horizontal / 2,
+        vertical: 10,
+      ),
       child: const Divider(),
     );
 
@@ -389,7 +399,7 @@ class _AboutTab extends HookWidget {
                 comm.community.name, comm.community.icon, comm.community.id),
           divider,
         ],
-        if (userDetails.follows.isNotEmpty) ...[
+        if (followsSnap.hasData && followsSnap.data!.isNotEmpty) ...[
           ListTile(
             title: Center(
               child: Text(
@@ -399,7 +409,7 @@ class _AboutTab extends HookWidget {
             ),
           ),
           for (final comm
-              in userDetails.follows
+              in followsSnap.data!
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
                 comm.community.name, comm.community.icon, comm.community.id)

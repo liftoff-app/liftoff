@@ -343,6 +343,25 @@ class _ModlogTable extends StatelessWidget {
             ),
           ),
         ),
+      for (final transferredToCommunity in modlog.transferredToCommunity)
+        _ModlogEntry.fromModTransferCommunityView(
+          transferredToCommunity,
+          RichText(
+            text: TextSpan(
+              children: [
+                if (transferredToCommunity.modTransferCommunity.removed ??
+                    false)
+                  const TextSpan(text: 'removed ')
+                else
+                  const TextSpan(text: 'transferred '),
+                community(transferredToCommunity.community),
+                const TextSpan(text: ' to '),
+                user(transferredToCommunity.moddedPerson),
+              ],
+              style: TextStyle(color: theme.colorScheme.onSurface),
+            ),
+          ),
+        ),
       for (final added in modlog.added)
         _ModlogEntry.fromModAddView(
           added,
@@ -479,6 +498,15 @@ class _ModlogEntry {
   ) : this(
           when: addedToCommunity.modAddCommunity.when,
           mod: addedToCommunity.moderator,
+          action: action,
+        );
+
+  _ModlogEntry.fromModTransferCommunityView(
+    ModTransferCommunityView transferCommunity,
+    Widget action,
+  ) : this(
+          when: transferCommunity.modTransferCommunity.when,
+          mod: transferCommunity.moderator,
           action: action,
         );
 

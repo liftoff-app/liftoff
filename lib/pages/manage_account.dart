@@ -34,7 +34,7 @@ class ManageAccountPage extends HookWidget {
       final site = await LemmyApiV3(instanceHost).run(GetSite(
           auth: accountStore.userDataFor(instanceHost, username)!.jwt.raw));
 
-      return site.myUser!;
+      return site.myUser!.localUserView;
     });
 
     void _openMoreMenu() {

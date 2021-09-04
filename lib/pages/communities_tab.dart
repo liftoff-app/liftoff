@@ -49,14 +49,10 @@ class CommunitiesTab extends HookWidget {
       final futures = accountsStore.loggedInInstances
           .map(
             (instanceHost) => LemmyApiV3(instanceHost)
-                .run(GetPersonDetails(
-                  sort: SortType.active,
-                  savedOnly: false,
-                  personId:
-                      accountsStore.defaultUserDataFor(instanceHost)!.userId,
+                .run(GetSite(
                   auth: accountsStore.defaultUserDataFor(instanceHost)!.jwt.raw,
                 ))
-                .then((e) => e.follows),
+                .then((e) => e.myUser!.follows),
           )
           .toList();
 
