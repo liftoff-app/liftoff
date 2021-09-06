@@ -3,6 +3,7 @@
 ### Added
 
 - Support for Lemmy v0.12.0
+- Show cake day on a user's profile and next to their name in a comment
 
 ## v0.5.0 - 2021-04-29
 
