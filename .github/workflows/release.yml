@@ -157,7 +157,7 @@ jobs:
       - name: Extract current changelog
         run: mv fastlane/metadata/android/en-US/changelogs/$(ls fastlane/metadata/android/en-US/changelogs/ | xargs -I'{}' basename '{}' .txt | sort -n | tail -n 1).txt current-changelog.txt
 
-      - name: Release
+      - name: Release to GitHub
         uses: softprops/action-gh-release@v1
         with:
           files: |
@@ -169,3 +169,25 @@ jobs:
           body_path: current-changelog.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: "2.7"
+
+      - name: Download bundle dependencies
+        working-directory: fastlane
+        run: |
+          gem install bundler:2.0.2
+          bundle config path vendor/bundle
+          bundle install
+
+      - name: Release to Google Play (beta)
+        working-directory: fastlane
+        run: |
+          echo $GOOGLE_SERVICE_ACCOUNT_KEY > $GOOGLE_SERVICE_ACCOUNT_KEY_PATH
+          bundle exec fastlane android prod
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY_PATH: ./google-service-account-key.json
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+          ABB_PATH: ../android-appbundle/app-release.aab
