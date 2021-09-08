@@ -59,7 +59,7 @@ class AddAccountPage extends HookWidget {
                     .userDataFor(
                         selectedInstance.value, usernameController.text)!
                     .jwt);
-            // ignore: avoid_catches_without_on_clauses, empty_catches
+            // ignore: empty_catches
           } catch (e) {}
         }
 

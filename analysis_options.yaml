@@ -1,7 +1,6 @@
 linter:
   rules:
     - avoid_bool_literals_in_conditional_expressions
-    - avoid_catches_without_on_clauses
     - avoid_catching_errors
     - avoid_classes_with_only_static_members
     - avoid_equals_and_hash_code_on_mutable_classes
@@ -57,7 +56,6 @@ linter:
     - prefer_constructors_over_static_methods
     - prefer_contains
     - prefer_equal_for_default_values
-    - prefer_expression_function_bodies
     - prefer_final_fields
     - prefer_final_in_for_each
     - prefer_final_locals
@@ -101,6 +99,7 @@ linter:
     - unnecessary_string_escapes
     - unnecessary_string_interpolations
     - unnecessary_this
+    - unrelated_type_equality_checks
     - use_full_hex_values_for_flutter_colors
     - use_is_even_rather_than_modulo
     - use_raw_strings
@@ -112,6 +111,7 @@ linter:
 analyzer:
   exclude:
     - "**/*.g.dart"
+    - "**/*.freezed.dart"
     - "lib/gen/assets.gen.dart"
   strong-mode:
     # TODO: remove after migrating to null safety, this is already turned off by default

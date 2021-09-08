@@ -5,7 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
-import 'comment.dart';
+import 'comment/comment.dart';
 import 'infinite_scroll.dart';
 import 'post.dart';
 import 'post_list_options.dart';

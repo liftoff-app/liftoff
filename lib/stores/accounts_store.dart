@@ -219,7 +219,6 @@ class AccountsStore extends ChangeNotifier {
     if (!assumeValid) {
       try {
         await LemmyApiV3(instanceHost).run(const GetSite());
-        // ignore: avoid_catches_without_on_clauses
       } catch (_) {
         throw Exception('This instance seems to not exist');
       }

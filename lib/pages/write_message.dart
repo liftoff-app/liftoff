@@ -50,8 +50,6 @@ class WriteMessagePage extends HookWidget {
             content: bodyController.text,
           ));
           Navigator.of(context).pop(msg);
-
-          // ignore: avoid_catches_without_on_clauses
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(e.toString()),
@@ -69,7 +67,6 @@ class WriteMessagePage extends HookWidget {
           Navigator.of(context).pop();
           // TODO: maybe send notification so that infinite list
           //       containing this widget adds new message?
-          // ignore: avoid_catches_without_on_clauses
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(e.toString()),

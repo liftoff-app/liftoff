@@ -4,7 +4,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
-import '../widgets/comment.dart';
+import '../widgets/comment/comment.dart';
 import '../widgets/post.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'communities_list.dart';

@@ -74,7 +74,6 @@ class FullPostPage extends HookWidget {
 
       try {
         await fullPostRefreshable.refresh();
-        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(e.toString()),

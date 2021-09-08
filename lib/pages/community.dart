@@ -471,7 +471,6 @@ class _FollowButton extends HookWidget {
             follow: !isSubbed.value,
             auth: token.raw));
         isSubbed.value = !isSubbed.value;
-        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(

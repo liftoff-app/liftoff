@@ -126,7 +126,6 @@ class CreatePostPage extends HookWidget {
           urlController.text =
               pathToPictrs(selectedInstance.value, upload.files[0].file);
         }
-        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to upload image')));
@@ -219,7 +218,6 @@ class CreatePostPage extends HookWidget {
         }();
         Navigator.of(context).pop(res);
         return;
-        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Failed to post')));

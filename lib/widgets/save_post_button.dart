@@ -27,7 +27,6 @@ class SavePostButton extends HookWidget {
         final res = await api.run(SavePost(
             postId: post.post.id, save: !isSaved.value, auth: token.raw));
         isSaved.value = res.saved;
-        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('saving failed :(')));

@@ -39,6 +39,8 @@ dependencies:
   # state management
   flutter_hooks: ^0.16.0
   provider: ^5.0.0
+  mobx: ^2.0.4
+  flutter_mobx: ^2.0.2
 
   # utils
   timeago: ^3.0.2
@@ -48,6 +50,7 @@ dependencies:
   matrix4_transform: ^2.0.0
   json_annotation: ^4.0.1
   keyboard_dismisser: ^2.0.0
+  freezed_annotation: ^0.14.2
 
   flutter:
     sdk: flutter
@@ -64,6 +67,8 @@ dev_dependencies:
   flutter_launcher_icons: ^0.9.0
   json_serializable: ^4.1.0
   build_runner: ^1.11.1
+  mobx_codegen: ^2.0.2
+  freezed: ^0.14.1+2
 
 flutter_icons:
   android: true

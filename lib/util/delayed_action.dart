@@ -18,7 +18,6 @@ Future<void> delayedAction<T>({
     delayedLoading.start();
     val = await LemmyApiV3(instanceHost).run<T>(query);
     onSuccess?.call(val as T);
-    // ignore: avoid_catches_without_on_clauses
   } catch (e) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(e.toString())));

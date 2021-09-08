@@ -17,7 +17,7 @@ import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../widgets/bottom_modal.dart';
-import '../widgets/comment.dart';
+import '../widgets/comment/comment.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_mode_icon.dart';

@@ -549,7 +549,6 @@ class _Voting extends HookWidget {
         final res = await api.run(
             CreatePostLike(postId: post.post.id, score: vote, auth: token.raw));
         myVote.value = res.myVote ?? VoteType.none;
-        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('voting failed :(')));
