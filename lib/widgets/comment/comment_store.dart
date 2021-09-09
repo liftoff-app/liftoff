@@ -35,6 +35,7 @@ abstract class _CommentStore with Store {
   final savingState = AsyncStore<FullCommentView>();
   final markPersonMentionAsReadState = AsyncStore<PersonMentionView>();
   final markAsReadState = AsyncStore<FullCommentView>();
+  final blockingState = AsyncStore<BlockedPerson>();
 
   @computed
   bool get isMine =>
@@ -101,6 +102,21 @@ abstract class _CommentStore with Store {
     );
 
     if (result != null) comment = result.commentView;
+  }
+
+  @action
+  Future<void> block(Jwt token) async {
+    final result = await blockingState.runLemmy(
+      comment.instanceHost,
+      BlockPerson(
+        personId: comment.creator.id,
+        block: !comment.creatorBlocked,
+        auth: token.raw,
+      ),
+    );
+    if (result != null) {
+      comment = comment.copyWith(creatorBlocked: result.blocked);
+    }
   }
 
   @action
