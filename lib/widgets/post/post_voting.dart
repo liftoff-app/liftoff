@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../hooks/stores.dart';
-import '../../util/async_store.dart';
 import '../../util/intl.dart';
 import '../../util/observer_consumers.dart';
 import 'post_store.dart';
@@ -33,7 +32,7 @@ class PostVoting extends HookWidget {
             ),
             onPressed: loggedInAction(store.upVote),
           ),
-          if (store.votingState is AsyncStateLoading)
+          if (store.votingState.isLoading)
             const SizedBox(
                 width: 20, height: 20, child: CircularProgressIndicator())
           else if (showScores)

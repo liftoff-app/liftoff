@@ -8,7 +8,6 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
 import '../../hooks/logged_in_action.dart';
-import '../../util/async_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
@@ -20,6 +19,7 @@ import '../../widgets/post/full_post_store.dart';
 import '../../widgets/post/post.dart';
 import '../../widgets/post/post_more_menu.dart';
 import '../../widgets/post/post_store.dart';
+import '../../widgets/post/save_post_button.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/write_comment.dart';
 
@@ -57,7 +57,6 @@ class _FullPostPage extends HookWidget {
 
     final loggedInAction = useLoggedInAction(
         context.select<FullPostStore, String>((store) => store.instanceHost));
-    final newComments = useState(const <CommentView>[]);
 
     return ObserverBuilder<FullPostStore>(
       builder: (context, store) {
@@ -97,8 +96,9 @@ class _FullPostPage extends HookWidget {
             context: context,
             builder: (_) => WriteComment.toPost(post.post),
           );
+
           if (newComment != null) {
-            newComments.value = [...newComments.value, newComment];
+            store.addComment(newComment);
           }
         }
 
@@ -115,7 +115,10 @@ class _FullPostPage extends HookWidget {
               ),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: sharePost),
-                // const SavePostButton(),
+                Provider<PostStore>(
+                  create: (context) => store.postStore!,
+                  child: const SavePostButton(),
+                ),
                 IconButton(
                   icon: Icon(moreIcon),
                   onPressed: () => showPostMoreMenu(
@@ -160,7 +163,7 @@ class _Comments extends StatelessWidget {
         if (fullPost != null) {
           return CommentSection(store.comments!,
               postCreatorId: fullPost.postView.creator.id);
-        } else if (store.fullPostState is AsyncStateError) {
+        } else if (store.fullPostState.errorTerm != null) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
             child: Column(
