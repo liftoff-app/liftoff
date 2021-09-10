@@ -15,7 +15,7 @@ import '../util/delayed_action.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
-import '../util/more_icon.dart';
+import '../util/icons.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/comment/comment.dart';
 import '../widgets/infinite_scroll.dart';

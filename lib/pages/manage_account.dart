@@ -11,7 +11,7 @@ import '../hooks/image_picker.dart';
 import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
-import '../util/more_icon.dart';
+import '../util/icons.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/bottom_safe.dart';

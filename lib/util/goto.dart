@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../pages/community.dart';
-import '../pages/full_post.dart';
+import '../pages/full_post/full_post.dart';
 import '../pages/instance.dart';
 import '../pages/media_view.dart';
 import '../pages/user.dart';

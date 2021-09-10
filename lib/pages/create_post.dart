@@ -18,7 +18,7 @@ import '../util/pictrs.dart';
 import '../widgets/editor.dart';
 import '../widgets/markdown_mode_icon.dart';
 import '../widgets/radio_picker.dart';
-import 'full_post.dart';
+import 'full_post/full_post.dart';
 
 /// Fab that triggers the [CreatePost] modal
 /// After creation it will navigate to the newly created post
