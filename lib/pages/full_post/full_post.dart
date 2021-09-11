@@ -123,8 +123,8 @@ class _FullPostPage extends HookWidget {
                   icon: Icon(moreIcon),
                   onPressed: () => showPostMoreMenu(
                     context: context,
-                    store: store.postStore!,
-                    fullPost: true,
+                    postStore: store.postStore!,
+                    fullPostStore: store,
                   ),
                 ),
               ],
@@ -154,6 +154,8 @@ class _FullPostPage extends HookWidget {
 
 class _Comments extends StatelessWidget {
   const _Comments();
+
+  // TODO: comments rebuild every refresh, even when they don't change. FIX THAT!
 
   @override
   Widget build(BuildContext context) {

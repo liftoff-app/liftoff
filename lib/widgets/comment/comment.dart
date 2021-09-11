@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../../comment_tree.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/config_store.dart';
-import '../../util/async_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/extensions/cake_day.dart';
@@ -92,26 +91,11 @@ class CommentWidget extends StatelessWidget {
         detached: detached,
         hideOnRead: hideOnRead,
       ),
-      builder: (context, child) => ObserverListener<AsyncStore<BlockedPerson>>(
-        store: context.read<CommentStore>().blockingState,
-        listener: (context, store) {
-          final errorTerm = store.errorTerm;
-
-          if (errorTerm != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(errorTerm.tr(context))));
-          } else if (store.asyncState is AsyncStateData) {
-            final state = store.asyncState as AsyncStateData<BlockedPerson>;
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text(
-                      state.data.blocked ? 'User blocked' : 'User unblocked'),
-                ),
-              );
-          }
+      builder: (context, child) => AsyncStoreListener<BlockedPerson>(
+        asyncStore: context.read<CommentStore>().blockingState,
+        successMessageBuilder: (context, state) {
+          final name = state.data.personView.person.preferredName;
+          return state.data.blocked ? '$name blocked' : '$name unblocked';
         },
         child: AsyncStoreListener(
           asyncStore: context.read<CommentStore>().votingState,
@@ -236,16 +220,17 @@ class _CommentWidget extends StatelessWidget {
                         child: Text(
                           creator.originPreferredName,
                           style: TextStyle(
-                            color: theme.accentColor,
+                            color: theme.colorScheme.secondary,
                           ),
                         ),
                       ),
                       if (creator.isCakeDay) const Text(' 🍰'),
-                      if (store.isOP) _CommentTag('OP', theme.accentColor),
+                      if (store.isOP)
+                        _CommentTag('OP', theme.colorScheme.secondary),
                       if (creator.admin)
                         _CommentTag(
                           L10n.of(context)!.admin.toUpperCase(),
-                          theme.accentColor,
+                          theme.colorScheme.secondary,
                         ),
                       if (creator.banned)
                         const _CommentTag('BANNED', Colors.red),

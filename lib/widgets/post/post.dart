@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../pages/full_post/full_post.dart';
 import '../../util/async_store_listener.dart';
+import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
 import 'post_actions.dart';
 import 'post_info_section.dart';
@@ -35,12 +36,13 @@ class PostTile extends StatelessWidget {
           asyncStore: context.read<PostStore>().savingState,
           child: AsyncStoreListener(
             asyncStore: context.read<PostStore>().votingState,
-            child: AsyncStoreListener(
+            child: AsyncStoreListener<BlockedPerson>(
               asyncStore: context.read<PostStore>().userBlockingState,
-              child: AsyncStoreListener(
-                asyncStore: context.read<PostStore>().communityBlockingState,
-                child: const _Post(),
-              ),
+              successMessageBuilder: (context, state) {
+                final name = state.data.personView.person.preferredName;
+                return state.data.blocked ? '$name blocked' : '$name unblocked';
+              },
+              child: const _Post(),
             ),
           ),
         );

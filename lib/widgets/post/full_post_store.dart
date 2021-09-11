@@ -22,6 +22,7 @@ abstract class _FullPostStore with Store {
   PostStore? postStore;
 
   final fullPostState = AsyncStore<FullPostView>();
+  final communityBlockingState = AsyncStore<BlockedCommunity>();
 
   @computed
   PostView? get postView => fullPostView?.postView ?? postStore?.postView;

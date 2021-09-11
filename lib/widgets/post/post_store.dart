@@ -15,7 +15,6 @@ abstract class _PostStore with Store {
   final votingState = AsyncStore<PostView>();
   final savingState = AsyncStore<PostView>();
   final userBlockingState = AsyncStore<BlockedPerson>();
-  final communityBlockingState = AsyncStore<BlockedCommunity>();
 
   @computed
   bool get wasVoted => (postView.myVote ?? VoteType.none) != VoteType.none;
@@ -62,7 +61,7 @@ abstract class _PostStore with Store {
     final result = await userBlockingState.runLemmy(
         postView.post.instanceHost,
         BlockPerson(
-          personId: postView.post.id,
+          personId: postView.creator.id,
           block: !postView.creatorBlocked,
           auth: token.raw,
         ));
