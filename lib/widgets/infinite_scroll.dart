@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../hooks/ref.dart';
 import 'bottom_safe.dart';
 
 class InfiniteScrollController {
@@ -77,9 +76,9 @@ class InfiniteScroll<T> extends HookWidget {
       if (controller != null) {
         controller?.clear = () {
           data.value = [];
-          hasMore.current = true;
-          page.current = 1;
-          dataSet.current.clear();
+          hasMore.value = true;
+          page.value = 1;
+          dataSet.value.clear();
         };
       }
 
@@ -89,9 +88,9 @@ class InfiniteScroll<T> extends HookWidget {
     return RefreshIndicator(
       onRefresh: () async {
         data.value = [];
-        hasMore.current = true;
-        page.current = 1;
-        dataSet.current.clear();
+        hasMore.value = true;
+        page.value = 1;
+        dataSet.value.clear();
 
         await HapticFeedback.mediumImpact();
         await Future.delayed(const Duration(seconds: 1));
@@ -107,35 +106,35 @@ class InfiniteScroll<T> extends HookWidget {
           i -= 1;
 
           // if we are done but we have no data it means the list is empty
-          if (!hasMore.current && data.value.isEmpty) {
+          if (!hasMore.value && data.value.isEmpty) {
             return Center(child: noItems);
           }
 
           // reached the bottom, fetch more
           if (i == data.value.length) {
             // if there are no more, skip
-            if (!hasMore.current) {
+            if (!hasMore.value) {
               return const BottomSafe();
             }
 
             // if it's already fetching more, skip
-            if (!isFetching.current) {
-              isFetching.current = true;
-              fetcher(page.current, batchSize).then((incoming) {
+            if (!isFetching.value) {
+              isFetching.value = true;
+              fetcher(page.value, batchSize).then((incoming) {
                 // if got less than the batchSize, mark the list as done
                 if (incoming.length < batchSize) {
-                  hasMore.current = false;
+                  hasMore.value = false;
                 }
 
                 final newData = incoming.where(
-                  (e) => !dataSet.current.contains(uniquePropFunc(e)),
+                  (e) => !dataSet.value.contains(uniquePropFunc(e)),
                 );
 
                 // append new data
                 data.value = [...data.value, ...newData];
-                dataSet.current.addAll(newData.map(uniquePropFunc));
-                page.current += 1;
-              }).whenComplete(() => isFetching.current = false);
+                dataSet.value.addAll(newData.map(uniquePropFunc));
+                page.value += 1;
+              }).whenComplete(() => isFetching.value = false);
             }
 
             return SafeArea(

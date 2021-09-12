@@ -8,7 +8,6 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/image_picker.dart';
-import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../util/more_icon.dart';
@@ -151,8 +150,8 @@ class _ManageAccount extends HookWidget {
           showReadPosts: showReadPosts.value,
           sendNotificationsToEmail: sendNotificationsToEmail.value,
           auth: token.raw,
-          avatar: avatar.current,
-          banner: banner.current,
+          avatar: avatar.value,
+          banner: banner.value,
           matrixUserId: matrixUserController.text.isEmpty
               ? null
               : matrixUserController.text,
@@ -163,8 +162,8 @@ class _ManageAccount extends HookWidget {
           email: emailController.text.isEmpty ? null : emailController.text,
         ));
 
-        informAcceptedAvatarRef.current?.call();
-        informAcceptedBannerRef.current?.call();
+        informAcceptedAvatarRef.value?.call();
+        informAcceptedBannerRef.value?.call();
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('User settings saved'),
@@ -243,16 +242,16 @@ class _ManageAccount extends HookWidget {
         _ImagePicker(
           user: user,
           name: L10n.of(context)!.avatar,
-          initialUrl: avatar.current,
-          onChange: (value) => avatar.current = value,
+          initialUrl: avatar.value,
+          onChange: (value) => avatar.value = value,
           informAcceptedRef: informAcceptedAvatarRef,
         ),
         const SizedBox(height: 8),
         _ImagePicker(
           user: user,
           name: L10n.of(context)!.banner,
-          initialUrl: banner.current,
-          onChange: (value) => banner.current = value,
+          initialUrl: banner.value,
+          onChange: (value) => banner.value = value,
           informAcceptedRef: informAcceptedBannerRef,
         ),
         const SizedBox(height: 8),
@@ -396,7 +395,7 @@ class _ImagePicker extends HookWidget {
   /// _ImagePicker will set the ref to a callback that can inform _ImagePicker
   /// that the current picture is accepted
   /// and should no longer allow for deletion of it
-  final Ref<VoidCallback?> informAcceptedRef;
+  final ObjectRef<VoidCallback?> informAcceptedRef;
 
   const _ImagePicker({
     Key? key,
@@ -413,7 +412,7 @@ class _ImagePicker extends HookWidget {
     // basically saves the very first initialUrl
     final initialUrl = useRef(this.initialUrl);
     final theme = Theme.of(context);
-    final url = useState(initialUrl.current);
+    final url = useState(initialUrl.value);
     final pictrsDeleteToken = useState<PictrsUploadFile?>(null);
 
     final imagePicker = useImagePicker();
@@ -422,7 +421,7 @@ class _ImagePicker extends HookWidget {
 
     uploadImage() async {
       try {
-        final pic = await imagePicker.getImage(source: ImageSource.gallery);
+        final pic = await imagePicker.pickImage(source: ImageSource.gallery);
         // pic is null when the picker was cancelled
         if (pic != null) {
           delayedLoading.start();
@@ -456,15 +455,15 @@ class _ImagePicker extends HookWidget {
 
       if (updateState) {
         pictrsDeleteToken.value = null;
-        url.value = initialUrl.current;
+        url.value = initialUrl.value;
         onChange?.call(url.value);
       }
     }
 
     useEffect(() {
-      informAcceptedRef.current = () {
+      informAcceptedRef.value = () {
         pictrsDeleteToken.value = null;
-        initialUrl.current = url.value;
+        initialUrl.value = url.value;
       };
 
       return () {

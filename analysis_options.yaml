@@ -32,13 +32,16 @@ linter:
     - directives_ordering
     - empty_catches
     - empty_constructor_bodies
+    - eol_at_end_of_file
     - exhaustive_cases
     - file_names
     - hash_and_equals
     - implementation_imports
+    - invariant_booleans
     - library_names
     - library_prefixes
     - non_constant_identifier_names
+    - noop_primitive_operations
     - null_check_on_nullable_type_parameter
     - omit_local_variable_types
     - one_member_abstracts
@@ -101,6 +104,7 @@ linter:
     - unrelated_type_equality_checks
     - use_full_hex_values_for_flutter_colors
     - use_is_even_rather_than_modulo
+    - use_test_throws_matchers
     - use_raw_strings
     - use_rethrow_when_possible
     - use_setters_to_change_properties

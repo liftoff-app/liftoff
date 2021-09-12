@@ -25,7 +25,7 @@ class UserPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userDetailsSnap = useFuture(_userDetails, initialData: null);
+    final userDetailsSnap = useFuture(_userDetails);
 
     final body = () {
       if (userDetailsSnap.hasData) {

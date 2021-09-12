@@ -38,7 +38,7 @@ class InstancePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final siteSnap = useFuture(siteFuture, initialData: null);
+    final siteSnap = useFuture(siteFuture);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
     final accStore = useAccountsStore();
     final scrollController = useScrollController();
@@ -233,7 +233,7 @@ class _AboutTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final commSnap = useFuture(communitiesFuture, initialData: null);
+    final commSnap = useFuture(communitiesFuture);
     final accStore = useAccountsStore();
 
     void goToCommunities() {

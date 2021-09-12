@@ -114,7 +114,7 @@ class CreatePostPage extends HookWidget {
 
     uploadPicture(Jwt token) async {
       try {
-        final pic = await imagePicker.getImage(source: ImageSource.gallery);
+        final pic = await imagePicker.pickImage(source: ImageSource.gallery);
         // pic is null when the picker was cancelled
         if (pic != null) {
           imageUploadLoading.value = true;
