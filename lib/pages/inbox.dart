@@ -75,7 +75,7 @@ class InboxPage extends HookWidget {
                   Flexible(
                     child: Text(
                       displayString,
-                      style: theme.appBarTheme.textTheme?.headline6,
+                      style: theme.appBarTheme.titleTextStyle,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
@@ -313,7 +313,7 @@ class PrivateMessageTile extends HookWidget {
                       ),
                     Text(
                       otherSide.originPreferredName,
-                      style: TextStyle(color: theme.accentColor),
+                      style: TextStyle(color: theme.colorScheme.secondary),
                     ),
                   ],
                 ),
@@ -354,7 +354,7 @@ class PrivateMessageTile extends HookWidget {
             ),
             if (toMe) ...[
               TileAction(
-                iconColor: read.value ? theme.accentColor : null,
+                iconColor: read.value ? theme.colorScheme.secondary : null,
                 icon: Icons.check,
                 tooltip: L10n.of(context)!.mark_as_read,
                 onPressed: handleRead,

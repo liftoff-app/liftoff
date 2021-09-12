@@ -377,7 +377,7 @@ class AccountsConfigPage extends HookWidget {
                 trailing: username == accountsStore.defaultUsernameFor(instance)
                     ? Icon(
                         Icons.check_circle_outline,
-                        color: theme.accentColor,
+                        color: theme.colorScheme.secondary,
                       )
                     : null,
                 title: Text(username),
@@ -420,7 +420,8 @@ class _SectionHeading extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(text.toUpperCase(),
-          style: theme.textTheme.subtitle2?.copyWith(color: theme.accentColor)),
+          style: theme.textTheme.subtitle2
+              ?.copyWith(color: theme.colorScheme.secondary)),
     );
   }
 }

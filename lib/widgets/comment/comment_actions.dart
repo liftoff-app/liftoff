@@ -66,7 +66,9 @@ class CommentActions extends HookWidget {
               TileAction(
                 icon: Icons.check,
                 onPressed: loggedInAction(store.markAsRead),
-                iconColor: comment.read ? Theme.of(context).accentColor : null,
+                iconColor: comment.read
+                    ? Theme.of(context).colorScheme.secondary
+                    : null,
                 tooltip: comment.read
                     ? L10n.of(context)!.mark_as_unread
                     : L10n.of(context)!.mark_as_read,
@@ -95,7 +97,7 @@ class CommentActions extends HookWidget {
             TileAction(
               icon: Icons.arrow_upward,
               iconColor: store.myVote == VoteType.up
-                  ? Theme.of(context).accentColor
+                  ? Theme.of(context).colorScheme.secondary
                   : null,
               onPressed: loggedInAction(store.upVote),
               tooltip: 'upvote',

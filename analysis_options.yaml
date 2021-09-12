@@ -2,7 +2,6 @@ linter:
   rules:
     - avoid_bool_literals_in_conditional_expressions
     - avoid_catching_errors
-    - avoid_classes_with_only_static_members
     - avoid_equals_and_hash_code_on_mutable_classes
     - avoid_escaping_inner_quotes
     - avoid_function_literals_in_foreach_calls

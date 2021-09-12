@@ -27,7 +27,9 @@ class MarkdownText extends StatelessWidget {
       styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
         blockquoteDecoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.3),
-          border: Border(left: BorderSide(width: 2, color: theme.accentColor)),
+          border: Border(
+            left: BorderSide(width: 2, color: theme.colorScheme.secondary),
+          ),
         ),
         code: theme.textTheme.bodyText1
             // TODO: use a font from google fonts maybe? the defaults aren't very pretty

@@ -23,7 +23,11 @@ environment:
 dependencies:
   # widgets
   flutter_speed_dial: ^3.0.5
-  photo_view: ^0.11.1
+  # TODO: bring back to pub hosted when fix is released
+  photo_view:
+    git:
+      url: https://github.com/karvulf/photo_view
+      ref: bugfix/flutter-2.5-update
   markdown: ^4.0.0
   flutter_markdown: ^0.6.1
   cached_network_image: ^3.0.0

@@ -90,7 +90,7 @@ class MyHomePage extends HookWidget {
 
       return IconButton(
         icon: Icon(icon),
-        color: tabNum == currentTab.value ? theme.accentColor : null,
+        color: tabNum == currentTab.value ? theme.colorScheme.secondary : null,
         onPressed: () => currentTab.value = tabNum,
       );
     }

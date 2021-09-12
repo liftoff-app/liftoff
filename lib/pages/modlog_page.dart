@@ -133,7 +133,7 @@ class _ModlogTable extends StatelessWidget {
             ),
             TextSpan(
               text: ' ${user.preferredName}',
-              style: TextStyle(color: theme.accentColor),
+              style: TextStyle(color: theme.colorScheme.secondary),
               recognizer: TapGestureRecognizer()
                 ..onTap = () => goToUser.byId(
                       context,
@@ -155,7 +155,7 @@ class _ModlogTable extends StatelessWidget {
             ),
             TextSpan(
               text: ' !${community.name}',
-              style: TextStyle(color: theme.accentColor),
+              style: TextStyle(color: theme.colorScheme.secondary),
               recognizer: TapGestureRecognizer()
                 ..onTap = () => goToCommunity.byId(
                       context,
@@ -180,7 +180,7 @@ class _ModlogTable extends StatelessWidget {
                 const TextSpan(text: ' post '),
                 TextSpan(
                   text: '"${removedPost.post.name}"',
-                  style: TextStyle(color: theme.accentColor),
+                  style: TextStyle(color: theme.colorScheme.secondary),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => goToPost(
                           context,
@@ -206,7 +206,7 @@ class _ModlogTable extends StatelessWidget {
                 const TextSpan(text: ' post '),
                 TextSpan(
                   text: '"${lockedPost.post.name}"',
-                  style: TextStyle(color: theme.accentColor),
+                  style: TextStyle(color: theme.colorScheme.secondary),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => goToPost(
                           context,
@@ -232,7 +232,7 @@ class _ModlogTable extends StatelessWidget {
                 const TextSpan(text: ' post '),
                 TextSpan(
                   text: '"${stickiedPost.post.name}"',
-                  style: TextStyle(color: theme.accentColor),
+                  style: TextStyle(color: theme.colorScheme.secondary),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => goToPost(
                           context,
@@ -259,7 +259,7 @@ class _ModlogTable extends StatelessWidget {
                 TextSpan(
                   text:
                       '"${removedComment.comment.content.replaceAll('\n', ' ')}"',
-                  style: TextStyle(color: theme.accentColor),
+                  style: TextStyle(color: theme.colorScheme.secondary),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => goToPost(
                           context,
@@ -553,7 +553,8 @@ class _ModlogEntry {
                 ),
                 Text(
                   ' ${mod.preferredName}',
-                  style: TextStyle(color: Theme.of(context).accentColor),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.secondary),
                 ),
               ],
             ),

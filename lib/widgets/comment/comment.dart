@@ -213,16 +213,17 @@ class _CommentWidget extends StatelessWidget {
                         child: Text(
                           creator.originPreferredName,
                           style: TextStyle(
-                            color: theme.accentColor,
+                            color: theme.colorScheme.secondary,
                           ),
                         ),
                       ),
                       if (creator.isCakeDay) const Text(' 🍰'),
-                      if (store.isOP) _CommentTag('OP', theme.accentColor),
+                      if (store.isOP)
+                        _CommentTag('OP', theme.colorScheme.secondary),
                       if (creator.admin)
                         _CommentTag(
                           L10n.of(context)!.admin.toUpperCase(),
-                          theme.accentColor,
+                          theme.colorScheme.secondary,
                         ),
                       if (creator.banned)
                         const _CommentTag('BANNED', Colors.red),
@@ -232,7 +233,7 @@ class _CommentWidget extends StatelessWidget {
                       if (store.collapsed && store.children.isNotEmpty) ...[
                         _CommentTag(
                           '+${store.children.length}',
-                          Theme.of(context).accentColor,
+                          Theme.of(context).colorScheme.secondary,
                         ),
                         const SizedBox(width: 7),
                       ],

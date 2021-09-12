@@ -562,7 +562,9 @@ class _Voting extends HookWidget {
         IconButton(
           icon: Icon(
             Icons.arrow_upward,
-            color: myVote.value == VoteType.up ? theme.accentColor : null,
+            color: myVote.value == VoteType.up
+                ? theme.colorScheme.secondary
+                : null,
           ),
           onPressed: loggedInAction(
             (token) => vote(

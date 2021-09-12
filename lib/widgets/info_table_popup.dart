@@ -30,7 +30,9 @@ void showInfoTablePopup({
                     ),
                     child: Text(
                       '[tap to show]',
-                      style: TextStyle(color: Theme.of(context).accentColor),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   )
                 else

@@ -236,7 +236,7 @@ class HomeTab extends HookWidget {
               Flexible(
                 child: Text(
                   title,
-                  style: theme.appBarTheme.textTheme?.headline6,
+                  style: theme.appBarTheme.titleTextStyle,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                 ),

@@ -271,8 +271,8 @@ class _CommunitySubscribeToggle extends HookWidget {
         decoration: delayed.loading
             ? null
             : BoxDecoration(
-                color: subbed.value ? theme.accentColor : null,
-                border: Border.all(color: theme.accentColor),
+                color: subbed.value ? theme.colorScheme.secondary : null,
+                border: Border.all(color: theme.colorScheme.secondary),
                 borderRadius: BorderRadius.circular(7),
               ),
         child: delayed.loading
@@ -281,8 +281,8 @@ class _CommunitySubscribeToggle extends HookWidget {
             : Icon(
                 subbed.value ? Icons.done : Icons.add,
                 color: subbed.value
-                    ? textColorBasedOnBackground(theme.accentColor)
-                    : theme.accentColor,
+                    ? textColorBasedOnBackground(theme.colorScheme.secondary)
+                    : theme.colorScheme.secondary,
                 size: 20,
               ),
       ),

@@ -80,7 +80,7 @@ class UserProfileTab extends HookWidget {
                 Text(
                   // TODO: fix overflow issues
                   displayValue,
-                  style: theme.appBarTheme.textTheme?.headline6,
+                  style: theme.appBarTheme.titleTextStyle,
                   overflow: TextOverflow.fade,
                 ),
                 const Icon(Icons.expand_more),

@@ -2,6 +2,7 @@ import 'dart:math' show max, min;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:photo_view/photo_view.dart';
@@ -69,7 +70,7 @@ class MediaViewPage extends HookWidget {
           Colors.black.withOpacity(max(0, 1.0 - (offset.value.dy.abs() / 200))),
       appBar: showButtons.value
           ? AppBar(
-              brightness: Brightness.dark,
+              systemOverlayStyle: SystemUiOverlayStyle.light,
               iconTheme: const IconThemeData(color: Colors.white),
               backgroundColor: Colors.black38,
               leading: const CloseButton(),
