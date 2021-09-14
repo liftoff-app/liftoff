@@ -7,7 +7,7 @@ import '../util/goto.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/user_profile.dart';
 import 'saved_page.dart';
-import 'settings.dart';
+import 'settings/settings.dart';
 
 /// Profile page for a logged in user. The difference between this and
 /// UserPage is that here you have access to settings

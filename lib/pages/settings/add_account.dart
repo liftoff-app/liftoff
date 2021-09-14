@@ -6,12 +6,12 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
-import '../hooks/delayed_loading.dart';
-import '../hooks/stores.dart';
-import '../l10n/l10n.dart';
-import '../stores/config_store.dart';
-import '../widgets/fullscreenable_image.dart';
-import '../widgets/radio_picker.dart';
+import '../../hooks/delayed_loading.dart';
+import '../../hooks/stores.dart';
+import '../../l10n/l10n.dart';
+import '../../stores/config_store.dart';
+import '../../widgets/fullscreenable_image.dart';
+import '../../widgets/radio_picker.dart';
 import 'add_instance.dart';
 
 /// A modal where an account can be added for a given instance
