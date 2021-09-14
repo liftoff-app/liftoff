@@ -8,6 +8,7 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
 import '../../hooks/logged_in_action.dart';
+import '../../stores/accounts_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
@@ -61,14 +62,28 @@ class _FullPostPage extends HookWidget {
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
 
-    useMemoized(() => context.read<FullPostStore>().refresh(), []);
+    useMemoized(() {
+      final store = context.read<FullPostStore>();
+      final token = context
+          .read<AccountsStore>()
+          .defaultUserDataFor(store.instanceHost)
+          ?.jwt;
+      store.refresh(token);
+    }, []);
 
-    final loggedInAction = useLoggedInAction(
-        context.select<FullPostStore, String>((store) => store.instanceHost));
+    final loggedInAction =
+        useLoggedInAction(context.read<FullPostStore>().instanceHost);
 
     return ObserverBuilder<FullPostStore>(
       builder: (context, store) {
-        // FALLBACK VIEW
+        Future<void> refresh() async {
+          unawaited(HapticFeedback.mediumImpact());
+          await store.refresh(context
+              .read<AccountsStore>()
+              .defaultUserDataFor(store.instanceHost)
+              ?.jwt);
+        }
+
         if (store.postView == null) {
           return Scaffold(
             appBar: AppBar(),
@@ -76,7 +91,7 @@ class _FullPostPage extends HookWidget {
               child: (store.fullPostState.isLoading)
                   ? const CircularProgressIndicator.adaptive()
                   : FailedToLoad(
-                      message: 'Post failed to load', refresh: store.refresh),
+                      message: 'Post failed to load', refresh: refresh),
             ),
           );
         }
@@ -84,12 +99,6 @@ class _FullPostPage extends HookWidget {
         // VARIABLES
 
         final post = store.postView!;
-
-        // FUNCTIONS
-        Future<void> refresh() async {
-          unawaited(HapticFeedback.mediumImpact());
-          await store.refresh();
-        }
 
         sharePost() => share(post.post.apId, context: context);
 
@@ -171,7 +180,11 @@ class _Comments extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
             child: FailedToLoad(
-                message: 'Comments failed to load', refresh: store.refresh),
+                message: 'Comments failed to load',
+                refresh: () => store.refresh(context
+                    .read<AccountsStore>()
+                    .defaultUserDataFor(store.instanceHost)
+                    ?.jwt)),
           );
         } else {
           return const Padding(

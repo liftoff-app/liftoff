@@ -25,16 +25,16 @@ abstract class _FullPostStore with Store {
   final communityBlockingState = AsyncStore<BlockedCommunity>();
 
   @computed
-  PostView? get postView => fullPostView?.postView ?? postStore?.postView;
+  PostView? get postView => postStore?.postView;
 
   @computed
   List<CommentView>? get comments =>
       fullPostView?.comments.followedBy(newComments).toList(growable: false);
 
   @action
-  Future<void> refresh() async {
-    final result =
-        await fullPostState.runLemmy(instanceHost, GetPost(id: postId));
+  Future<void> refresh([Jwt? token]) async {
+    final result = await fullPostState.runLemmy(
+        instanceHost, GetPost(id: postId, auth: token?.raw));
 
     if (result != null) {
       postStore ??= PostStore(result.postView);

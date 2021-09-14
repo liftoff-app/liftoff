@@ -72,8 +72,8 @@ mixin _$FullPostStore on _FullPostStore, Store {
   final _$refreshAsyncAction = AsyncAction('_FullPostStore.refresh');
 
   @override
-  Future<void> refresh() {
-    return _$refreshAsyncAction.run(() => super.refresh());
+  Future<void> refresh([Jwt? token]) {
+    return _$refreshAsyncAction.run(() => super.refresh(token));
   }
 
   final _$blockCommunityAsyncAction =
