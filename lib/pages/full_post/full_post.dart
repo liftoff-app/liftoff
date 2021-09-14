@@ -39,7 +39,15 @@ class FullPostPage extends StatelessWidget {
       create: (context) => fullPostStore,
       builder: (context, store) => AsyncStoreListener(
         asyncStore: context.read<FullPostStore>().fullPostState,
-        child: const _FullPostPage(),
+        child: AsyncStoreListener<BlockedCommunity>(
+          asyncStore: context.read<FullPostStore>().communityBlockingState,
+          successMessageBuilder: (context, asyncStore) {
+            final name =
+                asyncStore.data.communityView.community.originPreferredName;
+            return '${asyncStore.data.blocked ? 'Blocked' : 'Unblocked'} $name';
+          },
+          child: const _FullPostPage(),
+        ),
       ),
     );
   }
@@ -65,17 +73,11 @@ class _FullPostPage extends HookWidget {
           return Scaffold(
             appBar: AppBar(),
             body: Center(
-                child: (store.fullPostState.isLoading)
-                    ? const CircularProgressIndicator.adaptive()
-                    : Column(
-                        children: [
-                          const Text('Post failed to load'),
-                          ElevatedButton.icon(
-                              onPressed: store.refresh,
-                              icon: const Icon(Icons.refresh),
-                              label: const Text('try again'))
-                        ],
-                      )),
+              child: (store.fullPostState.isLoading)
+                  ? const CircularProgressIndicator.adaptive()
+                  : FailedToLoad(
+                      message: 'Post failed to load', refresh: store.refresh),
+            ),
           );
         }
 
@@ -114,7 +116,7 @@ class _FullPostPage extends HookWidget {
                 ),
               ),
               actions: [
-                IconButton(icon: const Icon(Icons.share), onPressed: sharePost),
+                IconButton(icon: Icon(shareIcon), onPressed: sharePost),
                 Provider<PostStore>(
                   create: (context) => store.postStore!,
                   child: const SavePostButton(),
@@ -168,12 +170,8 @@ class _Comments extends StatelessWidget {
         } else if (store.fullPostState.errorTerm != null) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-            child: Column(
-              children: [
-                const Icon(Icons.error),
-                Text('Error: ${store.fullPostState.errorTerm}')
-              ],
-            ),
+            child: FailedToLoad(
+                message: 'Comments failed to load', refresh: store.refresh),
           );
         } else {
           return const Padding(
@@ -182,6 +180,29 @@ class _Comments extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+class FailedToLoad extends StatelessWidget {
+  final String message;
+  final VoidCallback refresh;
+
+  const FailedToLoad({required this.refresh, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(message),
+        const SizedBox(height: 5),
+        ElevatedButton.icon(
+          onPressed: refresh,
+          icon: const Icon(Icons.refresh),
+          label: const Text('try again'),
+        )
+      ],
     );
   }
 }

@@ -40,10 +40,25 @@ abstract class _FullPostStore with Store {
       postStore ??= PostStore(result.postView);
 
       fullPostView = result;
-      postStore?.postView = result.postView;
+      postStore!.postView = result.postView;
     }
   }
 
+  @action
+  Future<void> blockCommunity(Jwt token) async {
+    final result = await communityBlockingState.runLemmy(
+        instanceHost,
+        BlockCommunity(
+            communityId: fullPostView!.communityView.community.id,
+            block: !fullPostView!.communityView.blocked,
+            auth: token.raw));
+    if (result != null) {
+      fullPostView =
+          fullPostView!.copyWith(communityView: result.communityView);
+    }
+  }
+
+  @action
   void addComment(CommentView commentView) =>
       newComments.insert(0, commentView);
 

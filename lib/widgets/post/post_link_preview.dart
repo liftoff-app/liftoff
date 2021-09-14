@@ -11,7 +11,8 @@ class PostLinkPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return ObserverBuilder<PostStore>(
       builder: (context, store) {
-        if (store.postView.post.url == null ||
+        if (store.hasMedia ||
+            store.postView.post.url == null ||
             store.postView.post.url!.isEmpty) {
           return const SizedBox();
         }

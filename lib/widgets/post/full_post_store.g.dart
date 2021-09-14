@@ -76,6 +76,28 @@ mixin _$FullPostStore on _FullPostStore, Store {
     return _$refreshAsyncAction.run(() => super.refresh());
   }
 
+  final _$blockCommunityAsyncAction =
+      AsyncAction('_FullPostStore.blockCommunity');
+
+  @override
+  Future<void> blockCommunity(Jwt token) {
+    return _$blockCommunityAsyncAction.run(() => super.blockCommunity(token));
+  }
+
+  final _$_FullPostStoreActionController =
+      ActionController(name: '_FullPostStore');
+
+  @override
+  void addComment(CommentView commentView) {
+    final _$actionInfo = _$_FullPostStoreActionController.startAction(
+        name: '_FullPostStore.addComment');
+    try {
+      return super.addComment(commentView);
+    } finally {
+      _$_FullPostStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

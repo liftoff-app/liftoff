@@ -112,16 +112,21 @@ class PostMoreMenu extends HookWidget {
                 ),
               if (fullPostStore != null && fullPostStore!.fullPostView != null)
                 ObserverBuilder<FullPostStore>(
-                    store: fullPostStore,
-                    builder: (context, store) {
-                      return ListTile(
-                        leading: store.communityBlockingState.isLoading
-                            ? const CircularProgressIndicator.adaptive()
-                            : const Icon(Icons.block),
-                        title: Text(
-                            '${store.fullPostView!.communityView.blocked ? 'Block' : 'Unblock'} community'),
-                      );
-                    }),
+                  store: fullPostStore,
+                  builder: (context, store) {
+                    return ListTile(
+                      leading: store.communityBlockingState.isLoading
+                          ? const CircularProgressIndicator.adaptive()
+                          : const Icon(Icons.block),
+                      title: Text(
+                          '${store.fullPostView!.communityView.blocked ? 'Unblock' : 'Block'} community'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        loggedInAction(store.blockCommunity)();
+                      },
+                    );
+                  },
+                ),
               ListTile(
                 leading: const Icon(Icons.info_outline),
                 title: const Text('Nerd stuff'),
