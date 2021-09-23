@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- Logging: local logs about some actions/errors. Can be accessed from **settings > about lemmur > logs**
+
 ## v0.6.0 - 2021-09-06
 
 ### Added

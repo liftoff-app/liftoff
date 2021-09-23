@@ -29,5 +29,20 @@
   "L10n string": {
     "prefix": "l10n",
     "body": ["L10n.of(context)!.$0"]
+  },
+  "Mobx store": {
+    "prefix": "mobxstore",
+    "body": [
+      "import 'package:mobx/mobx.dart';",
+      "",
+      "part '$TM_FILENAME_BASE.g.dart';",
+      "",
+      "class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} = _${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} with _$${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g};",
+      "",
+      "abstract class _${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} with Store {",
+      "\t@observable",
+      "\t$0",
+      "}"
+    ]
   }
 }

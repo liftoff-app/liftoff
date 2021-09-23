@@ -4,19 +4,25 @@
     {
       "name": "Debug",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "program": "lib/main_dev.dart",
+      "args": ["--flavor", "dev"]
     },
     {
       "name": "Profile",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "program": "lib/main_dev.dart",
+      "args": ["--flavor", "dev"]
     },
     {
       "name": "Release",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "program": "lib/main_dev.dart",
+      "args": ["--flavor", "dev"]
     }
   ]
 }

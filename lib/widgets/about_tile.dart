@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../gen/assets.gen.dart';
 import '../hooks/memo_future.dart';
+import '../pages/log_console_page/log_console_page.dart';
 import '../url_launcher.dart';
 import 'bottom_modal.dart';
 
@@ -72,7 +73,14 @@ class AboutTile extends HookWidget {
                 ),
               ),
             );
-          }, // TODO: link to some donation site
+          },
+        ),
+        TextButton.icon(
+          icon: const Icon(Icons.list_alt),
+          label: const Text('logs'),
+          onPressed: () {
+            Navigator.of(context).push(LogConsolePage.route());
+          },
         ),
       ],
       applicationIcon: ClipRRect(

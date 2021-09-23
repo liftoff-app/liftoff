@@ -55,6 +55,7 @@ dependencies:
   json_annotation: ^4.1.0
   keyboard_dismisser: ^2.0.0
   freezed_annotation: ^0.14.3
+  logging: ^1.0.1
 
   flutter:
     sdk: flutter
