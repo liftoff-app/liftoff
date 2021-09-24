@@ -5,28 +5,34 @@
     "body": ["\"$1\": \"$2\",", "\"@$1\": {}$0"]
   },
   "Assert not null": {
+    "scope": "dart",
     "prefix": "assnotnull",
     "body": ["assert($1 != null)$0"]
   },
   "sizedbox": {
+    "scope": "dart",
     "prefix": "sizedbox",
     "body": ["const SizedBox($1)$0"]
   },
   "theme": {
+    "scope": "dart",
     "prefix": "theme",
     "body": ["final theme = Theme.of(context);"]
   },
   "sleep": {
+    "scope": "dart",
     "prefix": "sleep",
     "body": [
       "await Future<dynamic>.delayed(const Duration(milliseconds: ${1:1000}));$0"
     ]
   },
   "repeat widget": {
+    "scope": "dart",
     "prefix": "repeat",
     "body": ["for(int i = 0; i < $1; i++)$0"]
   },
   "L10n string": {
+    "scope": "dart",
     "prefix": "l10n",
     "body": ["L10n.of(context)!.$0"]
   },

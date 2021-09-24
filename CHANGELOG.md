@@ -3,6 +3,7 @@
 ### Added
 
 - Logging: local logs about some actions/errors. Can be accessed from **settings > about lemmur > logs**
+- Android theme-aware splash screen (thanks to [@mimi89999](https://github.com/mimi89999))
 
 ## v0.6.0 - 2021-09-06
 
