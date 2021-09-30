@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -123,10 +122,8 @@ class AddAccountPage extends HookWidget {
                 ),
                 title: const Text('Add instance'),
                 onTap: () async {
-                  final value = await showCupertinoModalPopup<String>(
-                    context: context,
-                    builder: (context) => const AddInstancePage(),
-                  );
+                  final value =
+                      await Navigator.of(context).push(AddInstancePage.route());
                   Navigator.of(context).pop(value);
                 },
               ),
@@ -178,4 +175,9 @@ class AddAccountPage extends HookWidget {
       ),
     );
   }
+
+  static Route<String> route(String instanceHost) => MaterialPageRoute(
+        builder: (context) => AddAccountPage(instanceHost: instanceHost),
+        fullscreenDialog: true,
+      );
 }

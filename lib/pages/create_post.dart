@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,11 +32,10 @@ class CreatePostFab extends HookWidget {
 
     return FloatingActionButton(
       onPressed: loggedInAction((_) async {
-        final postView = await showCupertinoModalPopup<PostView>(
-          context: context,
-          builder: (_) => community == null
-              ? const CreatePostPage()
-              : CreatePostPage.toCommunity(community!),
+        final postView = await Navigator.of(context).push(
+          community == null
+              ? CreatePostPage.route()
+              : CreatePostPage.toCommunityRoute(community!),
         );
 
         if (postView != null) {
@@ -67,7 +65,7 @@ class CreatePostPage extends HookWidget {
   const CreatePostPage.toCommunity(CommunityView this.community)
       : _isEdit = false,
         post = null;
-  const CreatePostPage.edit(this.post)
+  const CreatePostPage.edit(Post this.post)
       : _isEdit = true,
         community = null;
 
@@ -352,4 +350,20 @@ class CreatePostPage extends HookWidget {
       ),
     );
   }
+
+  static Route<PostView> route() => MaterialPageRoute(
+        builder: (context) => const CreatePostPage(),
+        fullscreenDialog: true,
+      );
+
+  static Route<PostView> toCommunityRoute(CommunityView community) =>
+      MaterialPageRoute(
+        builder: (context) => CreatePostPage.toCommunity(community),
+        fullscreenDialog: true,
+      );
+
+  static Route<PostView> editRoute(Post post) => MaterialPageRoute(
+        builder: (context) => CreatePostPage.edit(post),
+        fullscreenDialog: true,
+      );
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -84,9 +83,8 @@ class FullPostPage extends HookWidget {
     sharePost() => share(post.post.apId, context: context);
 
     comment() async {
-      final newComment = await showCupertinoModalPopup<CommentView>(
-        context: context,
-        builder: (_) => WriteComment.toPost(post.post),
+      final newComment = await Navigator.of(context).push(
+        WriteComment.toPostRoute(post.post),
       );
       if (newComment != null) {
         newComments.value = [...newComments.value, newComment];

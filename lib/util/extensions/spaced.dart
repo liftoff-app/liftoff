@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 /// Creates gaps between given widgets
 extension SpaceWidgets on List<Widget> {

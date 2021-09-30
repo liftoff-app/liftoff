@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
@@ -13,7 +12,7 @@ Future<dynamic> goTo(
   BuildContext context,
   Widget Function(BuildContext context) builder,
 ) =>
-    Navigator.of(context).push(CupertinoPageRoute(
+    Navigator.of(context).push(MaterialPageRoute(
       builder: builder,
     ));
 
@@ -22,7 +21,7 @@ Future<dynamic> goToReplace(
   BuildContext context,
   Widget Function(BuildContext context) builder,
 ) =>
-    Navigator.of(context).pushReplacement(CupertinoPageRoute(
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: builder,
     ));
 

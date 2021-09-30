@@ -10,6 +10,13 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
   final maybeAmoledColor = amoled ? Colors.black : null;
 
   return theme.copyWith(
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     scaffoldBackgroundColor: maybeAmoledColor,
     backgroundColor: maybeAmoledColor,
     canvasColor: maybeAmoledColor,

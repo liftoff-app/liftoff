@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -327,16 +326,13 @@ class AccountsConfigPage extends HookWidget {
           SpeedDialChild(
             child: const Icon(Icons.person_add),
             label: 'Add account',
-            onTap: () => showCupertinoModalPopup(
-                context: context,
-                builder: (_) =>
-                    AddAccountPage(instanceHost: accountsStore.instances.last)),
+            onTap: () => Navigator.of(context)
+                .push(AddAccountPage.route(accountsStore.instances.last)),
           ),
           SpeedDialChild(
             child: const Icon(Icons.dns),
             label: 'Add instance',
-            onTap: () => showCupertinoModalPopup(
-                context: context, builder: (_) => const AddInstancePage()),
+            onTap: () => Navigator.of(context).push(AddInstancePage.route()),
           ),
         ],
         child: const Icon(Icons.add),
@@ -350,10 +346,8 @@ class AccountsConfigPage extends HookWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 100),
                   child: TextButton.icon(
-                    onPressed: () => showCupertinoModalPopup(
-                      context: context,
-                      builder: (_) => const AddInstancePage(),
-                    ),
+                    onPressed: () =>
+                        Navigator.of(context).push(AddInstancePage.route()),
                     icon: const Icon(Icons.add),
                     label: const Text('Add instance'),
                   ),
@@ -393,9 +387,7 @@ class AccountsConfigPage extends HookWidget {
                 leading: const Icon(Icons.add),
                 title: const Text('Add account'),
                 onTap: () {
-                  showCupertinoModalPopup(
-                      context: context,
-                      builder: (_) => AddAccountPage(instanceHost: instance));
+                  Navigator.of(context).push(AddAccountPage.route(instance));
                 },
               ),
           ]

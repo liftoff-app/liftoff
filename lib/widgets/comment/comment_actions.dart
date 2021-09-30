@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -33,9 +32,8 @@ class CommentActions extends HookWidget {
         final post = store.comment.post;
 
         reply() async {
-          final newComment = await showCupertinoModalPopup<CommentView>(
-            context: context,
-            builder: (context) => WriteComment.toComment(
+          final newComment = await Navigator.of(context).push(
+            WriteComment.toCommentRoute(
               comment: comment,
               post: post,
             ),

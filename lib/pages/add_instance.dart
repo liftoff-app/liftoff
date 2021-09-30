@@ -132,4 +132,9 @@ class AddInstancePage extends HookWidget {
       ),
     );
   }
+
+  static Route<String> route() => MaterialPageRoute(
+        builder: (context) => const AddInstancePage(),
+        fullscreenDialog: true,
+      );
 }
