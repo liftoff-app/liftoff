@@ -25,19 +25,35 @@ import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/write_comment.dart';
 
 class FullPostPage extends StatelessWidget {
-  final FullPostStore fullPostStore;
+  final String? instanceHost;
+  final int? id;
+  final PostView? postView;
+  final PostStore? postStore;
 
-  FullPostPage({required int id, required String instanceHost})
-      : fullPostStore = FullPostStore(instanceHost: instanceHost, postId: id);
-  FullPostPage.fromPostView(PostView postView)
-      : fullPostStore = FullPostStore.fromPostView(postView);
-  FullPostPage.fromPostStore(PostStore postStore)
-      : fullPostStore = FullPostStore.fromPostStore(postStore);
+  const FullPostPage({required int this.id, required String this.instanceHost})
+      : postView = null,
+        postStore = null;
+  const FullPostPage.fromPostView(PostView this.postView)
+      : id = null,
+        instanceHost = null,
+        postStore = null;
+  const FullPostPage.fromPostStore(PostStore this.postStore)
+      : id = null,
+        instanceHost = null,
+        postView = null;
 
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (context) => fullPostStore,
+      create: (context) {
+        if (postStore != null) {
+          return FullPostStore.fromPostStore(postStore!);
+        } else if (postView != null) {
+          return FullPostStore.fromPostView(postView!);
+        } else {
+          return FullPostStore(instanceHost: instanceHost!, postId: id!);
+        }
+      },
       builder: (context, store) => AsyncStoreListener(
         asyncStore: context.read<FullPostStore>().fullPostState,
         child: AsyncStoreListener<BlockedCommunity>(
