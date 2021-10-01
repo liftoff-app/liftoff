@@ -11,14 +11,21 @@ import 'bottom_safe.dart';
 import 'comment/comment.dart';
 import 'post/full_post_store.dart';
 
+class _SortSelection {
+  final IconData icon;
+  final String text;
+
+  const _SortSelection(this.icon, this.text);
+}
+
 /// Manages comments section, sorts them
 class CommentSection extends StatelessWidget {
   static const sortPairs = {
-    CommentSortType.hot: [Icons.whatshot, L10nStrings.hot],
-    CommentSortType.new_: [Icons.new_releases, L10nStrings.new_],
-    CommentSortType.old: [Icons.calendar_today, L10nStrings.old],
-    CommentSortType.top: [Icons.trending_up, L10nStrings.top],
-    CommentSortType.chat: [Icons.chat, L10nStrings.chat],
+    CommentSortType.hot: _SortSelection(Icons.whatshot, L10nStrings.hot),
+    CommentSortType.new_: _SortSelection(Icons.new_releases, L10nStrings.new_),
+    CommentSortType.old: _SortSelection(Icons.calendar_today, L10nStrings.old),
+    CommentSortType.top: _SortSelection(Icons.trending_up, L10nStrings.top),
+    CommentSortType.chat: _SortSelection(Icons.chat, L10nStrings.chat),
   };
 
   const CommentSection({Key? key}) : super(key: key);
@@ -62,8 +69,8 @@ class CommentSection extends StatelessWidget {
                           children: [
                             for (final e in sortPairs.entries)
                               ListTile(
-                                leading: Icon(e.value[0] as IconData),
-                                title: Text((e.value[1] as String).tr(context)),
+                                leading: Icon(e.value.icon),
+                                title: Text((e.value.text).tr(context)),
                                 trailing: store.sorting == e.key
                                     ? const Icon(Icons.check)
                                     : null,
@@ -78,8 +85,7 @@ class CommentSection extends StatelessWidget {
                     },
                     child: Row(
                       children: [
-                        Text((sortPairs[store.sorting]![1] as String)
-                            .tr(context)),
+                        Text((sortPairs[store.sorting]!.text).tr(context)),
                         const Icon(Icons.arrow_drop_down),
                       ],
                     ),
