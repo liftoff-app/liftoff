@@ -18,8 +18,10 @@ class Refreshable<T> {
 ///
 /// `keys` will re-run the initial fetching thus yielding a
 /// loading state in the AsyncSnapshot
-Refreshable<T?> useRefreshable<T>(AsyncValueGetter<T> fetcher,
-    [List<Object> keys = const <Object>[]]) {
+Refreshable<T> useRefreshable<T extends Object>(
+  AsyncValueGetter<T> fetcher, [
+  List<Object> keys = const <Object>[],
+]) {
   final newData = useState<T?>(null);
   final snapshot = useMemoFuture(() async {
     newData.value = null;
@@ -28,7 +30,7 @@ Refreshable<T?> useRefreshable<T>(AsyncValueGetter<T> fetcher,
 
   final outSnapshot = () {
     if (newData.value != null) {
-      return AsyncSnapshot.withData(ConnectionState.done, newData.value);
+      return AsyncSnapshot.withData(ConnectionState.done, newData.value!);
     }
     return snapshot;
   }();

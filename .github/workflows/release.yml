@@ -37,36 +37,36 @@ jobs:
         run: flutter pub get
 
       - name: Inject keystore
-        working-directory: android
-        env:
-          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          ALIAS: ${{ secrets.ALIAS }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        working-directory: android/app
         run: |
-          echo storePassword=$KEY_STORE_PASSWORD > key.properties
-          echo keyPassword=$KEY_PASSWORD >> key.properties
-          echo keyAlias=$ALIAS >> key.properties
-          echo storeFile=$HOME/key.jks >> key.properties
-
-          echo $SIGNING_KEY | base64 -d | tee ~/key.jks >/dev/null
+          echo "${{ secrets.SIGNING_KEY }}" | base64 -d | tee key.jks >/dev/null
 
       - name: Generate appbundle
-        run: flutter build appbundle
+        env:
+          ANDROID_KEY_ALIAS: ${{ secrets.ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ANDROID_STORE_PATH: key.jks
+          ANDROID_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+        run: flutter build appbundle --release --target lib/main_prod.dart --flavor prod
 
       - uses: actions/upload-artifact@v2
         with:
           name: android-appbundle
           path: |
-            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/bundle/prodRelease/app-prod-release.aab
 
       - name: Android build
-        run: |
-          flutter build apk --split-per-abi
+        env:
+          ANDROID_KEY_ALIAS: ${{ secrets.ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ANDROID_STORE_PATH: key.jks
+          ANDROID_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+        run:
+          flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
 
-          mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
-          mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
-          mv build/app/outputs/flutter-apk/app-x86_64-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
+          mv build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
+          mv build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
+          mv build/app/outputs/flutter-apk/app-x86_64-prod-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
 
       - uses: actions/upload-artifact@v2
         with:
@@ -96,17 +96,17 @@ jobs:
 
       - name: Build
         run: |
-          flutter build linux
+          flutter build linux --release --target lib/main_prod.dart
 
       - name: Archive
-        working-directory: build/linux/release/bundle
+        working-directory: build/linux/x64/release/bundle
         run: |
           tar -czf lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-linux.tar.gz *
 
       - uses: actions/upload-artifact@v2
         with:
           name: linux-build
-          path: build/linux/release/bundle/lemmur-*.tar.gz
+          path: build/linux/x64/release/bundle/lemmur-*.tar.gz
 
   windows-build:
     name: Windows build
@@ -125,7 +125,7 @@ jobs:
 
       - name: Build
         run: |
-          flutter build windows
+          flutter build windows --release --target lib/main_prod.dart
 
       - name: Archive
         working-directory: build/windows/runner/Release

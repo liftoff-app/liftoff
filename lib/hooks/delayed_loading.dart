@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'ref.dart';
-
 class DelayedLoading {
   final bool pending;
   final bool loading;
@@ -32,11 +30,11 @@ DelayedLoading useDelayedLoading(
     loading: loading.value,
     pending: pending.value,
     start: () {
-      timerHandle.current = Timer(delayDuration, () => loading.value = true);
+      timerHandle.value = Timer(delayDuration, () => loading.value = true);
       pending.value = true;
     },
     cancel: () {
-      timerHandle.current?.cancel();
+      timerHandle.value?.cancel();
       pending.value = false;
       loading.value = false;
     },

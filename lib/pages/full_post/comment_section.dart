@@ -123,8 +123,7 @@ class CommentSection extends StatelessWidget {
                     com,
                     key: ValueKey(com),
                   ),
-              const BottomSafe(
-                  kMinInteractiveDimension + kFloatingActionButtonMargin),
+              const BottomSafe.fab(),
             ]
           ],
         );

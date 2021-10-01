@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'ref.dart';
-
 class Debounce {
   final bool loading;
   final VoidCallback callback;
@@ -27,14 +25,14 @@ Debounce useDebounce(
   final timerHandle = useRef<Timer?>(null);
 
   cancel() {
-    timerHandle.current?.cancel();
+    timerHandle.value?.cancel();
     loading.value = false;
   }
 
-  useEffect(() => () => timerHandle.current?.cancel(), []);
+  useEffect(() => () => timerHandle.value?.cancel(), []);
 
   start() {
-    timerHandle.current = Timer(delayDuration, () async {
+    timerHandle.value = Timer(delayDuration, () async {
       loading.value = true;
       await callback();
       cancel();

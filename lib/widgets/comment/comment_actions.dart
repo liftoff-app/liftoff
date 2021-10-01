@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -33,9 +32,8 @@ class CommentActions extends HookWidget {
         final post = store.comment.post;
 
         reply() async {
-          final newComment = await showCupertinoModalPopup<CommentView>(
-            context: context,
-            builder: (context) => WriteComment.toComment(
+          final newComment = await Navigator.of(context).push(
+            WriteComment.toCommentRoute(
               comment: comment,
               post: post,
             ),
@@ -66,7 +64,9 @@ class CommentActions extends HookWidget {
               TileAction(
                 icon: Icons.check,
                 onPressed: loggedInAction(store.markAsRead),
-                iconColor: comment.read ? Theme.of(context).accentColor : null,
+                iconColor: comment.read
+                    ? Theme.of(context).colorScheme.secondary
+                    : null,
                 tooltip: comment.read
                     ? L10n.of(context)!.mark_as_unread
                     : L10n.of(context)!.mark_as_read,
@@ -95,7 +95,7 @@ class CommentActions extends HookWidget {
             TileAction(
               icon: Icons.arrow_upward,
               iconColor: store.myVote == VoteType.up
-                  ? Theme.of(context).accentColor
+                  ? Theme.of(context).colorScheme.secondary
                   : null,
               onPressed: loggedInAction(store.upVote),
               tooltip: 'upvote',

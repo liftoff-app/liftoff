@@ -133,4 +133,22 @@ class WriteMessagePage extends HookWidget {
       ),
     );
   }
+
+  static Route<PrivateMessageView> sendRoute({
+    required PersonSafe recipient,
+    required String instanceHost,
+  }) =>
+      MaterialPageRoute(
+        builder: (context) => WriteMessagePage.send(
+          recipient: recipient,
+          instanceHost: instanceHost,
+        ),
+        fullscreenDialog: true,
+      );
+
+  static Route<PrivateMessageView> editRoute(PrivateMessageView pmv) =>
+      MaterialPageRoute(
+        builder: (context) => WriteMessagePage.edit(pmv),
+        fullscreenDialog: true,
+      );
 }

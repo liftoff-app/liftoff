@@ -25,12 +25,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
-
 android {
     compileSdkVersion 30
 
@@ -51,21 +45,55 @@ android {
     }
 
     signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+        dev { }
+
+        if (System.getenv("ANDROID_STORE_PATH")) {
+            prod {
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+                storeFile file(System.getenv("ANDROID_STORE_PATH"))
+                storePassword System.getenv("ANDROID_STORE_PASSWORD")
+            }
+        } else {
+            prod { }
         }
-   }
+    }
+
+    flavorDimensions "app"
+
+    productFlavors {
+        dev {
+            dimension "app"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            manifestPlaceholders = [
+                appName: "lemmur DEV"
+            ]
+            signingConfig signingConfigs.debug
+        }
+
+        prod {
+            dimension "app"
+            manifestPlaceholders = [
+                appName: "lemmur"
+            ]
+            signingConfig signingConfigs.prod
+        }
+    }
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+            debuggable true
+            minifyEnabled false
+            signingConfig null
+        }
+
         release {
-            if (keystorePropertiesFile.exists()) {
-                signingConfig signingConfigs.release
-            } else {
-                signingConfig signingConfigs.debug
-            }
+            debuggable false
+            minifyEnabled true
+            shrinkResources false
+            zipAlignEnabled true
         }
     }
 }

@@ -137,7 +137,7 @@ class _UserOverview extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorOnTopOfAccentColor =
-        textColorBasedOnBackground(theme.accentColor);
+        textColorBasedOnBackground(theme.colorScheme.secondary);
 
     return Stack(
       children: [
@@ -154,7 +154,7 @@ class _UserOverview extends HookWidget {
           Container(
             width: double.infinity,
             height: 200,
-            color: theme.accentColor,
+            color: theme.colorScheme.secondary,
           ),
         Container(
           height: 200,

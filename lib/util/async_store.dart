@@ -19,10 +19,8 @@ abstract class _AsyncStore<T> with Store {
   bool get isLoading => asyncState is AsyncStateLoading;
 
   @computed
-  String? get errorTerm => asyncState.maybeWhen(
-        error: (errorTerm) => errorTerm,
-        orElse: () => null,
-      );
+  String? get errorTerm =>
+      asyncState.whenOrNull(error: (errorTerm) => errorTerm);
 
   /// runs some async action and reflects the progress in [asyncState].
   /// If successful, the result is returned, otherwise null is returned.

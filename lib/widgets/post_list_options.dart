@@ -31,10 +31,10 @@ class PostListOptions extends StatelessWidget {
             ),
             const Spacer(),
             if (styleButton)
-              IconButton(
-                icon: const Icon(Icons.view_stream),
+              const IconButton(
+                icon: Icon(Icons.view_stream),
                 // TODO: create compact post and dropdown for selecting
-                onPressed: () => print('TBD'),
+                onPressed: null,
               ),
           ],
         ),

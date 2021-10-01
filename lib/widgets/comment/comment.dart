@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
@@ -240,7 +239,7 @@ class _CommentWidget extends StatelessWidget {
                       if (store.collapsed && store.children.isNotEmpty) ...[
                         _CommentTag(
                           '+${store.children.length}',
-                          Theme.of(context).accentColor,
+                          Theme.of(context).colorScheme.secondary,
                         ),
                         const SizedBox(width: 7),
                       ],

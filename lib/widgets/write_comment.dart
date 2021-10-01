@@ -134,4 +134,28 @@ class WriteComment extends HookWidget {
       ),
     );
   }
+
+  static Route<CommentView> toPostRoute(Post post) => MaterialPageRoute(
+        builder: (context) => WriteComment.toPost(post),
+        fullscreenDialog: true,
+      );
+
+  static Route<CommentView> toCommentRoute({
+    required Comment comment,
+    required Post post,
+  }) =>
+      MaterialPageRoute(
+        builder: (context) =>
+            WriteComment.toComment(comment: comment, post: post),
+        fullscreenDialog: true,
+      );
+
+  static Route<CommentView> editRoute({
+    required Comment comment,
+    required Post post,
+  }) =>
+      MaterialPageRoute(
+        builder: (context) => WriteComment.edit(comment: comment, post: post),
+        fullscreenDialog: true,
+      );
 }

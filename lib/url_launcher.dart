@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
@@ -63,7 +62,6 @@ Future<void> linkLauncher({
           return goToPost(context, matchedInstance, int.parse(split[2]));
         } else if (split.length == 5) {
           // TODO: post with focus on comment thread
-          print('comment in post');
           return goToPost(context, matchedInstance, int.parse(split[2]));
         }
         break;
@@ -73,21 +71,17 @@ Future<void> linkLauncher({
 
       case 'communities':
         // TODO: put here push to communities page
-        print('communities');
         return;
 
       case 'modlog':
         // TODO: put here push to modlog
-        print('modlog');
         return;
       case 'inbox':
         // TODO: put here push to inbox
-        print('inbox');
         return;
       case 'search':
         // TODO: *maybe* put here push to search. we'll see
         //        how much web version differs form the app
-        print('search');
         return;
       case 'create_post':
       case 'create_community':

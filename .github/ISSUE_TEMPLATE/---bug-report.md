@@ -24,6 +24,14 @@ A clear and concise description of what the bug is.
 3. Scroll down to '....'
 4. See error
 
+### Relevant logs
+
+<details>
+  <summary>Logs</summary>
+  
+  Paste your logs here. Logs can be found in lemmur: settings > about lemmur > logs.
+</details>
+
 ### Expected behavior
 
 A clear and concise description of what you expected to happen.

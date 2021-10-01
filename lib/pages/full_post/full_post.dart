@@ -14,7 +14,6 @@ import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
-import '../../util/unawaited.dart';
 import '../../widgets/post/post.dart';
 import '../../widgets/post/post_more_menu.dart';
 import '../../widgets/post/post_store.dart';
@@ -119,9 +118,8 @@ class _FullPostPage extends HookWidget {
         sharePost() => share(post.post.apId, context: context);
 
         comment() async {
-          final newComment = await showCupertinoModalPopup<CommentView>(
-            context: context,
-            builder: (_) => WriteComment.toPost(post.post),
+          final newComment = await Navigator.of(context).push(
+            WriteComment.toPostRoute(post.post),
           );
 
           if (newComment != null) {

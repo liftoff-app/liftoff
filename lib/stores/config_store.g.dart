@@ -6,18 +6,16 @@ part of 'config_store.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) {
-  return ConfigStore()
-    ..theme = _$enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ??
-        ThemeMode.system
-    ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
-    ..locale = LocaleSerde.fromJson(json['locale'] as String?)
-    ..showAvatars = json['showAvatars'] as bool? ?? true
-    ..showScores = json['showScores'] as bool? ?? true
-    ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
-    ..defaultListingType =
-        _postListingTypeFromJson(json['defaultListingType'] as String?);
-}
+ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
+  ..theme = _$enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ??
+      ThemeMode.system
+  ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
+  ..locale = LocaleSerde.fromJson(json['locale'] as String?)
+  ..showAvatars = json['showAvatars'] as bool? ?? true
+  ..showScores = json['showScores'] as bool? ?? true
+  ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
+  ..defaultListingType =
+      _postListingTypeFromJson(json['defaultListingType'] as String?);
 
 Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
     <String, dynamic>{

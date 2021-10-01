@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'util/text_color.dart';
 
@@ -9,6 +10,13 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
   final maybeAmoledColor = amoled ? Colors.black : null;
 
   return theme.copyWith(
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     scaffoldBackgroundColor: maybeAmoledColor,
     backgroundColor: maybeAmoledColor,
     canvasColor: maybeAmoledColor,
@@ -17,29 +25,30 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     visualDensity: VisualDensity.adaptivePlatformDensity,
     appBarTheme: AppBarTheme(
       elevation: 0,
-      brightness: theme.brightness,
+      systemOverlayStyle: theme.brightness == Brightness.dark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
       color: Colors.transparent,
       shadowColor: Colors.transparent,
       centerTitle: true,
       iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-      textTheme: TextTheme(
-        headline6: theme.textTheme.headline6
-            ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-      ),
+      titleTextStyle: theme.textTheme.headline6
+          ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
     ),
     tabBarTheme: TabBarTheme(
       unselectedLabelColor: Colors.grey,
       labelColor: theme.colorScheme.onSurface,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: theme.accentColor,
+      backgroundColor: theme.colorScheme.secondary,
       disabledColor: Colors.amber,
       selectedColor: Colors.amber,
       secondarySelectedColor: Colors.amber,
       padding: EdgeInsets.zero,
       shape: const StadiumBorder(),
-      labelStyle:
-          TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
+      labelStyle: TextStyle(
+        color: textColorBasedOnBackground(theme.colorScheme.secondary),
+      ),
       secondaryLabelStyle: const TextStyle(color: Colors.amber),
       brightness: theme.brightness,
       labelPadding: const EdgeInsets.symmetric(horizontal: 12),
@@ -53,8 +62,8 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        primary: theme.accentColor,
-        onPrimary: textColorBasedOnBackground(theme.accentColor),
+        primary: theme.colorScheme.secondary,
+        onPrimary: textColorBasedOnBackground(theme.colorScheme.secondary),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

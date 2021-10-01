@@ -1,5 +1,6 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'async_store.dart';
 
@@ -51,6 +52,14 @@ mixin _$AsyncState<T> {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T data)? data,
+    TResult Function()? loading,
+    TResult Function(String errorTerm)? error,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(T data)? data,
@@ -65,6 +74,14 @@ mixin _$AsyncState<T> {
     required TResult Function(AsyncStateData<T> value) data,
     required TResult Function(AsyncStateLoading<T> value) loading,
     required TResult Function(AsyncStateError<T> value) error,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(AsyncStateInitial<T> value)? initial,
+    TResult Function(AsyncStateData<T> value)? data,
+    TResult Function(AsyncStateLoading<T> value)? loading,
+    TResult Function(AsyncStateError<T> value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -115,6 +132,7 @@ class _$AsyncStateInitialCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$AsyncStateInitial<T>
     with DiagnosticableTreeMixin
     implements AsyncStateInitial<T> {
@@ -152,6 +170,17 @@ class _$AsyncStateInitial<T>
 
   @override
   @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T data)? data,
+    TResult Function()? loading,
+    TResult Function(String errorTerm)? error,
+  }) {
+    return initial?.call();
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(T data)? data,
@@ -174,6 +203,17 @@ class _$AsyncStateInitial<T>
     required TResult Function(AsyncStateError<T> value) error,
   }) {
     return initial(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(AsyncStateInitial<T> value)? initial,
+    TResult Function(AsyncStateData<T> value)? data,
+    TResult Function(AsyncStateLoading<T> value)? loading,
+    TResult Function(AsyncStateError<T> value)? error,
+  }) {
+    return initial?.call(this);
   }
 
   @override
@@ -229,6 +269,7 @@ class _$AsyncStateDataCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$AsyncStateData<T>
     with DiagnosticableTreeMixin
     implements AsyncStateData<T> {
@@ -280,6 +321,17 @@ class _$AsyncStateData<T>
 
   @override
   @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T data)? data,
+    TResult Function()? loading,
+    TResult Function(String errorTerm)? error,
+  }) {
+    return data?.call(this.data);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(T data)? data,
@@ -302,6 +354,17 @@ class _$AsyncStateData<T>
     required TResult Function(AsyncStateError<T> value) error,
   }) {
     return data(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(AsyncStateInitial<T> value)? initial,
+    TResult Function(AsyncStateData<T> value)? data,
+    TResult Function(AsyncStateLoading<T> value)? loading,
+    TResult Function(AsyncStateError<T> value)? error,
+  }) {
+    return data?.call(this);
   }
 
   @override
@@ -349,6 +412,7 @@ class _$AsyncStateLoadingCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$AsyncStateLoading<T>
     with DiagnosticableTreeMixin
     implements AsyncStateLoading<T> {
@@ -386,6 +450,17 @@ class _$AsyncStateLoading<T>
 
   @override
   @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T data)? data,
+    TResult Function()? loading,
+    TResult Function(String errorTerm)? error,
+  }) {
+    return loading?.call();
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(T data)? data,
@@ -408,6 +483,17 @@ class _$AsyncStateLoading<T>
     required TResult Function(AsyncStateError<T> value) error,
   }) {
     return loading(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(AsyncStateInitial<T> value)? initial,
+    TResult Function(AsyncStateData<T> value)? data,
+    TResult Function(AsyncStateLoading<T> value)? loading,
+    TResult Function(AsyncStateError<T> value)? error,
+  }) {
+    return loading?.call(this);
   }
 
   @override
@@ -463,6 +549,7 @@ class _$AsyncStateErrorCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$AsyncStateError<T>
     with DiagnosticableTreeMixin
     implements AsyncStateError<T> {
@@ -515,6 +602,17 @@ class _$AsyncStateError<T>
 
   @override
   @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T data)? data,
+    TResult Function()? loading,
+    TResult Function(String errorTerm)? error,
+  }) {
+    return error?.call(errorTerm);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(T data)? data,
@@ -537,6 +635,17 @@ class _$AsyncStateError<T>
     required TResult Function(AsyncStateError<T> value) error,
   }) {
     return error(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(AsyncStateInitial<T> value)? initial,
+    TResult Function(AsyncStateData<T> value)? data,
+    TResult Function(AsyncStateLoading<T> value)? loading,
+    TResult Function(AsyncStateError<T> value)? error,
+  }) {
+    return error?.call(this);
   }
 
   @override

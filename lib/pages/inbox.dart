@@ -1,7 +1,6 @@
 import 'dart:math' show pi;
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -75,7 +74,7 @@ class InboxPage extends HookWidget {
                   Flexible(
                     child: Text(
                       displayString,
-                      style: theme.appBarTheme.textTheme?.headline6,
+                      style: theme.appBarTheme.titleTextStyle,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
@@ -313,7 +312,7 @@ class PrivateMessageTile extends HookWidget {
                       ),
                     Text(
                       otherSide.originPreferredName,
-                      style: TextStyle(color: theme.accentColor),
+                      style: TextStyle(color: theme.colorScheme.secondary),
                     ),
                   ],
                 ),
@@ -354,7 +353,7 @@ class PrivateMessageTile extends HookWidget {
             ),
             if (toMe) ...[
               TileAction(
-                iconColor: read.value ? theme.accentColor : null,
+                iconColor: read.value ? theme.colorScheme.secondary : null,
                 icon: Icons.check,
                 tooltip: L10n.of(context)!.mark_as_read,
                 onPressed: handleRead,
@@ -364,12 +363,12 @@ class PrivateMessageTile extends HookWidget {
                 icon: Icons.reply,
                 tooltip: L10n.of(context)!.reply,
                 onPressed: () {
-                  showCupertinoModalPopup(
-                      context: context,
-                      builder: (_) => WriteMessagePage.send(
-                            instanceHost: pmv.value.instanceHost,
-                            recipient: otherSide,
-                          ));
+                  Navigator.of(context).push(
+                    WriteMessagePage.sendRoute(
+                      instanceHost: pmv.value.instanceHost,
+                      recipient: otherSide,
+                    ),
+                  );
                 },
               )
             ] else ...[
@@ -377,9 +376,8 @@ class PrivateMessageTile extends HookWidget {
                 icon: Icons.edit,
                 tooltip: L10n.of(context)!.edit,
                 onPressed: () async {
-                  final val = await showCupertinoModalPopup<PrivateMessageView>(
-                      context: context,
-                      builder: (_) => WriteMessagePage.edit(pmv.value));
+                  final val = await Navigator.of(context)
+                      .push(WriteMessagePage.editRoute(pmv.value));
                   if (val != null) pmv.value = val;
                 },
               ),
