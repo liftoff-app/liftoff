@@ -72,6 +72,7 @@ abstract class _PostStore with Store {
   }
 
   @action
+  // ignore: use_setters_to_change_properties
   void updatePostView(PostView postView) {
     this.postView = postView;
   }

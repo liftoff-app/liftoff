@@ -7,12 +7,12 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../hooks/logged_in_action.dart';
 import '../../pages/create_post.dart';
+import '../../pages/full_post/full_post_store.dart';
 import '../../stores/accounts_store.dart';
 import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../bottom_modal.dart';
 import '../info_table_popup.dart';
-import 'full_post_store.dart';
 import 'post_store.dart';
 
 class PostMoreMenuButton extends StatelessWidget {

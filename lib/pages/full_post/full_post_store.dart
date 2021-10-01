@@ -3,7 +3,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../comment_tree.dart';
 import '../../util/async_store.dart';
-import 'post_store.dart';
+import '../../widgets/post/post_store.dart';
 
 part 'full_post_store.g.dart';
 

@@ -15,14 +15,14 @@ import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../../util/unawaited.dart';
-import '../../widgets/comment_section.dart';
-import '../../widgets/post/full_post_store.dart';
 import '../../widgets/post/post.dart';
 import '../../widgets/post/post_more_menu.dart';
 import '../../widgets/post/post_store.dart';
 import '../../widgets/post/save_post_button.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/write_comment.dart';
+import 'comment_section.dart';
+import 'full_post_store.dart';
 
 class FullPostPage extends StatelessWidget {
   final String? instanceHost;

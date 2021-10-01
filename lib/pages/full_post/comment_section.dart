@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../comment_tree.dart';
-import '../l10n/l10n.dart';
-import '../pages/full_post/full_post.dart';
-import '../stores/accounts_store.dart';
-import '../util/observer_consumers.dart';
-import 'bottom_modal.dart';
-import 'bottom_safe.dart';
-import 'comment/comment.dart';
-import 'post/full_post_store.dart';
+import '../../comment_tree.dart';
+import '../../l10n/l10n.dart';
+import '../../stores/accounts_store.dart';
+import '../../util/observer_consumers.dart';
+import '../../widgets/bottom_modal.dart';
+import '../../widgets/bottom_safe.dart';
+import '../../widgets/comment/comment.dart';
+import 'full_post.dart';
+import 'full_post_store.dart';
 
 class _SortSelection {
   final IconData icon;
