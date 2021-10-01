@@ -5,6 +5,10 @@
 - Support for Lemmy v0.12.0
 - Show cake day on a user's profile and next to their name in a comment
 
+### Fixed
+
+- Fixed a bug where post would go out of sync with full version of the post
+
 ## v0.5.0 - 2021-04-29
 
 ### Added
