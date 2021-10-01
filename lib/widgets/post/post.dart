@@ -9,6 +9,7 @@ import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
 import 'post_actions.dart';
+import 'post_body.dart';
 import 'post_info_section.dart';
 import 'post_link_preview.dart';
 import 'post_media.dart';
@@ -84,6 +85,7 @@ class _Post extends HookWidget {
               PostTitle(),
               PostMedia(),
               PostLinkPreview(),
+              PostBody(),
               PostActions(),
             ],
           ),

@@ -170,44 +170,10 @@ class _FullPostPage extends HookWidget {
                 children: [
                   const SizedBox(height: 15),
                   PostTile.fromPostStore(store.postStore!),
-                  const _Comments(),
+                  const CommentSection(),
                 ],
               ),
             ));
-      },
-    );
-  }
-}
-
-class _Comments extends StatelessWidget {
-  const _Comments();
-
-  // TODO: comments rebuild every refresh, even when they don't change. FIX THAT!
-
-  @override
-  Widget build(BuildContext context) {
-    return ObserverBuilder<FullPostStore>(
-      builder: (context, store) {
-        final fullPost = store.fullPostView;
-        if (fullPost != null) {
-          return CommentSection(store.comments!,
-              postCreatorId: fullPost.postView.creator.id);
-        } else if (store.fullPostState.errorTerm != null) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-            child: FailedToLoad(
-                message: 'Comments failed to load',
-                refresh: () => store.refresh(context
-                    .read<AccountsStore>()
-                    .defaultUserDataFor(store.instanceHost)
-                    ?.jwt)),
-          );
-        } else {
-          return const Padding(
-            padding: EdgeInsets.only(top: 40),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
       },
     );
   }

@@ -1,6 +1,7 @@
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../comment_tree.dart';
 import '../../util/async_store.dart';
 import 'post_store.dart';
 
@@ -16,7 +17,27 @@ abstract class _FullPostStore with Store {
   FullPostView? fullPostView;
 
   @observable
-  List<CommentView> newComments = [];
+  ObservableList<CommentView> newComments = ObservableList<CommentView>();
+
+  @observable
+  CommentSortType sorting = CommentSortType.hot;
+
+  @action
+  // ignore: use_setters_to_change_properties
+  void updateSorting(CommentSortType sort) {
+    sorting = sort;
+  }
+
+  @computed
+  List<CommentTree>? get commentTree {
+    if (fullPostView == null) return null;
+    return CommentTree.fromList(fullPostView!.comments);
+  }
+
+  @computed
+  List<CommentTree>? get sortedCommentTree {
+    return commentTree?..sortBy(sorting);
+  }
 
   @observable
   PostStore? postStore;
@@ -68,12 +89,14 @@ abstract class _FullPostStore with Store {
     required this.instanceHost,
   });
 
+  // ignore: unused_element
   _FullPostStore.fromPostView(PostView postView)
       : postId = postView.post.id,
         instanceHost = postView.instanceHost,
         postStore = PostStore(postView);
 
-  _FullPostStore.fromPostStore(this.postStore)
-      : postId = postStore!.postView.post.id,
+  // ignore: unused_element
+  _FullPostStore.fromPostStore(PostStore this.postStore)
+      : postId = postStore.postView.post.id,
         instanceHost = postStore.postView.instanceHost;
 }

@@ -39,6 +39,15 @@ extension on CommentSortType {
   }
 }
 
+extension SortCommentTreeList on List<CommentTree> {
+  void sortBy(CommentSortType sortType) {
+    sort(sortType.sortFunction);
+    for (final el in this) {
+      el._sort(sortType.sortFunction);
+    }
+  }
+}
+
 class CommentTree {
   CommentView comment;
   List<CommentTree> children = [];
@@ -70,15 +79,5 @@ class CommentTree {
     for (final el in children) {
       el._sort(compare);
     }
-  }
-
-  /// Sorts in-place a list of CommentTrees according to a given sortType
-  static List<CommentTree> sortList(
-      CommentSortType sortType, List<CommentTree> comms) {
-    comms.sort(sortType.sortFunction);
-    for (final el in comms) {
-      el._sort(sortType.sortFunction);
-    }
-    return comms;
   }
 }
