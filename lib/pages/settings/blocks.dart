@@ -102,32 +102,33 @@ class _UserBlocks extends HookWidget {
                 if (store.blockedUsers.isEmpty)
                   const ListTile(
                       title: Center(child: Text('No users blocked'))),
-                ListTile(
-                  leading: const Padding(
-                    padding: EdgeInsets.only(left: 16, right: 10),
-                    child: Icon(Icons.add),
-                  ),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) =>
-                            BlockUserPopup(store.instanceHost));
-                  },
-                  title: const Text('Block User'),
-                ),
+                // TODO: add user search & block
+                // ListTile(
+                //   leading: const Padding(
+                //     padding: EdgeInsets.only(left: 16, right: 10),
+                //     child: Icon(Icons.add),
+                //   ),
+                //   onTap: () {},
+                //   title: const Text('Block User'),
+                // ),
                 const Divider(),
                 for (final community in store.blockedCommunities)
                   _BlockCommunityTile(community, key: ValueKey(community)),
                 if (store.blockedCommunities.isEmpty)
                   const ListTile(
-                      title: Center(child: Text('No communities blocked'))),
-                const ListTile(
-                  leading: Padding(
-                    padding: EdgeInsets.only(left: 16, right: 10),
-                    child: Icon(Icons.add),
+                    title: Center(
+                      child: Text('No communities blocked'),
+                    ),
                   ),
-                  title: Text('Block Community'),
-                ),
+                // TODO: add community search & block
+                // const ListTile(
+                //   leading: Padding(
+                //     padding: EdgeInsets.only(left: 16, right: 10),
+                //     child: Icon(Icons.add),
+                //   ),
+                //   onTap: () {},
+                //   title: Text('Block Community'),
+                // ),
               ]
             ],
           ),
