@@ -6,6 +6,7 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
 import '../../../hooks/stores.dart';
+import '../../../l10n/l10n_from_string.dart';
 import '../../../stores/accounts_store.dart';
 import '../../../util/extensions/api.dart';
 import '../../../util/goto.dart';
@@ -74,7 +75,7 @@ class _UserBlocksWrapper extends StatelessWidget {
   }
 }
 
-class _UserBlocks extends HookWidget {
+class _UserBlocks extends StatelessWidget {
   const _UserBlocks();
 
   @override
@@ -95,7 +96,8 @@ class _UserBlocks extends HookWidget {
               else if (store.blocksState.errorTerm != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 64),
-                  child: Center(child: Text(store.blocksState.errorTerm!)),
+                  child: Center(
+                      child: Text(store.blocksState.errorTerm!.tr(context))),
                 )
               else ...[
                 for (final user in store.blockedUsers)
