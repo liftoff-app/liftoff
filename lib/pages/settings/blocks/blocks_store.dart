@@ -2,6 +2,8 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../util/async_store.dart';
+import 'community_block_store.dart';
+import 'user_block_store.dart';
 
 part 'blocks_store.g.dart';
 
@@ -11,41 +13,29 @@ abstract class _BlocksStore with Store {
   final String instanceHost;
   final Jwt token;
 
-  ObservableList<PersonSafe> blockedUsers;
+  _BlocksStore({required this.instanceHost, required this.token});
 
-  ObservableList<CommunitySafe> blockedCommunities;
+  @observable
+  List<UserBlockStore>? _blockedUsers;
+
+  @observable
+  List<CommunityBlockStore>? _blockedCommunities;
 
   final blockCommunityState = AsyncStore<BlockedCommunity>();
   final blockUserState = AsyncStore<BlockedPerson>();
 
   final blocksState = AsyncStore<FullSiteView>();
 
-  @action
-  void userUnblocked(int id) =>
-      blockedUsers.removeWhere((element) => element.id == id);
-  @action
-  void communityUnblocked(int id) =>
-      blockedCommunities.removeWhere((element) => element.id == id);
+  @computed
+  Iterable<UserBlockStore>? get blockedUsers =>
+      _blockedUsers?.where((u) => u.blocked);
 
-  @action
-  Future<void> blockUser(int id) async {
-    final result = await blockUserState.runLemmy(
-      instanceHost,
-      BlockPerson(personId: id, block: true, auth: token.raw),
-    );
+  @computed
+  Iterable<CommunityBlockStore>? get blockedCommunities =>
+      _blockedCommunities?.where((c) => c.blocked);
 
-    if (result != null) blockedUsers.add(result.personView.person);
-  }
-
-  @action
-  Future<void> blockCommunity(int id) async {
-    final result = await blockCommunityState.runLemmy(
-      instanceHost,
-      BlockCommunity(communityId: id, block: true, auth: token.raw),
-    );
-
-    if (result != null) blockedCommunities.add(result.communityView.community);
-  }
+  @computed
+  bool get isUsable => blockedUsers != null && blockedCommunities != null;
 
   @action
   Future<void> refresh() async {
@@ -53,18 +43,14 @@ abstract class _BlocksStore with Store {
         await blocksState.runLemmy(instanceHost, GetSite(auth: token.raw));
 
     if (result != null) {
-      blockedUsers = result.myUser!.personBlocks
-          .map((e) => e.target)
-          .toList()
-          .asObservable();
-      blockedCommunities = result.myUser!.communityBlocks
-          .map((e) => e.community)
-          .toList()
-          .asObservable();
+      _blockedUsers = result.myUser!.personBlocks
+          .map((e) => UserBlockStore(
+              instanceHost: instanceHost, token: token, person: e.target))
+          .toList();
+      _blockedCommunities = result.myUser!.communityBlocks
+          .map((e) => CommunityBlockStore(
+              instanceHost: instanceHost, token: token, community: e.community))
+          .toList();
     }
   }
-
-  _BlocksStore({required this.instanceHost, required this.token})
-      : blockedUsers = <PersonSafe>[].asObservable(),
-        blockedCommunities = <CommunitySafe>[].asObservable();
 }
