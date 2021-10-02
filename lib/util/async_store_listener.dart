@@ -7,17 +7,15 @@ import 'observer_consumers.dart';
 
 class AsyncStoreListener<T> extends StatelessWidget {
   final AsyncStore<T> asyncStore;
-  final String? successMessage;
   final String Function(
     BuildContext context,
-    AsyncStateData<T> asyncStore,
+    T data,
   )? successMessageBuilder;
   final Widget child;
 
   const AsyncStoreListener({
     Key? key,
     required this.asyncStore,
-    this.successMessage,
     this.successMessageBuilder,
     required this.child,
   }) : super(key: key);
@@ -34,15 +32,12 @@ class AsyncStoreListener<T> extends StatelessWidget {
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(content: Text(errorTerm.tr(context))));
         } else if (store.asyncState is AsyncStateData &&
-            (successMessage != null || successMessageBuilder != null)) {
+            (successMessageBuilder != null)) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-                content: Text(successMessageBuilder?.call(
-                      context,
-                      store.asyncState as AsyncStateData<T>,
-                    ) ??
-                    successMessage!)));
+                content: Text(successMessageBuilder!(
+                    context, (store.asyncState as AsyncStateData).data))));
         }
       },
       child: child,

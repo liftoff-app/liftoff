@@ -22,6 +22,7 @@ class SettingsPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final hasAnyUsers = useAccountsStoreSelect((store) => !store.hasNoAccount);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(L10n.of(context)!.settings),
@@ -47,7 +48,7 @@ class SettingsPage extends HookWidget {
               leading: const Icon(Icons.block),
               title: const Text('Blocks'),
               onTap: () {
-                goTo(context, (_) => const BlocksPage());
+                Navigator.of(context).push(BlocksPage.route());
               },
             ),
           ListTile(

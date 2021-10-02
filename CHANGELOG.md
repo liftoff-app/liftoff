@@ -5,17 +5,16 @@
 - Logging: local logs about some actions/errors. Can be accessed from **settings > about lemmur > logs**
 - Android theme-aware splash screen (thanks to [@mimi89999](https://github.com/mimi89999))
 - Blocking of users and communities (from post and from comment)
+- 
+### Fixed
 
+- Fixed a bug where post would go out of sync with full version of the post
 ## v0.6.0 - 2021-09-06
 
 ### Added
 
 - Support for Lemmy v0.12.0
 - Show cake day on a user's profile and next to their name in a comment
-
-### Fixed
-
-- Fixed a bug where post would go out of sync with full version of the post
 
 ## v0.5.0 - 2021-04-29
 

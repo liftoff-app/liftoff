@@ -38,7 +38,7 @@ class BlocksPage extends HookWidget {
         body: TabBarView(
           children: [
             for (final instance in accStore.loggedInInstances)
-              UserBlocksWrapper(
+              _UserBlocksWrapper(
                 instanceHost: instance,
                 username: accStore.defaultUsernameFor(instance)!,
               )
@@ -47,13 +47,17 @@ class BlocksPage extends HookWidget {
       ),
     );
   }
+
+  static Route route() =>
+      MaterialPageRoute(builder: (context) => const BlocksPage());
 }
 
-class UserBlocksWrapper extends StatelessWidget {
+class _UserBlocksWrapper extends StatelessWidget {
   final String instanceHost;
   final String username;
 
-  const UserBlocksWrapper({required this.instanceHost, required this.username});
+  const _UserBlocksWrapper(
+      {required this.instanceHost, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +68,7 @@ class UserBlocksWrapper extends StatelessWidget {
             .read<AccountsStore>()
             .userDataFor(instanceHost, username)!
             .jwt,
-      ),
+      )..refresh(),
       child: const _UserBlocks(),
     );
   }
@@ -75,8 +79,6 @@ class _UserBlocks extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useMemoized(() => context.read<BlocksStore>().refresh(), []);
-
     return ObserverBuilder<BlocksStore>(
       builder: (context, store) {
         return RefreshIndicator(
@@ -91,16 +93,19 @@ class _UserBlocks extends HookWidget {
                   child: Center(child: CircularProgressIndicator.adaptive()),
                 )
               else if (store.blocksState.errorTerm != null)
-                const Padding(
-                  padding: EdgeInsets.only(top: 64),
-                  child: Center(child: Text('error UwU')),
+                Padding(
+                  padding: const EdgeInsets.only(top: 64),
+                  child: Center(child: Text(store.blocksState.errorTerm!)),
                 )
               else ...[
                 for (final user in store.blockedUsers)
                   _BlockPersonTile(user, key: ValueKey(user)),
                 if (store.blockedUsers.isEmpty)
                   const ListTile(
-                      title: Center(child: Text('No users blocked'))),
+                    title: Center(
+                      child: Text('No users blocked'),
+                    ),
+                  ),
                 // TODO: add user search & block
                 // ListTile(
                 //   leading: const Padding(
@@ -166,7 +171,6 @@ class _BlockPersonTile extends HookWidget {
         );
       } on SocketException {
         showSnackBar('Network error');
-        // ignore: avoid_catches_without_on_clauses
       } on LemmyApiException catch (e) {
         showSnackBar(e.message);
       } catch (e) {
@@ -178,7 +182,7 @@ class _BlockPersonTile extends HookWidget {
 
     return ListTile(
       leading: Avatar(url: person.avatar),
-      title: Text(person.preferredName),
+      title: Text(person.originPreferredName),
       trailing: IconButton(
         icon: pending.value
             ? const CircularProgressIndicator.adaptive()
@@ -225,7 +229,6 @@ class _BlockCommunityTile extends HookWidget {
         showSnackBar('Network error');
       } on LemmyApiException catch (e) {
         showSnackBar(e.message);
-        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         showSnackBar(e.toString());
       } finally {

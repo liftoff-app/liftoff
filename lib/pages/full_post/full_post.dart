@@ -58,9 +58,8 @@ class FullPostPage extends StatelessWidget {
         child: AsyncStoreListener<BlockedCommunity>(
           asyncStore: context.read<FullPostStore>().communityBlockingState,
           successMessageBuilder: (context, asyncStore) {
-            final name =
-                asyncStore.data.communityView.community.originPreferredName;
-            return '${asyncStore.data.blocked ? 'Blocked' : 'Unblocked'} $name';
+            final name = asyncStore.communityView.community.originPreferredName;
+            return '${asyncStore.blocked ? 'Blocked' : 'Unblocked'} $name';
           },
           child: const _FullPostPage(),
         ),

@@ -93,8 +93,8 @@ class CommentWidget extends StatelessWidget {
       builder: (context, child) => AsyncStoreListener<BlockedPerson>(
         asyncStore: context.read<CommentStore>().blockingState,
         successMessageBuilder: (context, state) {
-          final name = state.data.personView.person.preferredName;
-          return state.data.blocked ? '$name blocked' : '$name unblocked';
+          final name = state.personView.person.preferredName;
+          return state.blocked ? '$name blocked' : '$name unblocked';
         },
         child: AsyncStoreListener(
           asyncStore: context.read<CommentStore>().votingState,
