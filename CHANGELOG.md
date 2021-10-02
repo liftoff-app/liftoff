@@ -7,6 +7,7 @@
 - Blocking of users and communities (from post and from comment)
 
 ### Fixed
+
 - Fixed a bug where post would go out of sync with full version of the post
 
 ## v0.6.0 - 2021-09-06
