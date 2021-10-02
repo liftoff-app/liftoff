@@ -5,13 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
-import '../../hooks/debounce.dart';
-import '../../hooks/stores.dart';
-import '../../stores/accounts_store.dart';
-import '../../util/extensions/api.dart';
-import '../../util/goto.dart';
-import '../../util/observer_consumers.dart';
-import '../../widgets/avatar.dart';
+import '../../../hooks/stores.dart';
+import '../../../stores/accounts_store.dart';
+import '../../../util/extensions/api.dart';
+import '../../../util/goto.dart';
+import '../../../util/observer_consumers.dart';
+import '../../../widgets/avatar.dart';
 import 'blocks_store.dart';
 
 class BlocksPage extends HookWidget {
@@ -247,33 +246,6 @@ class _BlockCommunityTile extends HookWidget {
       onTap: () {
         goToCommunity.byId(context, community.instanceHost, community.id);
       },
-    );
-  }
-}
-
-class BlockUserPopup extends HookWidget {
-  final String instanceHost;
-
-  const BlockUserPopup(this.instanceHost);
-
-  @override
-  Widget build(BuildContext context) {
-    final query = useState('');
-    final results = useState(<PersonViewSafe>[]);
-
-    final debounce = useDebounce(() async {
-      final res = await LemmyApiV3(instanceHost).run(Search(q: query.value));
-      results.value = res.users;
-    });
-
-    return Dialog(
-      child: Autocomplete<PersonViewSafe>(
-        optionsBuilder: (textEditingValue) {
-          debounce();
-          return results.value;
-        },
-        displayStringForOption: (person) => person.person.originPreferredName,
-      ),
     );
   }
 }

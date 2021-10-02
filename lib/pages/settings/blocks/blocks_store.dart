@@ -1,7 +1,7 @@
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../util/async_store.dart';
+import '../../../util/async_store.dart';
 
 part 'blocks_store.g.dart';
 

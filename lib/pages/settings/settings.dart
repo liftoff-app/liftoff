@@ -13,7 +13,7 @@ import '../../widgets/radio_picker.dart';
 import '../manage_account.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
-import 'blocks.dart';
+import 'blocks/blocks.dart';
 
 /// Page with a list of different settings sections
 class SettingsPage extends HookWidget {
