@@ -21,9 +21,6 @@ abstract class _BlocksStore with Store {
   @observable
   List<CommunityBlockStore>? _blockedCommunities;
 
-  final blockCommunityState = AsyncStore<BlockedCommunity>();
-  final blockUserState = AsyncStore<BlockedPerson>();
-
   final blocksState = AsyncStore<FullSiteView>();
 
   @computed
