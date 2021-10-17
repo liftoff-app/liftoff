@@ -19,7 +19,7 @@ class PostActions extends HookWidget {
   Widget build(BuildContext context) {
     final fullPost = context.read<IsFullPost>();
 
-    /// assemble actions section
+    // assemble actions section
     return ObserverBuilder<PostStore>(builder: (context, store) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
