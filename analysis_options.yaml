@@ -111,6 +111,7 @@ linter:
     - use_setters_to_change_properties
     - use_to_and_as_if_applicable
     - void_checks
+    - use_named_constants
 
 analyzer:
   exclude:
