@@ -22,7 +22,7 @@ class PostActions extends HookWidget {
     // assemble actions section
     return ObserverBuilder<PostStore>(builder: (context, store) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Row(
           children: [
             const Icon(Icons.comment),

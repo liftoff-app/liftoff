@@ -13,9 +13,9 @@ import 'full_post_store.dart';
 
 class _SortSelection {
   final IconData icon;
-  final String text;
+  final String term;
 
-  const _SortSelection(this.icon, this.text);
+  const _SortSelection(this.icon, this.term);
 }
 
 /// Manages comments section, sorts them
@@ -34,8 +34,10 @@ class CommentSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return ObserverBuilder<FullPostStore>(
       builder: (context, store) {
+        final fullPostView = store.fullPostView;
+
         // error & spinner handling
-        if (store.fullPostView == null) {
+        if (fullPostView == null) {
           if (store.fullPostState.errorTerm != null) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
@@ -49,7 +51,7 @@ class CommentSection extends StatelessWidget {
           } else {
             return const Padding(
               padding: EdgeInsets.only(top: 40),
-              child: Center(child: CircularProgressIndicator()),
+              child: Center(child: CircularProgressIndicator.adaptive()),
             );
           }
         }
@@ -70,7 +72,7 @@ class CommentSection extends StatelessWidget {
                             for (final e in sortPairs.entries)
                               ListTile(
                                 leading: Icon(e.value.icon),
-                                title: Text((e.value.text).tr(context)),
+                                title: Text((e.value.term).tr(context)),
                                 trailing: store.sorting == e.key
                                     ? const Icon(Icons.check)
                                     : null,
@@ -85,7 +87,7 @@ class CommentSection extends StatelessWidget {
                     },
                     child: Row(
                       children: [
-                        Text((sortPairs[store.sorting]!.text).tr(context)),
+                        Text((sortPairs[store.sorting]!.term).tr(context)),
                         const Icon(Icons.arrow_drop_down),
                       ],
                     ),
@@ -95,7 +97,7 @@ class CommentSection extends StatelessWidget {
               ),
             ),
             // sorting menu goes here
-            if (store.fullPostView!.comments.isEmpty)
+            if (fullPostView.comments.isEmpty)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 50),
                 child: Text(
@@ -111,7 +113,7 @@ class CommentSection extends StatelessWidget {
                   key: ValueKey(com),
                 ),
               if (store.sorting == CommentSortType.chat)
-                for (final com in store.fullPostView!.comments)
+                for (final com in fullPostView.comments)
                   CommentWidget.fromCommentView(
                     com,
                     detached: false,

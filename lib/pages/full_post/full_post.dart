@@ -29,8 +29,10 @@ class FullPostPage extends StatelessWidget {
   final PostView? postView;
   final PostStore? postStore;
 
-  const FullPostPage({required int this.id, required String this.instanceHost})
-      : postView = null,
+  const FullPostPage({
+    required int this.id,
+    required String this.instanceHost,
+  })  : postView = null,
         postStore = null;
   const FullPostPage.fromPostView(PostView this.postView)
       : id = null,
@@ -43,29 +45,52 @@ class FullPostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (context) {
-        if (postStore != null) {
-          return FullPostStore.fromPostStore(postStore!);
-        } else if (postView != null) {
-          return FullPostStore.fromPostView(postView!);
-        } else {
-          return FullPostStore(instanceHost: instanceHost!, postId: id!);
-        }
-      },
-      builder: (context, store) => AsyncStoreListener(
-        asyncStore: context.read<FullPostStore>().fullPostState,
-        child: AsyncStoreListener<BlockedCommunity>(
-          asyncStore: context.read<FullPostStore>().communityBlockingState,
-          successMessageBuilder: (context, asyncStore) {
-            final name = asyncStore.communityView.community.originPreferredName;
-            return '${asyncStore.blocked ? 'Blocked' : 'Unblocked'} $name';
-          },
-          child: const _FullPostPage(),
-        ),
+    return AsyncStoreListener(
+      asyncStore: context.read<FullPostStore>().fullPostState,
+      child: AsyncStoreListener<BlockedCommunity>(
+        asyncStore: context.read<FullPostStore>().communityBlockingState,
+        successMessageBuilder: (context, data) {
+          final name = data.communityView.community.originPreferredName;
+          return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
+        },
+        child: const _FullPostPage(),
       ),
     );
   }
+
+  static Jwt? _tryGetJwt(BuildContext context) {
+    final store = context.read<FullPostStore>();
+    return context
+        .read<AccountsStore>()
+        .defaultUserDataFor(store.instanceHost)
+        ?.jwt;
+  }
+
+  static Route route(int id, String instanceHost) => MaterialPageRoute(
+        builder: (context) => Provider(
+          create: (context) =>
+              FullPostStore(instanceHost: instanceHost, postId: id)
+                ..refresh(_tryGetJwt(context)),
+          child: FullPostPage(
+            id: id,
+            instanceHost: instanceHost,
+          ),
+        ),
+      );
+
+  static Route fromPostViewRoute(PostView postView) => MaterialPageRoute(
+        builder: (context) => Provider(
+          create: (context) => FullPostStore.fromPostView(postView)
+            ..refresh(_tryGetJwt(context)),
+          child: FullPostPage.fromPostView(postView),
+        ),
+      );
+  static Route fromPostStoreRoute(PostStore postStore) => MaterialPageRoute(
+        builder: (context) => Provider(
+            create: (context) => FullPostStore.fromPostStore(postStore)
+              ..refresh(_tryGetJwt(context)),
+            child: FullPostPage.fromPostStore(postStore)),
+      );
 }
 
 /// Displays a post with its comment section
@@ -76,102 +101,103 @@ class _FullPostPage extends HookWidget {
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
 
-    useMemoized(() {
-      final store = context.read<FullPostStore>();
-      final token = context
-          .read<AccountsStore>()
-          .defaultUserDataFor(store.instanceHost)
-          ?.jwt;
-      store.refresh(token);
-    }, []);
-
     final loggedInAction =
         useLoggedInAction(context.read<FullPostStore>().instanceHost);
 
-    return ObserverBuilder<FullPostStore>(
-      builder: (context, store) {
-        Future<void> refresh() async {
-          unawaited(HapticFeedback.mediumImpact());
-          await store.refresh(context
-              .read<AccountsStore>()
-              .defaultUserDataFor(store.instanceHost)
-              ?.jwt);
-        }
+    return AsyncStoreListener(
+      asyncStore: context.read<FullPostStore>().fullPostState,
+      child: AsyncStoreListener<BlockedCommunity>(
+        asyncStore: context.read<FullPostStore>().communityBlockingState,
+        successMessageBuilder: (context, data) {
+          final name = data.communityView.community.originPreferredName;
+          return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
+        },
+        child: ObserverBuilder<FullPostStore>(
+          builder: (context, store) {
+            Future<void> refresh() async {
+              unawaited(HapticFeedback.mediumImpact());
+              await store.refresh(context
+                  .read<AccountsStore>()
+                  .defaultUserDataFor(store.instanceHost)
+                  ?.jwt);
+            }
 
-        if (store.postView == null) {
-          return Scaffold(
-            appBar: AppBar(),
-            body: Center(
-              child: (store.fullPostState.isLoading)
-                  ? const CircularProgressIndicator.adaptive()
-                  : FailedToLoad(
-                      message: 'Post failed to load', refresh: refresh),
-            ),
-          );
-        }
+            final post = store.postView;
 
-        // VARIABLES
-
-        final post = store.postView!;
-
-        sharePost() => share(post.post.apId, context: context);
-
-        comment() async {
-          final newComment = await Navigator.of(context).push(
-            WriteComment.toPostRoute(post.post),
-          );
-
-          if (newComment != null) {
-            store.addComment(newComment);
-          }
-        }
-
-        return Scaffold(
-            appBar: AppBar(
-              centerTitle: false,
-              title: RevealAfterScroll(
-                scrollController: scrollController,
-                after: 65,
-                child: Text(
-                  post.community.originPreferredName,
-                  overflow: TextOverflow.fade,
+            if (post == null) {
+              return Scaffold(
+                appBar: AppBar(),
+                body: Center(
+                  child: (store.fullPostState.isLoading)
+                      ? const CircularProgressIndicator.adaptive()
+                      : FailedToLoad(
+                          message: 'Post failed to load', refresh: refresh),
                 ),
-              ),
-              actions: [
-                IconButton(icon: Icon(shareIcon), onPressed: sharePost),
-                Provider<PostStore>(
-                  create: (context) => store.postStore!,
-                  child: const SavePostButton(),
-                ),
-                IconButton(
-                  icon: Icon(moreIcon),
-                  onPressed: () => showPostMoreMenu(
-                    context: context,
-                    postStore: store.postStore!,
-                    fullPostStore: store,
+              );
+            }
+
+            // VARIABLES
+
+            sharePost() => share(post.post.apId, context: context);
+
+            comment() async {
+              final newComment = await Navigator.of(context).push(
+                WriteComment.toPostRoute(post.post),
+              );
+
+              if (newComment != null) {
+                store.addComment(newComment);
+              }
+            }
+
+            return Scaffold(
+                appBar: AppBar(
+                  centerTitle: false,
+                  title: RevealAfterScroll(
+                    scrollController: scrollController,
+                    after: 65,
+                    child: Text(
+                      post.community.originPreferredName,
+                      overflow: TextOverflow.fade,
+                    ),
                   ),
+                  actions: [
+                    IconButton(icon: Icon(shareIcon), onPressed: sharePost),
+                    Provider.value(
+                      value: store.postStore!,
+                      child: const SavePostButton(),
+                    ),
+                    IconButton(
+                      icon: Icon(moreIcon),
+                      onPressed: () => PostMoreMenuButton.show(
+                        context: context,
+                        postStore: store.postStore!,
+                        fullPostStore: store,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            floatingActionButton: post.post.locked
-                ? null
-                : FloatingActionButton(
-                    onPressed: loggedInAction((_) => comment()),
-                    child: const Icon(Icons.comment),
+                floatingActionButton: post.post.locked
+                    ? null
+                    : FloatingActionButton(
+                        onPressed: loggedInAction((_) => comment()),
+                        child: const Icon(Icons.comment),
+                      ),
+                body: RefreshIndicator(
+                  onRefresh: refresh,
+                  child: ListView(
+                    controller: scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      const SizedBox(height: 15),
+                      PostTile.fromPostStore(store.postStore!),
+                      const CommentSection(),
+                    ],
                   ),
-            body: RefreshIndicator(
-              onRefresh: refresh,
-              child: ListView(
-                controller: scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-                children: [
-                  const SizedBox(height: 15),
-                  PostTile.fromPostStore(store.postStore!),
-                  const CommentSection(),
-                ],
-              ),
-            ));
-      },
+                ));
+          },
+        ),
+      ),
     );
   }
 }

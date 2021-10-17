@@ -17,36 +17,36 @@ import 'post_store.dart';
 class PostMoreMenuButton extends StatelessWidget {
   const PostMoreMenuButton();
 
+  static void show({
+    required BuildContext context,
+    required PostStore postStore,
+    required FullPostStore? fullPostStore,
+  }) {
+    // TODO: add blocking!
+    showBottomModal(
+      context: context,
+      builder: (context) =>
+          PostMoreMenu(postStore: postStore, fullPostStore: fullPostStore),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         IconButton(
-          onPressed: () => showPostMoreMenu(
+          onPressed: () => show(
             context: context,
             postStore: context.read<PostStore>(),
             fullPostStore: null,
           ),
           icon: Icon(moreIcon),
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           visualDensity: VisualDensity.compact,
         )
       ],
     );
   }
-}
-
-void showPostMoreMenu({
-  required BuildContext context,
-  required PostStore postStore,
-  required FullPostStore? fullPostStore,
-}) {
-  // TODO: add blocking!
-  showBottomModal(
-    context: context,
-    builder: (context) =>
-        PostMoreMenu(postStore: postStore, fullPostStore: fullPostStore),
-  );
 }
 
 class PostMoreMenu extends HookWidget {

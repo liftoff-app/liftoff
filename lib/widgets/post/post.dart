@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
 import '../../pages/full_post/full_post.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
-import '../../util/goto.dart';
 import 'post_actions.dart';
 import 'post_body.dart';
 import 'post_info_section.dart';
@@ -29,8 +27,8 @@ class PostTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<PostStore>(create: (_) => postStore),
-        Provider<IsFullPost>(create: (_) => fullPost),
+        Provider.value(value: postStore),
+        Provider.value(value: fullPost),
       ],
       builder: (context, child) {
         return AsyncStoreListener(
@@ -53,7 +51,7 @@ class PostTile extends StatelessWidget {
 }
 
 /// A post overview card
-class _Post extends HookWidget {
+class _Post extends StatelessWidget {
   const _Post();
 
   @override
@@ -72,10 +70,8 @@ class _Post extends HookWidget {
             ? null
             : () {
                 final postStore = context.read<PostStore>();
-                goTo(
-                  context,
-                  (context) => FullPostPage.fromPostStore(postStore),
-                );
+                Navigator.of(context)
+                    .push(FullPostPage.fromPostStoreRoute(postStore));
               },
         child: Material(
           type: MaterialType.transparency,
