@@ -11,19 +11,23 @@ class PostMedia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ObserverBuilder<PostStore>(builder: (context, store) {
-      final post = store.postView.post;
-      if (!store.hasMedia) return const SizedBox();
+    return ObserverBuilder<PostStore>(
+      builder: (context, store) {
+        final post = store.postView.post;
+        if (!store.hasMedia) return const SizedBox();
 
-      return FullscreenableImage(
-        url: post.url!,
-        child: CachedNetworkImage(
-          imageUrl: post.url!,
-          errorWidget: (_, __, ___) => const Icon(Icons.warning),
-          progressIndicatorBuilder: (context, url, progress) =>
-              CircularProgressIndicator(value: progress.progress),
-        ),
-      );
-    });
+        final url = post.url!; // hasMedia returns false if url is null
+
+        return FullscreenableImage(
+          url: url,
+          child: CachedNetworkImage(
+            imageUrl: url,
+            errorWidget: (_, __, ___) => const Icon(Icons.warning),
+            progressIndicatorBuilder: (context, url, progress) =>
+                CircularProgressIndicator.adaptive(value: progress.progress),
+          ),
+        );
+      },
+    );
   }
 }

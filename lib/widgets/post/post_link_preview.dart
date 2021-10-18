@@ -11,9 +11,9 @@ class PostLinkPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return ObserverBuilder<PostStore>(
       builder: (context, store) {
-        if (store.hasMedia ||
-            store.postView.post.url == null ||
-            store.postView.post.url!.isEmpty) {
+        final url = store.postView.post.url;
+
+        if (store.hasMedia || url == null || url.isEmpty) {
           return const SizedBox();
         }
 
@@ -24,7 +24,7 @@ class PostLinkPreview extends StatelessWidget {
           child: InkWell(
             onTap: () => linkLauncher(
               context: context,
-              url: store.postView.post.url!,
+              url: url,
               instanceHost: store.postView.instanceHost,
             ),
             child: Container(
@@ -58,8 +58,8 @@ class PostLinkPreview extends StatelessWidget {
                         )
                       ],
                     ),
-                    if (store.postView.post.embedDescription != null &&
-                        store.postView.post.embedDescription!.isNotEmpty)
+                    if (store.postView.post.embedDescription?.isNotEmpty ??
+                        false)
                       Row(
                         children: [
                           Flexible(

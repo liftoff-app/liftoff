@@ -6,8 +6,6 @@ import '../../hooks/logged_in_action.dart';
 import '../../util/observer_consumers.dart';
 import 'post_store.dart';
 
-// TODO: sync this button between post and fullpost. the same with voting
-
 class SavePostButton extends HookWidget {
   const SavePostButton();
 

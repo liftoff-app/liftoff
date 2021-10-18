@@ -13,9 +13,11 @@ class PostTitle extends StatelessWidget {
     return ObserverBuilder<PostStore>(
       builder: (context, store) {
         final post = store.postView.post;
+        final thumbnailUrl = post.thumbnailUrl;
+        final url = post.url;
 
         return Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+          padding: const EdgeInsets.all(10).copyWith(top: 0),
           child: Row(
             children: [
               Expanded(
@@ -28,20 +30,20 @@ class PostTitle extends StatelessWidget {
                       fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
-              if (!store.hasMedia && post.thumbnailUrl != null) ...[
+              if (!store.hasMedia && thumbnailUrl != null && url != null) ...[
                 const Spacer(),
                 InkWell(
                   borderRadius: BorderRadius.circular(20),
                   onTap: () => linkLauncher(
                       context: context,
-                      url: post.url!,
+                      url: url,
                       instanceHost: store.postView.instanceHost),
                   child: Stack(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: CachedNetworkImage(
-                          imageUrl: post.thumbnailUrl!,
+                          imageUrl: thumbnailUrl,
                           width: 70,
                           height: 70,
                           fit: BoxFit.cover,

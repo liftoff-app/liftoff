@@ -32,19 +32,15 @@ class PostMoreMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        IconButton(
-          onPressed: () => show(
-            context: context,
-            postStore: context.read<PostStore>(),
-            fullPostStore: null,
-          ),
-          icon: Icon(moreIcon),
-          padding: EdgeInsets.zero,
-          visualDensity: VisualDensity.compact,
-        )
-      ],
+    return IconButton(
+      onPressed: () => show(
+        context: context,
+        postStore: context.read<PostStore>(),
+        fullPostStore: null,
+      ),
+      icon: Icon(moreIcon),
+      padding: EdgeInsets.zero,
+      visualDensity: VisualDensity.compact,
     );
   }
 }
@@ -108,7 +104,7 @@ class PostMoreMenu extends HookWidget {
                     loggedInAction(store.blockUser)();
                   },
                 ),
-              if (fullPostStore != null && fullPostStore!.fullPostView != null)
+              if (fullPostStore?.fullPostView != null)
                 ObserverBuilder<FullPostStore>(
                   store: fullPostStore,
                   builder: (context, store) {

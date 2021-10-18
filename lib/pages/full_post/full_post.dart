@@ -58,19 +58,15 @@ class FullPostPage extends StatelessWidget {
     );
   }
 
-  static Jwt? _tryGetJwt(BuildContext context) {
-    final store = context.read<FullPostStore>();
-    return context
-        .read<AccountsStore>()
-        .defaultUserDataFor(store.instanceHost)
-        ?.jwt;
+  static Jwt? _tryGetJwt(BuildContext context, String instanceHost) {
+    return context.read<AccountsStore>().defaultUserDataFor(instanceHost)?.jwt;
   }
 
   static Route route(int id, String instanceHost) => MaterialPageRoute(
         builder: (context) => Provider(
           create: (context) =>
               FullPostStore(instanceHost: instanceHost, postId: id)
-                ..refresh(_tryGetJwt(context)),
+                ..refresh(_tryGetJwt(context, instanceHost)),
           child: FullPostPage(
             id: id,
             instanceHost: instanceHost,
@@ -81,14 +77,14 @@ class FullPostPage extends StatelessWidget {
   static Route fromPostViewRoute(PostView postView) => MaterialPageRoute(
         builder: (context) => Provider(
           create: (context) => FullPostStore.fromPostView(postView)
-            ..refresh(_tryGetJwt(context)),
+            ..refresh(_tryGetJwt(context, postView.instanceHost)),
           child: FullPostPage.fromPostView(postView),
         ),
       );
   static Route fromPostStoreRoute(PostStore postStore) => MaterialPageRoute(
         builder: (context) => Provider(
             create: (context) => FullPostStore.fromPostStore(postStore)
-              ..refresh(_tryGetJwt(context)),
+              ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
             child: FullPostPage.fromPostStore(postStore)),
       );
 }

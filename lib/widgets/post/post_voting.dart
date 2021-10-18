@@ -34,10 +34,12 @@ class PostVoting extends HookWidget {
           ),
           if (store.votingState.isLoading)
             const SizedBox(
-                width: 20, height: 20, child: CircularProgressIndicator())
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator.adaptive(),
+            )
           else if (showScores)
-            Text(compactNumber(store.postView.counts.score +
-                (store.postView.myVote?.value ?? 0))),
+            Text(compactNumber(store.postView.counts.score)),
           IconButton(
             icon: Icon(
               Icons.arrow_downward,

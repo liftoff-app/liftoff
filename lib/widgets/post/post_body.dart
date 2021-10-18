@@ -16,13 +16,14 @@ class PostBody extends StatelessWidget {
     final fullPost = context.read<IsFullPost>();
 
     return ObserverBuilder<PostStore>(builder: (context, store) {
-      if (store.postView.post.body == null) return const SizedBox();
+      final body = store.postView.post.body;
+      if (body == null) return const SizedBox();
 
       if (fullPost) {
         return Padding(
           padding: const EdgeInsets.all(10),
           child: MarkdownText(
-            store.postView.post.body!,
+            body,
             instanceHost: store.postView.instanceHost,
             selectable: true,
           ),
@@ -31,7 +32,7 @@ class PostBody extends StatelessWidget {
         return LayoutBuilder(
           builder: (context, constraints) {
             final span = TextSpan(
-              text: store.postView.post.body,
+              text: body,
             );
             final tp = TextPainter(
               text: span,
@@ -50,9 +51,10 @@ class PostBody extends StatelessWidget {
                         alignment: Alignment.topCenter,
                         heightFactor: 0.8,
                         child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: MarkdownText(store.postView.post.body!,
-                                instanceHost: store.postView.instanceHost)),
+                          padding: const EdgeInsets.all(10),
+                          child: MarkdownText(body,
+                              instanceHost: store.postView.instanceHost),
+                        ),
                       ),
                     ),
                     Container(
@@ -74,7 +76,7 @@ class PostBody extends StatelessWidget {
             } else {
               return Padding(
                   padding: const EdgeInsets.all(10),
-                  child: MarkdownText(store.postView.post.body!,
+                  child: MarkdownText(body,
                       instanceHost: store.postView.instanceHost));
             }
           },
