@@ -12,7 +12,6 @@ import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
-import '../util/goto.dart';
 import '../util/pictrs.dart';
 import '../widgets/editor.dart';
 import '../widgets/markdown_mode_icon.dart';
@@ -39,10 +38,8 @@ class CreatePostFab extends HookWidget {
         );
 
         if (postView != null) {
-          await goTo(
-            context,
-            (_) => FullPostPage.fromPostView(postView),
-          );
+          await Navigator.of(context)
+              .push(FullPostPage.fromPostViewRoute(postView));
         }
       }),
       child: const Icon(Icons.add),

@@ -29,16 +29,16 @@ class FullPostPage extends StatelessWidget {
   final PostView? postView;
   final PostStore? postStore;
 
-  const FullPostPage({
+  const FullPostPage._({
     required int this.id,
     required String this.instanceHost,
   })  : postView = null,
         postStore = null;
-  const FullPostPage.fromPostView(PostView this.postView)
+  const FullPostPage._fromPostView(PostView this.postView)
       : id = null,
         instanceHost = null,
         postStore = null;
-  const FullPostPage.fromPostStore(PostStore this.postStore)
+  const FullPostPage._fromPostStore(PostStore this.postStore)
       : id = null,
         instanceHost = null,
         postView = null;
@@ -67,7 +67,7 @@ class FullPostPage extends StatelessWidget {
           create: (context) =>
               FullPostStore(instanceHost: instanceHost, postId: id)
                 ..refresh(_tryGetJwt(context, instanceHost)),
-          child: FullPostPage(
+          child: FullPostPage._(
             id: id,
             instanceHost: instanceHost,
           ),
@@ -78,14 +78,14 @@ class FullPostPage extends StatelessWidget {
         builder: (context) => Provider(
           create: (context) => FullPostStore.fromPostView(postView)
             ..refresh(_tryGetJwt(context, postView.instanceHost)),
-          child: FullPostPage.fromPostView(postView),
+          child: FullPostPage._fromPostView(postView),
         ),
       );
   static Route fromPostStoreRoute(PostStore postStore) => MaterialPageRoute(
         builder: (context) => Provider(
             create: (context) => FullPostStore.fromPostStore(postStore)
               ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
-            child: FullPostPage.fromPostStore(postStore)),
+            child: FullPostPage._fromPostStore(postStore)),
       );
 }
 
