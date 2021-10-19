@@ -118,9 +118,9 @@ class _FullPostPage extends HookWidget {
                   ?.jwt);
             }
 
-            final post = store.postView;
+            final postStore = store.postStore;
 
-            if (post == null) {
+            if (postStore == null) {
               return Scaffold(
                 appBar: AppBar(),
                 body: Center(
@@ -131,6 +131,8 @@ class _FullPostPage extends HookWidget {
                 ),
               );
             }
+
+            final post = postStore.postView;
 
             // VARIABLES
 
@@ -160,14 +162,14 @@ class _FullPostPage extends HookWidget {
                   actions: [
                     IconButton(icon: Icon(shareIcon), onPressed: sharePost),
                     Provider.value(
-                      value: store.postStore!,
+                      value: postStore,
                       child: const SavePostButton(),
                     ),
                     IconButton(
                       icon: Icon(moreIcon),
                       onPressed: () => PostMoreMenuButton.show(
                         context: context,
-                        postStore: store.postStore!,
+                        postStore: postStore,
                         fullPostStore: store,
                       ),
                     ),
@@ -186,7 +188,7 @@ class _FullPostPage extends HookWidget {
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: [
                       const SizedBox(height: 15),
-                      PostTile.fromPostStore(store.postStore!),
+                      PostTile.fromPostStore(postStore),
                       const CommentSection(),
                     ],
                   ),
