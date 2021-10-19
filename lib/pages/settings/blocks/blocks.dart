@@ -11,7 +11,7 @@ import 'block_tile.dart';
 import 'blocks_store.dart';
 
 class BlocksPage extends HookWidget {
-  const BlocksPage();
+  const BlocksPage._();
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
@@ -46,7 +46,7 @@ class BlocksPage extends HookWidget {
   }
 
   static Route route() =>
-      MaterialPageRoute(builder: (context) => const BlocksPage());
+      MaterialPageRoute(builder: (context) => const BlocksPage._());
 }
 
 class _UserBlocksWrapper extends StatelessWidget {
