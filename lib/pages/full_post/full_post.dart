@@ -25,24 +25,7 @@ import 'full_post_store.dart';
 
 /// Displays a post with its comment section
 class FullPostPage extends HookWidget {
-  final String? instanceHost;
-  final int? id;
-  final PostView? postView;
-  final PostStore? postStore;
-
-  const FullPostPage._({
-    required int this.id,
-    required String this.instanceHost,
-  })  : postView = null,
-        postStore = null;
-  const FullPostPage._fromPostView(PostView this.postView)
-      : id = null,
-        instanceHost = null,
-        postStore = null;
-  const FullPostPage._fromPostStore(PostStore this.postStore)
-      : id = null,
-        instanceHost = null,
-        postView = null;
+  const FullPostPage._();
 
   @override
   Widget build(BuildContext context) {
@@ -59,102 +42,92 @@ class FullPostPage extends HookWidget {
           final name = data.communityView.community.originPreferredName;
           return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
         },
-        child: AsyncStoreListener(
-          asyncStore: context.read<FullPostStore>().fullPostState,
-          child: AsyncStoreListener<BlockedCommunity>(
-            asyncStore: context.read<FullPostStore>().communityBlockingState,
-            successMessageBuilder: (context, data) {
-              final name = data.communityView.community.originPreferredName;
-              return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
-            },
-            child: ObserverBuilder<FullPostStore>(
-              builder: (context, store) {
-                Future<void> refresh() async {
-                  unawaited(HapticFeedback.mediumImpact());
-                  await store.refresh(context
-                      .read<AccountsStore>()
-                      .defaultUserDataFor(store.instanceHost)
-                      ?.jwt);
-                }
+        child: ObserverBuilder<FullPostStore>(
+          builder: (context, store) {
+            Future<void> refresh() async {
+              unawaited(HapticFeedback.mediumImpact());
+              await store.refresh(context
+                  .read<AccountsStore>()
+                  .defaultUserDataFor(store.instanceHost)
+                  ?.jwt);
+            }
 
-                final postStore = store.postStore;
+            final postStore = store.postStore;
 
-                if (postStore == null) {
-                  return Scaffold(
-                    appBar: AppBar(),
-                    body: Center(
-                      child: (store.fullPostState.isLoading)
-                          ? const CircularProgressIndicator.adaptive()
-                          : FailedToLoad(
-                              message: 'Post failed to load', refresh: refresh),
+            if (postStore == null) {
+              return Scaffold(
+                appBar: AppBar(),
+                body: Center(
+                  child: (store.fullPostState.isLoading)
+                      ? const CircularProgressIndicator.adaptive()
+                      : FailedToLoad(
+                          message: 'Post failed to load', refresh: refresh),
+                ),
+              );
+            }
+
+            final post = postStore.postView;
+
+            // VARIABLES
+
+            sharePost() => share(post.post.apId, context: context);
+
+            comment() async {
+              final newComment = await Navigator.of(context).push(
+                WriteComment.toPostRoute(post.post),
+              );
+
+              if (newComment != null) {
+                store.addComment(newComment);
+              }
+            }
+
+            return Scaffold(
+                appBar: AppBar(
+                  centerTitle: false,
+                  title: RevealAfterScroll(
+                    scrollController: scrollController,
+                    after: 65,
+                    child: Text(
+                      post.community.originPreferredName,
+                      overflow: TextOverflow.fade,
                     ),
-                  );
-                }
-
-                final post = postStore.postView;
-
-                // VARIABLES
-
-                sharePost() => share(post.post.apId, context: context);
-
-                comment() async {
-                  final newComment = await Navigator.of(context).push(
-                    WriteComment.toPostRoute(post.post),
-                  );
-
-                  if (newComment != null) {
-                    store.addComment(newComment);
-                  }
-                }
-
-                return Scaffold(
-                    appBar: AppBar(
-                      centerTitle: false,
-                      title: RevealAfterScroll(
-                        scrollController: scrollController,
-                        after: 65,
-                        child: Text(
-                          post.community.originPreferredName,
-                          overflow: TextOverflow.fade,
-                        ),
-                      ),
-                      actions: [
-                        IconButton(icon: Icon(shareIcon), onPressed: sharePost),
-                        Provider.value(
-                          value: postStore,
-                          child: const SavePostButton(),
-                        ),
-                        IconButton(
-                          icon: Icon(moreIcon),
-                          onPressed: () => PostMoreMenuButton.show(
-                            context: context,
-                            postStore: postStore,
-                            fullPostStore: store,
-                          ),
-                        ),
-                      ],
+                  ),
+                  actions: [
+                    IconButton(icon: Icon(shareIcon), onPressed: sharePost),
+                    Provider.value(
+                      value: postStore,
+                      child: const SavePostButton(),
                     ),
-                    floatingActionButton: post.post.locked
-                        ? null
-                        : FloatingActionButton(
-                            onPressed: loggedInAction((_) => comment()),
-                            child: const Icon(Icons.comment),
-                          ),
-                    body: RefreshIndicator(
-                      onRefresh: refresh,
-                      child: ListView(
-                        controller: scrollController,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        children: [
-                          const SizedBox(height: 15),
-                          PostTile.fromPostStore(postStore),
-                          const CommentSection(),
-                        ],
+                    IconButton(
+                      icon: Icon(moreIcon),
+                      onPressed: () => PostMoreMenuButton.show(
+                        context: context,
+                        postStore: postStore,
+                        fullPostStore: store,
                       ),
-                    ));
-              },
-            ),
-          ),
+                    ),
+                  ],
+                ),
+                floatingActionButton: post.post.locked
+                    ? null
+                    : FloatingActionButton(
+                        onPressed: loggedInAction((_) => comment()),
+                        child: const Icon(Icons.comment),
+                      ),
+                body: RefreshIndicator(
+                  onRefresh: refresh,
+                  child: ListView(
+                    controller: scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      const SizedBox(height: 15),
+                      PostTile.fromPostStore(postStore),
+                      const CommentSection(),
+                    ],
+                  ),
+                ));
+          },
         ),
       ),
     );
@@ -169,10 +142,7 @@ class FullPostPage extends HookWidget {
           create: (context) =>
               FullPostStore(instanceHost: instanceHost, postId: id)
                 ..refresh(_tryGetJwt(context, instanceHost)),
-          child: FullPostPage._(
-            id: id,
-            instanceHost: instanceHost,
-          ),
+          child: const FullPostPage._(),
         ),
       );
 
@@ -180,14 +150,15 @@ class FullPostPage extends HookWidget {
         builder: (context) => Provider(
           create: (context) => FullPostStore.fromPostView(postView)
             ..refresh(_tryGetJwt(context, postView.instanceHost)),
-          child: FullPostPage._fromPostView(postView),
+          child: const FullPostPage._(),
         ),
       );
   static Route fromPostStoreRoute(PostStore postStore) => MaterialPageRoute(
         builder: (context) => Provider(
-            create: (context) => FullPostStore.fromPostStore(postStore)
-              ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
-            child: FullPostPage._fromPostStore(postStore)),
+          create: (context) => FullPostStore.fromPostStore(postStore)
+            ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
+          child: const FullPostPage._(),
+        ),
       );
 }
 
