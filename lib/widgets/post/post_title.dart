@@ -21,7 +21,6 @@ class PostTitle extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                flex: 100,
                 child: Text(
                   post.name,
                   textAlign: TextAlign.left,
@@ -31,7 +30,6 @@ class PostTitle extends StatelessWidget {
                 ),
               ),
               if (!store.hasMedia && thumbnailUrl != null && url != null) ...[
-                const Spacer(),
                 InkWell(
                   borderRadius: BorderRadius.circular(20),
                   onTap: () => linkLauncher(

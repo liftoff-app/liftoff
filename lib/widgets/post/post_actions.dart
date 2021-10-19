@@ -28,7 +28,6 @@ class PostActions extends HookWidget {
             const Icon(Icons.comment),
             const SizedBox(width: 6),
             Expanded(
-              flex: 999,
               child: Text(
                 L10n.of(context)!
                     .number_of_comments(store.postView.counts.comments),
@@ -36,7 +35,6 @@ class PostActions extends HookWidget {
                 softWrap: false,
               ),
             ),
-            const Spacer(),
             if (!fullPost)
               IconButton(
                 icon: Icon(shareIcon),
