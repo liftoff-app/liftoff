@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +13,7 @@ import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
 import 'avatar.dart';
+import 'cached_network_image.dart';
 import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
 import 'sortable_infinite_list.dart';
@@ -147,7 +147,7 @@ class _UserOverview extends HookWidget {
             url: userView.person.banner!,
             child: CachedNetworkImage(
               imageUrl: userView.person.banner!,
-              errorWidget: (_, __, ___) => const SizedBox.shrink(),
+              errorBuilder: (_, ___) => const SizedBox.shrink(),
             ),
           )
         else
@@ -208,7 +208,7 @@ class _UserOverview extends HookWidget {
                         url: userView.person.avatar!,
                         child: CachedNetworkImage(
                           imageUrl: userView.person.avatar!,
-                          errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                          errorBuilder: (_, ___) => const SizedBox.shrink(),
                         ),
                       ),
                     ),

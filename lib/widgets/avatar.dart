@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/stores.dart';
+import 'cached_network_image.dart';
 
 /// User's avatar. Respects the `showAvatars` setting from configStore
 /// If passed url is null, a blank box is displayed to prevent weird indents
@@ -50,7 +50,7 @@ class Avatar extends HookWidget {
         width: radius * 2,
         imageUrl: imageUrl,
         fit: BoxFit.cover,
-        errorWidget: (_, __, ___) => blankWidget,
+        errorBuilder: (_, __) => blankWidget,
       ),
     );
   }

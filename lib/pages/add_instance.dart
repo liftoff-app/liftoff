@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -6,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/debounce.dart';
 import '../hooks/stores.dart';
 import '../util/cleanup_url.dart';
+import '../widgets/cached_network_image.dart';
 import '../widgets/fullscreenable_image.dart';
 
 /// A page that let's user add a new instance. Pops a url of the added instance
@@ -76,7 +76,7 @@ class AddInstancePage extends HookWidget {
                   url: icon.value!,
                   child: CachedNetworkImage(
                     imageUrl: icon.value!,
-                    errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                    errorBuilder: (_, ___) => const SizedBox.shrink(),
                   ),
                 ))
           else if (isSite.value == false)
