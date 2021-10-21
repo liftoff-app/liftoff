@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../url_launcher.dart';
+import 'cached_network_image.dart';
 import 'fullscreenable_image.dart';
 
 /// A Markdown renderer with link/image handling
@@ -52,7 +52,7 @@ class MarkdownText extends StatelessWidget {
         url: uri.toString(),
         child: CachedNetworkImage(
           imageUrl: uri.toString(),
-          errorWidget: (context, url, error) => Row(
+          errorBuilder: (context, error) => Row(
             children: [
               const Icon(Icons.warning),
               Text("couldn't load image, ${error.toString()}")

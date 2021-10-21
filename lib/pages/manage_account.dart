@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +13,7 @@ import '../util/more_icon.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/bottom_safe.dart';
+import '../widgets/cached_network_image.dart';
 import '../widgets/editor.dart';
 
 /// Page for managing things like username, email, avatar etc
@@ -506,7 +506,7 @@ class _ImagePicker extends HookWidget {
         if (url.value != null)
           CachedNetworkImage(
             imageUrl: url.value!,
-            errorWidget: (_, __, ___) => const Icon(Icons.error),
+            errorBuilder: (_, ___) => const Icon(Icons.error),
           ),
       ],
     );

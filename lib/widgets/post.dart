@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -23,6 +22,7 @@ import '../util/more_icon.dart';
 import '../util/share.dart';
 import 'avatar.dart';
 import 'bottom_modal.dart';
+import 'cached_network_image.dart';
 import 'fullscreenable_image.dart';
 import 'info_table_popup.dart';
 import 'markdown_text.dart';
@@ -309,7 +309,7 @@ class PostWidget extends HookWidget {
                           width: 70,
                           height: 70,
                           fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
+                          errorBuilder: (context, error) =>
                               Text(error.toString()),
                         ),
                       ),
@@ -397,9 +397,9 @@ class PostWidget extends HookWidget {
         url: post.post.url!,
         child: CachedNetworkImage(
           imageUrl: post.post.url!,
-          errorWidget: (_, __, ___) => const Icon(Icons.warning),
-          progressIndicatorBuilder: (context, url, progress) =>
-              CircularProgressIndicator(value: progress.progress),
+          errorBuilder: (_, ___) => const Icon(Icons.warning),
+          loadingBuilder: (context, progress) =>
+              CircularProgressIndicator(value: progress?.progress),
         ),
       );
     }
