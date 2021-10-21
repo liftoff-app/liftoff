@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../url_launcher.dart';
 import '../../util/observer_consumers.dart';
+import '../cached_network_image.dart';
 import 'post_store.dart';
 
 class PostTitle extends StatelessWidget {
@@ -45,7 +45,7 @@ class PostTitle extends StatelessWidget {
                           width: 70,
                           height: 70,
                           fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
+                          errorBuilder: (context, error) =>
                               Text(error.toString()),
                         ),
                       ),

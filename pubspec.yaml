@@ -30,7 +30,6 @@ dependencies:
       ref: bugfix/flutter-2.5-update
   markdown: ^4.0.0
   flutter_markdown: ^0.6.1
-  cached_network_image: ^3.0.0
   modal_bottom_sheet: ^2.0.0
 
   # native
@@ -39,6 +38,7 @@ dependencies:
   shared_preferences: ^2.0.5
   package_info_plus: ^1.0.6
   image_picker: ^0.8.4
+  extended_image: ^5.1.2
 
   # state management
   flutter_hooks: ^0.18.0

@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../util/observer_consumers.dart';
+import '../cached_network_image.dart';
 import '../fullscreenable_image.dart';
 import 'post_store.dart';
 
@@ -22,9 +22,9 @@ class PostMedia extends StatelessWidget {
           url: url,
           child: CachedNetworkImage(
             imageUrl: url,
-            errorWidget: (_, __, ___) => const Icon(Icons.warning),
-            progressIndicatorBuilder: (context, url, progress) =>
-                CircularProgressIndicator.adaptive(value: progress.progress),
+            errorBuilder: (_, ___) => const Icon(Icons.warning),
+            loadingBuilder: (context, progress) =>
+                CircularProgressIndicator.adaptive(value: progress?.progress),
           ),
         );
       },

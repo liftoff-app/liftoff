@@ -1,6 +1,6 @@
 import 'dart:math' show max, min;
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -144,7 +144,7 @@ class MediaViewPage extends HookWidget {
                 : (_, __, ___) => showButtons.value = !showButtons.value,
             minScale: PhotoViewComputedScale.contained,
             initialScale: PhotoViewComputedScale.contained,
-            imageProvider: CachedNetworkImageProvider(url),
+            imageProvider: ExtendedNetworkImageProvider(url, cache: true),
             heroAttributes: PhotoViewHeroAttributes(tag: url),
             loadingBuilder: (context, event) =>
                 const Center(child: CircularProgressIndicator()),
