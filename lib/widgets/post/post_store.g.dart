@@ -45,6 +45,13 @@ mixin _$PostStore on _PostStore, Store {
     return _$saveAsyncAction.run(() => super.save(token));
   }
 
+  final _$reportAsyncAction = AsyncAction('_PostStore.report');
+
+  @override
+  Future<void> report(Jwt token, String reason) {
+    return _$reportAsyncAction.run(() => super.report(token, reason));
+  }
+
   final _$blockUserAsyncAction = AsyncAction('_PostStore.blockUser');
 
   @override

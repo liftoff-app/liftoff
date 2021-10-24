@@ -7,8 +7,8 @@ part of 'config_store.dart';
 // **************************************************************************
 
 ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
-  ..theme = _$enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ??
-      ThemeMode.system
+  ..theme =
+      $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ?? ThemeMode.system
   ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
   ..locale = LocaleSerde.fromJson(json['locale'] as String?)
   ..showAvatars = json['showAvatars'] as bool? ?? true
@@ -27,43 +27,6 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'defaultSortType': instance.defaultSortType,
       'defaultListingType': instance.defaultListingType,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
 
 const _$ThemeModeEnumMap = {
   ThemeMode.system: 'system',
