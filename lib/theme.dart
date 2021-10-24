@@ -85,6 +85,11 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
         ),
       ),
     ),
+    dialogTheme: DialogTheme(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
   );
 }
 
