@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -10,6 +12,7 @@ import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../bottom_modal.dart';
 import '../markdown_mode_icon.dart';
+import '../report_dialog.dart';
 import '../tile_action.dart';
 import '../write_comment.dart';
 import 'comment.dart';
@@ -155,6 +158,22 @@ class _CommentMoreMenuPopup extends HookWidget {
                   store.block(token);
                 }),
               ),
+            ListTile(
+              leading: store.reportingState.isLoading
+                  ? const CircularProgressIndicator.adaptive()
+                  : const Icon(Icons.flag),
+              title: const Text('Report'),
+              onTap: () {
+                if (store.reportingState.isLoading) return;
+                Navigator.of(context).pop();
+                loggedInAction((token) async {
+                  final reason = await ReportDialog.show(context);
+                  if (reason != null) {
+                    unawaited(store.report(token, reason));
+                  }
+                })();
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('Nerd stuff'),

@@ -102,7 +102,11 @@ class CommentWidget extends StatelessWidget {
             asyncStore: context.read<CommentStore>().deletingState,
             child: AsyncStoreListener(
               asyncStore: context.read<CommentStore>().savingState,
-              child: const _CommentWidget(),
+              child: AsyncStoreListener<CommentReportView>(
+                asyncStore: context.read<CommentStore>().reportingState,
+                successMessageBuilder: (context, data) => 'Comment reported',
+                child: const _CommentWidget(),
+              ),
             ),
           ),
         ),

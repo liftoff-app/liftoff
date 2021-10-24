@@ -41,7 +41,11 @@ class PostTile extends StatelessWidget {
                 final name = state.personView.person.preferredName;
                 return state.blocked ? '$name blocked' : '$name unblocked';
               },
-              child: const _Post(),
+              child: AsyncStoreListener<PostReportView>(
+                asyncStore: context.read<PostStore>().reportingState,
+                successMessageBuilder: (context, data) => 'Post reported',
+                child: const _Post(),
+              ),
             ),
           ),
         );

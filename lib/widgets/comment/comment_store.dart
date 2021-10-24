@@ -36,6 +36,7 @@ abstract class _CommentStore with Store {
   final markPersonMentionAsReadState = AsyncStore<PersonMentionView>();
   final markAsReadState = AsyncStore<FullCommentView>();
   final blockingState = AsyncStore<BlockedPerson>();
+  final reportingState = AsyncStore<CommentReportView>();
 
   @computed
   bool get isMine =>
@@ -74,6 +75,20 @@ abstract class _CommentStore with Store {
   @action
   void toggleCollapsed() {
     collapsed = !collapsed;
+  }
+
+  @action
+  Future<void> report(Jwt token, String reason) async {
+    if (reason.trim().isEmpty) throw ArgumentError('reason must not be empty');
+
+    await reportingState.runLemmy(
+      comment.instanceHost,
+      CreateCommentReport(
+        commentId: comment.comment.id,
+        reason: reason,
+        auth: token.raw,
+      ),
+    );
   }
 
   @action

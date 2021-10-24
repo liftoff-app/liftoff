@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,6 +14,7 @@ import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../bottom_modal.dart';
 import '../info_table_popup.dart';
+import '../report_dialog.dart';
 import 'post_store.dart';
 
 class PostMoreMenuButton extends StatelessWidget {
@@ -121,6 +124,22 @@ class PostMoreMenu extends HookWidget {
                     );
                   },
                 ),
+              ListTile(
+                leading: store.reportingState.isLoading
+                    ? const CircularProgressIndicator.adaptive()
+                    : const Icon(Icons.flag),
+                title: const Text('Report'),
+                onTap: () {
+                  if (store.reportingState.isLoading) return;
+                  Navigator.of(context).pop();
+                  loggedInAction((token) async {
+                    final reason = await ReportDialog.show(context);
+                    if (reason != null) {
+                      unawaited(store.report(token, reason));
+                    }
+                  })();
+                },
+              ),
               ListTile(
                 leading: const Icon(Icons.info_outline),
                 title: const Text('Nerd stuff'),
