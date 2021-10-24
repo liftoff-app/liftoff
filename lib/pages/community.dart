@@ -17,6 +17,7 @@ import '../util/intl.dart';
 import '../util/share.dart';
 import '../widgets/avatar.dart';
 import '../widgets/bottom_modal.dart';
+import '../widgets/bottom_safe.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
@@ -399,6 +400,18 @@ class _AboutTab extends StatelessWidget {
                   label: Text(L10n.of(context)!
                       .number_of_users_online(onlineUsers ?? 0))),
               Chip(
+                  label:
+                      Text('${community.counts.usersActiveDay} users / day')),
+              Chip(
+                  label:
+                      Text('${community.counts.usersActiveWeek} users / week')),
+              Chip(
+                  label: Text(
+                      '${community.counts.usersActiveMonth} users / month')),
+              Chip(
+                  label: Text(
+                      '${community.counts.usersActiveHalfYear} users / 6 months')),
+              Chip(
                   label: Text(L10n.of(context)!
                       .number_of_subscribers(community.counts.subscribers))),
               Chip(
@@ -437,7 +450,8 @@ class _AboutTab extends StatelessWidget {
               title: Text(mod.moderator.preferredName),
               onTap: () => goToUser.fromPersonSafe(context, mod.moderator),
             ),
-        ]
+        ],
+        const BottomSafe(),
       ],
     );
   }

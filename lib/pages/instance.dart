@@ -291,6 +291,18 @@ class _AboutTab extends HookWidget {
                       label: Text(L10n.of(context)!
                           .number_of_users_online(site.online))),
                   Chip(
+                      label: Text(
+                          '${siteView.counts.usersActiveDay} users / day')),
+                  Chip(
+                      label: Text(
+                          '${siteView.counts.usersActiveWeek} users / week')),
+                  Chip(
+                      label: Text(
+                          '${siteView.counts.usersActiveMonth} users / month')),
+                  Chip(
+                      label: Text(
+                          '${siteView.counts.usersActiveHalfYear} users / 6 months')),
+                  Chip(
                       label: Text(L10n.of(context)!
                           .number_of_users(siteView.counts.users))),
                   Chip(
