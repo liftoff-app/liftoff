@@ -9,12 +9,6 @@ part of 'post_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$PostStore on _PostStore, Store {
-  Computed<bool>? _$wasVotedComputed;
-
-  @override
-  bool get wasVoted => (_$wasVotedComputed ??=
-          Computed<bool>(() => super.wasVoted, name: '_PostStore.wasVoted'))
-      .value;
   Computed<String?>? _$urlDomainComputed;
 
   @override
@@ -104,7 +98,6 @@ mixin _$PostStore on _PostStore, Store {
   String toString() {
     return '''
 postView: ${postView},
-wasVoted: ${wasVoted},
 urlDomain: ${urlDomain},
 hasMedia: ${hasMedia}
     ''';

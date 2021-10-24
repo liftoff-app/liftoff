@@ -13,6 +13,23 @@ abstract class _FullPostStore with Store {
   final int postId;
   final String instanceHost;
 
+  _FullPostStore({
+    this.postStore,
+    required this.postId,
+    required this.instanceHost,
+  });
+
+  // ignore: unused_element
+  _FullPostStore.fromPostView(PostView postView)
+      : postId = postView.post.id,
+        instanceHost = postView.instanceHost,
+        postStore = PostStore(postView);
+
+  // ignore: unused_element
+  _FullPostStore.fromPostStore(PostStore this.postStore)
+      : postId = postStore.postView.post.id,
+        instanceHost = postStore.postView.instanceHost;
+
   @observable
   FullPostView? fullPostView;
 
@@ -21,6 +38,12 @@ abstract class _FullPostStore with Store {
 
   @observable
   CommentSortType sorting = CommentSortType.hot;
+
+  @observable
+  PostStore? postStore;
+
+  final fullPostState = AsyncStore<FullPostView>();
+  final communityBlockingState = AsyncStore<BlockedCommunity>();
 
   @action
   // ignore: use_setters_to_change_properties
@@ -39,18 +62,12 @@ abstract class _FullPostStore with Store {
     return commentTree?..sortBy(sorting);
   }
 
-  @observable
-  PostStore? postStore;
-
-  final fullPostState = AsyncStore<FullPostView>();
-  final communityBlockingState = AsyncStore<BlockedCommunity>();
-
   @computed
   PostView? get postView => postStore?.postView;
 
   @computed
-  List<CommentView>? get comments =>
-      fullPostView?.comments.followedBy(newComments).toList(growable: false);
+  Iterable<CommentView>? get comments =>
+      fullPostView?.comments.followedBy(newComments);
 
   @action
   Future<void> refresh([Jwt? token]) async {
@@ -61,7 +78,7 @@ abstract class _FullPostStore with Store {
       postStore ??= PostStore(result.postView);
 
       fullPostView = result;
-      postStore!.postView = result.postView;
+      postStore!.updatePostView(result.postView);
     }
   }
 
@@ -82,21 +99,4 @@ abstract class _FullPostStore with Store {
   @action
   void addComment(CommentView commentView) =>
       newComments.insert(0, commentView);
-
-  _FullPostStore({
-    this.postStore,
-    required this.postId,
-    required this.instanceHost,
-  });
-
-  // ignore: unused_element
-  _FullPostStore.fromPostView(PostView postView)
-      : postId = postView.post.id,
-        instanceHost = postView.instanceHost,
-        postStore = PostStore(postView);
-
-  // ignore: unused_element
-  _FullPostStore.fromPostStore(PostStore this.postStore)
-      : postId = postStore.postView.post.id,
-        instanceHost = postStore.postView.instanceHost;
 }

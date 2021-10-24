@@ -30,13 +30,13 @@ mixin _$FullPostStore on _FullPostStore, Store {
       (_$postViewComputed ??= Computed<PostView?>(() => super.postView,
               name: '_FullPostStore.postView'))
           .value;
-  Computed<List<CommentView>?>? _$commentsComputed;
+  Computed<Iterable<CommentView>?>? _$commentsComputed;
 
   @override
-  List<CommentView>? get comments =>
-      (_$commentsComputed ??= Computed<List<CommentView>?>(() => super.comments,
+  Iterable<CommentView>? get comments => (_$commentsComputed ??=
+          Computed<Iterable<CommentView>?>(() => super.comments,
               name: '_FullPostStore.comments'))
-          .value;
+      .value;
 
   final _$fullPostViewAtom = Atom(name: '_FullPostStore.fullPostView');
 

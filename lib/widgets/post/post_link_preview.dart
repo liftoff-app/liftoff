@@ -27,7 +27,7 @@ class PostLinkPreview extends StatelessWidget {
               url: url,
               instanceHost: store.postView.instanceHost,
             ),
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                   border: Border.all(
                       color: Theme.of(context).iconTheme.color!.withAlpha(170)),
@@ -45,31 +45,19 @@ class PostLinkPreview extends StatelessWidget {
                         const Icon(Icons.launch, size: 12),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            store.postView.post.embedTitle ?? '',
-                            style: theme.textTheme.subtitle1
-                                ?.apply(fontWeightDelta: 2),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      ],
+                    Text(
+                      store.postView.post.embedTitle ?? '',
+                      style:
+                          theme.textTheme.subtitle1?.apply(fontWeightDelta: 2),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     if (store.postView.post.embedDescription?.isNotEmpty ??
                         false)
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              store.postView.post.embedDescription!,
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )
-                        ],
+                      Text(
+                        store.postView.post.embedDescription!,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
                       ),
                   ],
                 ),

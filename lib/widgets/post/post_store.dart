@@ -9,15 +9,14 @@ part 'post_store.g.dart';
 class PostStore = _PostStore with _$PostStore;
 
 abstract class _PostStore with Store {
-  @observable
-  PostView postView;
+  _PostStore(this.postView);
 
   final votingState = AsyncStore<PostView>();
   final savingState = AsyncStore<PostView>();
   final userBlockingState = AsyncStore<BlockedPerson>();
 
-  @computed
-  bool get wasVoted => (postView.myVote ?? VoteType.none) != VoteType.none;
+  @observable
+  PostView postView;
 
   @computed
   String? get urlDomain =>
@@ -97,6 +96,4 @@ abstract class _PostStore with Store {
   @action
   Future<void> downVote(Jwt token) => _vote(
       token, postView.myVote == VoteType.down ? VoteType.none : VoteType.down);
-
-  _PostStore(this.postView);
 }
