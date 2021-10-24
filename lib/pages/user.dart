@@ -32,7 +32,7 @@ class UserPage extends HookWidget {
       } else if (userDetailsSnap.hasError) {
         return const Center(child: Text('Could not find that user.'));
       } else {
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator.adaptive());
       }
     }();
 

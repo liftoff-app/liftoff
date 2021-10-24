@@ -170,7 +170,7 @@ class CreatePostPage extends HookWidget {
           return const [
             DropdownMenuItem(
               value: -1,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator.adaptive(),
             )
           ];
         }
@@ -262,7 +262,7 @@ class CreatePostPage extends HookWidget {
       const SizedBox(width: 5),
       IconButton(
         icon: imageUploadLoading.value
-            ? const CircularProgressIndicator()
+            ? const CircularProgressIndicator.adaptive()
             : Icon(pictrsDeleteToken.value == null
                 ? Icons.add_photo_alternate
                 : Icons.close),
@@ -335,7 +335,7 @@ class CreatePostPage extends HookWidget {
                   onPressed:
                       delayed.pending ? () {} : loggedInAction(handleSubmit),
                   child: delayed.loading
-                      ? const CircularProgressIndicator()
+                      ? const CircularProgressIndicator.adaptive()
                       : Text(_isEdit
                           ? L10n.of(context)!.edit
                           : L10n.of(context)!.post),

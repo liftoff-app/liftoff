@@ -52,8 +52,8 @@ class InfiniteScroll<T> extends HookWidget {
     this.batchSize = 10,
     this.leading = const SizedBox.shrink(),
     this.padding,
-    this.loadingWidget =
-        const ListTile(title: Center(child: CircularProgressIndicator())),
+    this.loadingWidget = const ListTile(
+        title: Center(child: CircularProgressIndicator.adaptive())),
     required this.itemBuilder,
     required this.fetcher,
     this.controller,

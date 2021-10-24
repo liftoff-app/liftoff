@@ -124,7 +124,7 @@ class WriteMessagePage extends HookWidget {
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator())
+                        child: CircularProgressIndicator.adaptive())
                     : Text(submit),
               ),
             ),

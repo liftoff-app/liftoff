@@ -58,7 +58,8 @@ class InstancePage extends HookWidget {
               ] else if (siteSnap.hasData && siteSnap.data!.siteView == null)
                 const Text('ERROR')
               else
-                const CircularProgressIndicator(semanticsLabel: 'loading')
+                const CircularProgressIndicator.adaptive(
+                    semanticsLabel: 'loading')
             ],
           ),
         ),
@@ -325,7 +326,7 @@ class _AboutTab extends HookWidget {
             else
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator.adaptive(),
               ),
             ListTile(
               title: const Center(child: Text('See all')),

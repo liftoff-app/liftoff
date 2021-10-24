@@ -93,7 +93,7 @@ class CommunitiesTab extends HookWidget {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator.adaptive(),
         ),
       );
     }
@@ -277,7 +277,9 @@ class _CommunitySubscribeToggle extends HookWidget {
               ),
         child: delayed.loading
             ? const SizedBox(
-                width: 20, height: 20, child: CircularProgressIndicator())
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator.adaptive())
             : Icon(
                 subbed.value ? Icons.done : Icons.add,
                 color: subbed.value

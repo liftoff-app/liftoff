@@ -256,7 +256,8 @@ class _CommentWidget extends StatelessWidget {
                                   if (store.votingState.isLoading)
                                     SizedBox.fromSize(
                                       size: const Size.square(16),
-                                      child: const CircularProgressIndicator(),
+                                      child: const CircularProgressIndicator
+                                          .adaptive(),
                                     )
                                   else if (configStore.showScores)
                                     Text(

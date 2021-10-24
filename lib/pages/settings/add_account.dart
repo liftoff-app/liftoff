@@ -157,7 +157,7 @@ class AddAccountPage extends HookWidget {
                   : SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(
+                      child: CircularProgressIndicator.adaptive(
                         valueColor:
                             AlwaysStoppedAnimation<Color>(theme.canvasColor),
                       ),

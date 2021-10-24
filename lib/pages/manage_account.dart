@@ -77,7 +77,7 @@ class ManageAccountPage extends HookWidget {
             return Center(child: Text('Error: ${userSnap.error?.toString()}'));
           }
           if (!userSnap.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
 
           return _ManageAccount(user: userSnap.data!);
@@ -367,7 +367,7 @@ class _ManageAccount extends HookWidget {
               ? const SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator.adaptive(),
                 )
               : Text(L10n.of(context)!.save),
         ),
@@ -490,7 +490,7 @@ class _ImagePicker extends HookWidget {
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator())
+                        child: CircularProgressIndicator.adaptive())
                     : Row(
                         children: const [Text('upload'), Icon(Icons.publish)],
                       ),

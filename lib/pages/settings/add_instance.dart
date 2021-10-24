@@ -120,7 +120,7 @@ class AddInstancePage extends HookWidget {
                     : SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(
+                        child: CircularProgressIndicator.adaptive(
                           valueColor:
                               AlwaysStoppedAnimation<Color>(theme.canvasColor),
                         ),

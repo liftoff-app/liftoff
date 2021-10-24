@@ -240,7 +240,7 @@ class _AccountOptions extends HookWidget {
                 ? const SizedBox(
                     height: 25,
                     width: 25,
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator.adaptive(),
                   )
                 : const Icon(Icons.cloud_download),
             title: const Text('Import settings to lemmur'),

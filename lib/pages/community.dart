@@ -96,7 +96,8 @@ class CommunityPage extends HookWidget {
                   child: Text('ERROR: ${fullCommunitySnap.error}'),
                 )
               ] else
-                const CircularProgressIndicator(semanticsLabel: 'loading')
+                const CircularProgressIndicator.adaptive(
+                    semanticsLabel: 'loading')
             ],
           ),
         ),
@@ -505,7 +506,7 @@ class _FollowButton extends HookWidget {
                   child: SizedBox(
                     height: 15,
                     width: 15,
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator.adaptive(),
                   ),
                 )
               : ElevatedButton.icon(

@@ -48,7 +48,7 @@ class UserProfile extends HookWidget {
     }, [userId, instanceHost]);
 
     if (!userDetailsSnap.hasData) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator.adaptive());
     } else if (userDetailsSnap.hasError) {
       return Center(
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [

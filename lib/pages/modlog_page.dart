@@ -56,7 +56,8 @@ class ModlogPage extends HookWidget {
                   future: modlogFut,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                          child: CircularProgressIndicator.adaptive());
                     } else if (snapshot.hasError) {
                       return Center(
                           child: Text('Error: ${snapshot.error?.toString()}'));

@@ -34,7 +34,7 @@ class TileAction extends StatelessWidget {
         icon: delayedLoading?.loading ?? loading
             ? SizedBox.fromSize(
                 size: const Size.square(22),
-                child: const CircularProgressIndicator(),
+                child: const CircularProgressIndicator.adaptive(),
               )
             : Icon(
                 icon,

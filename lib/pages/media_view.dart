@@ -147,7 +147,7 @@ class MediaViewPage extends HookWidget {
             imageProvider: ExtendedNetworkImageProvider(url, cache: true),
             heroAttributes: PhotoViewHeroAttributes(tag: url),
             loadingBuilder: (context, event) =>
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator.adaptive()),
           ),
         ),
       ),

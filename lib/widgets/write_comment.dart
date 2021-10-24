@@ -123,7 +123,7 @@ class WriteComment extends HookWidget {
                 onPressed:
                     delayed.pending ? () {} : loggedInAction(handleSubmit),
                 child: delayed.loading
-                    ? const CircularProgressIndicator()
+                    ? const CircularProgressIndicator.adaptive()
                     : Text(_isEdit
                         ? L10n.of(context)!.edit
                         : L10n.of(context)!.post),

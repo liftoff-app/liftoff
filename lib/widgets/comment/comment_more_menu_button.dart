@@ -145,7 +145,7 @@ class _CommentMoreMenuPopup extends HookWidget {
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator.adaptive(),
                       )
                     : const Icon(Icons.block),
                 title: Text(
