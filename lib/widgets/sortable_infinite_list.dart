@@ -7,7 +7,7 @@ import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
 import 'comment/comment.dart';
 import 'infinite_scroll.dart';
-import 'post.dart';
+import 'post/post.dart';
 import 'post_list_options.dart';
 
 typedef FetcherWithSorting<T> = Future<List<T>> Function(
@@ -74,7 +74,7 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
   }) : super(
           itemBuilder: (post) => Column(
             children: [
-              PostWidget(post),
+              PostTile.fromPostView(post),
               const SizedBox(height: 20),
             ],
           ),

@@ -4,52 +4,65 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../hooks/stores.dart';
-import '../l10n/l10n.dart';
-import '../util/goto.dart';
-import '../widgets/about_tile.dart';
-import '../widgets/bottom_modal.dart';
-import '../widgets/radio_picker.dart';
+import '../../hooks/stores.dart';
+import '../../l10n/l10n.dart';
+import '../../util/goto.dart';
+import '../../widgets/about_tile.dart';
+import '../../widgets/bottom_modal.dart';
+import '../../widgets/radio_picker.dart';
+import '../manage_account.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
-import 'manage_account.dart';
+import 'blocks/blocks.dart';
 
 /// Page with a list of different settings sections
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends HookWidget {
   const SettingsPage();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(L10n.of(context)!.settings),
-        ),
-        body: ListView(
-          children: [
+  Widget build(BuildContext context) {
+    final hasAnyUsers = useAccountsStoreSelect((store) => !store.hasNoAccount);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(L10n.of(context)!.settings),
+      ),
+      body: ListView(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('General'),
+            onTap: () {
+              goTo(context, (_) => const GeneralConfigPage());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text('Accounts'),
+            onTap: () {
+              goTo(context, (_) => AccountsConfigPage());
+            },
+          ),
+          if (hasAnyUsers)
             ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('General'),
+              leading: const Icon(Icons.block),
+              title: const Text('Blocks'),
               onTap: () {
-                goTo(context, (_) => const GeneralConfigPage());
+                Navigator.of(context).push(BlocksPage.route());
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Accounts'),
-              onTap: () {
-                goTo(context, (_) => AccountsConfigPage());
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.color_lens),
-              title: const Text('Appearance'),
-              onTap: () {
-                goTo(context, (_) => const AppearanceConfigPage());
-              },
-            ),
-            const AboutTile()
-          ],
-        ),
-      );
+          ListTile(
+            leading: const Icon(Icons.color_lens),
+            title: const Text('Appearance'),
+            onTap: () {
+              goTo(context, (_) => const AppearanceConfigPage());
+            },
+          ),
+          const AboutTile()
+        ],
+      ),
+    );
+  }
 }
 
 /// Settings for theme color, AMOLED switch

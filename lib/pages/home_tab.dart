@@ -13,8 +13,8 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
-import 'add_account.dart';
 import 'inbox.dart';
+import 'settings/add_account.dart';
 
 /// First thing users sees when opening the app
 /// Shows list of posts from all or just specific instances

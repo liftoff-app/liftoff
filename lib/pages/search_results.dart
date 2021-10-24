@@ -5,7 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../widgets/comment/comment.dart';
-import '../widgets/post.dart';
+import '../widgets/post/post.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
@@ -108,7 +108,7 @@ class _SearchResultsList extends HookWidget {
           case SearchType.posts:
             return Padding(
               padding: const EdgeInsets.only(bottom: 20),
-              child: PostWidget(data as PostView),
+              child: PostTile.fromPostView(data as PostView),
             );
           case SearchType.users:
             return UsersListItem(user: data as PersonViewSafe);

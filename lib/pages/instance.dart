@@ -8,7 +8,7 @@ import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
-import '../util/more_icon.dart';
+import '../util/icons.dart';
 import '../util/share.dart';
 import '../util/text_color.dart';
 import '../widgets/avatar.dart';

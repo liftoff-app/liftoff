@@ -128,17 +128,32 @@ class _CommentMoreMenuPopup extends HookWidget {
                 Navigator.of(context).pop();
               },
             ),
-            if (store.isMine)
+            if (store.isMine) ...[
               ListTile(
                 leading: const Icon(Icons.edit),
                 title: const Text('Edit'),
                 onTap: handleEdit,
               ),
-            if (store.isMine)
               ListTile(
                 leading: Icon(comment.deleted ? Icons.restore : Icons.delete),
                 title: Text(comment.deleted ? 'Restore' : 'Delete'),
                 onTap: loggedInAction(handleDelete),
+              ),
+            ] else
+              ListTile(
+                leading: store.blockingState.isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(),
+                      )
+                    : const Icon(Icons.block),
+                title: Text(
+                    '${store.comment.creatorBlocked ? 'Unblock' : 'Block'} ${store.comment.creator.preferredName}'),
+                onTap: loggedInAction((token) {
+                  Navigator.of(context).pop();
+                  store.block(token);
+                }),
               ),
             ListTile(
               leading: const Icon(Icons.info_outline),

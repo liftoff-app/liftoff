@@ -90,13 +90,20 @@ class CommentWidget extends StatelessWidget {
         detached: detached,
         hideOnRead: hideOnRead,
       ),
-      builder: (context, child) => AsyncStoreListener(
-        asyncStore: context.read<CommentStore>().votingState,
+      builder: (context, child) => AsyncStoreListener<BlockedPerson>(
+        asyncStore: context.read<CommentStore>().blockingState,
+        successMessageBuilder: (context, state) {
+          final name = state.personView.person.preferredName;
+          return state.blocked ? '$name blocked' : '$name unblocked';
+        },
         child: AsyncStoreListener(
-          asyncStore: context.read<CommentStore>().deletingState,
+          asyncStore: context.read<CommentStore>().votingState,
           child: AsyncStoreListener(
-            asyncStore: context.read<CommentStore>().savingState,
-            child: const _CommentWidget(),
+            asyncStore: context.read<CommentStore>().deletingState,
+            child: AsyncStoreListener(
+              asyncStore: context.read<CommentStore>().savingState,
+              child: const _CommentWidget(),
+            ),
           ),
         ),
       ),

@@ -102,6 +102,13 @@ mixin _$CommentStore on _CommentStore, Store {
     return _$saveAsyncAction.run(() => super.save(token));
   }
 
+  final _$blockAsyncAction = AsyncAction('_CommentStore.block');
+
+  @override
+  Future<void> block(Jwt token) {
+    return _$blockAsyncAction.run(() => super.block(token));
+  }
+
   final _$markAsReadAsyncAction = AsyncAction('_CommentStore.markAsRead');
 
   @override

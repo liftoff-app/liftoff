@@ -5,21 +5,24 @@ import '../l10n/l10n_from_string.dart';
 import 'async_store.dart';
 import 'observer_consumers.dart';
 
-class AsyncStoreListener extends StatelessWidget {
-  final AsyncStore asyncStore;
-  final String? successMessage;
+class AsyncStoreListener<T> extends StatelessWidget {
+  final AsyncStore<T> asyncStore;
+  final String Function(
+    BuildContext context,
+    T data,
+  )? successMessageBuilder;
   final Widget child;
 
   const AsyncStoreListener({
     Key? key,
     required this.asyncStore,
-    this.successMessage,
+    this.successMessageBuilder,
     required this.child,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ObserverListener<AsyncStore>(
+    return ObserverListener<AsyncStore<T>>(
       store: asyncStore,
       listener: (context, store) {
         final errorTerm = store.errorTerm;
@@ -29,10 +32,12 @@ class AsyncStoreListener extends StatelessWidget {
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(content: Text(errorTerm.tr(context))));
         } else if (store.asyncState is AsyncStateData &&
-            successMessage != null) {
+            (successMessageBuilder != null)) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(successMessage!)));
+            ..showSnackBar(SnackBar(
+                content: Text(successMessageBuilder!(
+                    context, (store.asyncState as AsyncStateData).data))));
         }
       },
       child: child,

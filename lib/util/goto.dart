@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../pages/community.dart';
-import '../pages/full_post.dart';
+import '../pages/full_post/full_post.dart';
 import '../pages/instance.dart';
 import '../pages/media_view.dart';
 import '../pages/user.dart';
@@ -62,8 +62,8 @@ abstract class goToUser {
       goToUser.byId(context, personSafe.instanceHost, personSafe.id);
 }
 
-void goToPost(BuildContext context, String instanceHost, int postId) => goTo(
-    context, (context) => FullPostPage(instanceHost: instanceHost, id: postId));
+void goToPost(BuildContext context, String instanceHost, int postId) =>
+    Navigator.of(context).push(FullPostPage.route(postId, instanceHost));
 
 void goToMedia(BuildContext context, String url) => Navigator.push(
       context,
