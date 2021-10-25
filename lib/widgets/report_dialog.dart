@@ -7,6 +7,7 @@ class ReportDialog extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useListenable(useTextEditingController());
+
     return AlertDialog(
       title: const Text('Report'),
       content: TextField(

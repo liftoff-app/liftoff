@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -163,16 +161,17 @@ class _CommentMoreMenuPopup extends HookWidget {
                   ? const CircularProgressIndicator.adaptive()
                   : const Icon(Icons.flag),
               title: const Text('Report'),
-              onTap: () {
-                if (store.reportingState.isLoading) return;
-                Navigator.of(context).pop();
-                loggedInAction((token) async {
-                  final reason = await ReportDialog.show(context);
-                  if (reason != null) {
-                    unawaited(store.report(token, reason));
-                  }
-                })();
-              },
+              onTap: store.reportingState.isLoading
+                  ? null
+                  : () {
+                      Navigator.of(context).pop();
+                      loggedInAction((token) async {
+                        final reason = await ReportDialog.show(context);
+                        if (reason != null) {
+                          await store.report(token, reason);
+                        }
+                      })();
+                    },
             ),
             ListTile(
               leading: const Icon(Icons.info_outline),
