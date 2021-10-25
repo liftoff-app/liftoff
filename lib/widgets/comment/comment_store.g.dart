@@ -88,6 +88,13 @@ mixin _$CommentStore on _CommentStore, Store {
     });
   }
 
+  final _$reportAsyncAction = AsyncAction('_CommentStore.report');
+
+  @override
+  Future<void> report(Jwt token, String reason) {
+    return _$reportAsyncAction.run(() => super.report(token, reason));
+  }
+
   final _$deleteAsyncAction = AsyncAction('_CommentStore.delete');
 
   @override

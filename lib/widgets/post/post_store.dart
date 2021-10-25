@@ -14,6 +14,7 @@ abstract class _PostStore with Store {
   final votingState = AsyncStore<PostView>();
   final savingState = AsyncStore<PostView>();
   final userBlockingState = AsyncStore<BlockedPerson>();
+  final reportingState = AsyncStore<PostReportView>();
 
   @observable
   PostView postView;
@@ -53,6 +54,20 @@ abstract class _PostStore with Store {
             postId: postView.post.id, save: !postView.saved, auth: token.raw));
 
     if (result != null) postView = result;
+  }
+
+  @action
+  Future<void> report(Jwt token, String reason) async {
+    if (reason.trim().isEmpty) throw ArgumentError('reason must not be empty');
+
+    await reportingState.runLemmy(
+      postView.instanceHost,
+      CreatePostReport(
+        postId: postView.post.id,
+        reason: reason,
+        auth: token.raw,
+      ),
+    );
   }
 
   @action
