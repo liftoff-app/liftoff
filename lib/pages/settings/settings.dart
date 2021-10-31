@@ -6,7 +6,10 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
+import '../../stores/config_store.dart';
+import '../../util/async_store_listener.dart';
 import '../../util/goto.dart';
+import '../../util/observer_consumers.dart';
 import '../../widgets/about_tile.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/radio_picker.dart';
@@ -66,112 +69,112 @@ class SettingsPage extends HookWidget {
 }
 
 /// Settings for theme color, AMOLED switch
-class AppearanceConfigPage extends HookWidget {
+class AppearanceConfigPage extends StatelessWidget {
   const AppearanceConfigPage();
 
   @override
   Widget build(BuildContext context) {
-    final configStore = useConfigStore();
-
     return Scaffold(
       appBar: AppBar(title: const Text('Appearance')),
-      body: ListView(
-        children: [
-          const _SectionHeading('Theme'),
-          for (final theme in ThemeMode.values)
-            RadioListTile<ThemeMode>(
-              value: theme,
-              title: Text(describeEnum(theme)),
-              groupValue: configStore.theme,
-              onChanged: (selected) {
-                if (selected != null) configStore.theme = selected;
+      body: ObserverBuilder<ConfigStore>(
+        builder: (context, store) => ListView(
+          children: [
+            const _SectionHeading('Theme'),
+            for (final theme in ThemeMode.values)
+              RadioListTile<ThemeMode>(
+                value: theme,
+                title: Text(describeEnum(theme)),
+                groupValue: store.theme,
+                onChanged: (selected) {
+                  if (selected != null) store.theme = selected;
+                },
+              ),
+            SwitchListTile.adaptive(
+              title: const Text('AMOLED dark mode'),
+              value: store.amoledDarkMode,
+              onChanged: (checked) {
+                store.amoledDarkMode = checked;
               },
             ),
-          SwitchListTile.adaptive(
-            title: const Text('AMOLED dark mode'),
-            value: configStore.amoledDarkMode,
-            onChanged: (checked) {
-              configStore.amoledDarkMode = checked;
-            },
-          ),
-          const SizedBox(height: 12),
-          const _SectionHeading('Other'),
-          SwitchListTile.adaptive(
-            title: Text(L10n.of(context)!.show_avatars),
-            value: configStore.showAvatars,
-            onChanged: (checked) {
-              configStore.showAvatars = checked;
-            },
-          ),
-          SwitchListTile.adaptive(
-            title: const Text('Show scores'),
-            value: configStore.showScores,
-            onChanged: (checked) {
-              configStore.showScores = checked;
-            },
-          ),
-        ],
+            const SizedBox(height: 12),
+            const _SectionHeading('Other'),
+            SwitchListTile.adaptive(
+              title: Text(L10n.of(context)!.show_avatars),
+              value: store.showAvatars,
+              onChanged: (checked) {
+                store.showAvatars = checked;
+              },
+            ),
+            SwitchListTile.adaptive(
+              title: const Text('Show scores'),
+              value: store.showScores,
+              onChanged: (checked) {
+                store.showScores = checked;
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 /// General settings
-class GeneralConfigPage extends HookWidget {
+class GeneralConfigPage extends StatelessWidget {
   const GeneralConfigPage();
 
   @override
   Widget build(BuildContext context) {
-    final configStore = useConfigStore();
-
     return Scaffold(
       appBar: AppBar(title: const Text('General')),
-      body: ListView(
-        children: [
-          ListTile(
-            title: Text(L10n.of(context)!.sort_type),
-            trailing: SizedBox(
-              width: 120,
-              child: RadioPicker<SortType>(
-                values: SortType.values,
-                groupValue: configStore.defaultSortType,
-                onChanged: (value) => configStore.defaultSortType = value,
-                mapValueToString: (value) => value.value,
+      body: ObserverBuilder<ConfigStore>(
+        builder: (context, store) => ListView(
+          children: [
+            ListTile(
+              title: Text(L10n.of(context)!.sort_type),
+              trailing: SizedBox(
+                width: 120,
+                child: RadioPicker<SortType>(
+                  values: SortType.values,
+                  groupValue: store.defaultSortType,
+                  onChanged: (value) => store.defaultSortType = value,
+                  mapValueToString: (value) => value.value,
+                ),
               ),
             ),
-          ),
-          ListTile(
-            title: Text(L10n.of(context)!.type),
-            trailing: SizedBox(
-              width: 120,
-              child: RadioPicker<PostListingType>(
-                values: const [
-                  PostListingType.all,
-                  PostListingType.local,
-                  PostListingType.subscribed,
-                ],
-                groupValue: configStore.defaultListingType,
-                onChanged: (value) => configStore.defaultListingType = value,
-                mapValueToString: (value) => value.value,
+            ListTile(
+              title: Text(L10n.of(context)!.type),
+              trailing: SizedBox(
+                width: 120,
+                child: RadioPicker<PostListingType>(
+                  values: const [
+                    PostListingType.all,
+                    PostListingType.local,
+                    PostListingType.subscribed,
+                  ],
+                  groupValue: store.defaultListingType,
+                  onChanged: (value) => store.defaultListingType = value,
+                  mapValueToString: (value) => value.value,
+                ),
               ),
             ),
-          ),
-          ListTile(
-            title: Text(L10n.of(context)!.language),
-            trailing: SizedBox(
-              width: 120,
-              child: RadioPicker<Locale>(
-                title: 'Choose language',
-                groupValue: configStore.locale,
-                values: L10n.supportedLocales,
-                mapValueToString: (locale) => locale.languageName,
-                onChanged: (selected) {
-                  configStore.locale = selected;
-                },
+            ListTile(
+              title: Text(L10n.of(context)!.language),
+              trailing: SizedBox(
+                width: 120,
+                child: RadioPicker<Locale>(
+                  title: 'Choose language',
+                  groupValue: store.locale,
+                  values: L10n.supportedLocales,
+                  mapValueToString: (locale) => locale.languageName,
+                  onChanged: (selected) {
+                    store.locale = selected;
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -191,8 +194,6 @@ class _AccountOptions extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accountsStore = useAccountsStore();
-    final configStore = useConfigStore();
-    final importLoading = useState(false);
 
     Future<void> removeUserDialog(String instanceHost, String username) async {
       if (await showDialog<bool>(
@@ -235,34 +236,28 @@ class _AccountOptions extends HookWidget {
           title: const Text('Remove account'),
           onTap: () => removeUserDialog(instanceHost, username),
         ),
-        ListTile(
-            leading: importLoading.value
-                ? const SizedBox(
-                    height: 25,
-                    width: 25,
-                    child: CircularProgressIndicator.adaptive(),
-                  )
-                : const Icon(Icons.cloud_download),
-            title: const Text('Import settings to lemmur'),
-            onTap: () async {
-              importLoading.value = true;
-              try {
-                await configStore.importLemmyUserSettings(
-                  accountsStore.userDataFor(instanceHost, username)!.jwt,
-                );
-
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Import successful'),
-                ));
-              } on Exception catch (err) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(err.toString()),
-                ));
-              } finally {
+        AsyncStoreListener(
+          asyncStore: context.read<ConfigStore>().lemmyImportState,
+          successMessageBuilder: (context, data) => 'Import successful',
+          child: ObserverBuilder<ConfigStore>(
+            builder: (context, store) => ListTile(
+              leading: store.lemmyImportState.isLoading
+                  ? const SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CircularProgressIndicator.adaptive(),
+                    )
+                  : const Icon(Icons.cloud_download),
+              title: const Text('Import settings to lemmur'),
+              onTap: () async {
+                await context.read<ConfigStore>().importLemmyUserSettings(
+                      accountsStore.userDataFor(instanceHost, username)!.jwt,
+                    );
                 Navigator.of(context).pop();
-                importLoading.value = false;
-              }
-            }),
+              },
+            ),
+          ),
+        ),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/stores.dart';
+import '../stores/config_store.dart';
 import 'cached_network_image.dart';
 
 /// User's avatar. Respects the `showAvatars` setting from configStore
@@ -26,8 +27,7 @@ class Avatar extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final showAvatars =
-        useConfigStoreSelect((configStore) => configStore.showAvatars) ||
-            alwaysShow;
+        useStore((ConfigStore store) => store.showAvatars) || alwaysShow;
 
     final blankWidget = () {
       if (noBlank) return const SizedBox.shrink();

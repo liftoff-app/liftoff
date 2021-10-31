@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provider/provider.dart';
 
 import '../../../util/async_store_listener.dart';
 import '../../../util/extensions/api.dart';

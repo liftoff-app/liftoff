@@ -8,6 +8,7 @@ import '../hooks/infinite_scroll.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../stores/config_store.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
@@ -25,7 +26,7 @@ class HomeTab extends HookWidget {
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
     final defaultListingType =
-        useConfigStoreSelect((configStore) => configStore.defaultListingType);
+        useStore((ConfigStore store) => store.defaultListingType);
     final selectedList = useState(_SelectedList(
         listingType: accStore.hasNoAccount &&
                 defaultListingType == PostListingType.subscribed

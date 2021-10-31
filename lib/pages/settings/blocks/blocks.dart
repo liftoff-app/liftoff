@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provider/provider.dart';
 
 import '../../../hooks/stores.dart';
 import '../../../l10n/l10n_from_string.dart';

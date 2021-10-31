@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 export 'package:flutter_gen/gen_l10n/l10n.dart';
 
 export 'l10n_api.dart';
 export 'l10n_from_string.dart';
 
-abstract class LocaleSerde {
-  static Locale fromJson(String? json) {
+class LocaleConverter implements JsonConverter<Locale, String?> {
+  const LocaleConverter();
+
+  @override
+  Locale fromJson(String? json) {
     if (json == null) return const Locale('en');
 
     final lang = json.split('-');
@@ -14,7 +18,8 @@ abstract class LocaleSerde {
     return Locale(lang[0], lang.length > 1 ? lang[1] : null);
   }
 
-  static String toJson(Locale locale) => locale.toLanguageTag();
+  @override
+  String? toJson(Locale locale) => locale.toLanguageTag();
 }
 
 const _languageNames = {

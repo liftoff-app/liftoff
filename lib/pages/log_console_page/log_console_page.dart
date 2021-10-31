@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_safe.dart';

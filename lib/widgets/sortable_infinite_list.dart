@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
+import '../stores/config_store.dart';
 import 'comment/comment.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
@@ -39,7 +40,7 @@ class SortableInfiniteList<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final defaultSortType =
-        useConfigStoreSelect((store) => store.defaultSortType);
+        useStore((ConfigStore store) => store.defaultSortType);
     final defaultController = useInfiniteScrollController();
     final isc = controller ?? defaultController;
 

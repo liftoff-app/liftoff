@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../comment_tree.dart';
 import '../../l10n/l10n.dart';

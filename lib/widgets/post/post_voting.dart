@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:provider/provider.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../hooks/stores.dart';
+import '../../stores/config_store.dart';
 import '../../util/intl.dart';
 import '../../util/observer_consumers.dart';
 import 'post_store.dart';
@@ -15,8 +15,7 @@ class PostVoting extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final showScores =
-        useConfigStoreSelect((configStore) => configStore.showScores);
+    final showScores = useStore((ConfigStore store) => store.showScores);
     final loggedInAction = useLoggedInAction(context
         .select<PostStore, String>((store) => store.postView.instanceHost));
 

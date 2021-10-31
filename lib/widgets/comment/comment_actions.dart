@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:provider/provider.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';

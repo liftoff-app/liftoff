@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
-import 'hooks/stores.dart';
 import 'l10n/l10n.dart';
 import 'pages/home_page.dart';
+import 'stores/config_store.dart';
 import 'theme.dart';
+import 'util/observer_consumers.dart';
 
-class MyApp extends HookWidget {
+class MyApp extends StatelessWidget {
   const MyApp();
 
   @override
   Widget build(BuildContext context) {
-    final configStore = useConfigStore();
-
     return KeyboardDismisser(
-      child: MaterialApp(
-        title: 'lemmur',
-        supportedLocales: L10n.supportedLocales,
-        localizationsDelegates: L10n.localizationsDelegates,
-        themeMode: configStore.theme,
-        darkTheme: configStore.amoledDarkMode ? amoledTheme : darkTheme,
-        locale: configStore.locale,
-        theme: lightTheme,
-        home: const HomePage(),
+      child: ObserverBuilder<ConfigStore>(
+        builder: (context, store) => MaterialApp(
+          title: 'lemmur',
+          supportedLocales: L10n.supportedLocales,
+          localizationsDelegates: L10n.localizationsDelegates,
+          themeMode: store.theme,
+          darkTheme: store.amoledDarkMode ? amoledTheme : darkTheme,
+          locale: store.locale,
+          theme: lightTheme,
+          home: const HomePage(),
+        ),
       ),
     );
   }
