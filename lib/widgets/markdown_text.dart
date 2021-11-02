@@ -20,7 +20,9 @@ class MarkdownText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return MarkdownBody(
+      key: ValueKey(Object.hashAll([selectable, text, instanceHost])),
       selectable: selectable,
       data: text,
       extensionSet: md.ExtensionSet.gitHubWeb,

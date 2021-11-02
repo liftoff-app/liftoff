@@ -9,6 +9,7 @@
 ### Fixed
 
 - Fixed a bug where post would go out of sync with full version of the post
+- Fixed a bug where making a comment selectable would not always result in making the comment selectable
 
 ## v0.6.0 - 2021-09-06
 

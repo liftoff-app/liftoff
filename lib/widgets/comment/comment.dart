@@ -156,9 +156,6 @@ class _CommentWidget extends StatelessWidget {
           );
         }
 
-        // TODO: bug, the text is selectable even when disabled after following
-        //       these steps:
-        //       make selectable > show raw > show fancy > make unselectable
         return store.showRaw
             ? store.selectable
                 ? SelectableText(comment.content)

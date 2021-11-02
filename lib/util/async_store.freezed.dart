@@ -151,7 +151,8 @@ class _$AsyncStateInitial<T>
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is AsyncStateInitial<T>);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is AsyncStateInitial<T>);
   }
 
   @override
@@ -294,14 +295,14 @@ class _$AsyncStateData<T>
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is AsyncStateData<T> &&
-            (identical(other.data, data) ||
-                const DeepCollectionEquality().equals(other.data, data)));
+        (other.runtimeType == runtimeType &&
+            other is AsyncStateData<T> &&
+            const DeepCollectionEquality().equals(other.data, data));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(data);
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
 
   @JsonKey(ignore: true)
   @override
@@ -386,7 +387,7 @@ class _$AsyncStateData<T>
 abstract class AsyncStateData<T> implements AsyncState<T> {
   const factory AsyncStateData(T data) = _$AsyncStateData<T>;
 
-  T get data => throw _privateConstructorUsedError;
+  T get data;
   @JsonKey(ignore: true)
   $AsyncStateDataCopyWith<T, AsyncStateData<T>> get copyWith =>
       throw _privateConstructorUsedError;
@@ -431,7 +432,8 @@ class _$AsyncStateLoading<T>
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is AsyncStateLoading<T>);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is AsyncStateLoading<T>);
   }
 
   @override
@@ -574,15 +576,14 @@ class _$AsyncStateError<T>
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is AsyncStateError<T> &&
+        (other.runtimeType == runtimeType &&
+            other is AsyncStateError<T> &&
             (identical(other.errorTerm, errorTerm) ||
-                const DeepCollectionEquality()
-                    .equals(other.errorTerm, errorTerm)));
+                other.errorTerm == errorTerm));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(errorTerm);
+  int get hashCode => Object.hash(runtimeType, errorTerm);
 
   @JsonKey(ignore: true)
   @override
@@ -667,7 +668,7 @@ class _$AsyncStateError<T>
 abstract class AsyncStateError<T> implements AsyncState<T> {
   const factory AsyncStateError(String errorTerm) = _$AsyncStateError<T>;
 
-  String get errorTerm => throw _privateConstructorUsedError;
+  String get errorTerm;
   @JsonKey(ignore: true)
   $AsyncStateErrorCopyWith<T, AsyncStateError<T>> get copyWith =>
       throw _privateConstructorUsedError;
