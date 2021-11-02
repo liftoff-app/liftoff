@@ -117,7 +117,7 @@ class InstancePage extends HookWidget {
                 ),
               ),
               actions: [
-                IconButton(icon: const Icon(Icons.share), onPressed: _share),
+                IconButton(icon: Icon(shareIcon), onPressed: _share),
                 IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
               ],
               flexibleSpace: FlexibleSpaceBar(

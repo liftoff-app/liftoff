@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../util/icons.dart';
 import '../util/share.dart';
 import '../widgets/bottom_modal.dart';
 
@@ -76,7 +77,7 @@ class MediaViewPage extends HookWidget {
               leading: const CloseButton(),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.share),
+                  icon: Icon(shareIcon),
                   tooltip: 'share',
                   onPressed: sharePhoto,
                 ),

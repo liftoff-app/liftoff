@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../util/extensions/api.dart';
+import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../bottom_modal.dart';
@@ -94,7 +95,7 @@ class _CommentMoreMenuPopup extends HookWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.share),
+              leading: Icon(shareIcon),
               title: const Text('Share url'),
               onTap: () {
                 share(comment.link, context: context);
@@ -102,7 +103,7 @@ class _CommentMoreMenuPopup extends HookWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.share),
+              leading: Icon(shareIcon),
               title: const Text('Share text'),
               onTap: () {
                 share(comment.content, context: context);
