@@ -15,11 +15,17 @@ class Avatar extends HookWidget {
     this.radius = 25,
     this.noBlank = false,
     this.alwaysShow = false,
+    this.padding = EdgeInsets.zero,
+    this.onTap,
   }) : super(key: key);
 
   final String? url;
   final double radius;
   final bool noBlank;
+  final VoidCallback? onTap;
+
+  /// padding is applied unless blank widget is returned
+  final EdgeInsetsGeometry padding;
 
   /// Overrides the `showAvatars` setting
   final bool alwaysShow;
@@ -44,13 +50,20 @@ class Avatar extends HookWidget {
       return blankWidget;
     }
 
-    return ClipOval(
-      child: CachedNetworkImage(
-        height: radius * 2,
-        width: radius * 2,
-        imageUrl: imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __) => blankWidget,
+    return Padding(
+      padding: padding,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(radius),
+        child: ClipOval(
+          child: CachedNetworkImage(
+            height: radius * 2,
+            width: radius * 2,
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __) => blankWidget,
+          ),
+        ),
       ),
     );
   }

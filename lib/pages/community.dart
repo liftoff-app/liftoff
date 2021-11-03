@@ -266,98 +266,93 @@ class _CommunityOverview extends StatelessWidget {
           )
         : null;
 
-    return Stack(children: [
-      if (community.community.banner != null)
-        FullscreenableImage(
-          url: community.community.banner!,
-          child: CachedNetworkImage(
-            imageUrl: community.community.banner!,
-            errorBuilder: (_, ___) => const SizedBox.shrink(),
+    return Stack(
+      children: [
+        if (community.community.banner != null)
+          FullscreenableImage(
+            url: community.community.banner!,
+            child: CachedNetworkImage(
+              imageUrl: community.community.banner!,
+              errorBuilder: (_, ___) => const SizedBox.shrink(),
+            ),
           ),
-        ),
-      SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 45),
-          child: Column(children: [
-            if (icon != null) icon,
-            // NAME
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: RichText(
-                  overflow: TextOverflow.ellipsis, // TODO: fix overflowing
-                  text: TextSpan(
-                    style:
-                        theme.textTheme.subtitle1?.copyWith(shadows: [shadow]),
-                    children: [
-                      const TextSpan(
-                          text: '!',
-                          style: TextStyle(fontWeight: FontWeight.w200)),
-                      TextSpan(
-                          text: community.community.name,
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                      const TextSpan(
-                          text: '@',
-                          style: TextStyle(fontWeight: FontWeight.w200)),
-                      TextSpan(
-                        text: community.community.originInstanceHost,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => goToInstance(
-                              context, community.community.originInstanceHost),
-                      ),
-                    ],
-                  ),
+        SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 45),
+              if (icon != null) icon,
+              const SizedBox(height: 10),
+              // NAME
+              RichText(
+                overflow: TextOverflow.ellipsis,
+                text: TextSpan(
+                  style: theme.textTheme.subtitle1?.copyWith(shadows: [shadow]),
+                  children: [
+                    const TextSpan(
+                      text: '!',
+                      style: TextStyle(fontWeight: FontWeight.w200),
+                    ),
+                    TextSpan(
+                      text: community.community.name,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    const TextSpan(
+                      text: '@',
+                      style: TextStyle(fontWeight: FontWeight.w200),
+                    ),
+                    TextSpan(
+                      text: community.community.originInstanceHost,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => goToInstance(
+                              context,
+                              community.community.originInstanceHost,
+                            ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            // TITLE/MOTTO
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
+              // TITLE/MOTTO
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
                   community.community.title,
                   textAlign: TextAlign.center,
-                  style:
-                      TextStyle(fontWeight: FontWeight.w300, shadows: [shadow]),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    shadows: [shadow],
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Stack(
+              const SizedBox(height: 20),
+              Stack(
+                alignment: Alignment.center,
                 children: [
                   // INFO ICONS
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Row(
-                      children: [
-                        const Spacer(),
-                        const Padding(
-                          padding: EdgeInsets.only(right: 3),
-                          child: Icon(Icons.people, size: 20),
-                        ),
-                        Text(compactNumber(community.counts.subscribers)),
-                        const Spacer(flex: 4),
-                        const Padding(
-                          padding: EdgeInsets.only(right: 3),
-                          child: Icon(Icons.record_voice_over, size: 20),
-                        ),
-                        Text(onlineUsers == null
-                            ? 'xx'
-                            : compactNumber(onlineUsers!)),
-                        const Spacer(),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      const Icon(Icons.people, size: 20),
+                      const SizedBox(width: 3),
+                      Text(compactNumber(community.counts.subscribers)),
+                      const Spacer(flex: 4),
+                      const Icon(Icons.record_voice_over, size: 20),
+                      const SizedBox(width: 3),
+                      Text(onlineUsers == null
+                          ? 'xx'
+                          : compactNumber(onlineUsers!)),
+                      const Spacer(),
+                    ],
                   ),
                   _FollowButton(community),
                 ],
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
 

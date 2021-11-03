@@ -76,11 +76,13 @@ class UserProfileTab extends HookWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  // TODO: fix overflow issues
-                  displayValue,
-                  style: theme.appBarTheme.titleTextStyle,
-                  overflow: TextOverflow.fade,
+                Flexible(
+                  child: Text(
+                    displayValue,
+                    style: theme.appBarTheme.titleTextStyle,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                  ),
                 ),
                 const Icon(Icons.expand_more),
               ],

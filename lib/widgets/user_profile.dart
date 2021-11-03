@@ -140,49 +140,47 @@ class _UserOverview extends HookWidget {
         textColorBasedOnBackground(theme.colorScheme.secondary);
 
     return Stack(
+      fit: StackFit.expand,
       children: [
         if (userView.person.banner != null)
-          // TODO: for some reason doesnt react to presses
-          FullscreenableImage(
-            url: userView.person.banner!,
-            child: CachedNetworkImage(
-              imageUrl: userView.person.banner!,
-              errorBuilder: (_, ___) => const SizedBox.shrink(),
+          Align(
+            alignment: Alignment.topCenter,
+            child: FullscreenableImage(
+              url: userView.person.banner!,
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).padding.top + 100,
+                width: double.infinity,
+                imageUrl: userView.person.banner!,
+                errorBuilder: (_, ___) => const SizedBox.shrink(),
+              ),
             ),
           )
         else
-          Container(
-            width: double.infinity,
-            height: 200,
-            color: theme.colorScheme.secondary,
-          ),
-        Container(
-          height: 200,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: FractionalOffset.topCenter,
-              end: FractionalOffset.bottomCenter,
-              colors: [
-                Colors.black26,
-                Colors.transparent,
-              ],
+          ColoredBox(color: theme.colorScheme.secondary),
+        const IgnorePointer(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                colors: [
+                  Colors.black26,
+                  Colors.transparent,
+                ],
+              ),
             ),
           ),
         ),
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 60),
-            child: SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(40),
-                    topLeft: Radius.circular(40),
-                  ),
-                  color: theme.cardColor,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(40),
                 ),
+                color: theme.cardColor,
               ),
             ),
           ),
@@ -191,25 +189,23 @@ class _UserOverview extends HookWidget {
           child: Column(
             children: [
               if (userView.person.avatar != null)
-                SizedBox(
+                Container(
                   width: 80,
                   height: 80,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(blurRadius: 6, color: Colors.black54)
-                      ],
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
-                      border: Border.all(color: Colors.white, width: 3),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
-                      child: FullscreenableImage(
-                        url: userView.person.avatar!,
-                        child: CachedNetworkImage(
-                          imageUrl: userView.person.avatar!,
-                          errorBuilder: (_, ___) => const SizedBox.shrink(),
-                        ),
+                  decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(blurRadius: 6, color: Colors.black54)
+                    ],
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    border: Border.all(color: Colors.white, width: 3),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    child: FullscreenableImage(
+                      url: userView.person.avatar!,
+                      child: CachedNetworkImage(
+                        imageUrl: userView.person.avatar!,
+                        errorBuilder: (_, ___) => const SizedBox.shrink(),
                       ),
                     ),
                   ),
@@ -292,13 +288,11 @@ class _UserOverview extends HookWidget {
                     Icons.cake,
                     size: 13,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4),
-                    child: Text(
-                      DateFormat('MMM dd, yyyy')
-                          .format(userView.person.published),
-                      style: theme.textTheme.bodyText1,
-                    ),
+                  const SizedBox(width: 4),
+                  Text(
+                    DateFormat('MMM dd, yyyy')
+                        .format(userView.person.published),
+                    style: theme.textTheme.bodyText1,
                   ),
                 ],
               ),
