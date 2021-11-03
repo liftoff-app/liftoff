@@ -30,12 +30,9 @@ class PostBody extends StatelessWidget {
       } else {
         return LayoutBuilder(
           builder: (context, constraints) {
-            final span = TextSpan(
-              text: body,
-            );
             final tp = TextPainter(
-              text: span,
-              maxLines: 10,
+              text: TextSpan(text: body),
+              maxLines: 8,
               textDirection: Directionality.of(context),
             )..layout(maxWidth: constraints.maxWidth - 20);
 
@@ -43,29 +40,30 @@ class PostBody extends StatelessWidget {
               return ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: tp.height),
                 child: Stack(
-                  alignment: Alignment.bottomCenter,
                   children: [
-                    ClipRect(
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        heightFactor: 0.8,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: MarkdownText(body,
-                              instanceHost: store.postView.instanceHost),
+                    Positioned.fill(
+                      bottom: null,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: MarkdownText(
+                          body,
+                          instanceHost: store.postView.instanceHost,
                         ),
                       ),
                     ),
-                    Container(
-                      height: tp.preferredLineHeight * 2.5,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            theme.cardColor.withAlpha(0),
-                            theme.cardColor,
-                          ],
+                    Positioned.fill(
+                      top: null,
+                      child: Container(
+                        height: tp.preferredLineHeight * 2.5,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              theme.cardColor.withAlpha(0),
+                              theme.cardColor,
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -74,9 +72,12 @@ class PostBody extends StatelessWidget {
               );
             } else {
               return Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: MarkdownText(body,
-                      instanceHost: store.postView.instanceHost));
+                padding: const EdgeInsets.all(10),
+                child: MarkdownText(
+                  body,
+                  instanceHost: store.postView.instanceHost,
+                ),
+              );
             }
           },
         );

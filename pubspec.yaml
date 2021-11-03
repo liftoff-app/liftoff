@@ -52,6 +52,7 @@ dependencies:
   keyboard_dismisser: ^2.0.0
   freezed_annotation: ^0.15.0
   logging: ^1.0.1
+  nested: ^1.0.0
 
   flutter:
     sdk: flutter

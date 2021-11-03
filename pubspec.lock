@@ -505,7 +505,7 @@ packages:
     source: hosted
     version: "2.0.0"
   nested:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: nested
       url: "https://pub.dartlang.org"

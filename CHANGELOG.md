@@ -10,6 +10,7 @@
 
 - Fixed a bug where post would go out of sync with full version of the post
 - Fixed a bug where making a comment selectable would not always result in making the comment selectable
+- Full post will now open no matter where you press on the post card
 
 ## v0.6.0 - 2021-09-06
 

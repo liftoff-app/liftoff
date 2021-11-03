@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
 
 import '../../pages/full_post/full_post.dart';
@@ -25,31 +26,25 @@ class PostTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
+    return Nested(
+      children: [
         Provider.value(value: postStore),
         Provider.value(value: fullPost),
+        AsyncStoreListener(asyncStore: postStore.savingState),
+        AsyncStoreListener(asyncStore: postStore.votingState),
+        AsyncStoreListener<BlockedPerson>(
+          asyncStore: postStore.userBlockingState,
+          successMessageBuilder: (context, state) {
+            final name = state.personView.person.preferredName;
+            return state.blocked ? '$name blocked' : '$name unblocked';
+          },
+        ),
+        AsyncStoreListener<PostReportView>(
+          asyncStore: postStore.reportingState,
+          successMessageBuilder: (context, data) => 'Post reported',
+        ),
       ],
-      builder: (context, child) {
-        return AsyncStoreListener(
-          asyncStore: context.read<PostStore>().savingState,
-          child: AsyncStoreListener(
-            asyncStore: context.read<PostStore>().votingState,
-            child: AsyncStoreListener<BlockedPerson>(
-              asyncStore: context.read<PostStore>().userBlockingState,
-              successMessageBuilder: (context, state) {
-                final name = state.personView.person.preferredName;
-                return state.blocked ? '$name blocked' : '$name unblocked';
-              },
-              child: AsyncStoreListener<PostReportView>(
-                asyncStore: context.read<PostStore>().reportingState,
-                successMessageBuilder: (context, data) => 'Post reported',
-                child: const _Post(),
-              ),
-            ),
-          ),
-        );
-      },
+      child: const _Post(),
     );
   }
 }
@@ -63,20 +58,20 @@ class _Post extends StatelessWidget {
     final theme = Theme.of(context);
     final isFullPost = context.read<IsFullPost>();
 
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black45)],
-        color: theme.cardColor,
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-      ),
-      child: GestureDetector(
-        onTap: isFullPost
-            ? null
-            : () {
-                final postStore = context.read<PostStore>();
-                Navigator.of(context)
-                    .push(FullPostPage.fromPostStoreRoute(postStore));
-              },
+    return GestureDetector(
+      onTap: isFullPost
+          ? null
+          : () {
+              final postStore = context.read<PostStore>();
+              Navigator.of(context)
+                  .push(FullPostPage.fromPostStoreRoute(postStore));
+            },
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black45)],
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        ),
         child: Material(
           type: MaterialType.transparency,
           child: Column(

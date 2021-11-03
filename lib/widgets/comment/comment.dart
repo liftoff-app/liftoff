@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:nested/nested.dart';
 
 import '../../comment_tree.dart';
 import '../../l10n/l10n.dart';
@@ -89,26 +90,30 @@ class CommentWidget extends StatelessWidget {
         detached: detached,
         hideOnRead: hideOnRead,
       ),
-      builder: (context, child) => AsyncStoreListener<BlockedPerson>(
-        asyncStore: context.read<CommentStore>().blockingState,
-        successMessageBuilder: (context, state) {
-          final name = state.personView.person.preferredName;
-          return state.blocked ? '$name blocked' : '$name unblocked';
-        },
-        child: AsyncStoreListener(
-          asyncStore: context.read<CommentStore>().votingState,
-          child: AsyncStoreListener(
-            asyncStore: context.read<CommentStore>().deletingState,
-            child: AsyncStoreListener(
-              asyncStore: context.read<CommentStore>().savingState,
-              child: AsyncStoreListener<CommentReportView>(
-                asyncStore: context.read<CommentStore>().reportingState,
-                successMessageBuilder: (context, data) => 'Comment reported',
-                child: const _CommentWidget(),
-              ),
-            ),
+      builder: (context, child) => Nested(
+        children: [
+          AsyncStoreListener<BlockedPerson>(
+            asyncStore: context.read<CommentStore>().blockingState,
+            successMessageBuilder: (context, state) {
+              final name = state.personView.person.preferredName;
+              return state.blocked ? '$name blocked' : '$name unblocked';
+            },
           ),
-        ),
+          AsyncStoreListener(
+            asyncStore: context.read<CommentStore>().votingState,
+          ),
+          AsyncStoreListener(
+            asyncStore: context.read<CommentStore>().deletingState,
+          ),
+          AsyncStoreListener(
+            asyncStore: context.read<CommentStore>().savingState,
+          ),
+          AsyncStoreListener<CommentReportView>(
+            asyncStore: context.read<CommentStore>().reportingState,
+            successMessageBuilder: (context, data) => 'Comment reported',
+          ),
+        ],
+        child: const _CommentWidget(),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:nested/nested.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../stores/accounts_store.dart';
@@ -33,101 +34,106 @@ class FullPostPage extends HookWidget {
     final loggedInAction =
         useLoggedInAction(context.read<FullPostStore>().instanceHost);
 
-    return AsyncStoreListener(
-      asyncStore: context.read<FullPostStore>().fullPostState,
-      child: AsyncStoreListener<BlockedCommunity>(
-        asyncStore: context.read<FullPostStore>().communityBlockingState,
-        successMessageBuilder: (context, data) {
-          final name = data.communityView.community.originPreferredName;
-          return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
-        },
-        child: ObserverBuilder<FullPostStore>(
-          builder: (context, store) {
-            Future<void> refresh() async {
-              unawaited(HapticFeedback.mediumImpact());
-              await store.refresh(context
-                  .read<AccountsStore>()
-                  .defaultUserDataFor(store.instanceHost)
-                  ?.jwt);
-            }
-
-            final postStore = store.postStore;
-
-            if (postStore == null) {
-              return Scaffold(
-                appBar: AppBar(),
-                body: Center(
-                  child: (store.fullPostState.isLoading)
-                      ? const CircularProgressIndicator.adaptive()
-                      : FailedToLoad(
-                          message: 'Post failed to load', refresh: refresh),
-                ),
-              );
-            }
-
-            final post = postStore.postView;
-
-            // VARIABLES
-
-            sharePost() => share(post.post.apId, context: context);
-
-            comment() async {
-              final newComment = await Navigator.of(context).push(
-                WriteComment.toPostRoute(post.post),
-              );
-
-              if (newComment != null) {
-                store.addComment(newComment);
-              }
-            }
-
-            return Scaffold(
-                appBar: AppBar(
-                  centerTitle: false,
-                  title: RevealAfterScroll(
-                    scrollController: scrollController,
-                    after: 65,
-                    child: Text(
-                      post.community.originPreferredName,
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                  actions: [
-                    IconButton(icon: Icon(shareIcon), onPressed: sharePost),
-                    Provider.value(
-                      value: postStore,
-                      child: const SavePostButton(),
-                    ),
-                    IconButton(
-                      icon: Icon(moreIcon),
-                      onPressed: () => PostMoreMenuButton.show(
-                        context: context,
-                        postStore: postStore,
-                        fullPostStore: store,
-                      ),
-                    ),
-                  ],
-                ),
-                floatingActionButton: post.post.locked
-                    ? null
-                    : FloatingActionButton(
-                        onPressed: loggedInAction((_) => comment()),
-                        child: const Icon(Icons.comment),
-                      ),
-                body: RefreshIndicator(
-                  onRefresh: refresh,
-                  child: ListView(
-                    controller: scrollController,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: [
-                      const SizedBox(height: 15),
-                      PostTile.fromPostStore(postStore),
-                      const CommentSection(),
-                    ],
-                  ),
-                ));
+    return Nested(
+      children: [
+        AsyncStoreListener(
+          asyncStore: context.read<FullPostStore>().fullPostState,
+        ),
+        AsyncStoreListener<BlockedCommunity>(
+          asyncStore: context.read<FullPostStore>().communityBlockingState,
+          successMessageBuilder: (context, data) {
+            final name = data.communityView.community.originPreferredName;
+            return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
           },
         ),
+      ],
+      child: ObserverBuilder<FullPostStore>(
+        builder: (context, store) {
+          Future<void> refresh() async {
+            unawaited(HapticFeedback.mediumImpact());
+            await store.refresh(context
+                .read<AccountsStore>()
+                .defaultUserDataFor(store.instanceHost)
+                ?.jwt);
+          }
+
+          final postStore = store.postStore;
+
+          if (postStore == null) {
+            return Scaffold(
+              appBar: AppBar(),
+              body: Center(
+                child: (store.fullPostState.isLoading)
+                    ? const CircularProgressIndicator.adaptive()
+                    : FailedToLoad(
+                        message: 'Post failed to load', refresh: refresh),
+              ),
+            );
+          }
+
+          final post = postStore.postView;
+
+          // VARIABLES
+
+          sharePost() => share(post.post.apId, context: context);
+
+          comment() async {
+            final newComment = await Navigator.of(context).push(
+              WriteComment.toPostRoute(post.post),
+            );
+
+            if (newComment != null) {
+              store.addComment(newComment);
+            }
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              centerTitle: false,
+              title: RevealAfterScroll(
+                scrollController: scrollController,
+                after: 65,
+                child: Text(
+                  post.community.originPreferredName,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+              actions: [
+                IconButton(icon: Icon(shareIcon), onPressed: sharePost),
+                Provider.value(
+                  value: postStore,
+                  child: const SavePostButton(),
+                ),
+                IconButton(
+                  icon: Icon(moreIcon),
+                  onPressed: () => PostMoreMenuButton.show(
+                    context: context,
+                    postStore: postStore,
+                    fullPostStore: store,
+                  ),
+                ),
+              ],
+            ),
+            floatingActionButton: post.post.locked
+                ? null
+                : FloatingActionButton(
+                    onPressed: loggedInAction((_) => comment()),
+                    child: const Icon(Icons.comment),
+                  ),
+            body: RefreshIndicator(
+              onRefresh: refresh,
+              child: ListView(
+                controller: scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  const SizedBox(height: 15),
+                  PostTile.fromPostStore(postStore),
+                  const CommentSection(),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
