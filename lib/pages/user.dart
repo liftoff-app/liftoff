@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/logged_in_action.dart';
+import '../util/icons.dart';
 import '../util/share.dart';
 import '../widgets/user_profile.dart';
 import 'write_message.dart';
@@ -43,7 +44,7 @@ class UserPage extends HookWidget {
           if (userDetailsSnap.hasData) ...[
             SendMessageButton(userDetailsSnap.data!.personView.person),
             IconButton(
-              icon: const Icon(Icons.share),
+              icon: Icon(shareIcon),
               onPressed: () => share(
                 userDetailsSnap.data!.personView.person.actorId,
                 context: context,
