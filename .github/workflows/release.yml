@@ -61,7 +61,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           ANDROID_STORE_PATH: key.jks
           ANDROID_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-        run:
+        run: |
           flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
 
           mv build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
