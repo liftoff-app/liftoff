@@ -2,9 +2,10 @@
 
 ### Added
 
-- Logging: local logs about some actions/errors. Can be accessed from **settings > about lemmur > logs**
-- Android theme-aware splash screen (thanks to [@mimi89999](https://github.com/mimi89999))
 - Blocking of users and communities (from post and from comment)
+- Reporting posts and comments
+- Android theme-aware splash screen (thanks to [@mimi89999](https://github.com/mimi89999))
+- Logging: local logs about some actions/errors. Can be accessed from **settings > about lemmur > logs**
 
 ### Fixed
 
