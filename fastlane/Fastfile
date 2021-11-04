@@ -3,7 +3,6 @@ platform :android do
   lane :prod do
     upload_to_play_store(
       track: "beta",
-      metadata_path: "./metadata/android",
       package_name: "com.krawieck.lemmur",
       json_key: ENV["GOOGLE_SERVICE_ACCOUNT_KEY_PATH"],
       aab: ENV["ABB_PATH"]
