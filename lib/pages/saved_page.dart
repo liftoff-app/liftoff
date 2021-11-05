@@ -26,11 +26,11 @@ class SavedPage extends HookWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(L10n.of(context)!.saved),
+          title: Text(L10n.of(context).saved),
           bottom: TabBar(
             tabs: [
-              Tab(text: L10n.of(context)!.posts),
-              Tab(text: L10n.of(context)!.comments),
+              Tab(text: L10n.of(context).posts),
+              Tab(text: L10n.of(context).comments),
             ],
           ),
         ),

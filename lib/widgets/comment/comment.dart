@@ -142,7 +142,7 @@ class _CommentWidget extends StatelessWidget {
 
         if (comment.deleted) {
           return Text(
-            L10n.of(context)!.deleted_by_creator,
+            L10n.of(context).deleted_by_creator,
             style: const TextStyle(fontStyle: FontStyle.italic),
           );
         } else if (comment.removed) {
@@ -233,7 +233,7 @@ class _CommentWidget extends StatelessWidget {
                         _CommentTag('OP', theme.colorScheme.secondary),
                       if (creator.admin)
                         _CommentTag(
-                          L10n.of(context)!.admin.toUpperCase(),
+                          L10n.of(context).admin.toUpperCase(),
                           theme.colorScheme.secondary,
                         ),
                       if (creator.banned)

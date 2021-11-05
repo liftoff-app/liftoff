@@ -137,7 +137,7 @@ class AddAccountPage extends HookWidget {
               ],
               onSubmitted: (_) => passwordFocusNode.requestFocus(),
               decoration: InputDecoration(
-                  labelText: L10n.of(context)!.email_or_username),
+                  labelText: L10n.of(context).email_or_username),
             ),
             const SizedBox(height: 5),
             TextField(
@@ -147,8 +147,7 @@ class AddAccountPage extends HookWidget {
               onSubmitted: (_) => handleSubmit?.call(),
               autofillHints: const [AutofillHints.password],
               keyboardType: TextInputType.visiblePassword,
-              decoration:
-                  InputDecoration(labelText: L10n.of(context)!.password),
+              decoration: InputDecoration(labelText: L10n.of(context).password),
             ),
             ElevatedButton(
               onPressed: handleSubmit,

@@ -37,8 +37,8 @@ class WriteMessagePage extends HookWidget {
         useTextEditingController(text: privateMessage?.content);
     final loading = useState(false);
     final loggedInAction = useLoggedInAction(instanceHost);
-    final submit = _isEdit ? L10n.of(context)!.save : 'send';
-    final title = _isEdit ? 'Edit message' : L10n.of(context)!.send_message;
+    final submit = _isEdit ? L10n.of(context).save : 'send';
+    final title = _isEdit ? 'Edit message' : L10n.of(context).send_message;
 
     handleSubmit(Jwt token) async {
       if (_isEdit) {

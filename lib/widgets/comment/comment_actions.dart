@@ -67,8 +67,8 @@ class CommentActions extends HookWidget {
                     ? Theme.of(context).colorScheme.secondary
                     : null,
                 tooltip: comment.read
-                    ? L10n.of(context)!.mark_as_unread
-                    : L10n.of(context)!.mark_as_read,
+                    ? L10n.of(context).mark_as_unread
+                    : L10n.of(context).mark_as_read,
               ),
             if (store.detached)
               TileAction(
@@ -89,7 +89,7 @@ class CommentActions extends HookWidget {
               TileAction(
                 icon: Icons.reply,
                 onPressed: loggedInAction((_) => reply()),
-                tooltip: L10n.of(context)!.reply,
+                tooltip: L10n.of(context).reply,
               ),
             TileAction(
               icon: Icons.arrow_upward,

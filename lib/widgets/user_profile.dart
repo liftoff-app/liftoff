@@ -81,8 +81,8 @@ class UserProfile extends HookWidget {
                 color: theme.cardColor,
                 child: TabBar(
                   tabs: [
-                    Tab(text: L10n.of(context)!.posts),
-                    Tab(text: L10n.of(context)!.comments),
+                    Tab(text: L10n.of(context).posts),
+                    Tab(text: L10n.of(context).comments),
                     const Tab(text: 'About'),
                   ],
                 ),
@@ -249,7 +249,7 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          L10n.of(context)!
+                          L10n.of(context)
                               .number_of_posts(userView.counts.postCount),
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),
@@ -267,7 +267,7 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          L10n.of(context)!
+                          L10n.of(context)
                               .number_of_comments(userView.counts.commentCount),
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),

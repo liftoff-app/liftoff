@@ -28,7 +28,7 @@ class SettingsPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(L10n.of(context)!.settings),
+        title: Text(L10n.of(context).settings),
       ),
       body: ListView(
         children: [
@@ -99,7 +99,7 @@ class AppearanceConfigPage extends StatelessWidget {
             const SizedBox(height: 12),
             const _SectionHeading('Other'),
             SwitchListTile.adaptive(
-              title: Text(L10n.of(context)!.show_avatars),
+              title: Text(L10n.of(context).show_avatars),
               value: store.showAvatars,
               onChanged: (checked) {
                 store.showAvatars = checked;
@@ -131,7 +131,7 @@ class GeneralConfigPage extends StatelessWidget {
         builder: (context, store) => ListView(
           children: [
             ListTile(
-              title: Text(L10n.of(context)!.sort_type),
+              title: Text(L10n.of(context).sort_type),
               trailing: SizedBox(
                 width: 120,
                 child: RadioPicker<SortType>(
@@ -143,7 +143,7 @@ class GeneralConfigPage extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text(L10n.of(context)!.type),
+              title: Text(L10n.of(context).type),
               trailing: SizedBox(
                 width: 120,
                 child: RadioPicker<PostListingType>(
@@ -159,7 +159,7 @@ class GeneralConfigPage extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text(L10n.of(context)!.language),
+              title: Text(L10n.of(context).language),
               trailing: SizedBox(
                 width: 120,
                 child: RadioPicker<Locale>(
@@ -205,11 +205,11 @@ class _AccountOptions extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(L10n.of(context)!.no),
+                  child: Text(L10n.of(context).no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(L10n.of(context)!.yes),
+                  child: Text(L10n.of(context).yes),
                 ),
               ],
             ),
@@ -281,11 +281,11 @@ class AccountsConfigPage extends HookWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(L10n.of(context)!.no),
+                  child: Text(L10n.of(context).no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(L10n.of(context)!.yes),
+                  child: Text(L10n.of(context).yes),
                 ),
               ],
             ),

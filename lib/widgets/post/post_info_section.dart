@@ -88,7 +88,7 @@ class PostInfoSection extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: L10n.of(context)!.by,
+                          text: L10n.of(context).by,
                           style: const TextStyle(fontWeight: FontWeight.w300),
                         ),
                         TextSpan(
@@ -106,7 +106,7 @@ class PostInfoSection extends StatelessWidget {
                         if (post.post.nsfw) const TextSpan(text: ' · '),
                         if (post.post.nsfw)
                           TextSpan(
-                            text: L10n.of(context)!.nsfw,
+                            text: L10n.of(context).nsfw,
                             style: const TextStyle(color: Colors.red),
                           ),
                         if (store.urlDomain != null)

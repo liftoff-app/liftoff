@@ -33,7 +33,7 @@ class CommentMoreMenuButton extends HookWidget {
             );
           },
           loading: store.deletingState.isLoading,
-          tooltip: L10n.of(context)!.more,
+          tooltip: L10n.of(context).more,
         );
       },
     );
