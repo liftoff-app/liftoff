@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:nested/nested.dart';
 
+import '../../../hooks/logged_in_action.dart';
 import '../../../hooks/stores.dart';
 import '../../../l10n/l10n_from_string.dart';
 import '../../../stores/accounts_store.dart';
 import '../../../util/async_store_listener.dart';
 import '../../../util/observer_consumers.dart';
+import 'block_dialog.dart';
 import 'block_tile.dart';
 import 'blocks_store.dart';
 
@@ -70,13 +73,26 @@ class _UserBlocksWrapper extends StatelessWidget {
   }
 }
 
-class _UserBlocks extends StatelessWidget {
+class _UserBlocks extends HookWidget {
   const _UserBlocks();
 
   @override
   Widget build(BuildContext context) {
-    return AsyncStoreListener(
-      asyncStore: context.read<BlocksStore>().blocksState,
+    final loggedInAction =
+        useLoggedInAction(context.read<BlocksStore>().instanceHost);
+
+    return Nested(
+      children: [
+        AsyncStoreListener(
+          asyncStore: context.read<BlocksStore>().blocksState,
+        ),
+        AsyncStoreListener(
+          asyncStore: context.read<BlocksStore>().communityBlockingState,
+        ),
+        AsyncStoreListener(
+          asyncStore: context.read<BlocksStore>().userBlockingState,
+        ),
+      ],
       child: ObserverBuilder<BlocksStore>(
         builder: (context, store) {
           return RefreshIndicator(
@@ -114,14 +130,27 @@ class _UserBlocks extends StatelessWidget {
                       ),
                     ),
                   // TODO: add user search & block
-                  // ListTile(
-                  //   leading: const Padding(
-                  //     padding: EdgeInsets.only(left: 16, right: 10),
-                  //     child: Icon(Icons.add),
-                  //   ),
-                  //   onTap: () {},
-                  //   title: const Text('Block User'),
-                  // ),
+                  ListTile(
+                    leading: Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 10),
+                      child: store.userBlockingState.isLoading
+                          ? const CircularProgressIndicator.adaptive()
+                          : const Icon(Icons.add),
+                    ),
+                    onTap: store.userBlockingState.isLoading
+                        ? null
+                        : loggedInAction(
+                            (token) async {
+                              final person =
+                                  await BlockPersonDialog.show(context);
+
+                              if (person != null) {
+                                await store.blockUser(token, person.person.id);
+                              }
+                            },
+                          ),
+                    title: const Text('Block User'),
+                  ),
                   const Divider(),
                   for (final community in store.blockedCommunities!)
                     Provider(
@@ -136,14 +165,30 @@ class _UserBlocks extends StatelessWidget {
                       ),
                     ),
                   // TODO: add community search & block
-                  // const ListTile(
-                  //   leading: Padding(
-                  //     padding: EdgeInsets.only(left: 16, right: 10),
-                  //     child: Icon(Icons.add),
-                  //   ),
-                  //   onTap: () {},
-                  //   title: Text('Block Community'),
-                  // ),
+                  ListTile(
+                    leading: Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 10),
+                      child: store.communityBlockingState.isLoading
+                          ? const CircularProgressIndicator.adaptive()
+                          : const Icon(Icons.add),
+                    ),
+                    onTap: store.communityBlockingState.isLoading
+                        ? null
+                        : loggedInAction(
+                            (token) async {
+                              final community =
+                                  await BlockCommunityDialog.show(context);
+
+                              if (community != null) {
+                                await store.blockCommunity(
+                                  token,
+                                  community.community.id,
+                                );
+                              }
+                            },
+                          ),
+                    title: const Text('Block Community'),
+                  ),
                 ],
               ],
             ),

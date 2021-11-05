@@ -35,13 +35,13 @@ mixin _$BlocksStore on _BlocksStore, Store {
   final _$_blockedUsersAtom = Atom(name: '_BlocksStore._blockedUsers');
 
   @override
-  List<UserBlockStore>? get _blockedUsers {
+  ObservableList<UserBlockStore>? get _blockedUsers {
     _$_blockedUsersAtom.reportRead();
     return super._blockedUsers;
   }
 
   @override
-  set _blockedUsers(List<UserBlockStore>? value) {
+  set _blockedUsers(ObservableList<UserBlockStore>? value) {
     _$_blockedUsersAtom.reportWrite(value, super._blockedUsers, () {
       super._blockedUsers = value;
     });
@@ -51,16 +51,32 @@ mixin _$BlocksStore on _BlocksStore, Store {
       Atom(name: '_BlocksStore._blockedCommunities');
 
   @override
-  List<CommunityBlockStore>? get _blockedCommunities {
+  ObservableList<CommunityBlockStore>? get _blockedCommunities {
     _$_blockedCommunitiesAtom.reportRead();
     return super._blockedCommunities;
   }
 
   @override
-  set _blockedCommunities(List<CommunityBlockStore>? value) {
+  set _blockedCommunities(ObservableList<CommunityBlockStore>? value) {
     _$_blockedCommunitiesAtom.reportWrite(value, super._blockedCommunities, () {
       super._blockedCommunities = value;
     });
+  }
+
+  final _$blockUserAsyncAction = AsyncAction('_BlocksStore.blockUser');
+
+  @override
+  Future<void> blockUser(Jwt token, int id) {
+    return _$blockUserAsyncAction.run(() => super.blockUser(token, id));
+  }
+
+  final _$blockCommunityAsyncAction =
+      AsyncAction('_BlocksStore.blockCommunity');
+
+  @override
+  Future<void> blockCommunity(Jwt token, int id) {
+    return _$blockCommunityAsyncAction
+        .run(() => super.blockCommunity(token, id));
   }
 
   final _$refreshAsyncAction = AsyncAction('_BlocksStore.refresh');
