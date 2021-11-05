@@ -164,8 +164,8 @@ class InstancePage extends HookWidget {
                   color: theme.cardColor,
                   child: TabBar(
                     tabs: [
-                      Tab(text: L10n.of(context)!.posts),
-                      Tab(text: L10n.of(context)!.comments),
+                      Tab(text: L10n.of(context).posts),
+                      Tab(text: L10n.of(context).comments),
                       const Tab(text: 'About'),
                     ],
                   ),
@@ -225,7 +225,7 @@ class _AboutTab extends HookWidget {
       context,
       (_) => UsersListPage(
         users: site.banned.reversed.toList(),
-        title: L10n.of(context)!.banned_users,
+        title: L10n.of(context).banned_users,
       ),
     );
   }
@@ -288,7 +288,7 @@ class _AboutTab extends HookWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 children: [
                   Chip(
-                      label: Text(L10n.of(context)!
+                      label: Text(L10n.of(context)
                           .number_of_users_online(site.online))),
                   Chip(
                       label: Text(
@@ -303,7 +303,7 @@ class _AboutTab extends HookWidget {
                       label: Text(
                           '${siteView.counts.usersActiveHalfYear} users / 6 months')),
                   Chip(
-                      label: Text(L10n.of(context)!
+                      label: Text(L10n.of(context)
                           .number_of_users(siteView.counts.users))),
                   Chip(
                       label:
@@ -364,11 +364,11 @@ class _AboutTab extends HookWidget {
               ),
             const _Divider(),
             ListTile(
-              title: Center(child: Text(L10n.of(context)!.banned_users)),
+              title: Center(child: Text(L10n.of(context).banned_users)),
               onTap: () => goToBannedUsers(context),
             ),
             ListTile(
-              title: Center(child: Text(L10n.of(context)!.modlog)),
+              title: Center(child: Text(L10n.of(context).modlog)),
               onTap: () => goTo(
                 context,
                 (context) => ModlogPage.forInstance(instanceHost: instanceHost),

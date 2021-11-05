@@ -171,8 +171,8 @@ class CommunityPage extends HookWidget {
                   color: theme.cardColor,
                   child: TabBar(
                     tabs: [
-                      Tab(text: L10n.of(context)!.posts),
-                      Tab(text: L10n.of(context)!.comments),
+                      Tab(text: L10n.of(context).posts),
+                      Tab(text: L10n.of(context).comments),
                       const Tab(text: 'About'),
                     ],
                   ),
@@ -392,7 +392,7 @@ class _AboutTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             children: [
               Chip(
-                  label: Text(L10n.of(context)!
+                  label: Text(L10n.of(context)
                       .number_of_users_online(onlineUsers ?? 0))),
               Chip(
                   label:
@@ -407,7 +407,7 @@ class _AboutTab extends StatelessWidget {
                   label: Text(
                       '${community.counts.usersActiveHalfYear} users / 6 months')),
               Chip(
-                  label: Text(L10n.of(context)!
+                  label: Text(L10n.of(context)
                       .number_of_subscribers(community.counts.subscribers))),
               Chip(
                   label: Text(
@@ -430,7 +430,7 @@ class _AboutTab extends StatelessWidget {
                 communityName: community.community.name,
               ),
             ),
-            child: Text(L10n.of(context)!.modlog),
+            child: Text(L10n.of(context).modlog),
           ),
         ),
         const _Divider(),
@@ -525,8 +525,8 @@ class _FollowButton extends HookWidget {
                       ? const Icon(Icons.remove, size: 18)
                       : const Icon(Icons.add, size: 18),
                   label: Text(isSubbed.value
-                      ? L10n.of(context)!.unsubscribe
-                      : L10n.of(context)!.subscribe),
+                      ? L10n.of(context).unsubscribe
+                      : L10n.of(context).subscribe),
                 ),
         ),
       ),

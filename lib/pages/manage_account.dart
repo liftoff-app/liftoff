@@ -182,11 +182,11 @@ class _ManageAccount extends HookWidget {
             context: context,
             builder: (context) => AlertDialog(
               title: Text(
-                  '${L10n.of(context)!.delete_account} @${user.instanceHost}@${user.person.name}'),
+                  '${L10n.of(context).delete_account} @${user.instanceHost}@${user.person.name}'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(L10n.of(context)!.delete_account_confirm),
+                  Text(L10n.of(context).delete_account_confirm),
                   const SizedBox(height: 10),
                   TextField(
                     controller: deleteAccountPasswordController,
@@ -194,18 +194,18 @@ class _ManageAccount extends HookWidget {
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     decoration:
-                        InputDecoration(hintText: L10n.of(context)!.password),
+                        InputDecoration(hintText: L10n.of(context).password),
                   )
                 ],
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(L10n.of(context)!.no),
+                  child: Text(L10n.of(context).no),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(L10n.of(context)!.yes),
+                  child: Text(L10n.of(context).yes),
                 ),
               ],
             ),
@@ -241,7 +241,7 @@ class _ManageAccount extends HookWidget {
       children: [
         _ImagePicker(
           user: user,
-          name: L10n.of(context)!.avatar,
+          name: L10n.of(context).avatar,
           initialUrl: avatar.value,
           onChange: (value) => avatar.value = value,
           informAcceptedRef: informAcceptedAvatarRef,
@@ -249,19 +249,19 @@ class _ManageAccount extends HookWidget {
         const SizedBox(height: 8),
         _ImagePicker(
           user: user,
-          name: L10n.of(context)!.banner,
+          name: L10n.of(context).banner,
           initialUrl: banner.value,
           onChange: (value) => banner.value = value,
           informAcceptedRef: informAcceptedBannerRef,
         ),
         const SizedBox(height: 8),
-        Text(L10n.of(context)!.display_name, style: theme.textTheme.headline6),
+        Text(L10n.of(context).display_name, style: theme.textTheme.headline6),
         TextField(
           controller: displayNameController,
           onSubmitted: (_) => bioFocusNode.requestFocus(),
         ),
         const SizedBox(height: 8),
-        Text(L10n.of(context)!.bio, style: theme.textTheme.headline6),
+        Text(L10n.of(context).bio, style: theme.textTheme.headline6),
         Editor(
           controller: bioController,
           focusNode: bioFocusNode,
@@ -270,7 +270,7 @@ class _ManageAccount extends HookWidget {
           maxLines: 10,
         ),
         const SizedBox(height: 8),
-        Text(L10n.of(context)!.email, style: theme.textTheme.headline6),
+        Text(L10n.of(context).email, style: theme.textTheme.headline6),
         TextField(
           focusNode: emailFocusNode,
           controller: emailController,
@@ -279,7 +279,7 @@ class _ManageAccount extends HookWidget {
           onSubmitted: (_) => matrixUserFocusNode.requestFocus(),
         ),
         const SizedBox(height: 8),
-        Text(L10n.of(context)!.matrix_user, style: theme.textTheme.headline6),
+        Text(L10n.of(context).matrix_user, style: theme.textTheme.headline6),
         TextField(
           focusNode: matrixUserFocusNode,
           controller: matrixUserController,
@@ -321,7 +321,7 @@ class _ManageAccount extends HookWidget {
           onChanged: (checked) {
             showNsfw.value = checked;
           },
-          title: Text(L10n.of(context)!.show_nsfw),
+          title: Text(L10n.of(context).show_nsfw),
           dense: true,
         ),
         const SizedBox(height: 8),
@@ -330,7 +330,7 @@ class _ManageAccount extends HookWidget {
           onChanged: (checked) {
             botAccount.value = checked;
           },
-          title: Text(L10n.of(context)!.bot_account),
+          title: Text(L10n.of(context).bot_account),
           dense: true,
         ),
         const SizedBox(height: 8),
@@ -339,7 +339,7 @@ class _ManageAccount extends HookWidget {
           onChanged: (checked) {
             showBotAccounts.value = checked;
           },
-          title: Text(L10n.of(context)!.show_bot_accounts),
+          title: Text(L10n.of(context).show_bot_accounts),
           dense: true,
         ),
         const SizedBox(height: 8),
@@ -348,7 +348,7 @@ class _ManageAccount extends HookWidget {
           onChanged: (checked) {
             showReadPosts.value = checked;
           },
-          title: Text(L10n.of(context)!.show_read_posts),
+          title: Text(L10n.of(context).show_read_posts),
           dense: true,
         ),
         const SizedBox(height: 8),
@@ -357,7 +357,7 @@ class _ManageAccount extends HookWidget {
           onChanged: (checked) {
             sendNotificationsToEmail.value = checked;
           },
-          title: Text(L10n.of(context)!.send_notifications_to_email),
+          title: Text(L10n.of(context).send_notifications_to_email),
           dense: true,
         ),
         const SizedBox(height: 8),
@@ -369,7 +369,7 @@ class _ManageAccount extends HookWidget {
                   height: 20,
                   child: CircularProgressIndicator.adaptive(),
                 )
-              : Text(L10n.of(context)!.save),
+              : Text(L10n.of(context).save),
         ),
         const SizedBox(height: 8),
         ElevatedButton(
@@ -377,7 +377,7 @@ class _ManageAccount extends HookWidget {
           style: ElevatedButton.styleFrom(
             primary: Colors.red,
           ),
-          child: Text(L10n.of(context)!.delete_account.toUpperCase()),
+          child: Text(L10n.of(context).delete_account.toUpperCase()),
         ),
         const BottomSafe(),
       ],

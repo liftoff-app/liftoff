@@ -91,7 +91,7 @@ class HomeTab extends HookWidget {
               ),
               ListTile(
                 title: Text(
-                  L10n.of(context)!.subscribed,
+                  L10n.of(context).subscribed,
                   style: TextStyle(
                     color: accStore.hasNoAccount
                         ? theme.textTheme.bodyText1?.color?.withOpacity(0.4)
@@ -151,7 +151,7 @@ class HomeTab extends HookWidget {
                 ),
                 ListTile(
                   title: Text(
-                    L10n.of(context)!.subscribed,
+                    L10n.of(context).subscribed,
                     style: TextStyle(
                         color: accStore.isAnonymousFor(instance)
                             ? theme.textTheme.bodyText1?.color?.withOpacity(0.4)
@@ -167,7 +167,7 @@ class HomeTab extends HookWidget {
                   leading: const SizedBox(width: 20),
                 ),
                 ListTile(
-                  title: Text(L10n.of(context)!.local),
+                  title: Text(L10n.of(context).local),
                   onTap: () => pop(_SelectedList(
                     listingType: PostListingType.local,
                     instanceHost: instance,
@@ -175,7 +175,7 @@ class HomeTab extends HookWidget {
                   leading: const SizedBox(width: 20),
                 ),
                 ListTile(
-                  title: Text(L10n.of(context)!.all),
+                  title: Text(L10n.of(context).all),
                   onTap: () => pop(_SelectedList(
                     listingType: PostListingType.all,
                     instanceHost: instance,

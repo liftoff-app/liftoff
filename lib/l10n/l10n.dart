@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-export 'package:flutter_gen/gen_l10n/l10n.dart';
-
+export 'gen/l10n.dart';
 export 'l10n_api.dart';
 export 'l10n_from_string.dart';
 

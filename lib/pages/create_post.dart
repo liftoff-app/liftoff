@@ -231,7 +231,7 @@ class CreatePostPage extends HookWidget {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: selectedCommunity.value?.community.id,
-          hint: Text(L10n.of(context)!.community),
+          hint: Text(L10n.of(context).community),
           onChanged: _isEdit
               ? null
               : (communityId) {
@@ -254,7 +254,7 @@ class CreatePostPage extends HookWidget {
           keyboardType: TextInputType.url,
           onSubmitted: (_) => titleFocusNode.requestFocus(),
           decoration: InputDecoration(
-            labelText: L10n.of(context)!.url,
+            labelText: L10n.of(context).url,
             suffixIcon: const Icon(Icons.link),
           ),
         ),
@@ -282,7 +282,7 @@ class CreatePostPage extends HookWidget {
       onSubmitted: (_) => bodyFocusNode.requestFocus(),
       minLines: 1,
       maxLines: 2,
-      decoration: InputDecoration(labelText: L10n.of(context)!.title),
+      decoration: InputDecoration(labelText: L10n.of(context).title),
     );
 
     final body = Editor(
@@ -290,7 +290,7 @@ class CreatePostPage extends HookWidget {
       focusNode: bodyFocusNode,
       onSubmitted: (_) =>
           delayed.pending ? () {} : loggedInAction(handleSubmit),
-      labelText: L10n.of(context)!.body,
+      labelText: L10n.of(context).body,
       instanceHost: selectedInstance.value,
       fancy: showFancy.value,
     );
@@ -327,7 +327,7 @@ class CreatePostPage extends HookWidget {
                           if (val != null) nsfw.value = val;
                         },
                       ),
-                      Text(L10n.of(context)!.nsfw)
+                      Text(L10n.of(context).nsfw)
                     ],
                   ),
                 ),
@@ -337,8 +337,8 @@ class CreatePostPage extends HookWidget {
                   child: delayed.loading
                       ? const CircularProgressIndicator.adaptive()
                       : Text(_isEdit
-                          ? L10n.of(context)!.edit
-                          : L10n.of(context)!.post),
+                          ? L10n.of(context).edit
+                          : L10n.of(context).post),
                 )
               ],
             ),

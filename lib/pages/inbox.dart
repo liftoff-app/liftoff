@@ -94,9 +94,9 @@ class InboxPage extends HookWidget {
           ],
           bottom: TabBar(
             tabs: [
-              Tab(text: L10n.of(context)!.replies),
-              Tab(text: L10n.of(context)!.mentions),
-              Tab(text: L10n.of(context)!.messages),
+              Tab(text: L10n.of(context).replies),
+              Tab(text: L10n.of(context).mentions),
+              Tab(text: L10n.of(context).messages),
             ],
           ),
         ),
@@ -283,7 +283,7 @@ class PrivateMessageTile extends HookWidget {
           Row(
             children: [
               Text(
-                '${toMe ? L10n.of(context)!.from : L10n.of(context)!.to} ',
+                '${toMe ? L10n.of(context).from : L10n.of(context).to} ',
                 style: TextStyle(color: theme.textTheme.caption?.color),
               ),
               InkWell(
@@ -339,7 +339,7 @@ class PrivateMessageTile extends HookWidget {
           const SizedBox(height: 5),
           if (pmv.value.privateMessage.deleted)
             Text(
-              L10n.of(context)!.deleted_by_creator,
+              L10n.of(context).deleted_by_creator,
               style: const TextStyle(fontStyle: FontStyle.italic),
             )
           else
@@ -349,19 +349,19 @@ class PrivateMessageTile extends HookWidget {
             TileAction(
               icon: moreIcon,
               onPressed: showMoreMenu,
-              tooltip: L10n.of(context)!.more,
+              tooltip: L10n.of(context).more,
             ),
             if (toMe) ...[
               TileAction(
                 iconColor: read.value ? theme.colorScheme.secondary : null,
                 icon: Icons.check,
-                tooltip: L10n.of(context)!.mark_as_read,
+                tooltip: L10n.of(context).mark_as_read,
                 onPressed: handleRead,
                 delayedLoading: readDelayed,
               ),
               TileAction(
                 icon: Icons.reply,
-                tooltip: L10n.of(context)!.reply,
+                tooltip: L10n.of(context).reply,
                 onPressed: () {
                   Navigator.of(context).push(
                     WriteMessagePage.sendRoute(
@@ -374,7 +374,7 @@ class PrivateMessageTile extends HookWidget {
             ] else ...[
               TileAction(
                 icon: Icons.edit,
-                tooltip: L10n.of(context)!.edit,
+                tooltip: L10n.of(context).edit,
                 onPressed: () async {
                   final val = await Navigator.of(context)
                       .push(WriteMessagePage.editRoute(pmv.value));
@@ -385,8 +385,8 @@ class PrivateMessageTile extends HookWidget {
                 delayedLoading: deleteDelayed,
                 icon: deleted.value ? Icons.restore : Icons.delete,
                 tooltip: deleted.value
-                    ? L10n.of(context)!.restore
-                    : L10n.of(context)!.delete,
+                    ? L10n.of(context).restore
+                    : L10n.of(context).delete,
                 onPressed: handleDelete,
               ),
             ]

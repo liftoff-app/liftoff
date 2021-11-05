@@ -125,8 +125,8 @@ class WriteComment extends HookWidget {
                 child: delayed.loading
                     ? const CircularProgressIndicator.adaptive()
                     : Text(_isEdit
-                        ? L10n.of(context)!.edit
-                        : L10n.of(context)!.post),
+                        ? L10n.of(context).edit
+                        : L10n.of(context).post),
               )
             ],
           ),

@@ -50,7 +50,7 @@ class SearchTab extends HookWidget {
             keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
             onSubmitted: (_) => handleSearch(),
-            decoration: InputDecoration(hintText: L10n.of(context)!.search),
+            decoration: InputDecoration(hintText: L10n.of(context).search),
           ),
           const SizedBox(height: 5),
           Row(
@@ -72,7 +72,7 @@ class SearchTab extends HookWidget {
           if (searchInputController.text.isNotEmpty)
             ElevatedButton(
               onPressed: handleSearch,
-              child: Text(L10n.of(context)!.search),
+              child: Text(L10n.of(context).search),
             )
         ],
       ),

@@ -29,10 +29,10 @@ class SearchResultsPage extends HookWidget {
             bottom: TabBar(
               isScrollable: true,
               tabs: [
-                Tab(text: L10n.of(context)!.posts),
-                Tab(text: L10n.of(context)!.comments),
-                Tab(text: L10n.of(context)!.users),
-                Tab(text: L10n.of(context)!.communities),
+                Tab(text: L10n.of(context).posts),
+                Tab(text: L10n.of(context).comments),
+                Tab(text: L10n.of(context).users),
+                Tab(text: L10n.of(context).communities),
               ],
             ),
           ),

@@ -117,6 +117,7 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "lib/gen/assets.gen.dart"
+    - "lib/l10n/gen/*"
   # strong-mode:
   #   TODO: consider disabling
   #   implicit-dynamic: false
