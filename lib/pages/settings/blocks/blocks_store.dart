@@ -52,7 +52,7 @@ abstract class _BlocksStore with Store {
     );
 
     if (res != null &&
-        _blockedUsers!.indexWhere((element) => element.person.id == id) == -1) {
+        !_blockedUsers!.any((element) => element.person.id == id)) {
       _blockedUsers!.add(
         UserBlockStore(
           instanceHost: instanceHost,
