@@ -7,7 +7,7 @@ import '../gen/assets.gen.dart';
 import '../hooks/memo_future.dart';
 import '../pages/log_console_page/log_console_page.dart';
 import '../url_launcher.dart';
-import 'bottom_modal.dart';
+import 'bottom_safe.dart';
 
 /// Title that opens a dialog with information about Lemmur.
 /// Licenses, changelog, version etc.
@@ -35,14 +35,10 @@ class AboutTile extends HookWidget {
       icon: const Icon(Icons.info),
       aboutBoxChildren: [
         TextButton.icon(
-          icon: const Icon(Icons.subject),
-          label: const Text('changelog'),
-          onPressed: () => showBottomModal(
-            context: context,
-            padding: const EdgeInsets.all(8),
-            builder: (_) => MarkdownBody(data: changelog),
-          ),
-        ),
+            icon: const Icon(Icons.subject),
+            label: const Text('changelog'),
+            onPressed: () =>
+                Navigator.of(context).push(ChangelogPage.route(changelog))),
         TextButton.icon(
           icon: const Icon(Icons.code),
           label: const Text('source code'),
@@ -89,4 +85,27 @@ class AboutTile extends HookWidget {
       applicationVersion: packageInfo.version,
     );
   }
+}
+
+class ChangelogPage extends StatelessWidget {
+  final String changelog;
+
+  const ChangelogPage(this.changelog, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('Changelog')),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            MarkdownBody(data: changelog),
+            const BottomSafe(),
+          ],
+        ));
+  }
+
+  static Route route(String changelog) => MaterialPageRoute(
+        builder: (context) => ChangelogPage(changelog),
+      );
 }
