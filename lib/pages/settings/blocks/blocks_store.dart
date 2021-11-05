@@ -78,9 +78,7 @@ abstract class _BlocksStore with Store {
     );
 
     if (res != null &&
-        _blockedCommunities!
-                .indexWhere((element) => element.community.id == id) ==
-            -1) {
+                !_blockedCommunities!.any((element) => element.community.id == id)) {
       _blockedCommunities!.add(
         CommunityBlockStore(
           instanceHost: instanceHost,
