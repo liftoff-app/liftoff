@@ -78,7 +78,7 @@ abstract class _BlocksStore with Store {
     );
 
     if (res != null &&
-                !_blockedCommunities!.any((element) => element.community.id == id)) {
+        !_blockedCommunities!.any((element) => element.community.id == id)) {
       _blockedCommunities!.add(
         CommunityBlockStore(
           instanceHost: instanceHost,
