@@ -13,11 +13,7 @@ class BlockPersonDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Row(
-        children: const [
-          Expanded(child: Text('Block User')),
-        ],
-      ),
+      title: const Text('Block User'),
       content: TypeAheadField<PersonViewSafe>(
         suggestionsCallback: (pattern) async {
           if (pattern.trim().isEmpty) return const Iterable.empty();
@@ -76,11 +72,7 @@ class BlockCommunityDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Row(
-        children: const [
-          Expanded(child: Text('Block Community')),
-        ],
-      ),
+      title: const Text('Block Community'),
       content: TypeAheadField<CommunityView>(
         suggestionsCallback: (pattern) async {
           if (pattern.trim().isEmpty) return const Iterable.empty();

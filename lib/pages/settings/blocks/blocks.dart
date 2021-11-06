@@ -129,7 +129,6 @@ class _UserBlocks extends HookWidget {
                         child: Text('No users blocked'),
                       ),
                     ),
-                  // TODO: add user search & block
                   ListTile(
                     leading: Padding(
                       padding: const EdgeInsets.only(left: 16, right: 10),
@@ -164,7 +163,6 @@ class _UserBlocks extends HookWidget {
                         child: Text('No communities blocked'),
                       ),
                     ),
-                  // TODO: add community search & block
                   ListTile(
                     leading: Padding(
                       padding: const EdgeInsets.only(left: 16, right: 10),
