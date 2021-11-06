@@ -8,7 +8,9 @@ import '../../../widgets/avatar.dart';
 import 'blocks_store.dart';
 
 class BlockPersonDialog extends StatelessWidget {
-  const BlockPersonDialog();
+  final BlocksStore store;
+
+  const BlockPersonDialog(this.store);
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +19,10 @@ class BlockPersonDialog extends StatelessWidget {
       content: TypeAheadField<PersonViewSafe>(
         suggestionsCallback: (pattern) async {
           if (pattern.trim().isEmpty) return const Iterable.empty();
-          return LemmyApiV3(context.read<BlocksStore>().instanceHost)
+          return LemmyApiV3(store.instanceHost)
               .run(Search(
                 q: pattern,
-                auth: context.read<BlocksStore>().token.raw,
+                auth: store.token.raw,
                 type: SearchType.users,
                 limit: 10,
               ))
@@ -58,16 +60,15 @@ class BlockPersonDialog extends StatelessWidget {
     final store = context.read<BlocksStore>();
     return showDialog(
       context: context,
-      builder: (context) => Provider.value(
-        value: store,
-        child: const BlockPersonDialog(),
-      ),
+      builder: (context) => BlockPersonDialog(store),
     );
   }
 }
 
 class BlockCommunityDialog extends StatelessWidget {
-  const BlockCommunityDialog();
+  final BlocksStore store;
+
+  const BlockCommunityDialog(this.store);
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +77,10 @@ class BlockCommunityDialog extends StatelessWidget {
       content: TypeAheadField<CommunityView>(
         suggestionsCallback: (pattern) async {
           if (pattern.trim().isEmpty) return const Iterable.empty();
-          return LemmyApiV3(context.read<BlocksStore>().instanceHost)
+          return LemmyApiV3(store.instanceHost)
               .run(Search(
                 q: pattern,
-                auth: context.read<BlocksStore>().token.raw,
+                auth: store.token.raw,
                 type: SearchType.communities,
                 limit: 10,
               ))
@@ -117,10 +118,7 @@ class BlockCommunityDialog extends StatelessWidget {
     final store = context.read<BlocksStore>();
     return showDialog(
       context: context,
-      builder: (context) => Provider.value(
-        value: store,
-        child: const BlockCommunityDialog(),
-      ),
+      builder: (context) => BlockCommunityDialog(store),
     );
   }
 }
