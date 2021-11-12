@@ -14,8 +14,8 @@ import '../../widgets/about_tile.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/radio_picker.dart';
 import '../manage_account.dart';
-import 'add_account.dart';
-import 'add_instance.dart';
+import 'add_account_page.dart';
+import 'add_instance_page.dart';
 import 'blocks/blocks.dart';
 
 /// Page with a list of different settings sections

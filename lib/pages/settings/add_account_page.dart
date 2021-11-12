@@ -11,7 +11,7 @@ import '../../stores/config_store.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/fullscreenable_image.dart';
 import '../../widgets/radio_picker.dart';
-import 'add_instance.dart';
+import 'add_instance_page.dart';
 
 /// A modal where an account can be added for a given instance
 class AddAccountPage extends HookWidget {

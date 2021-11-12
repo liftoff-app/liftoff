@@ -1,10 +1,10 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'bottom_safe.dart';
+import 'pull_to_refresh.dart';
 
 class InfiniteScrollController {
   late VoidCallback clear;
@@ -85,14 +85,13 @@ class InfiniteScroll<T> extends HookWidget {
       return null;
     }, []);
 
-    return RefreshIndicator(
+    return PullToRefresh(
       onRefresh: () async {
         data.value = [];
         hasMore.value = true;
         page.value = 1;
         dataSet.value.clear();
 
-        await HapticFeedback.mediumImpact();
         await Future.delayed(const Duration(seconds: 1));
       },
       child: ListView.builder(

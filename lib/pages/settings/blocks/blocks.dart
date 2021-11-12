@@ -8,6 +8,7 @@ import '../../../l10n/l10n_from_string.dart';
 import '../../../stores/accounts_store.dart';
 import '../../../util/async_store_listener.dart';
 import '../../../util/observer_consumers.dart';
+import '../../../widgets/pull_to_refresh.dart';
 import 'block_dialog.dart';
 import 'block_tile.dart';
 import 'blocks_store.dart';
@@ -95,7 +96,7 @@ class _UserBlocks extends HookWidget {
       ],
       child: ObserverBuilder<BlocksStore>(
         builder: (context, store) {
-          return RefreshIndicator(
+          return PullToRefresh(
             onRefresh: store.refresh,
             child: ListView(
               children: [

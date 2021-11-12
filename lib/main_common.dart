@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'app_config.dart';
-import 'pages/log_console_page/log_console_page_store.dart';
+import 'pages/log_console/log_console_page_store.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 

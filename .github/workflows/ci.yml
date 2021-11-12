@@ -20,6 +20,11 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Generate l10n
+        run: |
+          flutter gen-l10n
+          dart format lib/l10n/gen/
+
       - name: Run lints
         run: flutter analyze
 

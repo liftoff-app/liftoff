@@ -15,7 +15,7 @@ import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'inbox.dart';
-import 'settings/add_account.dart';
+import 'settings/add_account_page.dart';
 
 /// First thing users sees when opening the app
 /// Shows list of posts from all or just specific instances
