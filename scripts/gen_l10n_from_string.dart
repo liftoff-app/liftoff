@@ -2,11 +2,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'migrate_lemmy_l10n.dart';
+
 const baseFile = 'intl_en.arb';
 const autoGenHeader = '// FILE GENERATED AUTOMATICALLY, TO NOT EDIT BY HAND';
 
 Future<void> main(List<String> args) async {
-  final strings = jsonDecode(await File('lib/l10n/$baseFile').readAsString())
+  final strings = jsonDecode(await File('$outDir/$baseFile').readAsString())
       as Map<String, dynamic>;
 
   final keys = strings.keys.where((key) => !key.startsWith('@')).toSet();
@@ -21,7 +23,8 @@ Future<void> main(List<String> args) async {
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+
+import 'gen/l10n.dart';
 
 abstract class L10nStrings {
 ${keys.map((key) => "  static const $key = '$key';").join('\n')}
@@ -30,7 +33,7 @@ ${keys.map((key) => "  static const $key = '$key';").join('\n')}
 extension L10nFromString on String {
   String tr(BuildContext context) {
     switch (this) {
-${keysWithoutVariables.map((key) => "      case L10nStrings.$key:\n        return L10n.of(context)!.$key;").join('\n')}
+${keysWithoutVariables.map((key) => "      case L10nStrings.$key:\n        return L10n.of(context).$key;").join('\n')}
 
       default:
         return this;

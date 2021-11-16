@@ -1,0 +1,20 @@
+{
+  "@@locale": "nb_NO",
+  "posts": "innleggene",
+  "comments": "Kommentarer",
+  "post": "Innlegg",
+  "more": "mer",
+  "reply": "svare",
+  "edit": "Redigere",
+  "avatar": "Profilbilde",
+  "banner": "Banner",
+  "display_name": "Vis navn",
+  "communities": "Nettsamfunn",
+  "users": "Brukere",
+  "number_of_comments": "{formattedCount,plural, =1{{formattedCount} Kommentar} other{{formattedCount} Kommentarer}}",
+  "number_of_posts": "{formattedCount,plural, =1{{formattedCount} Innlegg} other{{formattedCount} innleggene}}",
+  "show_avatars": "Vis profilbilder",
+  "send_message": "Sende melding",
+  "bot_account": "Bot Konto",
+  "show_bot_accounts": "Vis Bot Kontoer"
+}

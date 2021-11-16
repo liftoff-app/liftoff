@@ -537,7 +537,7 @@ class _ModlogEntry {
                 ),
               );
             },
-            child: Center(child: Text(when.fancyShort)),
+            child: Center(child: Text(when.timeagoShort(context))),
           ),
           GestureDetector(
             onTap: () => goToUser.byId(

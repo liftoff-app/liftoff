@@ -319,8 +319,8 @@ class PrivateMessageTile extends HookWidget {
               ),
               const Spacer(),
               if (pmv.value.privateMessage.updated != null) const Text('🖊  '),
-              Text(pmv.value.privateMessage.updated?.fancy ??
-                  pmv.value.privateMessage.published.fancy),
+              Text(pmv.value.privateMessage.updated?.timeago(context) ??
+                  pmv.value.privateMessage.published.timeago(context)),
               const SizedBox(width: 5),
               Transform(
                 transform: Matrix4Transform()

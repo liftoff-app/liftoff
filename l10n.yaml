@@ -1,9 +1,9 @@
-arb-dir: lib/l10n
+arb-dir: assets/l10n
 output-dir: lib/l10n/gen
 template-arb-file: intl_en.arb
 output-localization-file: l10n.dart
 preferred-supported-locales: [en]
 output-class: L10n
-untranslated-messages-file: lib/l10n/untranslated.json
+untranslated-messages-file: assets/l10n/untranslated.json
 synthetic-package: false
 nullable-getter: false

@@ -278,7 +278,7 @@ class _UserOverview extends HookWidget {
               ),
               const SizedBox(height: 15),
               Text(
-                'Joined ${userView.person.published.fancy}',
+                'Joined ${userView.person.published.timeago(context)}',
                 style: theme.textTheme.bodyText1,
               ),
               Row(

@@ -182,6 +182,9 @@ const toMigrate = <_>[
 const repoName = 'lemmy-translations';
 const baseLanguage = 'en';
 const flutterIntlPrefix = 'intl_';
+final outDir = RegExp('^arb-dir: (.+)')
+    .firstMatch(File('l10n.yaml').readAsStringSync())!
+    .group(1)!;
 
 Future<void> main(List<String> args) async {
   final force = args.contains('-f') || args.contains('--force');
@@ -200,7 +203,7 @@ Future<void> main(List<String> args) async {
 
   await Process.run('npx', [
     'prettier',
-    'lib/l10n/*.arb',
+    '$outDir/*.arb',
     '--parser',
     'json',
     '--write',
@@ -250,7 +253,7 @@ Future<Map<String, Map<String, String>>> loadLemmyStrings() async {
 
 /// Map<languageTag, Map<stringKey, stringValue>> + some metadata
 Future<Map<String, Map<String, dynamic>>> loadLemmurStrings() async {
-  final translationsDir = Directory('lib/l10n');
+  final translationsDir = Directory(outDir);
   final translations = <String, Map<String, dynamic>>{};
 
   await for (final file in translationsDir.list()) {
@@ -371,7 +374,7 @@ Future<void> save(Map<String, Map<String, dynamic>> lemmurTranslations) async {
   }
 
   for (final language in lemmurTranslations.keys) {
-    await File('lib/l10n/$flutterIntlPrefix$language.arb')
+    await File('$outDir/$flutterIntlPrefix$language.arb')
         .writeAsString(jsonEncode(lemmurTranslations[language]));
   }
 }

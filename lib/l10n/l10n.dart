@@ -44,13 +44,13 @@ const _languageNames = {
   'oc': 'Occitan',
   'pl': 'Polski',
   'pt': 'Português',
-  'pt_BR': 'Português Brasileiro',
+  'pt-BR': 'Português Brasileiro',
   'zh': '中文',
   'fi': 'Suomi',
   'fr': 'Français',
   'sv': 'Svenska',
   'sq': 'Shqip',
-  'sr_Latn': 'srpski',
+  'sr-Latn': 'srpski',
   'th': 'ภาษาไทย',
   'tr': 'Türkçe',
   'uk': 'Українська Mова',
@@ -58,13 +58,21 @@ const _languageNames = {
   'nl': 'Nederlands',
   'it': 'Italiano',
   'sr': 'Српски',
-  'zh_Hant': '繁體中文',
+  'zh-Hant': '繁體中文',
   'nb': 'Norwegian',
-  'nb_NO': 'Norwegian Bokmål',
+  'nb-NO': 'Norwegian Bokmål',
   'bg': 'български',
+  'cs': 'čeština',
+  'cy': 'Cymraeg',
+  'id': 'Bahasa Indonesia',
+  'ml': 'മലയാളം',
+  'sk': 'slovenčina',
+  'vi': 'Tiếng Việt',
+  'bn': 'বাংলা',
+  'mnc': 'Manchu',
 };
 
 extension LanguageName on Locale {
   /// returns the name of the language in the given language
-  String get languageName => _languageNames[toString()] ?? toString();
+  String get languageName => _languageNames[toLanguageTag()] ?? toLanguageTag();
 }

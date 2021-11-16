@@ -274,7 +274,7 @@ class _CommentWidget extends StatelessWidget {
                                     const Text(' · ')
                                   else
                                     const SizedBox(width: 4),
-                                  Text(comment.published.fancy),
+                                  Text(comment.published.timeago(context)),
                                 ],
                               ),
                             );

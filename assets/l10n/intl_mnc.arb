@@ -1,0 +1,8 @@
+{
+  "@@locale": "mnc",
+  "posts": "ᡧᡠ",
+  "comments": "ᠯᡝᠣᠯᡝᠨ",
+  "post": "ᡧ",
+  "number_of_comments": "{formattedCount,plural, =1{{formattedCount} ᠯᡝᠣᠯᡝᠨ} other{{formattedCount} ᠯᡝᠣᠯᡝᠨ}}",
+  "number_of_posts": "{formattedCount,plural, =1{{formattedCount} ᡧᡠ} other{{formattedCount} ᡧᡠ}}"
+}

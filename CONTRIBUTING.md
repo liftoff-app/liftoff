@@ -8,11 +8,15 @@ From issues to wikis: everything is on [GitHub](https://github.com/krawieck/lemm
 
 ## Linting / Formatting
 
-Everything is formatted with `dartfmt` (no flags) and linted with `dartanalyzer` ([see rules](analysis_options.yaml)). Both are enforced by the CI.
+Everything is formatted with `dart format` (no flags) and linted with `dart analyze` ([see rules](analysis_options.yaml)). Both are enforced by the CI.
 
 ## Translations
 
-<!-- TODO -->
+### Time ago strings
+
+Strings such as "_About one hour ago_" or "_~1h_" are localizable. We inherit a set of ready translations from [github.com/andresaraujo/timeago.dart/messages](https://github.com/andresaraujo/timeago.dart/tree/master/timeago/lib/src/messages) and provide our own in [lib/l10n/timeago](./lib/l10n/timeago).
+
+To contribute time ago strings please send a PR containing a class that implements `timeago.LookupMessages`. Place it under [lib/l10n/timeago](./lib/l10n/timeago) with an appropriate name (locale tag) and finally register it in [main_common.dart](./lib/main_common.dart) in the `_setupTimeago` function. Each locale can have a normal (for example "_About one hour ago_") and a short (for example "_~1h_") variant, there are registered separately.
 
 ## Architecture
 
@@ -20,7 +24,7 @@ Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communic
 
 ### State management
 
-`ChangeNotifier` + [Provider](https://github.com/rrousselGit/provider) is used for global state management, [flutter_hooks](https://github.com/rrousselGit/flutter_hooks) is used for local (widget-level) state management. `StatefulWidget`s are avoided all together and any state logic reuse is moved to a [custom hook](./lib/hooks).
+[`MobX`](https://github.com/mobxjs/mobx.dart) + [Provider](https://github.com/rrousselGit/provider) is used for global state management, [flutter_hooks](https://github.com/rrousselGit/flutter_hooks) is used for local (widget-level) state management. `StatefulWidget`s are avoided all together and any state logic reuse is moved to a [custom hook](./lib/hooks).
 
 ### Project structure
 
@@ -32,12 +36,16 @@ Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communic
 - `stores/`: global stores
 - `util/`: utilities
 - `widgets/`: reusable widgets; building blocks for pages
-- `main.dart`: entrypoint of the app. Sets up the stores, initializes the themes, renders the first page
+- `main_common.dart`: entrypoint of the app. Sets up the stores, initializes the themes, renders the first page
 
 ### Things to keep in mind
 
 - Be aware that Lemmur supports arbitrary Lemmy instances, don't hardcode instance urls
 - Remember that a user is not obligated to be logged in, contributed widgets should handle this case
+
+### Lemmy API
+
+LAC (Lemmy API Client) is used to communicate with Lemmy backends, more information can be found [here](https://github.com/krawieck/lemmy_api_client).
 
 ### For React developers
 
