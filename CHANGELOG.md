@@ -2,7 +2,7 @@
 
 ### Changed
 
-- "Time ago" strings are now localized
+- "Time ago" strings, dates, and compact numbers are now localized
 
 ## v0.7.0 - 2021-11-04
 

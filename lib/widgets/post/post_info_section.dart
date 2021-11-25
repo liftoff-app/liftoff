@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../l10n/l10n.dart';
 import '../../pages/community/community.dart';
 import '../../util/extensions/api.dart';
-import '../../util/extensions/datetime.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../avatar.dart';

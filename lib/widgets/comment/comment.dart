@@ -10,9 +10,7 @@ import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/extensions/cake_day.dart';
-import '../../util/extensions/datetime.dart';
 import '../../util/goto.dart';
-import '../../util/intl.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/text_color.dart';
 import '../avatar.dart';
@@ -266,9 +264,8 @@ class _CommentWidget extends StatelessWidget {
                                     )
                                   else if (configStore.showScores)
                                     Text(
-                                      compactNumber(
-                                        store.comment.counts.score,
-                                      ),
+                                      store.comment.counts.score
+                                          .compact(context),
                                     ),
                                   if (configStore.showScores)
                                     const Text(' · ')

@@ -2,9 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
+import '../../l10n/l10n.dart';
 import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
-import '../../util/intl.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/fullscreenable_image.dart';
@@ -124,11 +124,11 @@ class CommunityOverview extends StatelessWidget {
                       const Spacer(),
                       const Icon(Icons.people, size: 20),
                       const SizedBox(width: 3),
-                      Text(compactNumber(community.counts.subscribers)),
+                      Text(community.counts.subscribers.compact(context)),
                       const Spacer(flex: 4),
                       const Icon(Icons.record_voice_over, size: 20),
                       const SizedBox(width: 3),
-                      Text(compactNumber(fullCommunityView.online)),
+                      Text(fullCommunityView.online.compact(context)),
                       const Spacer(),
                     ],
                   ),

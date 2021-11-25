@@ -5,7 +5,6 @@ import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import '../../util/extensions/spaced.dart';
 import '../../util/goto.dart';
-import '../../util/intl.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_safe.dart';
 import '../../widgets/markdown_text.dart';
@@ -72,10 +71,10 @@ class CommmunityAboutTab extends StatelessWidget {
                         .number_of_subscribers(community.counts.subscribers))),
                 Chip(
                     label: Text(
-                        '${community.counts.posts} post${pluralS(community.counts.posts)}')),
+                        '${community.counts.posts} post${community.counts.posts == 1 ? '' : 's'}')),
                 Chip(
                     label: Text(
-                        '${community.counts.comments} comment${pluralS(community.counts.comments)}')),
+                        '${community.counts.comments} comment${community.counts.comments == 1 ? '' : 's'}')),
               ].spaced(8),
             ),
           ),

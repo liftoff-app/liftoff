@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:timeago/timeago.dart';
 
 export 'gen/l10n.dart';
 export 'l10n_api.dart';
@@ -75,4 +77,23 @@ const _languageNames = {
 extension LanguageName on Locale {
   /// returns the name of the language in the given language
   String get languageName => _languageNames[toLanguageTag()] ?? toLanguageTag();
+}
+
+extension TimeagoTime on DateTime {
+  /// returns `this` time as a relative, human-readable string. In short format
+  String timeagoShort(BuildContext context) => format(
+        this,
+        locale: '${Localizations.localeOf(context).toLanguageTag()}_short',
+      );
+
+  /// returns `this` time as a relative, human-readable string
+  String timeago(BuildContext context) =>
+      format(this, locale: Localizations.localeOf(context).toLanguageTag());
+}
+
+extension NumberFormatExtensions on num {
+  /// returns `this` as a formatted compact number
+  String compact(BuildContext context) => NumberFormat.compact(
+        locale: Localizations.localeOf(context).toLanguageTag(),
+      ).format(this);
 }

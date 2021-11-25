@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
+import '../l10n/l10n.dart';
 import '../util/extensions/api.dart';
-import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../widgets/avatar.dart';
 import '../widgets/bottom_safe.dart';

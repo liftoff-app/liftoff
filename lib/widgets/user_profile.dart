@@ -9,7 +9,6 @@ import '../l10n/l10n.dart';
 import '../pages/manage_account.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/cake_day.dart';
-import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
 import 'avatar.dart';
@@ -290,8 +289,9 @@ class _UserOverview extends HookWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    DateFormat('MMM dd, yyyy')
-                        .format(userView.person.published),
+                    DateFormat.yMMMMd(
+                      Localizations.localeOf(context).toLanguageTag(),
+                    ).format(userView.person.published),
                     style: theme.textTheme.bodyText1,
                   ),
                 ],
