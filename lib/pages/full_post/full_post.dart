@@ -13,6 +13,7 @@ import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
+import '../../widgets/failed_to_load.dart';
 import '../../widgets/post/post.dart';
 import '../../widgets/post/post_more_menu.dart';
 import '../../widgets/post/post_store.dart';
@@ -164,27 +165,4 @@ class FullPostPage extends HookWidget {
           child: const FullPostPage._(),
         ),
       );
-}
-
-class FailedToLoad extends StatelessWidget {
-  final String message;
-  final VoidCallback refresh;
-
-  const FailedToLoad({required this.refresh, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(message),
-        const SizedBox(height: 5),
-        ElevatedButton.icon(
-          onPressed: refresh,
-          icon: const Icon(Icons.refresh),
-          label: const Text('try again'),
-        )
-      ],
-    );
-  }
 }

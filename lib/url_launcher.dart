@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
-import 'pages/community.dart';
+import 'pages/community/community.dart';
 import 'pages/instance.dart';
 import 'pages/media_view.dart';
 import 'pages/user.dart';
@@ -16,7 +16,7 @@ Future<void> linkLauncher({
   required String url,
   required String instanceHost,
 }) async {
-  push(Widget Function() builder) {
+  void push(Widget Function() builder) {
     goTo(context, (c) => builder());
   }
 
@@ -33,8 +33,9 @@ Future<void> linkLauncher({
 
   // CHECK IF LINK TO COMMUNITY
   if (url.startsWith('/c/')) {
-    return push(() => CommunityPage.fromName(
-        communityName: chonks[2], instanceHost: instanceHost));
+    await Navigator.of(context)
+        .push(CommunityPage.fromNameRoute(instanceHost, chonks[2]));
+    return;
   }
 
   // CHECK IF REDIRECTS TO A PAGE ON ONE OF ADDED INSTANCES

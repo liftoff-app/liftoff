@@ -42,7 +42,7 @@ class UsersListItem extends StatelessWidget {
         title: Text(user.person.originPreferredName),
         subtitle: user.person.bio != null
             ? Opacity(
-                opacity: 0.5,
+                opacity: 0.7,
                 child: MarkdownText(
                   user.person.bio!,
                   instanceHost: user.instanceHost,

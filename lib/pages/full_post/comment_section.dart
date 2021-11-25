@@ -7,7 +7,7 @@ import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/bottom_safe.dart';
 import '../../widgets/comment/comment.dart';
-import 'full_post.dart';
+import '../../widgets/failed_to_load.dart';
 import 'full_post_store.dart';
 
 class _SortSelection {

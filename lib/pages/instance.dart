@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
-import '../util/extensions/api.dart';
 import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/icons.dart';
@@ -19,6 +18,7 @@ import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/reveal_after_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
+import '../widgets/user_tile.dart';
 import 'communities_list.dart';
 import 'modlog_page.dart';
 import 'users_list.dart';
@@ -354,13 +354,9 @@ class _AboutTab extends HookWidget {
               ),
             ),
             for (final u in site.admins)
-              ListTile(
-                title: Text(u.person.originPreferredName),
-                subtitle: u.person.bio != null
-                    ? MarkdownText(u.person.bio!, instanceHost: instanceHost)
-                    : null,
-                onTap: () => goToUser.fromPersonSafe(context, u.person),
-                leading: Avatar(url: u.person.avatar),
+              PersonTile(
+                u.person,
+                expanded: true,
               ),
             const _Divider(),
             ListTile(

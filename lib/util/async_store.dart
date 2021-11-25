@@ -16,20 +16,33 @@ abstract class _AsyncStore<T> with Store {
   AsyncState<T> asyncState = const AsyncState.initial();
 
   @computed
-  bool get isLoading => asyncState is AsyncStateLoading;
+  bool get isLoading => asyncState is AsyncStateLoading<T>;
 
   @computed
-  String? get errorTerm =>
-      asyncState.whenOrNull(error: (errorTerm) => errorTerm);
+  String? get errorTerm => asyncState.whenOrNull<String?>(
+        error: (errorTerm) => errorTerm,
+        data: (data, errorTerm) => errorTerm,
+      );
+
+  /// sets data in asyncState
+  @action
+  void setData(T data) => asyncState = AsyncState.data(data);
 
   /// runs some async action and reflects the progress in [asyncState].
   /// If successful, the result is returned, otherwise null is returned.
   /// If this [AsyncStore] is already running some action, it will exit immediately and do nothing
+  ///
+  /// When [refresh] is true and [asyncState] is [AsyncStateData], then the data state is persisted and
+  ///  errors are not fatal but stored in [AsyncStateData]
   @action
-  Future<T?> run(AsyncValueGetter<T> callback) async {
+  Future<T?> run(AsyncValueGetter<T> callback, {bool refresh = false}) async {
     if (isLoading) return null;
 
-    asyncState = const AsyncState.loading();
+    final data = refresh ? asyncState.mapOrNull(data: (data) => data) : null;
+
+    if (data == null) {
+      asyncState = const AsyncState.loading();
+    }
 
     try {
       final result = await callback();
@@ -39,9 +52,17 @@ abstract class _AsyncStore<T> with Store {
       return result;
     } on SocketException {
       // TODO: use an existing l10n key
-      asyncState = const AsyncState.error('network_error');
+      if (data != null) {
+        asyncState = data.copyWith(errorTerm: 'network_error');
+      } else {
+        asyncState = const AsyncState.error('network_error');
+      }
     } catch (err) {
-      asyncState = AsyncState.error(err.toString());
+      if (data != null) {
+        asyncState = data.copyWith(errorTerm: err.toString());
+      } else {
+        asyncState = AsyncState.error(err.toString());
+      }
       rethrow;
     }
   }
@@ -49,27 +70,39 @@ abstract class _AsyncStore<T> with Store {
   /// [run] but specialized for a [LemmyApiQuery].
   /// Will catch [LemmyApiException] and map to its error term.
   @action
-  Future<T?> runLemmy(String instanceHost, LemmyApiQuery<T> query) async {
+  Future<T?> runLemmy(
+    String instanceHost,
+    LemmyApiQuery<T> query, {
+    bool refresh = false,
+  }) async {
     try {
-      return await run(() => LemmyApiV3(instanceHost).run(query));
+      return await run(() => LemmyApiV3(instanceHost).run(query),
+          refresh: refresh);
     } on LemmyApiException catch (err) {
-      asyncState = AsyncState.error(err.message);
+      final data = refresh ? asyncState.mapOrNull(data: (data) => data) : null;
+      if (data != null) {
+        asyncState = data.copyWith(errorTerm: err.message);
+      } else {
+        asyncState = AsyncState.error(err.message);
+      }
     }
   }
 }
 
 /// State in which an async action can be
 @freezed
-class AsyncState<T> with _$AsyncState {
+class AsyncState<T> with _$AsyncState<T> {
   /// async action has not yet begun
-  const factory AsyncState.initial() = AsyncStateInitial;
+  const factory AsyncState.initial() = AsyncStateInitial<T>;
 
   /// async action completed successfully with [T]
-  const factory AsyncState.data(T data) = AsyncStateData;
+  /// and possibly an error term after a refresh
+  const factory AsyncState.data(T data, [String? errorTerm]) =
+      AsyncStateData<T>;
 
   /// async action is running at the moment
-  const factory AsyncState.loading() = AsyncStateLoading;
+  const factory AsyncState.loading() = AsyncStateLoading<T>;
 
   /// async action failed with a translatable error term
-  const factory AsyncState.error(String errorTerm) = AsyncStateError;
+  const factory AsyncState.error(String errorTerm) = AsyncStateError<T>;
 }

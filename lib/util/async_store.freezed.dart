@@ -21,9 +21,10 @@ class _$AsyncStateTearOff {
     return AsyncStateInitial<T>();
   }
 
-  AsyncStateData<T> data<T>(T data) {
+  AsyncStateData<T> data<T>(T data, [String? errorTerm]) {
     return AsyncStateData<T>(
       data,
+      errorTerm,
     );
   }
 
@@ -46,7 +47,7 @@ mixin _$AsyncState<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(T data) data,
+    required TResult Function(T data, String? errorTerm) data,
     required TResult Function() loading,
     required TResult Function(String errorTerm) error,
   }) =>
@@ -54,7 +55,7 @@ mixin _$AsyncState<T> {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
   }) =>
@@ -62,7 +63,7 @@ mixin _$AsyncState<T> {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
     required TResult orElse(),
@@ -162,7 +163,7 @@ class _$AsyncStateInitial<T>
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(T data) data,
+    required TResult Function(T data, String? errorTerm) data,
     required TResult Function() loading,
     required TResult Function(String errorTerm) error,
   }) {
@@ -173,7 +174,7 @@ class _$AsyncStateInitial<T>
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
   }) {
@@ -184,7 +185,7 @@ class _$AsyncStateInitial<T>
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
     required TResult orElse(),
@@ -242,7 +243,7 @@ abstract class $AsyncStateDataCopyWith<T, $Res> {
   factory $AsyncStateDataCopyWith(
           AsyncStateData<T> value, $Res Function(AsyncStateData<T>) then) =
       _$AsyncStateDataCopyWithImpl<T, $Res>;
-  $Res call({T data});
+  $Res call({T data, String? errorTerm});
 }
 
 /// @nodoc
@@ -259,12 +260,17 @@ class _$AsyncStateDataCopyWithImpl<T, $Res>
   @override
   $Res call({
     Object? data = freezed,
+    Object? errorTerm = freezed,
   }) {
     return _then(AsyncStateData<T>(
       data == freezed
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
               as T,
+      errorTerm == freezed
+          ? _value.errorTerm
+          : errorTerm // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -274,14 +280,16 @@ class _$AsyncStateDataCopyWithImpl<T, $Res>
 class _$AsyncStateData<T>
     with DiagnosticableTreeMixin
     implements AsyncStateData<T> {
-  const _$AsyncStateData(this.data);
+  const _$AsyncStateData(this.data, [this.errorTerm]);
 
   @override
   final T data;
+  @override
+  final String? errorTerm;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AsyncState<$T>.data(data: $data)';
+    return 'AsyncState<$T>.data(data: $data, errorTerm: $errorTerm)';
   }
 
   @override
@@ -289,7 +297,8 @@ class _$AsyncStateData<T>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'AsyncState<$T>.data'))
-      ..add(DiagnosticsProperty('data', data));
+      ..add(DiagnosticsProperty('data', data))
+      ..add(DiagnosticsProperty('errorTerm', errorTerm));
   }
 
   @override
@@ -297,12 +306,14 @@ class _$AsyncStateData<T>
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is AsyncStateData<T> &&
-            const DeepCollectionEquality().equals(other.data, data));
+            const DeepCollectionEquality().equals(other.data, data) &&
+            (identical(other.errorTerm, errorTerm) ||
+                other.errorTerm == errorTerm));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(data), errorTerm);
 
   @JsonKey(ignore: true)
   @override
@@ -313,35 +324,35 @@ class _$AsyncStateData<T>
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(T data) data,
+    required TResult Function(T data, String? errorTerm) data,
     required TResult Function() loading,
     required TResult Function(String errorTerm) error,
   }) {
-    return data(this.data);
+    return data(this.data, errorTerm);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
   }) {
-    return data?.call(this.data);
+    return data?.call(this.data, errorTerm);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
     required TResult orElse(),
   }) {
     if (data != null) {
-      return data(this.data);
+      return data(this.data, errorTerm);
     }
     return orElse();
   }
@@ -385,9 +396,11 @@ class _$AsyncStateData<T>
 }
 
 abstract class AsyncStateData<T> implements AsyncState<T> {
-  const factory AsyncStateData(T data) = _$AsyncStateData<T>;
+  const factory AsyncStateData(T data, [String? errorTerm]) =
+      _$AsyncStateData<T>;
 
   T get data;
+  String? get errorTerm;
   @JsonKey(ignore: true)
   $AsyncStateDataCopyWith<T, AsyncStateData<T>> get copyWith =>
       throw _privateConstructorUsedError;
@@ -443,7 +456,7 @@ class _$AsyncStateLoading<T>
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(T data) data,
+    required TResult Function(T data, String? errorTerm) data,
     required TResult Function() loading,
     required TResult Function(String errorTerm) error,
   }) {
@@ -454,7 +467,7 @@ class _$AsyncStateLoading<T>
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
   }) {
@@ -465,7 +478,7 @@ class _$AsyncStateLoading<T>
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
     required TResult orElse(),
@@ -594,7 +607,7 @@ class _$AsyncStateError<T>
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(T data) data,
+    required TResult Function(T data, String? errorTerm) data,
     required TResult Function() loading,
     required TResult Function(String errorTerm) error,
   }) {
@@ -605,7 +618,7 @@ class _$AsyncStateError<T>
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
   }) {
@@ -616,7 +629,7 @@ class _$AsyncStateError<T>
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(T data)? data,
+    TResult Function(T data, String? errorTerm)? data,
     TResult Function()? loading,
     TResult Function(String errorTerm)? error,
     required TResult orElse(),

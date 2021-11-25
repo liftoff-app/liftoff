@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../l10n/l10n.dart';
+import '../../pages/community/community.dart';
 import '../../util/extensions/api.dart';
 import '../../util/extensions/datetime.dart';
 import '../../util/goto.dart';
@@ -30,8 +31,8 @@ class PostInfoSection extends StatelessWidget {
             Avatar(
               url: post.community.icon,
               padding: const EdgeInsets.only(right: 10),
-              onTap: () =>
-                  goToCommunity.byId(context, instanceHost, post.community.id),
+              onTap: () => Navigator.of(context).push(
+                  CommunityPage.fromIdRoute(instanceHost, post.community.id)),
               noBlank: true,
               radius: 20,
             ),
@@ -56,11 +57,9 @@ class PostInfoSection extends StatelessWidget {
                           text: post.community.name,
                           style: const TextStyle(fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => goToCommunity.byId(
-                                  context,
-                                  instanceHost,
-                                  post.community.id,
-                                ),
+                            ..onTap = () => Navigator.of(context).push(
+                                CommunityPage.fromIdRoute(
+                                    instanceHost, post.community.id)),
                         ),
                         const TextSpan(
                           text: '@',

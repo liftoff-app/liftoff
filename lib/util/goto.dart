@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../pages/community.dart';
+import '../pages/community/community.dart';
 import '../pages/full_post/full_post.dart';
 import '../pages/instance.dart';
 import '../pages/media_view.dart';
@@ -33,19 +33,13 @@ abstract class goToCommunity {
   /// Navigates to `CommunityPage`
   static void byId(
           BuildContext context, String instanceHost, int communityId) =>
-      goTo(
-        context,
-        (context) => CommunityPage.fromId(
-            instanceHost: instanceHost, communityId: communityId),
-      );
+      Navigator.of(context)
+          .push(CommunityPage.fromIdRoute(instanceHost, communityId));
 
   static void byName(
           BuildContext context, String instanceHost, String communityName) =>
-      goTo(
-        context,
-        (context) => CommunityPage.fromName(
-            instanceHost: instanceHost, communityName: communityName),
-      );
+      Navigator.of(context)
+          .push(CommunityPage.fromNameRoute(instanceHost, communityName));
 }
 
 // ignore: camel_case_types
