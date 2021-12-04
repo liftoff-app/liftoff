@@ -12,6 +12,7 @@ import 'l10n/timeago/pl.dart';
 import 'pages/log_console/log_console_page_store.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
+import 'util/mobx_provider.dart';
 
 Future<void> mainCommon(AppConfig appConfig) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,15 +23,14 @@ Future<void> mainCommon(AppConfig appConfig) async {
   _setupLogger(appConfig, logConsoleStore);
   _setupTimeago();
 
-  final configStore = ConfigStore.load(sharedPrefs);
   final accountsStore = await AccountsStore.load();
 
   runApp(
     MultiProvider(
       providers: [
-        Provider.value(value: configStore),
+        MobxProvider(create: (context) => ConfigStore.load(sharedPrefs)),
         ChangeNotifierProvider.value(value: accountsStore),
-        Provider.value(value: logConsoleStore),
+        MobxProvider.value(value: logConsoleStore),
       ],
       child: const MyApp(),
     ),

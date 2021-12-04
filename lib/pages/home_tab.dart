@@ -342,6 +342,7 @@ class _SelectedList {
     this.instanceHost,
   });
 
+  @override
   String toString() =>
       'SelectedList(instanceHost: $instanceHost, listingType: $listingType)';
 }

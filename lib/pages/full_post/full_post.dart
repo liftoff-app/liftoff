@@ -11,6 +11,7 @@ import '../../stores/accounts_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
+import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../../widgets/failed_to_load.dart';
@@ -100,7 +101,7 @@ class FullPostPage extends HookWidget {
               ),
               actions: [
                 IconButton(icon: Icon(shareIcon), onPressed: sharePost),
-                Provider.value(
+                MobxProvider.value(
                   value: postStore,
                   child: const SavePostButton(),
                 ),
@@ -143,7 +144,7 @@ class FullPostPage extends HookWidget {
   }
 
   static Route route(int id, String instanceHost) => MaterialPageRoute(
-        builder: (context) => Provider(
+        builder: (context) => MobxProvider(
           create: (context) =>
               FullPostStore(instanceHost: instanceHost, postId: id)
                 ..refresh(_tryGetJwt(context, instanceHost)),
@@ -152,14 +153,14 @@ class FullPostPage extends HookWidget {
       );
 
   static Route fromPostViewRoute(PostView postView) => MaterialPageRoute(
-        builder: (context) => Provider(
+        builder: (context) => MobxProvider(
           create: (context) => FullPostStore.fromPostView(postView)
             ..refresh(_tryGetJwt(context, postView.instanceHost)),
           child: const FullPostPage._(),
         ),
       );
   static Route fromPostStoreRoute(PostStore postStore) => MaterialPageRoute(
-        builder: (context) => Provider(
+        builder: (context) => MobxProvider(
           create: (context) => FullPostStore.fromPostStore(postStore)
             ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
           child: const FullPostPage._(),

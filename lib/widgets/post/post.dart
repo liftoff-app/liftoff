@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../pages/full_post/full_post.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
+import '../../util/mobx_provider.dart';
 import 'post_actions.dart';
 import 'post_body.dart';
 import 'post_info_section.dart';
@@ -28,7 +29,7 @@ class PostTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Nested(
       children: [
-        Provider.value(value: postStore),
+        MobxProvider.value(value: postStore),
         Provider.value(value: fullPost),
         AsyncStoreListener(asyncStore: postStore.savingState),
         AsyncStoreListener(asyncStore: postStore.votingState),

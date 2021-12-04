@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../hooks/logged_in_action.dart';
 import '../../util/extensions/api.dart';
+import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/info_table_popup.dart';
@@ -60,9 +61,10 @@ class CommunityMoreMenu extends HookWidget {
 
   static void open(BuildContext context, FullCommunityView fullCommunityView) {
     final store = context.read<CommunityStore>();
+
     showBottomModal(
       context: context,
-      builder: (context) => Provider.value(
+      builder: (context) => MobxProvider.value(
         value: store,
         child: CommunityMoreMenu(
           fullCommunityView: fullCommunityView,

@@ -20,7 +20,7 @@ import '../widgets/reveal_after_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
 import '../widgets/user_tile.dart';
 import 'communities_list.dart';
-import 'modlog_page.dart';
+import 'modlog/modlog.dart';
 import 'users_list.dart';
 
 /// Displays posts, comments, and general info about the given instance
@@ -365,9 +365,8 @@ class _AboutTab extends HookWidget {
             ),
             ListTile(
               title: Center(child: Text(L10n.of(context).modlog)),
-              onTap: () => goTo(
-                context,
-                (context) => ModlogPage.forInstance(instanceHost: instanceHost),
+              onTap: () => Navigator.of(context).push(
+                ModlogPage.forInstanceRoute(instanceHost),
               ),
             ),
           ],

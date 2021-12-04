@@ -11,6 +11,7 @@ import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/extensions/cake_day.dart';
 import '../../util/goto.dart';
+import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/text_color.dart';
 import '../avatar.dart';
@@ -78,7 +79,7 @@ class CommentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return MobxProvider(
       create: (context) => CommentStore(
         context.read(),
         commentTree: commentTree,

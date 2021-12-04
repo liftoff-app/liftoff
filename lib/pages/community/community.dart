@@ -10,6 +10,7 @@ import '../../util/async_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
+import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../../widgets/failed_to_load.dart';
@@ -158,7 +159,7 @@ class CommunityPage extends HookWidget {
   static Route _route(String instanceHost, CommunityStore store) {
     return MaterialPageRoute(
       builder: (context) {
-        return Provider.value(
+        return MobxProvider.value(
           value: store
             ..refresh(context
                 .read<AccountsStore>()

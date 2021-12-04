@@ -98,5 +98,27 @@ void main() {
       expect(store.errorTerm, null);
       expect(store.asyncState, AsyncState.data(res2!));
     });
+
+    test('maps states correctly', () {
+      final store = AsyncStore<int>();
+
+      loading() => 'loading';
+      data(data) => 'data';
+      error(error) => 'error';
+
+      expect(store.map(loading: loading, error: error, data: data), 'loading');
+
+      store.asyncState = const AsyncState.loading();
+      expect(store.map(loading: loading, error: error, data: data), 'loading');
+
+      store.asyncState = const AsyncState.data(123);
+      expect(store.map(loading: loading, error: error, data: data), 'data');
+
+      store.asyncState = const AsyncState.data(123, 'error');
+      expect(store.map(loading: loading, error: error, data: data), 'data');
+
+      store.asyncState = const AsyncState.error('error');
+      expect(store.map(loading: loading, error: error, data: data), 'error');
+    });
   });
 }

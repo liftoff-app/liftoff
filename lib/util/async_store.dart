@@ -13,7 +13,7 @@ class AsyncStore<T> = _AsyncStore<T> with _$AsyncStore<T>;
 
 abstract class _AsyncStore<T> with Store {
   @observable
-  AsyncState<T> asyncState = const AsyncState.initial();
+  AsyncState<T> asyncState = AsyncState<T>.initial();
 
   @computed
   bool get isLoading => asyncState is AsyncStateLoading<T>;
@@ -41,7 +41,7 @@ abstract class _AsyncStore<T> with Store {
     final data = refresh ? asyncState.mapOrNull(data: (data) => data) : null;
 
     if (data == null) {
-      asyncState = const AsyncState.loading();
+      asyncState = AsyncState<T>.loading();
     }
 
     try {
@@ -61,7 +61,7 @@ abstract class _AsyncStore<T> with Store {
       if (data != null) {
         asyncState = data.copyWith(errorTerm: err.toString());
       } else {
-        asyncState = AsyncState.error(err.toString());
+        asyncState = AsyncState<T>.error(err.toString());
       }
       rethrow;
     }
@@ -83,9 +83,23 @@ abstract class _AsyncStore<T> with Store {
       if (data != null) {
         asyncState = data.copyWith(errorTerm: err.message);
       } else {
-        asyncState = AsyncState.error(err.message);
+        asyncState = AsyncState<T>.error(err.message);
       }
     }
+  }
+
+  /// helper function for mapping [asyncState] into 3 variants
+  U map<U>({
+    required U Function() loading,
+    required U Function(String errorTerm) error,
+    required U Function(T data) data,
+  }) {
+    return asyncState.when<U>(
+      initial: loading,
+      data: (value, errorTerm) => data(value),
+      loading: loading,
+      error: error,
+    );
   }
 }
 

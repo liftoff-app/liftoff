@@ -7,6 +7,7 @@ import '../../../hooks/stores.dart';
 import '../../../l10n/l10n_from_string.dart';
 import '../../../stores/accounts_store.dart';
 import '../../../util/async_store_listener.dart';
+import '../../../util/mobx_provider.dart';
 import '../../../util/observer_consumers.dart';
 import '../../../widgets/pull_to_refresh.dart';
 import 'block_dialog.dart';
@@ -61,7 +62,7 @@ class _UserBlocksWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<BlocksStore>(
+    return MobxProvider(
       create: (context) => BlocksStore(
         instanceHost: instanceHost,
         token: context
@@ -119,8 +120,8 @@ class _UserBlocks extends HookWidget {
                     )
                 ] else ...[
                   for (final user in store.blockedUsers!)
-                    Provider(
-                      create: (context) => user,
+                    MobxProvider.value(
+                      value: user,
                       key: ValueKey(user),
                       child: const BlockPersonTile(),
                     ),
@@ -153,8 +154,8 @@ class _UserBlocks extends HookWidget {
                   ),
                   const Divider(),
                   for (final community in store.blockedCommunities!)
-                    Provider(
-                      create: (context) => community,
+                    MobxProvider.value(
+                      value: community,
                       key: ValueKey(community),
                       child: const BlockCommunityTile(),
                     ),

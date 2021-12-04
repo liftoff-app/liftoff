@@ -8,16 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/l10n.dart';
 import '../util/async_store.dart';
+import '../util/mobx_provider.dart';
 
 part 'config_store.g.dart';
 
 /// Store managing user-level configuration such as theme or language
 @JsonSerializable()
 @LocaleConverter()
-class ConfigStore extends _ConfigStore with _$ConfigStore {
+class ConfigStore extends _ConfigStore with _$ConfigStore, DisposableStore {
   static const _prefsKey = 'v1:ConfigStore';
   late final SharedPreferences _sharedPrefs;
-  late final ReactionDisposer _saveDisposer;
 
   @visibleForTesting
   ConfigStore();
@@ -28,7 +28,7 @@ class ConfigStore extends _ConfigStore with _$ConfigStore {
           as Map<String, dynamic>,
     ).._sharedPrefs = sharedPrefs;
 
-    store._saveDisposer = autorun((_) => store.save());
+    store.addReaction(autorun((_) => store.save()));
 
     return store;
   }
@@ -37,10 +37,6 @@ class ConfigStore extends _ConfigStore with _$ConfigStore {
     final serialized = jsonEncode(_$ConfigStoreToJson(this));
 
     await _sharedPrefs.setString(_prefsKey, serialized);
-  }
-
-  void dispose() {
-    _saveDisposer();
   }
 }
 

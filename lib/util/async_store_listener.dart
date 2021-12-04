@@ -20,6 +20,7 @@ class AsyncStoreListener<T> extends SingleChildStatelessWidget {
     Widget? child,
   }) : super(key: key, child: child);
 
+  @override
   Widget buildWithChild(BuildContext context, Widget? child) {
     return ObserverListener<AsyncStore<T>>(
       store: asyncStore,

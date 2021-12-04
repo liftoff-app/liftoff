@@ -4,13 +4,12 @@ import 'package:lemmy_api_client/v3.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import '../../util/extensions/spaced.dart';
-import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_safe.dart';
 import '../../widgets/markdown_text.dart';
 import '../../widgets/pull_to_refresh.dart';
 import '../../widgets/user_tile.dart';
-import '../modlog_page.dart';
+import '../modlog/modlog.dart';
 import 'community_store.dart';
 
 class CommmunityAboutTab extends StatelessWidget {
@@ -99,9 +98,8 @@ class CommmunityAboutTab extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
-            onTap: () => goTo(
-              context,
-              (context) => ModlogPage.forCommunity(
+            onTap: () => Navigator.of(context).push(
+              ModlogPage.forCommunityRoute(
                 instanceHost: community.instanceHost,
                 communityId: community.community.id,
                 communityName: community.community.name,

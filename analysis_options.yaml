@@ -1,5 +1,6 @@
 linter:
   rules:
+    - annotate_overrides
     - avoid_bool_literals_in_conditional_expressions
     - avoid_catching_errors
     - avoid_equals_and_hash_code_on_mutable_classes
