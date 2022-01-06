@@ -3,8 +3,8 @@ import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 import 'l10n/l10n.dart';
 import 'pages/home_page.dart';
+import 'resources/theme.dart';
 import 'stores/config_store.dart';
-import 'theme.dart';
 import 'util/observer_consumers.dart';
 
 class MyApp extends StatelessWidget {

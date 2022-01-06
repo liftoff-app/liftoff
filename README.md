@@ -1,14 +1,14 @@
 <div align="center">
 
-[![](https://github.com/krawieck/lemmur/workflows/ci/badge.svg)](https://github.com/krawieck/lemmur/actions)
+[![](https://github.com/LemmurOrg/lemmur/workflows/ci/badge.svg)](https://github.com/LemmurOrg/lemmur/actions)
 
-<img width=200px height=200px src="https://raw.githubusercontent.com/krawieck/lemmur/master/assets/readme_icon.svg"/>
+<img width=200px height=200px src="https://raw.githubusercontent.com/LemmurOrg/lemmur/master/assets/readme_icon.svg"/>
 
 # lemmur
 
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.krawieck.lemmur)
-[<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.krawieck.lemmur)
-[<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/krawieck/lemmur/releases/latest)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LemmurOrg.lemmur)
+[<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.LemmurOrg.lemmur)
+[<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/LemmurOrg/lemmur/releases/latest)
 
 A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative
 
@@ -31,7 +31,7 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
 ### Prerequisites
 
 - Install [flutter](https://flutter.dev/docs/get-started/install): To check if this step was successful run `flutter doctor` (Installing android studio is not required if you setup the android SDK yourself)
-- Clone this repo: `git clone https://github.com/krawieck/lemmur`
+- Clone this repo: `git clone https://github.com/LemmurOrg/lemmur`
 - Enter the repo: `cd lemmur`
 
 ### Android

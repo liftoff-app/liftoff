@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../gen/assets.gen.dart';
 import '../hooks/memo_future.dart';
 import '../pages/log_console/log_console.dart';
+import '../resources/links.dart';
 import '../url_launcher.dart';
 import 'bottom_safe.dart';
 
@@ -42,7 +43,7 @@ class AboutTile extends HookWidget {
         TextButton.icon(
           icon: const Icon(Icons.code),
           label: const Text('source code'),
-          onPressed: () => openInBrowser('https://github.com/krawieck/lemmur'),
+          onPressed: () => openInBrowser(lemmurRepositoryLink),
         ),
         TextButton.icon(
           icon: const Icon(Icons.monetization_on),

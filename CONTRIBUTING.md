@@ -4,7 +4,7 @@
 
 ## Issue tracking / Repository
 
-From issues to wikis: everything is on [GitHub](https://github.com/krawieck/lemmur)
+From issues to wikis: everything is on [GitHub](https://github.com/LemmurOrg/lemmur)
 
 ## Linting / Formatting
 
@@ -20,7 +20,7 @@ To contribute time ago strings please send a PR containing a class that implemen
 
 ## Architecture
 
-Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/krawieck/lemmy_api_client) is used.
+Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/LemmurOrg/lemmy_api_client) is used.
 
 ### State management
 
@@ -45,7 +45,7 @@ Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communic
 
 ### Lemmy API
 
-LAC (Lemmy API Client) is used to communicate with Lemmy backends, more information can be found [here](https://github.com/krawieck/lemmy_api_client).
+LAC (Lemmy API Client) is used to communicate with Lemmy backends, more information can be found [here](https://github.com/LemmurOrg/lemmy_api_client).
 
 ### For React developers
 

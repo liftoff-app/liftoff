@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'util/text_color.dart';
+import '../util/text_color.dart';
 
 ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
   assert(dark || !amoled, "Can't have amoled without dark mode");
