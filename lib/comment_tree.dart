@@ -65,9 +65,8 @@ class CommentTree {
       return parent;
     }
 
-    final topLevelParents = comments
-        .where((e) => e.comment.parentId == null)
-        .map((e) => CommentTree(e));
+    final topLevelParents =
+        comments.where((e) => e.comment.parentId == null).map(CommentTree.new);
 
     final result = topLevelParents.map(gatherChildren).toList();
     return result;
