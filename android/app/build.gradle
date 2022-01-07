@@ -54,8 +54,6 @@ android {
     }
 
     signingConfigs {
-        dev { }
-
         if (System.getenv("ANDROID_STORE_PATH")) {
             prod {
                 keyAlias System.getenv("ANDROID_KEY_ALIAS")
@@ -64,7 +62,12 @@ android {
                 storePassword System.getenv("ANDROID_STORE_PASSWORD")
             }
         } else {
-            prod { }
+            prod {
+                keyAlias signingConfigs.debug.keyAlias
+                keyPassword signingConfigs.debug.keyPassword
+                storeFile signingConfigs.debug.storeFile
+                storePassword signingConfigs.debug.storePassword
+            }
         }
     }
 

@@ -36,9 +36,9 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
 
 ### Android
 
-1. Build: `flutter build apk`
+1. Build: `flutter build apk --flavor prod --target lib/main_prod.dart --release`
 
-The apk will be in `build/app/outputs/flutter-apk/app-release.apk`
+The apk will be in `build/app/outputs/flutter-apk/app-prod-release.apk`
 
 ### Linux
 
@@ -47,9 +47,9 @@ The apk will be in `build/app/outputs/flutter-apk/app-release.apk`
    ```sh
    flutter config --enable-linux-desktop
    ```
-3. Build: `flutter build linux`
+3. Build: `flutter build linux --target lib/main_prod.dart --release`
 
-The executable will be in `build/linux/release/bundle/lemmur` (be aware, however, that this executable is not standalone)
+The executable will be in `build/linux/x64/release/bundle/lemmur` (be aware, however, that this executable is not standalone)
 
 ### Windows
 
@@ -58,7 +58,7 @@ The executable will be in `build/linux/release/bundle/lemmur` (be aware, however
    ```sh
    flutter config --enable-windows-desktop
    ```
-3. Build: `flutter build windows`
+3. Build: `flutter build windows --target lib/main_prod.dart --release`
 
 The executable will be in `build\windows\runner\Release\lemmur.exe` (be aware, however, that this executable is not standalone)
 
