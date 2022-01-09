@@ -12,6 +12,24 @@ Everything is formatted with `dart format` (no flags) and linted with `dart anal
 
 ## Translations
 
+### Weblate
+
+Lemmy devs are kindly hosting lemmur translation strings on their [Weblate instance](https://weblate.yerbamate.ml/projects/lemmur/lemmur/). Feel free to contribute strings there, we regularly sync string changes with Weblate.
+
+We use flutter's native file format for translations: ARB, which itself uses the ICU message syntax. In most cases you will be able to deduce the syntax based on the source string. Here are 3 important examples:
+
+1. Placeholders
+
+`Hello there {name}!` - placeholders are put in a pair of braces, it will be later replaced with an appropriate value.
+
+2. Plurals
+
+`You have {amount} new {amount, plural, =0{messages} =1{message} =2{messages} few{messages} many{messages} other{message}}` - plurals are checked against their quantifier and provide 6 possible forms to choose from. In english this example does not make much sense, since we could just provide the `=1{message}` and `other{messages}` case. `other` case always has to be specified, it acts as a fallback.
+
+3. Selects
+
+`I will take a {distance_name, select, close{bus} far{train} veryFar{plane}}.` - selects allow for arbitrary matching against some predefined cases. All cases should be the same as in the source string.
+
 ### Time ago strings
 
 Strings such as "_About one hour ago_" or "_~1h_" are localizable. We inherit a set of ready translations from [github.com/andresaraujo/timeago.dart/messages](https://github.com/andresaraujo/timeago.dart/tree/master/timeago/lib/src/messages) and provide our own in [lib/l10n/timeago](./lib/l10n/timeago).
@@ -53,6 +71,6 @@ If you come from a React background Flutter shouldn't be anything hard to grasp 
 
 - Components are called 'widgets' in flutter
 - `flutter_hooks` is a React hooks port to flutter. Though you will come to see that `flutter_hooks` are not as powerful
-- There is no CSS. You compose your layout with other widgets and style them by passing properties to them
-- There are no functional components, everything has to be a class
+- There is no CSS. You compose your layout with other widgets and style them by passing properties
+- There are no functional components, everything needs to be a class
 - Creating wrapping widgets is not as nice as in React, there is no `{ ...props }`. In flutter you need to pass each argument one by one

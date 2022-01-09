@@ -1,0 +1,26 @@
+name: weblate
+
+on:
+  schedule:
+    # every friday at 19:00 UTC
+    - cron: "0 19 * * 5"
+
+jobs:
+  weblate:
+    name: Pull Weblate changes to repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Fetch changes
+        run: |
+          git remote add weblate http://weblate.yerbamate.ml/git/lemmur/lemmur
+          git fetch weblate
+          git merge weblate/master
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3.12.0
+        with:
+          reviewers: shilangyu,krawieck
+          title: Weblate update
+          branch: weblate
