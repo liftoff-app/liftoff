@@ -145,7 +145,7 @@ jobs:
       - linux-build
       - windows-build
     runs-on: ubuntu-latest
-    if: github.repository == 'krawieck/lemmur'
+    if: github.repository == 'LemmurOrg/lemmur'
     steps:
       - uses: actions/checkout@v2
 
