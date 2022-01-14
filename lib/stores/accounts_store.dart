@@ -187,10 +187,19 @@ class AccountsStore extends ChangeNotifier {
     }
 
     final lemmy = LemmyApiV3(instanceHost);
-    final jwt = await lemmy.run(Login(
+    final response = await lemmy.run(Login(
       usernameOrEmail: usernameOrEmail,
       password: password,
     ));
+    final jwt = response.jwt;
+    if (jwt == null) {
+      if (response.verifyEmailSent) {
+        throw const VerifyEmailException();
+      } else if (response.registrationCreated) {
+        throw const RegistrationApplicationSentException();
+      }
+      throw Exception('Unknown error'); // should never happen
+    }
     final userData = await lemmy
         .run(GetSite(auth: jwt.raw))
         .then((value) => value.myUser!.localUserView.person);
@@ -268,4 +277,20 @@ class UserData {
       _$UserDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserDataToJson(this);
+}
+//if (data.verify_email_sent) {
+//   toast(i18n.t("verify_email_sent"));
+// }
+// if (data.registration_created) {
+//   toast(i18n.t("registration_application_sent"));
+// }
+
+class VerifyEmailException implements Exception {
+  final message = 'verify_email_sent';
+  const VerifyEmailException();
+}
+
+class RegistrationApplicationSentException implements Exception {
+  final message = 'registration_application_sent';
+  const RegistrationApplicationSentException();
 }

@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 import '../../hooks/delayed_loading.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
+import '../../stores/accounts_store.dart';
 import '../../stores/config_store.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/fullscreenable_image.dart';
@@ -63,6 +64,14 @@ class AddAccountPage extends HookWidget {
         }
 
         Navigator.of(context).pop();
+      } on VerifyEmailException {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Verification email sent'),
+        ));
+      } on RegistrationApplicationSentException {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Registration application sent'),
+        ));
       } on Exception catch (err) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(err.toString()),

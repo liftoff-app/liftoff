@@ -21,7 +21,6 @@ import '../widgets/sortable_infinite_list.dart';
 import '../widgets/user_tile.dart';
 import 'communities_list.dart';
 import 'modlog/modlog.dart';
-import 'users_list.dart';
 
 /// Displays posts, comments, and general info about the given instance
 class InstancePage extends HookWidget {
@@ -220,15 +219,15 @@ class _AboutTab extends HookWidget {
     required this.instanceHost,
   });
 
-  void goToBannedUsers(BuildContext context) {
-    goTo(
-      context,
-      (_) => UsersListPage(
-        users: site.banned.reversed.toList(),
-        title: L10n.of(context).banned_users,
-      ),
-    );
-  }
+  // void goToBannedUsers(BuildContext context) {
+  //   goTo(
+  //     context,
+  //     (_) => UsersListPage(
+  //       users: site.banned.reversed.toList(),
+  //       title: L10n.of(context).banned_users,
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -359,10 +358,11 @@ class _AboutTab extends HookWidget {
                 expanded: true,
               ),
             const _Divider(),
-            ListTile(
-              title: Center(child: Text(L10n.of(context).banned_users)),
-              onTap: () => goToBannedUsers(context),
-            ),
+            // TODO: transition to new API
+            // ListTile(
+            //   title: Center(child: Text(L10n.of(context).banned_users)),
+            //   onTap: () => goToBannedUsers(context),
+            // ),
             ListTile(
               title: Center(child: Text(L10n.of(context).modlog)),
               onTap: () => Navigator.of(context).push(

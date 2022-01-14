@@ -19,6 +19,8 @@ const _lemmyUserSettings = LocalUserSettings(
   showBotAccounts: true,
   showNewPostNotifs: true,
   instanceHost: '',
+  emailVerified: true,
+  acceptedApplication: true,
 );
 
 void main() {
