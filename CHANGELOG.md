@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- Support for Lemmy v0.15.0
+
 ### Changed
 
 - "Time ago" strings, dates, and compact numbers are now localized
