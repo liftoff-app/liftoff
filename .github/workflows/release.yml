@@ -165,7 +165,6 @@ jobs:
             linux-build/*
             windows-build/*
           draft: true
-          prerelease: true
           body_path: current-changelog.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,7 @@
 <div align="center">
 
 [![](https://github.com/LemmurOrg/lemmur/workflows/ci/badge.svg)](https://github.com/LemmurOrg/lemmur/actions)
+[![Translation status](http://weblate.yerbamate.ml/widgets/lemmur/-/lemmur/svg-badge.svg)](http://weblate.yerbamate.ml/engage/lemmur/)
 
 <img width=200px height=200px src="https://raw.githubusercontent.com/LemmurOrg/lemmur/master/assets/readme_icon.svg"/>
 

@@ -2,7 +2,6 @@ platform :android do
   desc "Deploy a new version to the Google Play"
   lane :prod do
     upload_to_play_store(
-      track: "beta",
       package_name: "com.krawieck.lemmur",
       json_key: ENV["GOOGLE_SERVICE_ACCOUNT_KEY_PATH"],
       aab: ENV["ABB_PATH"]
