@@ -16,7 +16,7 @@ import '../../util/share.dart';
 import '../../widgets/failed_to_load.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/sortable_infinite_list.dart';
-import '../create_post.dart';
+import '../create_post/create_post_fab.dart';
 import 'community_about_tab.dart';
 import 'community_more_menu.dart';
 import 'community_overview.dart';
