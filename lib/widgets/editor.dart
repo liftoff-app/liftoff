@@ -8,6 +8,7 @@ class Editor extends HookWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final ValueChanged<String>? onSubmitted;
+  final ValueChanged<String>? onChanged;
   final int? minLines;
   final int? maxLines;
   final String? labelText;
@@ -22,6 +23,7 @@ class Editor extends HookWidget {
     this.controller,
     this.focusNode,
     this.onSubmitted,
+    this.onChanged,
     this.minLines = 5,
     this.maxLines,
     this.labelText,
@@ -51,6 +53,7 @@ class Editor extends HookWidget {
       autofocus: autofocus,
       keyboardType: TextInputType.multiline,
       textCapitalization: TextCapitalization.sentences,
+      onChanged: onChanged,
       onSubmitted: onSubmitted,
       maxLines: maxLines,
       minLines: minLines,

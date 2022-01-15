@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../hooks/logged_in_action.dart';
-import '../../pages/create_post.dart';
+import '../../pages/create_post/create_post.dart';
 import '../../pages/full_post/full_post_store.dart';
 import '../../stores/accounts_store.dart';
 import '../../util/icons.dart';

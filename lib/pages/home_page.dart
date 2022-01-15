@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../util/extensions/brightness.dart';
 import 'communities_tab.dart';
-import 'create_post.dart';
+import 'create_post/create_post_fab.dart';
 import 'home_tab.dart';
 import 'profile_tab.dart';
 import 'search_tab.dart';

@@ -345,5 +345,7 @@
   "add_instance": "Add instance",
   "@add_instance": {},
   "instance_added": "Instance successfully added",
-  "@instance_added": {}
+  "@instance_added": {},
+  "required_field": "required field",
+  "@required_field": {}
 }
