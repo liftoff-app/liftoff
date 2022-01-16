@@ -347,5 +347,9 @@
   "instance_added": "Instance successfully added",
   "@instance_added": {},
   "required_field": "required field",
-  "@required_field": {}
+  "@required_field": {},
+  "no_communities_found": "No communities found",
+  "@no_communities_found": {},
+  "network_error": "Network error",
+  "@network_error": {}
 }

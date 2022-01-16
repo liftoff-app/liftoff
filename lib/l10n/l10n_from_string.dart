@@ -123,6 +123,7 @@ abstract class L10nStrings {
   static const number_of_posts = 'number_of_posts';
   static const number_of_subscribers = 'number_of_subscribers';
   static const number_of_users = 'number_of_users';
+  static const number_of_communities = 'number_of_communities';
   static const unsubscribe = 'unsubscribe';
   static const subscribe = 'subscribe';
   static const messages = 'messages';
@@ -145,6 +146,22 @@ abstract class L10nStrings {
   static const bot_account = 'bot_account';
   static const show_bot_accounts = 'show_bot_accounts';
   static const show_read_posts = 'show_read_posts';
+  static const site_not_set_up = 'site_not_set_up';
+  static const nerd_stuff = 'nerd_stuff';
+  static const open_in_browser = 'open_in_browser';
+  static const cannot_open_in_browser = 'cannot_open_in_browser';
+  static const about = 'about';
+  static const see_all = 'see_all';
+  static const admins = 'admins';
+  static const trending_communities = 'trending_communities';
+  static const communities_of_instance = 'communities_of_instance';
+  static const day = 'day';
+  static const week = 'week';
+  static const month = 'month';
+  static const six_months = 'six_months';
+  static const required_field = 'required_field';
+  static const no_communities_found = 'no_communities_found';
+  static const network_error = 'network_error';
 }
 
 extension L10nFromString on String {
@@ -406,6 +423,36 @@ extension L10nFromString on String {
         return L10n.of(context).show_bot_accounts;
       case L10nStrings.show_read_posts:
         return L10n.of(context).show_read_posts;
+      case L10nStrings.site_not_set_up:
+        return L10n.of(context).site_not_set_up;
+      case L10nStrings.nerd_stuff:
+        return L10n.of(context).nerd_stuff;
+      case L10nStrings.open_in_browser:
+        return L10n.of(context).open_in_browser;
+      case L10nStrings.cannot_open_in_browser:
+        return L10n.of(context).cannot_open_in_browser;
+      case L10nStrings.about:
+        return L10n.of(context).about;
+      case L10nStrings.see_all:
+        return L10n.of(context).see_all;
+      case L10nStrings.admins:
+        return L10n.of(context).admins;
+      case L10nStrings.trending_communities:
+        return L10n.of(context).trending_communities;
+      case L10nStrings.day:
+        return L10n.of(context).day;
+      case L10nStrings.week:
+        return L10n.of(context).week;
+      case L10nStrings.month:
+        return L10n.of(context).month;
+      case L10nStrings.six_months:
+        return L10n.of(context).six_months;
+      case L10nStrings.required_field:
+        return L10n.of(context).required_field;
+      case L10nStrings.no_communities_found:
+        return L10n.of(context).no_communities_found;
+      case L10nStrings.network_error:
+        return L10n.of(context).network_error;
 
       default:
         return this;

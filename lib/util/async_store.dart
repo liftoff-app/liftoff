@@ -5,6 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../l10n/l10n_from_string.dart';
+
 part 'async_store.freezed.dart';
 part 'async_store.g.dart';
 
@@ -51,11 +53,10 @@ abstract class _AsyncStore<T> with Store {
 
       return result;
     } on SocketException {
-      // TODO: use an existing l10n key
       if (data != null) {
-        asyncState = data.copyWith(errorTerm: 'network_error');
+        asyncState = data.copyWith(errorTerm: L10nStrings.network_error);
       } else {
-        asyncState = const AsyncState.error('network_error');
+        asyncState = const AsyncState.error(L10nStrings.network_error);
       }
     } catch (err) {
       if (data != null) {
