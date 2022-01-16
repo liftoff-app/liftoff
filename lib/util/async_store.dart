@@ -30,6 +30,10 @@ abstract class _AsyncStore<T> with Store {
   @action
   void setData(T data) => asyncState = AsyncState.data(data);
 
+  /// reset an asyncState to its initial one
+  @action
+  void reset() => asyncState = AsyncState<T>.initial();
+
   /// runs some async action and reflects the progress in [asyncState].
   /// If successful, the result is returned, otherwise null is returned.
   /// If this [AsyncStore] is already running some action, it will exit immediately and do nothing

@@ -1,7 +1,9 @@
+import 'package:lemmy_api_client/pictrs.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../util/async_store.dart';
+import '../../util/pictrs.dart';
 
 part 'create_post_store.g.dart';
 
@@ -37,6 +39,14 @@ abstract class _CreatePostStore with Store {
 
   final submitState = AsyncStore<PostView>();
   final searchCommunitiesState = AsyncStore<List<CommunityView>>();
+  final imageUploadState = AsyncStore<PictrsUploadFile>();
+
+  @computed
+  bool get hasUploadedImage => imageUploadState.map(
+        loading: () => false,
+        error: (_) => false,
+        data: (_) => true,
+      );
 
   @action
   Future<List<CommunityView>?> searchCommunities(
@@ -89,6 +99,39 @@ abstract class _CreatePostStore with Store {
               auth: token.raw,
             ),
     );
+  }
+
+  @action
+  Future<void> uploadImage(String filePath, Jwt token) async {
+    final instanceHost = this.instanceHost;
+
+    final upload = await imageUploadState.run(
+      () => PictrsApi(instanceHost)
+          .upload(
+            filePath: filePath,
+            auth: token.raw,
+          )
+          .then((value) => value.files.single),
+    );
+
+    if (upload != null) {
+      url = pathToPictrs(instanceHost, upload.file);
+    }
+  }
+
+  @action
+  void removeImage() {
+    final pictrsFile = imageUploadState.map<PictrsUploadFile?>(
+      data: (data) => data,
+      loading: () => null,
+      error: (_) => null,
+    );
+    if (pictrsFile == null) return;
+
+    PictrsApi(instanceHost).delete(pictrsFile).catchError((_) {});
+
+    imageUploadState.reset();
+    url = '';
   }
 }
 

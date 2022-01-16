@@ -9,6 +9,14 @@ part of 'create_post_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$CreatePostStore on _CreatePostStore, Store {
+  Computed<bool>? _$hasUploadedImageComputed;
+
+  @override
+  bool get hasUploadedImage => (_$hasUploadedImageComputed ??= Computed<bool>(
+          () => super.hasUploadedImage,
+          name: '_CreatePostStore.hasUploadedImage'))
+      .value;
+
   final _$showFancyAtom = Atom(name: '_CreatePostStore.showFancy');
 
   @override
@@ -122,6 +130,40 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
     return _$submitAsyncAction.run(() => super.submit(token));
   }
 
+  final _$uploadImageAsyncAction = AsyncAction('_CreatePostStore.uploadImage');
+
+  @override
+  Future<void> uploadImage(String filePath, Jwt token) {
+    return _$uploadImageAsyncAction
+        .run(() => super.uploadImage(filePath, token));
+  }
+
+  final _$_CreatePostStoreActionController =
+      ActionController(name: '_CreatePostStore');
+
+  @override
+  Future<List<CommunityView>?> searchCommunities(
+      String searchTerm, Jwt? token) {
+    final _$actionInfo = _$_CreatePostStoreActionController.startAction(
+        name: '_CreatePostStore.searchCommunities');
+    try {
+      return super.searchCommunities(searchTerm, token);
+    } finally {
+      _$_CreatePostStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeImage() {
+    final _$actionInfo = _$_CreatePostStoreActionController.startAction(
+        name: '_CreatePostStore.removeImage');
+    try {
+      return super.removeImage();
+    } finally {
+      _$_CreatePostStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
@@ -131,7 +173,8 @@ selectedCommunity: ${selectedCommunity},
 url: ${url},
 title: ${title},
 body: ${body},
-nsfw: ${nsfw}
+nsfw: ${nsfw},
+hasUploadedImage: ${hasUploadedImage}
     ''';
   }
 }
