@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 import '../../l10n/l10n.dart';
 import '../../util/async_store_listener.dart';
@@ -41,11 +42,7 @@ class CreatePostCommunityPicker extends HookWidget {
             ),
             onChanged: (_) => store.selectedCommunity = null,
           ),
-          validator: (choice) {
-            if (choice?.isEmpty ?? false) {
-              return L10n.of(context).required_field;
-            }
-          },
+          validator: Validators.required(L10n.of(context).required_field),
           suggestionsCallback: (pattern) async {
             final communities = await store.searchCommunities(
               pattern,
