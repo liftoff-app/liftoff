@@ -17,8 +17,12 @@ class CreatePostCommunityPicker extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useTextEditingController();
     final store = context.read<CreatePostStore>();
+    final controller = useTextEditingController(
+      text: store.selectedCommunity != null
+          ? _communityString(store.selectedCommunity!)
+          : '',
+    );
 
     return AsyncStoreListener(
       asyncStore: context.read<CreatePostStore>().searchCommunitiesState,
