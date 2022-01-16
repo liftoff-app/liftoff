@@ -61,6 +61,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   wc_form_validators: ^1.0.0
+  file_picker: ^4.3.1
 
 dev_dependencies:
   flutter_test:
