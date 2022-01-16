@@ -12,6 +12,7 @@ class Editor extends HookWidget {
   final int? minLines;
   final int? maxLines;
   final String? labelText;
+  final String? initialValue;
   final bool autofocus;
 
   /// Whether the editor should be preview the contents
@@ -27,6 +28,7 @@ class Editor extends HookWidget {
     this.minLines = 5,
     this.maxLines,
     this.labelText,
+    this.initialValue,
     this.fancy = false,
     required this.instanceHost,
     this.autofocus = false,
@@ -34,7 +36,7 @@ class Editor extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultController = useTextEditingController();
+    final defaultController = useTextEditingController(text: initialValue);
     final actualController = controller ?? defaultController;
 
     if (fancy) {

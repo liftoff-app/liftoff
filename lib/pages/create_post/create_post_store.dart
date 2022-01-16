@@ -36,6 +36,36 @@ abstract class _CreatePostStore with Store {
   bool nsfw;
 
   final submitState = AsyncStore<PostView>();
+  final searchCommunitiesState = AsyncStore<List<CommunityView>>();
+
+  @action
+  Future<List<CommunityView>?> searchCommunities(
+    String searchTerm,
+    Jwt? token,
+  ) {
+    if (searchTerm.isEmpty) {
+      return searchCommunitiesState.runLemmy(
+        instanceHost,
+        ListCommunities(
+          type: PostListingType.all,
+          sort: SortType.topAll,
+          limit: 20,
+          auth: token?.raw,
+        ),
+      );
+    } else {
+      return searchCommunitiesState.runLemmy(
+        instanceHost,
+        SearchCommunities(
+          q: searchTerm,
+          sort: SortType.topAll,
+          listingType: PostListingType.all,
+          limit: 20,
+          auth: token?.raw,
+        ),
+      );
+    }
+  }
 
   @action
   Future<void> submit(Jwt token) async {
@@ -60,4 +90,38 @@ abstract class _CreatePostStore with Store {
             ),
     );
   }
+}
+
+class SearchCommunities implements LemmyApiQuery<List<CommunityView>> {
+  final Search base;
+
+  SearchCommunities({
+    required String q,
+    PostListingType? listingType,
+    SortType? sort,
+    int? page,
+    int? limit,
+    String? auth,
+  }) : base = Search(
+          q: q,
+          type: SearchType.communities,
+          listingType: listingType,
+          sort: sort,
+          page: page,
+          limit: limit,
+          auth: auth,
+        );
+
+  @override
+  String get path => base.path;
+
+  @override
+  HttpMethod get httpMethod => base.httpMethod;
+
+  @override
+  List<CommunityView> responseFactory(Map<String, dynamic> json) =>
+      base.responseFactory(json).communities;
+
+  @override
+  Map<String, dynamic> toJson() => base.toJson();
 }
