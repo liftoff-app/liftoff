@@ -9,7 +9,6 @@ import '../../l10n/l10n.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
-import '../../util/extensions/cake_day.dart';
 import '../../util/goto.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';

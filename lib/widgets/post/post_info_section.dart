@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/l10n.dart';
 import '../../pages/community/community.dart';
+import '../../pages/instance/instance.dart';
 import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
@@ -67,9 +68,10 @@ class PostInfoSection extends StatelessWidget {
                           text: post.post.originInstanceHost,
                           style: const TextStyle(fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => goToInstance(
-                                  context,
-                                  post.post.originInstanceHost,
+                            ..onTap = () => Navigator.of(context).push(
+                                  InstancePage.route(
+                                    post.post.originInstanceHost,
+                                  ),
                                 ),
                         ),
                       ],

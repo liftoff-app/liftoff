@@ -17,6 +17,8 @@ class InfiniteScrollController {
   }
 }
 
+typedef Fetcher<T> = Future<List<T>> Function(int page, int batchSize);
+
 /// `ListView.builder` with asynchronous data fetching and no `itemCount`
 class InfiniteScroll<T> extends HookWidget {
   /// How many items should be fetched per call
@@ -31,7 +33,7 @@ class InfiniteScroll<T> extends HookWidget {
   /// Fetches data to be displayed. It is important to respect `batchSize`,
   /// if the returned list has less than `batchSize` then the InfiniteScroll
   /// is considered finished
-  final Future<List<T>> Function(int page, int batchSize) fetcher;
+  final Fetcher<T> fetcher;
 
   final InfiniteScrollController? controller;
 

@@ -3,7 +3,6 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../pages/community/community.dart';
 import '../pages/full_post/full_post.dart';
-import '../pages/instance.dart';
 import '../pages/media_view.dart';
 import '../pages/user.dart';
 
@@ -24,9 +23,6 @@ Future<dynamic> goToReplace(
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: builder,
     ));
-
-void goToInstance(BuildContext context, String instanceHost) =>
-    goTo(context, (context) => InstancePage(instanceHost: instanceHost));
 
 // ignore: camel_case_types
 abstract class goToCommunity {

@@ -15,6 +15,7 @@ import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'inbox.dart';
+import 'instance/instance.dart';
 import 'settings/add_account_page.dart';
 
 /// First thing users sees when opening the app
@@ -128,7 +129,9 @@ class HomeTab extends HookWidget {
                         color:
                             theme.textTheme.bodyText1?.color?.withOpacity(0.7)),
                   ),
-                  onTap: () => goToInstance(context, instance),
+                  onTap: () => Navigator.of(context).push(
+                    InstancePage.route(instance),
+                  ),
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   visualDensity: const VisualDensity(

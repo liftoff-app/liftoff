@@ -6,9 +6,9 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../pages/instance/instance.dart';
 import '../pages/manage_account.dart';
 import '../util/extensions/api.dart';
-import '../util/extensions/cake_day.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
 import 'avatar.dart';
@@ -226,8 +226,11 @@ class _UserOverview extends HookWidget {
                     style: theme.textTheme.caption,
                   ),
                   InkWell(
-                    onTap: () => goToInstance(
-                        context, userView.person.originInstanceHost),
+                    onTap: () => Navigator.of(context).push(
+                      InstancePage.route(
+                        userView.person.originInstanceHost,
+                      ),
+                    ),
                     child: Text(
                       userView.person.originInstanceHost,
                       style: theme.textTheme.caption,

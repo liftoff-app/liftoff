@@ -15,6 +15,7 @@ import '../util/goto.dart';
 import '../util/text_color.dart';
 import '../widgets/avatar.dart';
 import '../widgets/pull_to_refresh.dart';
+import 'instance/instance.dart';
 
 /// List of subscribed communities per instance
 class CommunitiesTab extends HookWidget {
@@ -171,8 +172,11 @@ class CommunitiesTab extends HookWidget {
                     Column(
                       children: [
                         ListTile(
-                          onTap: () => goToInstance(context,
-                              accountsStore.loggedInInstances.elementAt(i)),
+                          onTap: () => Navigator.of(context).push(
+                            InstancePage.route(
+                              accountsStore.loggedInInstances.elementAt(i),
+                            ),
+                          ),
                           onLongPress: () => toggleCollapse(i),
                           leading: Avatar(
                             url: instances[i].icon,

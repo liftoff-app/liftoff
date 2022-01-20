@@ -4,29 +4,35 @@ import 'package:lemmy_api_client/v3.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/avatar.dart';
+import '../widgets/infinite_scroll.dart';
 import '../widgets/markdown_text.dart';
 
 /// Infinite list of Users fetched by the given fetcher
 class UsersListPage extends StatelessWidget {
   final String title;
-  final List<PersonViewSafe> users;
+  final Fetcher<PersonViewSafe> fetcher;
 
-  const UsersListPage({Key? key, required this.users, this.title = ''})
+  const UsersListPage({Key? key, required this.fetcher, this.title = ''})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // TODO: change to infinite scroll
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.cardColor,
         title: Text(title),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, i) => UsersListItem(user: users[i]),
-        itemCount: users.length,
+      body: InfiniteScroll<PersonViewSafe>(
+        fetcher: fetcher,
+        itemBuilder: (user) => Column(
+          children: [
+            const Divider(),
+            UsersListItem(user: user),
+          ],
+        ),
+        uniqueProp: (user) => user.person.actorId,
       ),
     );
   }
@@ -38,18 +44,20 @@ class UsersListItem extends StatelessWidget {
   const UsersListItem({Key? key, required this.user}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ListTile(
-        title: Text(user.person.originPreferredName),
-        subtitle: user.person.bio != null
-            ? Opacity(
-                opacity: 0.7,
-                child: MarkdownText(
-                  user.person.bio!,
-                  instanceHost: user.instanceHost,
-                ),
-              )
-            : null,
-        onTap: () => goToUser.fromPersonSafe(context, user.person),
-        leading: Avatar(url: user.person.avatar),
-      );
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(user.person.originPreferredName),
+      subtitle: user.person.bio != null
+          ? Opacity(
+              opacity: 0.7,
+              child: MarkdownText(
+                user.person.bio!,
+                instanceHost: user.instanceHost,
+              ),
+            )
+          : null,
+      onTap: () => goToUser.fromPersonSafe(context, user.person),
+      leading: Avatar(url: user.person.avatar),
+    );
+  }
 }

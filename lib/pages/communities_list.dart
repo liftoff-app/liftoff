@@ -9,11 +9,7 @@ import '../widgets/sortable_infinite_list.dart';
 /// Infinite list of Communities fetched by the given fetcher
 class CommunitiesListPage extends StatelessWidget {
   final String title;
-  final Future<List<CommunityView>> Function(
-    int page,
-    int batchSize,
-    SortType sortType,
-  ) fetcher;
+  final FetcherWithSorting<CommunityView> fetcher;
 
   const CommunitiesListPage({Key? key, required this.fetcher, this.title = ''})
       : super(key: key);
@@ -21,6 +17,7 @@ class CommunitiesListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.cardColor,

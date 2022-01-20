@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'pages/community/community.dart';
-import 'pages/instance.dart';
+import 'pages/instance/instance.dart';
 import 'pages/media_view.dart';
 import 'pages/user.dart';
 import 'stores/accounts_store.dart';
@@ -48,7 +48,7 @@ Future<void> linkLauncher({
 
   if (matchedInstance != null && instances.any((e) => e == match?.group(1))) {
     if (rest == null || rest.isEmpty || rest == '/') {
-      return push(() => InstancePage(instanceHost: matchedInstance));
+      return Navigator.of(context).push<void>(InstancePage.route(instanceHost));
     }
     final split = rest.split('/');
     switch (split[1]) {

@@ -4,10 +4,10 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../../l10n/l10n.dart';
 import '../../util/extensions/api.dart';
-import '../../util/goto.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/fullscreenable_image.dart';
+import '../instance/instance.dart';
 import 'community_follow_button.dart';
 
 class CommunityOverview extends StatelessWidget {
@@ -93,9 +93,10 @@ class CommunityOverview extends StatelessWidget {
                       text: community.community.originInstanceHost,
                       style: const TextStyle(fontWeight: FontWeight.w600),
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => goToInstance(
-                              context,
-                              community.community.originInstanceHost,
+                        ..onTap = () => Navigator.of(context).push(
+                              InstancePage.route(
+                                community.community.originInstanceHost,
+                              ),
                             ),
                     ),
                   ],

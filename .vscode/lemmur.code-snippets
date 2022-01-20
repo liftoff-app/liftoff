@@ -34,7 +34,7 @@
   "L10n string": {
     "scope": "dart",
     "prefix": "l10n",
-    "body": ["L10n.of(context)!.$0"]
+    "body": ["L10n.of(context).$0"]
   },
   "Mobx store": {
     "prefix": "mobxstore",
