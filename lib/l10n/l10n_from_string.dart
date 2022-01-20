@@ -159,6 +159,8 @@ abstract class L10nStrings {
   static const week = 'week';
   static const month = 'month';
   static const six_months = 'six_months';
+  static const add_instance = 'add_instance';
+  static const instance_added = 'instance_added';
   static const required_field = 'required_field';
   static const no_communities_found = 'no_communities_found';
   static const network_error = 'network_error';
@@ -447,6 +449,10 @@ extension L10nFromString on String {
         return L10n.of(context).month;
       case L10nStrings.six_months:
         return L10n.of(context).six_months;
+      case L10nStrings.add_instance:
+        return L10n.of(context).add_instance;
+      case L10nStrings.instance_added:
+        return L10n.of(context).instance_added;
       case L10nStrings.required_field:
         return L10n.of(context).required_field;
       case L10nStrings.no_communities_found:
