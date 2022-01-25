@@ -15,7 +15,7 @@ jobs:
 
       - name: Fetch changes
         run: |
-          git remote add weblate http://weblate.yerbamate.ml/git/lemmur/lemmur
+          git remote add weblate https://weblate.yerbamate.ml/git/lemmur/lemmur/
           git fetch weblate
           git merge weblate/master
 
