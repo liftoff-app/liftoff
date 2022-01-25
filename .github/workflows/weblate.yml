@@ -16,7 +16,7 @@ jobs:
       - name: Fetch changes
         run: |
           git remote add weblate https://weblate.yerbamate.ml/git/lemmur/lemmur/
-          git fetch weblate
+          git fetch weblate --unshallow
           git merge weblate/master
 
       - name: Create Pull Request
