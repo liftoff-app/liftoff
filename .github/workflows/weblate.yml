@@ -1,6 +1,7 @@
 name: weblate
 
 on:
+  workflow_dispatch:
   schedule:
     # every friday at 19:00 UTC
     - cron: "0 19 * * 5"
