@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../url_launcher.dart';
 import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
@@ -83,13 +83,7 @@ class _CommentMoreMenuPopup extends HookWidget {
               leading: const Icon(Icons.open_in_browser),
               title: const Text('Open in browser'),
               onTap: () async {
-                if (await ul.canLaunch(comment.link)) {
-                  await ul.launch(comment.link);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("can't open in browser")),
-                  );
-                }
+                await launchLink(link: comment.link, context: context);
 
                 Navigator.of(context).pop();
               },

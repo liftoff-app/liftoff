@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../hooks/delayed_loading.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import '../../stores/config_store.dart';
+import '../../url_launcher.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/fullscreenable_image.dart';
 import '../../widgets/radio_picker.dart';
@@ -173,8 +173,11 @@ class AddAccountPage extends HookWidget {
             ),
             TextButton(
               onPressed: () {
-                // TODO: extract to LemmyUrls or something
-                ul.launch('https://${selectedInstance.value}/login');
+                launchLink(
+                  // TODO: extract to LemmyUrls or something
+                  link: 'https://${selectedInstance.value}/login',
+                  context: context,
+                );
               },
               child: const Text('Register'),
             ),

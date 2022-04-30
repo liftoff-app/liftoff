@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import 'l10n/l10n.dart';
 import 'pages/community/community.dart';
 import 'pages/instance/instance.dart';
 import 'pages/media_view.dart';
@@ -23,7 +25,10 @@ Future<void> linkLauncher({
   final instances = context.read<AccountsStore>().instances;
 
   final chonks = url.split('/');
-  if (chonks.length == 1) return openInBrowser(url);
+  if (chonks.length == 1) {
+    await launchLink(link: url, context: context);
+    return;
+  }
 
   // CHECK IF LINK TO USER
   if (url.startsWith('/u/')) {
@@ -97,14 +102,25 @@ Future<void> linkLauncher({
 
   // FALLBACK TO REGULAR LINK STUFF
 
-  return openInBrowser(url);
+  await launchLink(link: url, context: context);
 }
 
-Future<void> openInBrowser(String url) async {
-  if (await ul.canLaunch(url)) {
-    await ul.launch(url);
+final _logger = Logger('launchLink');
+
+/// Returns whether launching was successful.
+Future<bool> launchLink({
+  required String link,
+  required BuildContext context,
+}) async {
+  final uri = Uri.tryParse(link);
+  if (uri != null && await ul.canLaunchUrl(uri)) {
+    await ul.launchUrl(uri);
+    return true;
   } else {
-    throw Exception();
-    // TODO: handle opening links to stuff in app
+    _logger.warning('Failed to launch a link: $link');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(L10n.of(context).cannot_open_in_browser)),
+    );
+    return false;
   }
 }
