@@ -70,6 +70,8 @@ abstract class _AsyncStore<T> with Store {
       }
       rethrow;
     }
+
+    return null;
   }
 
   /// [run] but specialized for a [LemmyApiQuery].
@@ -93,6 +95,8 @@ abstract class _AsyncStore<T> with Store {
         asyncState = AsyncState<T>.error(err.message);
       }
     }
+
+    return null;
   }
 
   /// helper function for mapping [asyncState] into 3 variants

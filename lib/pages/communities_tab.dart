@@ -60,15 +60,14 @@ class CommunitiesTab extends HookWidget {
       return Future.wait(futures);
     }
 
-    final _loggedInAccounts = accountsStore.loggedInInstances
+    final loggedInAccounts = accountsStore.loggedInInstances
         .map((instanceHost) =>
             '$instanceHost${accountsStore.defaultUsernameFor(instanceHost)}')
         .toList();
 
-    final instancesRefreshable =
-        useRefreshable(getInstances, _loggedInAccounts);
+    final instancesRefreshable = useRefreshable(getInstances, loggedInAccounts);
     final communitiesRefreshable =
-        useRefreshable(getCommunities, _loggedInAccounts);
+        useRefreshable(getCommunities, loggedInAccounts);
 
     if (communitiesRefreshable.snapshot.hasError ||
         instancesRefreshable.snapshot.hasError) {

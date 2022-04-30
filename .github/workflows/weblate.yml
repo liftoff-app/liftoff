@@ -1,6 +1,7 @@
 name: weblate
 
 on:
+  workflow_dispatch:
   schedule:
     # every friday at 19:00 UTC
     - cron: "0 19 * * 5"
@@ -11,10 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Fetch changes
         run: |
-          git remote add weblate http://weblate.yerbamate.ml/git/lemmur/lemmur
+          git remote add weblate https://weblate.yerbamate.ml/git/lemmur/lemmur/
           git fetch weblate
           git merge weblate/master
 
