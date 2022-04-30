@@ -55,11 +55,7 @@ The executable will be in `build/linux/x64/release/bundle/lemmur` (be aware, how
 ### Windows
 
 1. Make sure you have the additional [windows requirements](https://flutter.dev/desktop#additional-windows-requirements) (verify with `flutter doctor`)
-2. Enable windows desktop:
-   ```sh
-   flutter config --enable-windows-desktop
-   ```
-3. Build: `flutter build windows --target lib/main_prod.dart --release`
+2. Build: `flutter build windows --target lib/main_prod.dart --release`
 
 The executable will be in `build\windows\runner\Release\lemmur.exe` (be aware, however, that this executable is not standalone)
 

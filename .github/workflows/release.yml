@@ -119,10 +119,6 @@ jobs:
         with:
           channel: "stable"
 
-      - name: Enable windows support
-        run: |
-          flutter config --enable-windows-desktop
-
       - name: Build
         run: |
           flutter build windows --release --target lib/main_prod.dart

@@ -18,8 +18,8 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 0.8.0+19
 
 environment:
-  sdk: ">=2.15.0 <3.0.0"
-  flutter: ">=2.8.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
+  flutter: ">=2.10.0 <3.0.0"
 
 dependencies:
   # widgets
@@ -50,7 +50,7 @@ dependencies:
   lemmy_api_client: ^0.19.0
   intl: ^0.17.0
   matrix4_transform: ^2.0.0
-  json_annotation: ^4.3.0
+  json_annotation: ^4.4.0
   keyboard_dismisser: ^2.0.0
   freezed_annotation: ^1.0.0
   logging: ^1.0.1
