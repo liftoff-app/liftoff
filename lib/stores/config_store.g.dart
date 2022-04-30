@@ -41,7 +41,7 @@ const _$ThemeModeEnumMap = {
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ConfigStore on _ConfigStore, Store {
-  final _$themeAtom = Atom(name: '_ConfigStore.theme');
+  late final _$themeAtom = Atom(name: '_ConfigStore.theme', context: context);
 
   @override
   ThemeMode get theme {
@@ -56,7 +56,8 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  final _$amoledDarkModeAtom = Atom(name: '_ConfigStore.amoledDarkMode');
+  late final _$amoledDarkModeAtom =
+      Atom(name: '_ConfigStore.amoledDarkMode', context: context);
 
   @override
   bool get amoledDarkMode {
@@ -71,7 +72,7 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  final _$localeAtom = Atom(name: '_ConfigStore.locale');
+  late final _$localeAtom = Atom(name: '_ConfigStore.locale', context: context);
 
   @override
   Locale get locale {
@@ -86,7 +87,8 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  final _$showAvatarsAtom = Atom(name: '_ConfigStore.showAvatars');
+  late final _$showAvatarsAtom =
+      Atom(name: '_ConfigStore.showAvatars', context: context);
 
   @override
   bool get showAvatars {
@@ -101,7 +103,8 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  final _$showScoresAtom = Atom(name: '_ConfigStore.showScores');
+  late final _$showScoresAtom =
+      Atom(name: '_ConfigStore.showScores', context: context);
 
   @override
   bool get showScores {
@@ -116,7 +119,8 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  final _$defaultSortTypeAtom = Atom(name: '_ConfigStore.defaultSortType');
+  late final _$defaultSortTypeAtom =
+      Atom(name: '_ConfigStore.defaultSortType', context: context);
 
   @override
   SortType get defaultSortType {
@@ -131,8 +135,8 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  final _$defaultListingTypeAtom =
-      Atom(name: '_ConfigStore.defaultListingType');
+  late final _$defaultListingTypeAtom =
+      Atom(name: '_ConfigStore.defaultListingType', context: context);
 
   @override
   PostListingType get defaultListingType {
@@ -147,8 +151,8 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  final _$importLemmyUserSettingsAsyncAction =
-      AsyncAction('_ConfigStore.importLemmyUserSettings');
+  late final _$importLemmyUserSettingsAsyncAction =
+      AsyncAction('_ConfigStore.importLemmyUserSettings', context: context);
 
   @override
   Future<void> importLemmyUserSettings(Jwt token) {
@@ -156,7 +160,8 @@ mixin _$ConfigStore on _ConfigStore, Store {
         .run(() => super.importLemmyUserSettings(token));
   }
 
-  final _$_ConfigStoreActionController = ActionController(name: '_ConfigStore');
+  late final _$_ConfigStoreActionController =
+      ActionController(name: '_ConfigStore', context: context);
 
   @override
   void copyLemmyUserSettings(LocalUserSettings localUserSettings) {

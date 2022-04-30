@@ -9,14 +9,16 @@ part of 'community_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$CommunityStore on _CommunityStore, Store {
-  final _$refreshAsyncAction = AsyncAction('_CommunityStore.refresh');
+  late final _$refreshAsyncAction =
+      AsyncAction('_CommunityStore.refresh', context: context);
 
   @override
   Future<void> refresh(Jwt? token) {
     return _$refreshAsyncAction.run(() => super.refresh(token));
   }
 
-  final _$subscribeAsyncAction = AsyncAction('_CommunityStore.subscribe');
+  late final _$subscribeAsyncAction =
+      AsyncAction('_CommunityStore.subscribe', context: context);
 
   @override
   Future<void> subscribe(Jwt token) {

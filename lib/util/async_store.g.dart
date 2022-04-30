@@ -23,7 +23,8 @@ mixin _$AsyncStore<T> on _AsyncStore<T>, Store {
               name: '_AsyncStore.errorTerm'))
           .value;
 
-  final _$asyncStateAtom = Atom(name: '_AsyncStore.asyncState');
+  late final _$asyncStateAtom =
+      Atom(name: '_AsyncStore.asyncState', context: context);
 
   @override
   AsyncState<T> get asyncState {
@@ -38,14 +39,16 @@ mixin _$AsyncStore<T> on _AsyncStore<T>, Store {
     });
   }
 
-  final _$runAsyncAction = AsyncAction('_AsyncStore.run');
+  late final _$runAsyncAction =
+      AsyncAction('_AsyncStore.run', context: context);
 
   @override
   Future<T?> run(AsyncValueGetter<T> callback, {bool refresh = false}) {
     return _$runAsyncAction.run(() => super.run(callback, refresh: refresh));
   }
 
-  final _$runLemmyAsyncAction = AsyncAction('_AsyncStore.runLemmy');
+  late final _$runLemmyAsyncAction =
+      AsyncAction('_AsyncStore.runLemmy', context: context);
 
   @override
   Future<T?> runLemmy(String instanceHost, LemmyApiQuery<T> query,
@@ -54,7 +57,8 @@ mixin _$AsyncStore<T> on _AsyncStore<T>, Store {
         .run(() => super.runLemmy(instanceHost, query, refresh: refresh));
   }
 
-  final _$_AsyncStoreActionController = ActionController(name: '_AsyncStore');
+  late final _$_AsyncStoreActionController =
+      ActionController(name: '_AsyncStore', context: context);
 
   @override
   void setData(T data) {

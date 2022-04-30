@@ -38,7 +38,8 @@ mixin _$FullPostStore on _FullPostStore, Store {
               name: '_FullPostStore.comments'))
       .value;
 
-  final _$fullPostViewAtom = Atom(name: '_FullPostStore.fullPostView');
+  late final _$fullPostViewAtom =
+      Atom(name: '_FullPostStore.fullPostView', context: context);
 
   @override
   FullPostView? get fullPostView {
@@ -53,7 +54,8 @@ mixin _$FullPostStore on _FullPostStore, Store {
     });
   }
 
-  final _$newCommentsAtom = Atom(name: '_FullPostStore.newComments');
+  late final _$newCommentsAtom =
+      Atom(name: '_FullPostStore.newComments', context: context);
 
   @override
   ObservableList<CommentView> get newComments {
@@ -68,7 +70,8 @@ mixin _$FullPostStore on _FullPostStore, Store {
     });
   }
 
-  final _$sortingAtom = Atom(name: '_FullPostStore.sorting');
+  late final _$sortingAtom =
+      Atom(name: '_FullPostStore.sorting', context: context);
 
   @override
   CommentSortType get sorting {
@@ -83,7 +86,8 @@ mixin _$FullPostStore on _FullPostStore, Store {
     });
   }
 
-  final _$postStoreAtom = Atom(name: '_FullPostStore.postStore');
+  late final _$postStoreAtom =
+      Atom(name: '_FullPostStore.postStore', context: context);
 
   @override
   PostStore? get postStore {
@@ -98,23 +102,24 @@ mixin _$FullPostStore on _FullPostStore, Store {
     });
   }
 
-  final _$refreshAsyncAction = AsyncAction('_FullPostStore.refresh');
+  late final _$refreshAsyncAction =
+      AsyncAction('_FullPostStore.refresh', context: context);
 
   @override
   Future<void> refresh([Jwt? token]) {
     return _$refreshAsyncAction.run(() => super.refresh(token));
   }
 
-  final _$blockCommunityAsyncAction =
-      AsyncAction('_FullPostStore.blockCommunity');
+  late final _$blockCommunityAsyncAction =
+      AsyncAction('_FullPostStore.blockCommunity', context: context);
 
   @override
   Future<void> blockCommunity(Jwt token) {
     return _$blockCommunityAsyncAction.run(() => super.blockCommunity(token));
   }
 
-  final _$_FullPostStoreActionController =
-      ActionController(name: '_FullPostStore');
+  late final _$_FullPostStoreActionController =
+      ActionController(name: '_FullPostStore', context: context);
 
   @override
   void updateSorting(CommentSortType sort) {
