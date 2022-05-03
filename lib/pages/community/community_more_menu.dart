@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../hooks/logged_in_action.dart';
+import '../../url_launcher.dart';
 import '../../util/extensions/api.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
@@ -28,10 +28,10 @@ class CommunityMoreMenu extends HookWidget {
         ListTile(
           leading: const Icon(Icons.open_in_browser),
           title: const Text('Open in browser'),
-          onTap: () async => await ul.canLaunch(communityView.community.actorId)
-              ? ul.launch(communityView.community.actorId)
-              : ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("can't open in browser"))),
+          onTap: () => launchLink(
+            link: communityView.community.actorId,
+            context: context,
+          ),
         ),
         ObserverBuilder<CommunityStore>(builder: (context, store) {
           return ListTile(

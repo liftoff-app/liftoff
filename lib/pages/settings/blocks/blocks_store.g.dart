@@ -32,7 +32,8 @@ mixin _$BlocksStore on _BlocksStore, Store {
           Computed<bool>(() => super.isUsable, name: '_BlocksStore.isUsable'))
       .value;
 
-  final _$_blockedUsersAtom = Atom(name: '_BlocksStore._blockedUsers');
+  late final _$_blockedUsersAtom =
+      Atom(name: '_BlocksStore._blockedUsers', context: context);
 
   @override
   ObservableList<UserBlockStore>? get _blockedUsers {
@@ -47,8 +48,8 @@ mixin _$BlocksStore on _BlocksStore, Store {
     });
   }
 
-  final _$_blockedCommunitiesAtom =
-      Atom(name: '_BlocksStore._blockedCommunities');
+  late final _$_blockedCommunitiesAtom =
+      Atom(name: '_BlocksStore._blockedCommunities', context: context);
 
   @override
   ObservableList<CommunityBlockStore>? get _blockedCommunities {
@@ -63,15 +64,16 @@ mixin _$BlocksStore on _BlocksStore, Store {
     });
   }
 
-  final _$blockUserAsyncAction = AsyncAction('_BlocksStore.blockUser');
+  late final _$blockUserAsyncAction =
+      AsyncAction('_BlocksStore.blockUser', context: context);
 
   @override
   Future<void> blockUser(Jwt token, int id) {
     return _$blockUserAsyncAction.run(() => super.blockUser(token, id));
   }
 
-  final _$blockCommunityAsyncAction =
-      AsyncAction('_BlocksStore.blockCommunity');
+  late final _$blockCommunityAsyncAction =
+      AsyncAction('_BlocksStore.blockCommunity', context: context);
 
   @override
   Future<void> blockCommunity(Jwt token, int id) {
@@ -79,7 +81,8 @@ mixin _$BlocksStore on _BlocksStore, Store {
         .run(() => super.blockCommunity(token, id));
   }
 
-  final _$refreshAsyncAction = AsyncAction('_BlocksStore.refresh');
+  late final _$refreshAsyncAction =
+      AsyncAction('_BlocksStore.refresh', context: context);
 
   @override
   Future<void> refresh() {

@@ -24,7 +24,7 @@ mixin _$ModlogPageStore on _ModlogPageStore, Store {
               name: '_ModlogPageStore.hasNextPage'))
           .value;
 
-  final _$pageAtom = Atom(name: '_ModlogPageStore.page');
+  late final _$pageAtom = Atom(name: '_ModlogPageStore.page', context: context);
 
   @override
   int get page {
@@ -39,15 +39,16 @@ mixin _$ModlogPageStore on _ModlogPageStore, Store {
     });
   }
 
-  final _$fetchPageAsyncAction = AsyncAction('_ModlogPageStore.fetchPage');
+  late final _$fetchPageAsyncAction =
+      AsyncAction('_ModlogPageStore.fetchPage', context: context);
 
   @override
   Future<void> fetchPage() {
     return _$fetchPageAsyncAction.run(() => super.fetchPage());
   }
 
-  final _$_ModlogPageStoreActionController =
-      ActionController(name: '_ModlogPageStore');
+  late final _$_ModlogPageStoreActionController =
+      ActionController(name: '_ModlogPageStore', context: context);
 
   @override
   void previousPage() {

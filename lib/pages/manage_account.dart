@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/pictrs.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../url_launcher.dart';
 import '../util/files.dart';
 import '../util/icons.dart';
 import '../util/pictrs.dart';
@@ -47,13 +47,12 @@ class ManageAccountPage extends HookWidget {
                 final userProfileUrl =
                     await userFuture.then((e) => e.person.actorId);
 
-                if (await ul.canLaunch(userProfileUrl)) {
-                  await ul.launch(userProfileUrl);
+                final didLaunch = await launchLink(
+                  link: userProfileUrl,
+                  context: context,
+                );
+                if (didLaunch) {
                   Navigator.of(context).pop();
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("can't open in browser")),
-                  );
                 }
               },
             ),

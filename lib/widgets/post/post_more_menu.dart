@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../hooks/logged_in_action.dart';
 import '../../pages/create_post/create_post.dart';
 import '../../pages/full_post/full_post_store.dart';
 import '../../stores/accounts_store.dart';
+import '../../url_launcher.dart';
 import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../bottom_modal.dart';
@@ -72,10 +72,7 @@ class PostMoreMenu extends HookWidget {
               ListTile(
                 leading: const Icon(Icons.open_in_browser),
                 title: const Text('Open in browser'),
-                onTap: () async => await ul.canLaunch(post.post.apId)
-                    ? ul.launch(post.post.apId)
-                    : ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("can't open in browser"))),
+                onTap: () => launchLink(link: post.post.apId, context: context),
               ),
               if (isMine)
                 ListTile(
