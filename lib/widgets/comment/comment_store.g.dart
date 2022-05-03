@@ -28,7 +28,8 @@ mixin _$CommentStore on _CommentStore, Store {
           Computed<bool>(() => super.isOP, name: '_CommentStore.isOP'))
       .value;
 
-  final _$commentAtom = Atom(name: '_CommentStore.comment');
+  late final _$commentAtom =
+      Atom(name: '_CommentStore.comment', context: context);
 
   @override
   CommentView get comment {
@@ -43,7 +44,8 @@ mixin _$CommentStore on _CommentStore, Store {
     });
   }
 
-  final _$selectableAtom = Atom(name: '_CommentStore.selectable');
+  late final _$selectableAtom =
+      Atom(name: '_CommentStore.selectable', context: context);
 
   @override
   bool get selectable {
@@ -58,7 +60,8 @@ mixin _$CommentStore on _CommentStore, Store {
     });
   }
 
-  final _$collapsedAtom = Atom(name: '_CommentStore.collapsed');
+  late final _$collapsedAtom =
+      Atom(name: '_CommentStore.collapsed', context: context);
 
   @override
   bool get collapsed {
@@ -73,7 +76,8 @@ mixin _$CommentStore on _CommentStore, Store {
     });
   }
 
-  final _$showRawAtom = Atom(name: '_CommentStore.showRaw');
+  late final _$showRawAtom =
+      Atom(name: '_CommentStore.showRaw', context: context);
 
   @override
   bool get showRaw {
@@ -88,64 +92,72 @@ mixin _$CommentStore on _CommentStore, Store {
     });
   }
 
-  final _$reportAsyncAction = AsyncAction('_CommentStore.report');
+  late final _$reportAsyncAction =
+      AsyncAction('_CommentStore.report', context: context);
 
   @override
   Future<void> report(Jwt token, String reason) {
     return _$reportAsyncAction.run(() => super.report(token, reason));
   }
 
-  final _$deleteAsyncAction = AsyncAction('_CommentStore.delete');
+  late final _$deleteAsyncAction =
+      AsyncAction('_CommentStore.delete', context: context);
 
   @override
   Future<void> delete(Jwt token) {
     return _$deleteAsyncAction.run(() => super.delete(token));
   }
 
-  final _$saveAsyncAction = AsyncAction('_CommentStore.save');
+  late final _$saveAsyncAction =
+      AsyncAction('_CommentStore.save', context: context);
 
   @override
   Future<void> save(Jwt token) {
     return _$saveAsyncAction.run(() => super.save(token));
   }
 
-  final _$blockAsyncAction = AsyncAction('_CommentStore.block');
+  late final _$blockAsyncAction =
+      AsyncAction('_CommentStore.block', context: context);
 
   @override
   Future<void> block(Jwt token) {
     return _$blockAsyncAction.run(() => super.block(token));
   }
 
-  final _$markAsReadAsyncAction = AsyncAction('_CommentStore.markAsRead');
+  late final _$markAsReadAsyncAction =
+      AsyncAction('_CommentStore.markAsRead', context: context);
 
   @override
   Future<void> markAsRead(Jwt token) {
     return _$markAsReadAsyncAction.run(() => super.markAsRead(token));
   }
 
-  final _$_voteAsyncAction = AsyncAction('_CommentStore._vote');
+  late final _$_voteAsyncAction =
+      AsyncAction('_CommentStore._vote', context: context);
 
   @override
   Future<void> _vote(VoteType voteType, Jwt token) {
     return _$_voteAsyncAction.run(() => super._vote(voteType, token));
   }
 
-  final _$upVoteAsyncAction = AsyncAction('_CommentStore.upVote');
+  late final _$upVoteAsyncAction =
+      AsyncAction('_CommentStore.upVote', context: context);
 
   @override
   Future<void> upVote(Jwt token) {
     return _$upVoteAsyncAction.run(() => super.upVote(token));
   }
 
-  final _$downVoteAsyncAction = AsyncAction('_CommentStore.downVote');
+  late final _$downVoteAsyncAction =
+      AsyncAction('_CommentStore.downVote', context: context);
 
   @override
   Future<void> downVote(Jwt token) {
     return _$downVoteAsyncAction.run(() => super.downVote(token));
   }
 
-  final _$_CommentStoreActionController =
-      ActionController(name: '_CommentStore');
+  late final _$_CommentStoreActionController =
+      ActionController(name: '_CommentStore', context: context);
 
   @override
   void toggleShowRaw() {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
+import '../../url_launcher.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/info_table_popup.dart';
@@ -37,17 +37,7 @@ class InstanceMoreMenu extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.open_in_browser),
           title: Text(L10n.of(context).open_in_browser),
-          onTap: () async {
-            if (await ul.canLaunch(instanceUrl)) {
-              await ul.launch(instanceUrl);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(L10n.of(context).cannot_open_in_browser),
-                ),
-              );
-            }
-          },
+          onTap: () => launchLink(link: instanceUrl, context: context),
         ),
         ListTile(
           leading: const Icon(Icons.info_outline),

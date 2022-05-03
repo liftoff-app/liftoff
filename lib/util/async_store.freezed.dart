@@ -12,36 +12,7 @@ part of 'async_store.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$AsyncStateTearOff {
-  const _$AsyncStateTearOff();
-
-  AsyncStateInitial<T> initial<T>() {
-    return AsyncStateInitial<T>();
-  }
-
-  AsyncStateData<T> data<T>(T data, [String? errorTerm]) {
-    return AsyncStateData<T>(
-      data,
-      errorTerm,
-    );
-  }
-
-  AsyncStateLoading<T> loading<T>() {
-    return AsyncStateLoading<T>();
-  }
-
-  AsyncStateError<T> error<T>(String errorTerm) {
-    return AsyncStateError<T>(
-      errorTerm,
-    );
-  }
-}
-
-/// @nodoc
-const $AsyncState = _$AsyncStateTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$AsyncState<T> {
@@ -148,7 +119,7 @@ class _$AsyncStateInitial<T>
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'AsyncState<$T>.initial'));
+    properties.add(DiagnosticsProperty('type', 'AsyncState<$T>.initial'));
   }
 
   @override
@@ -398,11 +369,11 @@ class _$AsyncStateData<T>
 }
 
 abstract class AsyncStateData<T> implements AsyncState<T> {
-  const factory AsyncStateData(T data, [String? errorTerm]) =
+  const factory AsyncStateData(final T data, [final String? errorTerm]) =
       _$AsyncStateData<T>;
 
-  T get data;
-  String? get errorTerm;
+  T get data => throw _privateConstructorUsedError;
+  String? get errorTerm => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $AsyncStateDataCopyWith<T, AsyncStateData<T>> get copyWith =>
       throw _privateConstructorUsedError;
@@ -442,7 +413,7 @@ class _$AsyncStateLoading<T>
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'AsyncState<$T>.loading'));
+    properties.add(DiagnosticsProperty('type', 'AsyncState<$T>.loading'));
   }
 
   @override
@@ -681,9 +652,9 @@ class _$AsyncStateError<T>
 }
 
 abstract class AsyncStateError<T> implements AsyncState<T> {
-  const factory AsyncStateError(String errorTerm) = _$AsyncStateError<T>;
+  const factory AsyncStateError(final String errorTerm) = _$AsyncStateError<T>;
 
-  String get errorTerm;
+  String get errorTerm => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $AsyncStateErrorCopyWith<T, AsyncStateError<T>> get copyWith =>
       throw _privateConstructorUsedError;

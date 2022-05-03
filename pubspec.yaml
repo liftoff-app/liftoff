@@ -23,15 +23,15 @@ environment:
 
 dependencies:
   # widgets
-  flutter_speed_dial: ^5.0.0
+  flutter_speed_dial: ^6.0.0
   photo_view: ^0.13.0
-  markdown: ^4.0.0
+  markdown: ^5.0.0
   flutter_markdown: ^0.6.1
   flutter_typeahead: ^3.2.1
   modal_bottom_sheet: ^2.0.0
 
   # native
-  share_plus: ^3.0.4
+  share_plus: ^4.0.4
   url_launcher: ^6.0.3
   shared_preferences: ^2.0.5
   package_info_plus: ^1.0.6
@@ -47,12 +47,12 @@ dependencies:
   # utils
   timeago: ^3.0.2
   fuzzy: ^0.4.0-nullsafety.0
-  lemmy_api_client: ^0.19.0
+  lemmy_api_client: ^0.20.0
   intl: ^0.17.0
   matrix4_transform: ^2.0.0
-  json_annotation: ^4.4.0
+  json_annotation: ^4.5.0
   keyboard_dismisser: ^2.0.0
-  freezed_annotation: ^1.0.0
+  freezed_annotation: ^2.0.1
   logging: ^1.0.1
   nested: ^1.0.0
 
@@ -68,7 +68,7 @@ dev_dependencies:
   json_serializable: ^6.0.0
   build_runner: ^2.1.2
   mobx_codegen: ^2.0.2
-  freezed: ^1.0.0
+  freezed: ^2.0.2
 
 flutter_icons:
   android: true

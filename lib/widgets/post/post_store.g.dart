@@ -23,7 +23,8 @@ mixin _$PostStore on _PostStore, Store {
           Computed<bool>(() => super.hasMedia, name: '_PostStore.hasMedia'))
       .value;
 
-  final _$postViewAtom = Atom(name: '_PostStore.postView');
+  late final _$postViewAtom =
+      Atom(name: '_PostStore.postView', context: context);
 
   @override
   PostView get postView {
@@ -38,35 +39,40 @@ mixin _$PostStore on _PostStore, Store {
     });
   }
 
-  final _$saveAsyncAction = AsyncAction('_PostStore.save');
+  late final _$saveAsyncAction =
+      AsyncAction('_PostStore.save', context: context);
 
   @override
   Future<void> save(Jwt token) {
     return _$saveAsyncAction.run(() => super.save(token));
   }
 
-  final _$reportAsyncAction = AsyncAction('_PostStore.report');
+  late final _$reportAsyncAction =
+      AsyncAction('_PostStore.report', context: context);
 
   @override
   Future<void> report(Jwt token, String reason) {
     return _$reportAsyncAction.run(() => super.report(token, reason));
   }
 
-  final _$blockUserAsyncAction = AsyncAction('_PostStore.blockUser');
+  late final _$blockUserAsyncAction =
+      AsyncAction('_PostStore.blockUser', context: context);
 
   @override
   Future<void> blockUser(Jwt token) {
     return _$blockUserAsyncAction.run(() => super.blockUser(token));
   }
 
-  final _$_voteAsyncAction = AsyncAction('_PostStore._vote');
+  late final _$_voteAsyncAction =
+      AsyncAction('_PostStore._vote', context: context);
 
   @override
   Future<void> _vote(Jwt token, VoteType voteType) {
     return _$_voteAsyncAction.run(() => super._vote(token, voteType));
   }
 
-  final _$_PostStoreActionController = ActionController(name: '_PostStore');
+  late final _$_PostStoreActionController =
+      ActionController(name: '_PostStore', context: context);
 
   @override
   void updatePostView(PostView postView) {
