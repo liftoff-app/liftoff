@@ -34,7 +34,7 @@ class CreatePostUrlField extends HookWidget {
 
     return ObserverConsumer<CreatePostStore>(
       listener: (context, store) {
-        // needed since flutter's TextFields cannot work as dumb widgets
+        // needed to keep the controller and store data in sync
         if (controller.text != store.url) {
           controller.text = store.url;
         }

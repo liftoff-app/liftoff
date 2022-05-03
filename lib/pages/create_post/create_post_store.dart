@@ -59,7 +59,7 @@ abstract class _CreatePostStore with Store {
         ListCommunities(
           type: PostListingType.all,
           sort: SortType.topAll,
-          limit: 20,
+          limit: 10,
           auth: token?.raw,
         ),
       );
@@ -70,7 +70,7 @@ abstract class _CreatePostStore with Store {
           q: searchTerm,
           sort: SortType.topAll,
           listingType: PostListingType.all,
-          limit: 20,
+          limit: 10,
           auth: token?.raw,
         ),
       );

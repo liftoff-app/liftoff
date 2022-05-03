@@ -5,7 +5,6 @@ import 'util/hot_rank.dart';
 enum CommentSortType {
   hot,
   top,
-  // ignore: constant_identifier_names
   new_,
   old,
   chat,

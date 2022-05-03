@@ -32,63 +32,73 @@ class CreatePostCommunityPicker extends HookWidget {
             controller.text = '';
           }
         },
-        child: TypeAheadFormField<CommunityView>(
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: controller,
-            enabled: !store.isEdit,
-            decoration: InputDecoration(
-              hintText: L10n.of(context).community,
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 16,
-                horizontal: 20,
+        child: ObserverBuilder<CreatePostStore>(builder: (context, store) {
+          return TypeAheadFormField<CommunityView>(
+            textFieldConfiguration: TextFieldConfiguration(
+              controller: controller,
+              enabled: !store.isEdit,
+              decoration: InputDecoration(
+                hintText: L10n.of(context).community,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 20,
+                ),
+                suffixIcon: store.selectedCommunity == null
+                    ? const Icon(Icons.arrow_drop_down)
+                    : IconButton(
+                        onPressed: () {
+                          store.selectedCommunity = null;
+                          controller.clear();
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
               ),
-              suffixIcon: const Icon(Icons.arrow_drop_down),
+              onChanged: (_) => store.selectedCommunity = null,
             ),
-            onChanged: (_) => store.selectedCommunity = null,
-          ),
-          validator: Validators.required(L10n.of(context).required_field),
-          suggestionsCallback: (pattern) async {
-            final communities = await store.searchCommunities(
-              pattern,
-              context.defaultJwt(store.instanceHost),
-            );
+            validator: Validators.required(L10n.of(context).required_field),
+            suggestionsCallback: (pattern) async {
+              final communities = await store.searchCommunities(
+                pattern,
+                context.defaultJwt(store.instanceHost),
+              );
 
-            return communities ?? [];
-          },
-          itemBuilder: (context, community) {
-            return ListTile(
-              leading: Avatar(
-                url: community.community.icon,
-                radius: 20,
-              ),
-              title: Text(_communityString(community)),
-            );
-          },
-          onSuggestionSelected: (community) {
-            store.selectedCommunity = community;
-            controller.text = _communityString(community);
-          },
-          noItemsFoundBuilder: (context) => SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                L10n.of(context).no_communities_found,
-                textAlign: TextAlign.center,
+              return communities ?? [];
+            },
+            itemBuilder: (context, community) {
+              return ListTile(
+                leading: Avatar(
+                  url: community.community.icon,
+                  radius: 20,
+                ),
+                title: Text(_communityString(community)),
+              );
+            },
+            onSuggestionSelected: (community) {
+              store.selectedCommunity = community;
+              controller.text = _communityString(community);
+            },
+            noItemsFoundBuilder: (context) => SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  L10n.of(context).no_communities_found,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-          ),
-          loadingBuilder: (context) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            ],
-          ),
-          debounceDuration: const Duration(milliseconds: 400),
-        ),
+            loadingBuilder: (context) => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              ],
+            ),
+            debounceDuration: const Duration(milliseconds: 400),
+          );
+        }),
       ),
     );
   }
