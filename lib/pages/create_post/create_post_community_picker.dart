@@ -43,15 +43,16 @@ class CreatePostCommunityPicker extends HookWidget {
                   vertical: 16,
                   horizontal: 20,
                 ),
-                suffixIcon: store.selectedCommunity == null
-                    ? const Icon(Icons.arrow_drop_down)
-                    : IconButton(
-                        onPressed: () {
-                          store.selectedCommunity = null;
-                          controller.clear();
-                        },
-                        icon: const Icon(Icons.close),
-                      ),
+                suffixIcon:
+                    store.selectedCommunity == null && controller.text.isEmpty
+                        ? const Icon(Icons.arrow_drop_down)
+                        : IconButton(
+                            onPressed: () {
+                              store.selectedCommunity = null;
+                              controller.clear();
+                            },
+                            icon: const Icon(Icons.close),
+                          ),
               ),
               onChanged: (_) => store.selectedCommunity = null,
             ),
