@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../hooks/logged_in_action.dart';
-import '../../pages/create_post.dart';
+import '../../pages/create_post/create_post.dart';
 import '../../pages/full_post/full_post_store.dart';
 import '../../stores/accounts_store.dart';
 import '../../url_launcher.dart';

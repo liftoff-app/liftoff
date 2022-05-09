@@ -12,10 +12,16 @@ class AsyncStoreListener<T> extends SingleChildStatelessWidget {
     T data,
   )? successMessageBuilder;
 
+  final void Function(
+    BuildContext context,
+    T data,
+  )? onSuccess;
+
   const AsyncStoreListener({
     Key? key,
     required this.asyncStore,
     this.successMessageBuilder,
+    this.onSuccess,
     Widget? child,
   }) : super(key: key, child: child);
 
@@ -24,20 +30,27 @@ class AsyncStoreListener<T> extends SingleChildStatelessWidget {
     return ObserverListener<AsyncStore<T>>(
       store: asyncStore,
       listener: (context, store) {
-        final errorTerm = store.errorTerm;
+        store.map(
+          loading: () {},
+          error: (errorTerm) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(content: Text(errorTerm.tr(context))));
+          },
+          data: (data) {
+            onSuccess?.call(context, data);
 
-        if (errorTerm != null) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(errorTerm.tr(context))));
-        } else if (store.asyncState is AsyncStateData &&
-            (successMessageBuilder != null)) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-                content: Text(successMessageBuilder!(
-                    context, (store.asyncState as AsyncStateData).data))));
-        }
+            if (successMessageBuilder != null) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(successMessageBuilder!(context, data)),
+                  ),
+                );
+            }
+          },
+        );
       },
       child: child ?? const SizedBox(),
     );

@@ -72,6 +72,17 @@ mixin _$AsyncStore<T> on _AsyncStore<T>, Store {
   }
 
   @override
+  void reset() {
+    final _$actionInfo =
+        _$_AsyncStoreActionController.startAction(name: '_AsyncStore.reset');
+    try {
+      return super.reset();
+    } finally {
+      _$_AsyncStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 asyncState: ${asyncState},

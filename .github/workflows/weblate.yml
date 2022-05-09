@@ -21,6 +21,10 @@ jobs:
           git fetch weblate
           git merge weblate/master
 
+      - name: Regenerate l10n_from_string
+        run: |
+          dart run scripts/gen_l10n_from_string.dart
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.12.0
         with:

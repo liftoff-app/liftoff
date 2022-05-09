@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lemmy_api_client/pictrs.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/delayed_loading.dart';
-import '../hooks/image_picker.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../url_launcher.dart';
+import '../util/files.dart';
 import '../util/icons.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_modal.dart';
@@ -414,13 +413,12 @@ class _ImagePicker extends HookWidget {
     final url = useState(initialUrl.value);
     final pictrsDeleteToken = useState<PictrsUploadFile?>(null);
 
-    final imagePicker = useImagePicker();
     final accountsStore = useAccountsStore();
     final delayedLoading = useDelayedLoading();
 
     uploadImage() async {
       try {
-        final pic = await imagePicker.pickImage(source: ImageSource.gallery);
+        final pic = await pickImage();
         // pic is null when the picker was cancelled
         if (pic != null) {
           delayedLoading.start();

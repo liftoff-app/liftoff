@@ -2,6 +2,7 @@
 
 ### Added
 
+- Create post community picker now has autocomplete
 - You can now add an instance from the three dots menu on the instance page
 
 ## v0.8.0 - 2022-01-14
