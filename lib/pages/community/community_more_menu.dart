@@ -14,8 +14,7 @@ import 'community_store.dart';
 class CommunityMoreMenu extends HookWidget {
   final FullCommunityView fullCommunityView;
 
-  const CommunityMoreMenu({Key? key, required this.fullCommunityView})
-      : super(key: key);
+  const CommunityMoreMenu({super.key, required this.fullCommunityView});
 
   @override
   Widget build(BuildContext context) {

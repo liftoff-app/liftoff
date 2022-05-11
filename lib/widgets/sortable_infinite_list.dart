@@ -70,8 +70,8 @@ class SortableInfiniteList<T> extends HookWidget {
 
 class InfinitePostList extends SortableInfiniteList<PostView> {
   InfinitePostList({
-    required FetcherWithSorting<PostView> fetcher,
-    InfiniteScrollController? controller,
+    required super.fetcher,
+    super.controller,
   }) : super(
           itemBuilder: (post) => Column(
             children: [
@@ -79,8 +79,6 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
               const SizedBox(height: 20),
             ],
           ),
-          fetcher: fetcher,
-          controller: controller,
           noItems: const Text('there are no posts'),
           uniqueProp: (item) => item.post.apId,
         );
@@ -88,15 +86,13 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
 
 class InfiniteCommentList extends SortableInfiniteList<CommentView> {
   InfiniteCommentList({
-    required FetcherWithSorting<CommentView> fetcher,
-    InfiniteScrollController? controller,
+    required super.fetcher,
+    super.controller,
   }) : super(
           itemBuilder: (comment) => CommentWidget(
             CommentTree(comment),
             detached: true,
           ),
-          fetcher: fetcher,
-          controller: controller,
           noItems: const Text('there are no comments'),
           uniqueProp: (item) => item.comment.apId,
         );

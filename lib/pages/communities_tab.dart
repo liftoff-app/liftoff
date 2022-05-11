@@ -241,9 +241,11 @@ class _CommunitySubscribeToggle extends HookWidget {
   final int communityId;
   final String instanceHost;
 
-  const _CommunitySubscribeToggle(
-      {required this.instanceHost, required this.communityId, Key? key})
-      : super(key: key);
+  const _CommunitySubscribeToggle({
+    required this.instanceHost,
+    required this.communityId,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

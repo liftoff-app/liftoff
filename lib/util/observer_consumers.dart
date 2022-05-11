@@ -14,10 +14,10 @@ class ObserverBuilder<T extends Store> extends StatelessWidget {
   final MobxBuilder<T> builder;
 
   const ObserverBuilder({
-    Key? key,
+    super.key,
     this.store,
     required this.builder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,11 @@ class ObserverListener<T extends Store> extends HookWidget {
   final Widget child;
 
   const ObserverListener({
-    Key? key,
+    super.key,
     this.store,
     required this.listener,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +64,11 @@ class ObserverConsumer<T extends Store> extends HookWidget {
   final MobxBuilder<T> builder;
 
   const ObserverConsumer({
-    Key? key,
+    super.key,
     this.store,
     required this.listener,
     required this.builder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

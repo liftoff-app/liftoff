@@ -8,34 +8,24 @@ import 'observer_consumers.dart';
 /// Important: this will not make [context.watch] react to changes
 class MobxProvider<T extends Store> extends Provider<T> {
   MobxProvider({
-    Key? key,
-    required Create<T> create,
-    bool? lazy,
-    TransitionBuilder? builder,
-    Widget? child,
+    super.key,
+    required super.create,
+    super.lazy,
+    super.builder,
+    super.child,
   }) : super(
-          key: key,
-          create: create,
           dispose: (context, store) {
             if (store is DisposableStore) store.dispose();
           },
-          lazy: lazy,
-          builder: builder,
-          child: child,
         );
 
   /// will not dispose the store
   MobxProvider.value({
-    Key? key,
-    required T value,
-    TransitionBuilder? builder,
-    Widget? child,
-  }) : super.value(
-          key: key,
-          builder: builder,
-          value: value,
-          child: child,
-        );
+    super.key,
+    required super.value,
+    super.builder,
+    super.child,
+  }) : super.value();
 }
 
 /// tracks reactions and disposes them in [DisposableStore.dispose]

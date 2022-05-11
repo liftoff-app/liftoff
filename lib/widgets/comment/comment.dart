@@ -35,8 +35,8 @@ class CommentWidget extends StatelessWidget {
     this.canBeMarkedAsRead = false,
     this.hideOnRead = false,
     this.userMentionId,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   CommentWidget.fromCommentView(
     CommentView cv, {

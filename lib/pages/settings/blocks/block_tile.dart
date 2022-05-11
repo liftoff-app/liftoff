@@ -10,7 +10,7 @@ import 'community_block_store.dart';
 import 'user_block_store.dart';
 
 class BlockPersonTile extends StatelessWidget {
-  const BlockPersonTile({Key? key}) : super(key: key);
+  const BlockPersonTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class BlockPersonTile extends StatelessWidget {
 }
 
 class BlockCommunityTile extends HookWidget {
-  const BlockCommunityTile({Key? key}) : super(key: key);
+  const BlockCommunityTile({super.key});
 
   @override
   Widget build(BuildContext context) {

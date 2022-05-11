@@ -20,7 +20,7 @@ class Editor extends HookWidget {
   final String instanceHost;
 
   const Editor({
-    Key? key,
+    super.key,
     this.controller,
     this.focusNode,
     this.onSubmitted,
@@ -32,7 +32,7 @@ class Editor extends HookWidget {
     this.fancy = false,
     required this.instanceHost,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

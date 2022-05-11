@@ -10,14 +10,14 @@ import 'cached_network_image.dart';
 /// Can be disabled with `noBlank`
 class Avatar extends HookWidget {
   const Avatar({
-    Key? key,
+    super.key,
     required this.url,
     this.radius = 25,
     this.noBlank = false,
     this.alwaysShow = false,
     this.padding = EdgeInsets.zero,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final String? url;
   final double radius;

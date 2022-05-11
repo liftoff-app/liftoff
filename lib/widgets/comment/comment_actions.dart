@@ -13,7 +13,7 @@ import 'comment_more_menu_button.dart';
 import 'comment_store.dart';
 
 class CommentActions extends HookWidget {
-  const CommentActions({Key? key}) : super(key: key);
+  const CommentActions({super.key});
 
   @override
   Widget build(BuildContext context) {

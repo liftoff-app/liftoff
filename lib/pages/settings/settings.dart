@@ -185,10 +185,9 @@ class _AccountOptions extends HookWidget {
   final String username;
 
   const _AccountOptions({
-    Key? key,
     required this.instanceHost,
     required this.username,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
