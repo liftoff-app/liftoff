@@ -54,6 +54,7 @@ abstract class _CommentStore with Store {
   _CommentStore(
     this._accountsStore, {
     required CommentTree commentTree,
+    // ignore: unused_element
     this.userMentionId,
     required this.depth,
     required this.canBeMarkedAsRead,
