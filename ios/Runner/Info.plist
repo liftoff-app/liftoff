@@ -53,5 +53,7 @@
 		<string>For uploading images for posts/avatars</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>For recording videos for posts</string>
-	</dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
 </plist>
