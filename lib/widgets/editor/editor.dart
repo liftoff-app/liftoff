@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'markdown_text.dart';
+import '../../formatter.dart';
+import '../markdown_text.dart';
+
+export 'toolbar.dart';
 
 /// A text field with added functionality for ease of editing
 class Editor extends HookWidget {
@@ -49,17 +52,22 @@ class Editor extends HookWidget {
       );
     }
 
-    return TextField(
-      controller: actualController,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      keyboardType: TextInputType.multiline,
-      textCapitalization: TextCapitalization.sentences,
-      onChanged: onChanged,
-      onSubmitted: onSubmitted,
-      maxLines: maxLines,
-      minLines: minLines,
-      decoration: InputDecoration(labelText: labelText),
+    return Stack(
+      children: [
+        TextField(
+          controller: actualController,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
+          onChanged: onChanged,
+          onSubmitted: onSubmitted,
+          maxLines: maxLines,
+          minLines: minLines,
+          decoration: InputDecoration(labelText: labelText),
+          inputFormatters: [MarkdownFormatter()],
+        ),
+      ],
     );
   }
 }
