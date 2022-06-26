@@ -13,7 +13,7 @@ import '../util/pictrs.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/bottom_safe.dart';
 import '../widgets/cached_network_image.dart';
-import '../widgets/editor.dart';
+import '../widgets/editor/editor.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
