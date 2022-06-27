@@ -31,7 +31,6 @@ class CreatePostPage extends HookWidget {
     );
 
     final titleFocusNode = useFocusNode();
-    final bodyFocusNode = useFocusNode();
 
     handleSubmit(Jwt token) async {
       if (formKey.currentState!.validate()) {
@@ -47,7 +46,6 @@ class CreatePostPage extends HookWidget {
         textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.next,
         validator: Validators.required(L10n.of(context).required_field),
-        onFieldSubmitted: (_) => bodyFocusNode.requestFocus(),
         onChanged: (title) => store.title = title,
         minLines: 1,
         maxLines: 2,
@@ -61,7 +59,6 @@ class CreatePostPage extends HookWidget {
     final body = ObserverBuilder<CreatePostStore>(
       builder: (context, store) => Editor(
         controller: bodyController,
-        focusNode: bodyFocusNode,
         onChanged: (body) => store.body = body,
         labelText: L10n.of(context).body,
         instanceHost: store.instanceHost,
