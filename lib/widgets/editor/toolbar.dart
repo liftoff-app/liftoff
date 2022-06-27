@@ -152,8 +152,8 @@ class AddLinkDialog extends HookWidget {
   final String selection;
 
   AddLinkDialog(this.selection)
-      : title = selection.startsWith('http?s://') ? '' : selection,
-        url = selection.startsWith('http?s://') ? selection : '';
+      : title = selection.startsWith('https?://') ? '' : selection,
+        url = selection.startsWith('https?://') ? selection : '';
 
   @override
   Widget build(BuildContext context) {
