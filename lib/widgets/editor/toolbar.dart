@@ -62,12 +62,13 @@ extension on TextEditingController {
 class Toolbar extends HookWidget {
   final TextEditingController controller;
 
+  static const _height = 50.0;
   const Toolbar(this.controller);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: _height,
       width: double.infinity,
       color: Theme.of(context).cardColor,
       child: Material(
@@ -144,6 +145,8 @@ class Toolbar extends HookWidget {
       ),
     );
   }
+
+  static Widget safeArea = const SizedBox(height: _height);
 }
 
 class AddLinkDialog extends HookWidget {

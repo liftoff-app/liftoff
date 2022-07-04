@@ -134,6 +134,7 @@ class CreatePostPage extends HookWidget {
                           )
                         ],
                       ),
+                      Toolbar.safeArea,
                     ].spaced(6),
                   ),
                 ),
