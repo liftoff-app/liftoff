@@ -37,18 +37,44 @@ class MarkdownFormatter extends TextInputFormatter {
       TextEditingValue oldValue, TextEditingValue newValue) {
     if (oldValue.text.length > newValue.text.length) return newValue;
 
+    var newVal = newValue;
+
     final char = newValue.text[newValue.selection.baseOffset - 1];
+
     if (char == '\n') {
       final lineBefore =
           newValue.text.lineBefore(newValue.selection.baseOffset - 2);
-      if (lineBefore.startsWith('- ')) {
-        return newValue.append('- ');
+
+      TextEditingValue listContinuation(String listChar, TextEditingValue tev) {
+        final regex = RegExp('(\\s*)${RegExp.escape(listChar)} ');
+        final match = regex.matchAsPrefix(lineBefore);
+        if (match == null) {
+          return tev;
+        }
+        final indent = match.group(1);
+
+        return tev.append('$indent$listChar ');
       }
-      if (lineBefore.startsWith('* ')) {
-        return newValue.append('* ');
+
+      TextEditingValue numberedListContinuation(
+          String afterNumberChar, TextEditingValue tev) {
+        final regex = RegExp('(\\s*)(\\d+)${RegExp.escape(afterNumberChar)} ');
+        final match = regex.matchAsPrefix(lineBefore);
+        if (match == null) {
+          return tev;
+        }
+        final indent = match.group(1);
+        final number = int.parse(match.group(2)!) + 1;
+
+        return tev.append('$indent$number$afterNumberChar ');
       }
+
+      newVal = listContinuation('-', newVal);
+      newVal = listContinuation('*', newVal);
+      newVal = numberedListContinuation('.', newVal);
+      newVal = numberedListContinuation(')', newVal);
     }
 
-    return newValue;
+    return newVal;
   }
 }
