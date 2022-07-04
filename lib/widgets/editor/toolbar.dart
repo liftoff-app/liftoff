@@ -151,9 +151,11 @@ class AddLinkDialog extends HookWidget {
   final String url;
   final String selection;
 
+  static final _websiteRegex = RegExp(r'https?:\/\/', caseSensitive: false);
+
   AddLinkDialog(this.selection)
-      : title = selection.startsWith('https?://') ? '' : selection,
-        url = selection.startsWith('https?://') ? selection : '';
+      : title = selection.startsWith(_websiteRegex) ? '' : selection,
+        url = selection.startsWith(_websiteRegex) ? selection : '';
 
   @override
   Widget build(BuildContext context) {
