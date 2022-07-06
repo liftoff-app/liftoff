@@ -1,16 +1,25 @@
 import 'package:flutter/services.dart';
 
-extension on String {
-  int getBeginningOfPreviousLine(int startingIndex) {
+extension Utilities on String {
+  int getBeginningOfTheLine(int startingIndex) {
+    if (startingIndex <= 0) return 0;
     for (var i = startingIndex; i >= 0; i--) {
       if (this[i] == '\n') return i + 1;
     }
     return 0;
   }
 
+  int getEndOfTheLine(int from) {
+    for (var i = from; i < length; i++) {
+      if (this[i] == '\n') return i;
+    }
+
+    return length - 1;
+  }
+
   // returns the line that ends at endingIndex
   String lineBefore(int endingIndex) {
-    return substring(getBeginningOfPreviousLine(endingIndex), endingIndex + 1);
+    return substring(getBeginningOfTheLine(endingIndex), endingIndex + 1);
   }
 }
 
