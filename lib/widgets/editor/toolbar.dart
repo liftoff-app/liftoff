@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../formatter.dart';
 import '../../util/extensions/spaced.dart';
+import '../../util/text_lines_iterator.dart';
 
 class Reformat {
   final String text;
@@ -41,6 +43,54 @@ extension on TextEditingController {
           baseOffset: selection.baseOffset + before.length,
           extentOffset: selection.baseOffset + before.length + mid.length,
         ));
+  }
+
+  String get firstSelectedLine {
+    if (text.isEmpty) return '';
+    return text.substring(text.getBeginningOfTheLine(selection.start - 1),
+        text.getEndOfTheLine(selection.end));
+  }
+
+  void removeAtBeginningOfEverySelectedLine(String s) {
+    final lines = TextLinesIterator.fromController(this);
+    var linesCount = 0;
+    while (lines.moveNext()) {
+      if (lines.isWithinSelection) {
+        if (lines.current.startsWith(RegExp.escape(s))) {
+          lines.current = lines.current.substring(s.length);
+          linesCount++;
+        }
+      }
+    }
+
+    value = value.copyWith(
+      text: lines.text,
+      selection: selection.copyWith(
+        baseOffset: selection.baseOffset - s.length,
+        extentOffset: selection.extentOffset - s.length * linesCount,
+      ),
+    );
+  }
+
+  void insertAtBeginningOfEverySelectedLine(String s) {
+    final lines = TextLinesIterator.fromController(this);
+    var linesCount = 0;
+    while (lines.moveNext()) {
+      if (lines.isWithinSelection) {
+        if (!lines.current.startsWith(RegExp.escape(s))) {
+          lines.current = '$s${lines.current}';
+          linesCount++;
+        }
+      }
+    }
+
+    value = value.copyWith(
+      text: lines.text,
+      selection: selection.copyWith(
+        baseOffset: selection.baseOffset + s.length,
+        extentOffset: selection.extentOffset + s.length * linesCount,
+      ),
+    );
   }
 
   void reformat(Reformat Function(String selection) reformatter) {
@@ -101,9 +151,7 @@ class Toolbar extends HookWidget {
                 icon: const Icon(Icons.person),
               ),
               IconButton(
-                onPressed: () {
-                  //
-                },
+                onPressed: () {},
                 icon: const Icon(Icons.home),
               ),
               IconButton(
@@ -119,7 +167,17 @@ class Toolbar extends HookWidget {
                 icon: const Icon(Icons.format_quote),
               ),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    final line = controller.firstSelectedLine;
+
+                    if (line.startsWith(RegExp.escape('* '))) {
+                      controller.removeAtBeginningOfEverySelectedLine('* ');
+                    } else if (line.startsWith('- ')) {
+                      controller.removeAtBeginningOfEverySelectedLine('- ');
+                    } else {
+                      controller.insertAtBeginningOfEverySelectedLine('- ');
+                    }
+                  },
                   icon: const Icon(Icons.format_list_bulleted)),
               IconButton(
                 onPressed: () => controller.surround('`'),
