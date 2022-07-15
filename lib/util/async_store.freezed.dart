@@ -372,8 +372,8 @@ abstract class AsyncStateData<T> implements AsyncState<T> {
   const factory AsyncStateData(final T data, [final String? errorTerm]) =
       _$AsyncStateData<T>;
 
-  T get data => throw _privateConstructorUsedError;
-  String? get errorTerm => throw _privateConstructorUsedError;
+  T get data;
+  String? get errorTerm;
   @JsonKey(ignore: true)
   _$$AsyncStateDataCopyWith<T, _$AsyncStateData<T>> get copyWith =>
       throw _privateConstructorUsedError;
@@ -655,7 +655,7 @@ class _$AsyncStateError<T>
 abstract class AsyncStateError<T> implements AsyncState<T> {
   const factory AsyncStateError(final String errorTerm) = _$AsyncStateError<T>;
 
-  String get errorTerm => throw _privateConstructorUsedError;
+  String get errorTerm;
   @JsonKey(ignore: true)
   _$$AsyncStateErrorCopyWith<T, _$AsyncStateError<T>> get copyWith =>
       throw _privateConstructorUsedError;
