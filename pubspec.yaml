@@ -24,10 +24,10 @@ environment:
 dependencies:
   # widgets
   flutter_speed_dial: ^6.0.0
-  photo_view: ^0.13.0
+  photo_view: ^0.14.0
   markdown: ^5.0.0
   flutter_markdown: ^0.6.1
-  flutter_typeahead: ^3.2.1
+  flutter_typeahead: ^4.0.0
   modal_bottom_sheet: ^2.0.0
 
   # native
@@ -51,7 +51,7 @@ dependencies:
   intl: ^0.17.0
   matrix4_transform: ^2.0.0
   json_annotation: ^4.5.0
-  keyboard_dismisser: ^2.0.0
+  keyboard_dismisser: ^3.0.0
   freezed_annotation: ^2.0.1
   logging: ^1.0.1
   nested: ^1.0.0
