@@ -18,12 +18,12 @@ class AsyncStoreListener<T> extends SingleChildStatelessWidget {
   )? onSuccess;
 
   const AsyncStoreListener({
-    Key? key,
+    super.key,
     required this.asyncStore,
     this.successMessageBuilder,
     this.onSuccess,
-    Widget? child,
-  }) : super(key: key, child: child);
+    super.child,
+  });
 
   @override
   Widget buildWithChild(BuildContext context, Widget? child) {

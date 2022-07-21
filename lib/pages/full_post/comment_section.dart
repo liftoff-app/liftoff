@@ -27,7 +27,7 @@ class CommentSection extends StatelessWidget {
     CommentSortType.chat: _SortSelection(Icons.chat, L10nStrings.chat),
   };
 
-  const CommentSection({Key? key}) : super(key: key);
+  const CommentSection({super.key});
 
   @override
   Widget build(BuildContext context) {

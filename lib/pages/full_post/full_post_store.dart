@@ -14,7 +14,6 @@ abstract class _FullPostStore with Store {
   final String instanceHost;
 
   _FullPostStore({
-    this.postStore,
     required this.postId,
     required this.instanceHost,
   });

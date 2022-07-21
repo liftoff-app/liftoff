@@ -14,14 +14,14 @@ class TileAction extends StatelessWidget {
   final Color? iconColor;
 
   const TileAction({
-    Key? key,
+    super.key,
     this.delayedLoading,
     this.iconColor,
     required this.icon,
     required this.onPressed,
     required this.tooltip,
     this.loading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => IconButton(

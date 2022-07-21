@@ -13,7 +13,7 @@ import '../../widgets/avatar.dart';
 import 'create_post_store.dart';
 
 class CreatePostCommunityPicker extends HookWidget {
-  const CreatePostCommunityPicker({Key? key}) : super(key: key);
+  const CreatePostCommunityPicker({super.key});
 
   @override
   Widget build(BuildContext context) {

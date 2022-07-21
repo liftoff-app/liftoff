@@ -18,7 +18,7 @@ import 'comment.dart';
 import 'comment_store.dart';
 
 class CommentMoreMenuButton extends HookWidget {
-  const CommentMoreMenuButton({Key? key}) : super(key: key);
+  const CommentMoreMenuButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,8 @@ class _CommentMoreMenuPopup extends HookWidget {
   final CommentStore store;
 
   const _CommentMoreMenuPopup({
-    Key? key,
     required this.store,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

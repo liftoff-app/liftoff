@@ -8,7 +8,7 @@ import '../../widgets/avatar.dart';
 import 'modlog_entry.dart';
 
 class ModlogTable extends StatelessWidget {
-  const ModlogTable({Key? key, required this.modlog}) : super(key: key);
+  const ModlogTable({super.key, required this.modlog});
 
   final Modlog modlog;
 

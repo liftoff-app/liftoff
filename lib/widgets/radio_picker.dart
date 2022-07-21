@@ -20,7 +20,7 @@ class RadioPicker<T> extends StatelessWidget {
   final Widget? trailing;
 
   const RadioPicker({
-    Key? key,
+    super.key,
     required this.values,
     required this.groupValue,
     required this.onChanged,
@@ -28,7 +28,7 @@ class RadioPicker<T> extends StatelessWidget {
     this.buttonBuilder,
     this.title,
     this.trailing,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

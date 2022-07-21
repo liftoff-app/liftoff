@@ -12,6 +12,7 @@ abstract class _ModlogPageStore with Store, DisposableStore {
   final String instanceHost;
   final int? communityId;
 
+  // ignore: unused_element
   _ModlogPageStore(this.instanceHost, [this.communityId]) {
     addReaction(reaction((_) => page, (_) => fetchPage()));
   }

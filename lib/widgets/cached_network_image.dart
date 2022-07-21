@@ -41,8 +41,8 @@ class CachedNetworkImage extends StatelessWidget {
     this.width,
     this.fit,
     this.cache = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

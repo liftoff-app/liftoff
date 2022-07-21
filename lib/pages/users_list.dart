@@ -12,8 +12,7 @@ class UsersListPage extends StatelessWidget {
   final String title;
   final Fetcher<PersonViewSafe> fetcher;
 
-  const UsersListPage({Key? key, required this.fetcher, this.title = ''})
-      : super(key: key);
+  const UsersListPage({super.key, required this.fetcher, this.title = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class UsersListPage extends StatelessWidget {
 class UsersListItem extends StatelessWidget {
   final PersonViewSafe user;
 
-  const UsersListItem({Key? key, required this.user}) : super(key: key);
+  const UsersListItem({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

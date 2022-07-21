@@ -11,7 +11,7 @@ import '../../widgets/info_table_popup.dart';
 class InstanceMoreMenu extends StatelessWidget {
   final FullSiteView site;
 
-  const InstanceMoreMenu({Key? key, required this.site}) : super(key: key);
+  const InstanceMoreMenu({super.key, required this.site});
 
   @override
   Widget build(BuildContext context) {

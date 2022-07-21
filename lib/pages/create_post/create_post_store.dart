@@ -16,6 +16,7 @@ abstract class _CreatePostStore with Store {
   _CreatePostStore({
     required this.instanceHost,
     this.postToEdit,
+    // ignore: unused_element
     this.selectedCommunity,
   })  : title = postToEdit?.name ?? '',
         nsfw = postToEdit?.nsfw ?? false,

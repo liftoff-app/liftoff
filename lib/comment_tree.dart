@@ -7,10 +7,8 @@ enum CommentSortType {
   top,
   new_,
   old,
-  chat,
-}
+  chat;
 
-extension on CommentSortType {
   /// returns a compare function for sorting a CommentTree according
   /// to the comment sort type
   int Function(CommentTree a, CommentTree b) get sortFunction {

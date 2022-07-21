@@ -6,7 +6,7 @@ part of 'create_post_store.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$CreatePostStore on _CreatePostStore, Store {
   Computed<bool>? _$hasUploadedImageComputed;
@@ -17,7 +17,8 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
           name: '_CreatePostStore.hasUploadedImage'))
       .value;
 
-  final _$showFancyAtom = Atom(name: '_CreatePostStore.showFancy');
+  late final _$showFancyAtom =
+      Atom(name: '_CreatePostStore.showFancy', context: context);
 
   @override
   bool get showFancy {
@@ -32,7 +33,8 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
     });
   }
 
-  final _$instanceHostAtom = Atom(name: '_CreatePostStore.instanceHost');
+  late final _$instanceHostAtom =
+      Atom(name: '_CreatePostStore.instanceHost', context: context);
 
   @override
   String get instanceHost {
@@ -47,8 +49,8 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
     });
   }
 
-  final _$selectedCommunityAtom =
-      Atom(name: '_CreatePostStore.selectedCommunity');
+  late final _$selectedCommunityAtom =
+      Atom(name: '_CreatePostStore.selectedCommunity', context: context);
 
   @override
   CommunityView? get selectedCommunity {
@@ -63,7 +65,7 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
     });
   }
 
-  final _$urlAtom = Atom(name: '_CreatePostStore.url');
+  late final _$urlAtom = Atom(name: '_CreatePostStore.url', context: context);
 
   @override
   String get url {
@@ -78,7 +80,8 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
     });
   }
 
-  final _$titleAtom = Atom(name: '_CreatePostStore.title');
+  late final _$titleAtom =
+      Atom(name: '_CreatePostStore.title', context: context);
 
   @override
   String get title {
@@ -93,7 +96,7 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
     });
   }
 
-  final _$bodyAtom = Atom(name: '_CreatePostStore.body');
+  late final _$bodyAtom = Atom(name: '_CreatePostStore.body', context: context);
 
   @override
   String get body {
@@ -108,7 +111,7 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
     });
   }
 
-  final _$nsfwAtom = Atom(name: '_CreatePostStore.nsfw');
+  late final _$nsfwAtom = Atom(name: '_CreatePostStore.nsfw', context: context);
 
   @override
   bool get nsfw {
@@ -123,14 +126,16 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
     });
   }
 
-  final _$submitAsyncAction = AsyncAction('_CreatePostStore.submit');
+  late final _$submitAsyncAction =
+      AsyncAction('_CreatePostStore.submit', context: context);
 
   @override
   Future<void> submit(Jwt token) {
     return _$submitAsyncAction.run(() => super.submit(token));
   }
 
-  final _$uploadImageAsyncAction = AsyncAction('_CreatePostStore.uploadImage');
+  late final _$uploadImageAsyncAction =
+      AsyncAction('_CreatePostStore.uploadImage', context: context);
 
   @override
   Future<void> uploadImage(String filePath, Jwt token) {
@@ -138,8 +143,8 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
         .run(() => super.uploadImage(filePath, token));
   }
 
-  final _$_CreatePostStoreActionController =
-      ActionController(name: '_CreatePostStore');
+  late final _$_CreatePostStoreActionController =
+      ActionController(name: '_CreatePostStore', context: context);
 
   @override
   Future<List<CommunityView>?> searchCommunities(

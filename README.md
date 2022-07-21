@@ -44,11 +44,7 @@ The apk will be in `build/app/outputs/flutter-apk/app-prod-release.apk`
 ### Linux
 
 1. Make sure you have the additional [linux requirements](https://flutter.dev/desktop#additional-linux-requirements) (verify with `flutter doctor`)
-2. Enable linux desktop:
-   ```sh
-   flutter config --enable-linux-desktop
-   ```
-3. Build: `flutter build linux --target lib/main_prod.dart --release`
+2. Build: `flutter build linux --target lib/main_prod.dart --release`
 
 The executable will be in `build/linux/x64/release/bundle/lemmur` (be aware, however, that this executable is not standalone)
 

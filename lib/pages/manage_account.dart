@@ -86,7 +86,7 @@ class ManageAccountPage extends HookWidget {
 }
 
 class _ManageAccount extends HookWidget {
-  const _ManageAccount({Key? key, required this.user}) : super(key: key);
+  const _ManageAccount({required this.user});
 
   final LocalUserSettingsView user;
 
@@ -396,13 +396,12 @@ class _ImagePicker extends HookWidget {
   final ObjectRef<VoidCallback?> informAcceptedRef;
 
   const _ImagePicker({
-    Key? key,
     required this.initialUrl,
     required this.name,
     required this.user,
     required this.onChange,
     required this.informAcceptedRef,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

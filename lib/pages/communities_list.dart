@@ -11,8 +11,11 @@ class CommunitiesListPage extends StatelessWidget {
   final String title;
   final FetcherWithSorting<CommunityView> fetcher;
 
-  const CommunitiesListPage({Key? key, required this.fetcher, this.title = ''})
-      : super(key: key);
+  const CommunitiesListPage({
+    super.key,
+    required this.fetcher,
+    this.title = '',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +45,7 @@ class CommunitiesListPage extends StatelessWidget {
 class CommunitiesListItem extends StatelessWidget {
   final CommunityView community;
 
-  const CommunitiesListItem({Key? key, required this.community})
-      : super(key: key);
+  const CommunitiesListItem({super.key, required this.community});
 
   @override
   Widget build(BuildContext context) => ListTile(

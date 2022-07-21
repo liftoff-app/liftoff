@@ -12,8 +12,8 @@ class PersonTile extends StatelessWidget {
   const PersonTile(
     this.person, {
     this.expanded = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

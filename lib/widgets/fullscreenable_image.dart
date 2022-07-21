@@ -9,10 +9,10 @@ class FullscreenableImage extends StatelessWidget {
   final Widget child;
 
   const FullscreenableImage({
-    Key? key,
+    super.key,
     required this.url,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => InkWell(

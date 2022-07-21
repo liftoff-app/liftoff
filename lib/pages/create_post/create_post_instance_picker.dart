@@ -6,7 +6,7 @@ import '../../widgets/radio_picker.dart';
 import 'create_post_store.dart';
 
 class CreatePostInstancePicker extends StatelessWidget {
-  const CreatePostInstancePicker({Key? key}) : super(key: key);
+  const CreatePostInstancePicker({super.key});
 
   @override
   Widget build(BuildContext context) {

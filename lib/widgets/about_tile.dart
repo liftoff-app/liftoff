@@ -96,7 +96,7 @@ class AboutTile extends HookWidget {
 class ChangelogPage extends StatelessWidget {
   final String changelog;
 
-  const ChangelogPage(this.changelog, {Key? key}) : super(key: key);
+  const ChangelogPage(this.changelog, {super.key});
 
   @override
   Widget build(BuildContext context) {

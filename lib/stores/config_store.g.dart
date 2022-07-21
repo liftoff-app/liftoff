@@ -19,7 +19,7 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
 
 Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
     <String, dynamic>{
-      'theme': _$ThemeModeEnumMap[instance.theme],
+      'theme': _$ThemeModeEnumMap[instance.theme]!,
       'amoledDarkMode': instance.amoledDarkMode,
       'locale': const LocaleConverter().toJson(instance.locale),
       'showAvatars': instance.showAvatars,
@@ -38,7 +38,7 @@ const _$ThemeModeEnumMap = {
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ConfigStore on _ConfigStore, Store {
   late final _$themeAtom = Atom(name: '_ConfigStore.theme', context: context);
