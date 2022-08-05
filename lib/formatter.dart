@@ -55,7 +55,7 @@ class MarkdownFormatter extends TextInputFormatter {
           newValue.text.lineBefore(newValue.selection.baseOffset - 2);
 
       TextEditingValue listContinuation(String listChar, TextEditingValue tev) {
-        final regex = RegExp('(\\s*)${RegExp.escape(listChar)} ');
+        final regex = RegExp(r'(\s*)' '${RegExp.escape(listChar)} ');
         final match = regex.matchAsPrefix(lineBefore);
         if (match == null) {
           return tev;
@@ -67,7 +67,8 @@ class MarkdownFormatter extends TextInputFormatter {
 
       TextEditingValue numberedListContinuation(
           String afterNumberChar, TextEditingValue tev) {
-        final regex = RegExp('(\\s*)(\\d+)${RegExp.escape(afterNumberChar)} ');
+        final regex =
+            RegExp(r'(\s*)(\d+)' '${RegExp.escape(afterNumberChar)} ');
         final match = regex.matchAsPrefix(lineBefore);
         if (match == null) {
           return tev;
