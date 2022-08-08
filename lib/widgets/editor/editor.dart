@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../formatter.dart';
 import '../markdown_text.dart';
 
-export 'toolbar.dart';
+export 'editor_toolbar.dart';
 
 /// A text field with added functionality for ease of editing
 class Editor extends HookWidget {
