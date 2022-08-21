@@ -411,5 +411,9 @@
   "editor_help": "markdown guide",
   "@editor_help": {
     "description": "tooltip for button that goes to page containing a guide for markdown"
+  },
+  "insert_text_here_placeholder": "[write text here]",
+  "@insert_text_here_placeholder": {
+    "description": "placeholder for text in markdown editor when inserting stuff like * for italics or ** for bold, etc."
   }
 }

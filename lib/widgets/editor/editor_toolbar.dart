@@ -36,11 +36,13 @@ extension on TextEditingController {
   String get afterSelectionText => text.substring(selection.extentOffset);
 
   /// surroungs selection with given strings. If nothing is selected, placeholder is used in the middle
-  void surround(
-    String before, [
+  void surround({
+    required String before,
+    required String placeholder,
+
+    /// after = before if null
     String? after,
-    String placeholder = '[write text here]',
-  ]) {
+  }) {
     after ??= before;
     final beg = text.substring(0, selection.baseOffset);
     final mid = () {
@@ -202,12 +204,16 @@ class _ToolbarBody extends HookWidget {
     return Row(
       children: [
         IconButton(
-          onPressed: () => controller.surround('**'),
+          onPressed: () => controller.surround(
+              before: '**',
+              placeholder: L10n.of(context).insert_text_here_placeholder),
           icon: const Icon(Icons.format_bold),
           tooltip: L10n.of(context).editor_bold,
         ),
         IconButton(
-          onPressed: () => controller.surround('*'),
+          onPressed: () => controller.surround(
+              before: '*',
+              placeholder: L10n.of(context).insert_text_here_placeholder),
           icon: const Icon(Icons.format_italic),
           tooltip: L10n.of(context).editor_italics,
         ),
@@ -302,7 +308,10 @@ class _ToolbarBody extends HookWidget {
           child: const Icon(Icons.h_mobiledata),
         ),
         IconButton(
-          onPressed: () => controller.surround('~~'),
+          onPressed: () => controller.surround(
+            before: '~~',
+            placeholder: L10n.of(context).insert_text_here_placeholder,
+          ),
           icon: const Icon(Icons.format_strikethrough),
           tooltip: L10n.of(context).editor_strikethrough,
         ),
@@ -329,17 +338,26 @@ class _ToolbarBody extends HookWidget {
           tooltip: L10n.of(context).editor_list,
         ),
         IconButton(
-          onPressed: () => controller.surround('`'),
+          onPressed: () => controller.surround(
+            before: '`',
+            placeholder: L10n.of(context).insert_text_here_placeholder,
+          ),
           icon: const Icon(Icons.code),
           tooltip: L10n.of(context).editor_code,
         ),
         IconButton(
-          onPressed: () => controller.surround('~'),
+          onPressed: () => controller.surround(
+            before: '~',
+            placeholder: L10n.of(context).insert_text_here_placeholder,
+          ),
           icon: const Icon(Icons.subscript),
           tooltip: L10n.of(context).editor_subscript,
         ),
         IconButton(
-          onPressed: () => controller.surround('^'),
+          onPressed: () => controller.surround(
+            before: '^',
+            placeholder: L10n.of(context).insert_text_here_placeholder,
+          ),
           icon: const Icon(Icons.superscript),
           tooltip: L10n.of(context).editor_superscript,
         ),
