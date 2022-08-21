@@ -152,12 +152,6 @@ class CreatePostPage extends HookWidget {
                 ],
               ),
             ),
-            // Positioned(
-            //   bottom: MediaQuery.of(context).viewInsets.bottom,
-            //   left: 0,
-            //   right: 0,
-            //   child: Toolbar(bodyController),
-            // )
           ],
         ),
       ),
