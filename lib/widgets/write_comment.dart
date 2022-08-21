@@ -99,36 +99,53 @@ class WriteComment extends HookWidget {
           ),
         ],
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * .35),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(8),
-              child: preview,
-            ),
-          ),
-          const Divider(),
-          Editor(
-            instanceHost: post.instanceHost,
-            controller: controller,
-            autofocus: true,
-            fancy: showFancy.value,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          ListView(
             children: [
-              TextButton(
-                onPressed:
-                    delayed.pending ? () {} : loggedInAction(handleSubmit),
-                child: delayed.loading
-                    ? const CircularProgressIndicator.adaptive()
-                    : Text(_isEdit
-                        ? L10n.of(context).edit
-                        : L10n.of(context).post),
-              )
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * .35),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(8),
+                  child: preview,
+                ),
+              ),
+              const Divider(),
+              Editor(
+                instanceHost: post.instanceHost,
+                controller: controller,
+                autofocus: true,
+                fancy: showFancy.value,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed:
+                        delayed.pending ? () {} : loggedInAction(handleSubmit),
+                    child: delayed.loading
+                        ? const CircularProgressIndicator.adaptive()
+                        : Text(_isEdit
+                            ? L10n.of(context).edit
+                            : L10n.of(context).post),
+                  )
+                ],
+              ),
+              Toolbar.safeArea,
             ],
+          ),
+          SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Spacer(),
+                Toolbar(
+                  controller: controller,
+                  instanceHost: post.instanceHost,
+                ),
+              ],
+            ),
           ),
         ],
       ),
