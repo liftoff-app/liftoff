@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logging/logging.dart';
 
 import '../../formatter.dart';
 import '../../hooks/logged_in_action.dart';
+import '../../resources/links.dart';
+import '../../url_launcher.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/extensions/spaced.dart';
@@ -286,9 +289,24 @@ class _ToolbarBody extends HookWidget {
           icon: const Icon(Icons.superscript),
         ),
         //spoiler
-        IconButton(onPressed: () {}, icon: const Icon(Icons.warning)),
         IconButton(
-          onPressed: () {},
+            onPressed: () {
+              controller.reformat((selection) {
+                final insides = selection.isNotEmpty ? selection : '___';
+                Logger.root
+                    .info([21, 21 + insides.length, insides, insides.length]);
+                return Reformat(
+                  text: '\n::: spoiler spoiler\n$insides\n:::\n',
+                  selectionBeginningShift: 21,
+                  selectionEndingShift: 21 + insides.length - selection.length,
+                );
+              });
+            },
+            icon: const Icon(Icons.warning)),
+        IconButton(
+          onPressed: () {
+            launchLink(link: markdownGuide, context: context);
+          },
           icon: const Icon(Icons.question_mark),
         ),
       ],
