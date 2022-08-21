@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../formatter.dart';
+import '../../hooks/logged_in_action.dart';
+import '../../util/async_store_listener.dart';
 import '../../util/extensions/spaced.dart';
+import '../../util/files.dart';
+import '../../util/mobx_provider.dart';
+import '../../util/observer_consumers.dart';
 import '../../util/text_lines_iterator.dart';
+import 'editor_toolbar_store.dart';
 
 class Reformat {
   final String text;
@@ -111,93 +117,33 @@ extension on TextEditingController {
 
 class Toolbar extends HookWidget {
   final TextEditingController controller;
-
+  final String instanceHost;
+  final EditorToolbarStore store;
   static const _height = 50.0;
-  const Toolbar(this.controller);
+
+  Toolbar({
+    required this.controller,
+    required this.instanceHost,
+  }) : store = EditorToolbarStore(instanceHost);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: _height,
-      width: double.infinity,
-      color: Theme.of(context).cardColor,
-      child: Material(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () => controller.surround('**'),
-                icon: const Icon(Icons.format_bold),
+    return MobxProvider.value(
+      value: store,
+      child: AsyncStoreListener(
+        asyncStore: store.imageUploadState,
+        child: Container(
+          height: _height,
+          width: double.infinity,
+          color: Theme.of(context).cardColor,
+          child: Material(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: _ToolbarBody(
+                controller: controller,
+                instanceHost: instanceHost,
               ),
-              IconButton(
-                onPressed: () => controller.surround('*'),
-                icon: const Icon(Icons.format_italic),
-              ),
-              IconButton(
-                onPressed: () async {
-                  final r = await AddLinkDialog.show(
-                      context, controller.selectionText);
-                  if (r != null) controller.reformat((_) => r);
-                },
-                icon: const Icon(Icons.link),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.image),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.person),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.home),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.h_mobiledata),
-              ),
-              IconButton(
-                onPressed: () => controller.surround('~~'),
-                icon: const Icon(Icons.format_strikethrough),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.format_quote),
-              ),
-              IconButton(
-                  onPressed: () {
-                    final line = controller.firstSelectedLine;
-
-                    if (line.startsWith(RegExp.escape('* '))) {
-                      controller.removeAtBeginningOfEverySelectedLine('* ');
-                    } else if (line.startsWith('- ')) {
-                      controller.removeAtBeginningOfEverySelectedLine('- ');
-                    } else {
-                      controller.insertAtBeginningOfEverySelectedLine('- ');
-                    }
-                  },
-                  icon: const Icon(Icons.format_list_bulleted)),
-              IconButton(
-                onPressed: () => controller.surround('`'),
-                icon: const Icon(Icons.code),
-              ),
-              IconButton(
-                onPressed: () => controller.surround('~'),
-                icon: const Icon(Icons.subscript),
-              ),
-              IconButton(
-                onPressed: () => controller.surround('^'),
-                icon: const Icon(Icons.superscript),
-              ),
-              //spoiler
-              IconButton(onPressed: () {}, icon: const Icon(Icons.warning)),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.question_mark),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -205,6 +151,126 @@ class Toolbar extends HookWidget {
   }
 
   static Widget safeArea = const SizedBox(height: _height);
+}
+
+class _ToolbarBody extends HookWidget {
+  const _ToolbarBody({
+    required this.controller,
+    required this.instanceHost,
+  });
+
+  final TextEditingController controller;
+  final String instanceHost;
+
+  @override
+  Widget build(BuildContext context) {
+    final loggedInAction = useLoggedInAction(instanceHost);
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () => controller.surround('**'),
+          icon: const Icon(Icons.format_bold),
+        ),
+        IconButton(
+          onPressed: () => controller.surround('*'),
+          icon: const Icon(Icons.format_italic),
+        ),
+        IconButton(
+          onPressed: () async {
+            final r =
+                await AddLinkDialog.show(context, controller.selectionText);
+            if (r != null) controller.reformat((_) => r);
+          },
+          icon: const Icon(Icons.link),
+        ),
+        // Insert image
+        ObserverBuilder<EditorToolbarStore>(
+          builder: (context, store) {
+            return IconButton(
+              onPressed: loggedInAction((token) async {
+                if (store.imageUploadState.isLoading) {
+                  return;
+                }
+                try {
+                  // FIXME: for some reason it doesn't go past this line on iOS. idk why
+                  final pic = await pickImage();
+                  // pic is null when the picker was cancelled
+
+                  if (pic != null) {
+                    final picUrl = await context
+                        .read<EditorToolbarStore>()
+                        .uploadImage(pic.path, token);
+
+                    if (picUrl != null) {
+                      controller.reformat(
+                          (selection) => Reformat(text: '![]($picUrl)'));
+                    }
+                  }
+                } on Exception catch (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to upload image')));
+                }
+              }),
+              icon: store.imageUploadState.isLoading
+                  ? const CircularProgressIndicator.adaptive()
+                  : const Icon(Icons.image),
+            );
+          },
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.person),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.home),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.h_mobiledata),
+        ),
+        IconButton(
+          onPressed: () => controller.surround('~~'),
+          icon: const Icon(Icons.format_strikethrough),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.format_quote),
+        ),
+        IconButton(
+            onPressed: () {
+              final line = controller.firstSelectedLine;
+
+              if (line.startsWith(RegExp.escape('* '))) {
+                controller.removeAtBeginningOfEverySelectedLine('* ');
+              } else if (line.startsWith('- ')) {
+                controller.removeAtBeginningOfEverySelectedLine('- ');
+              } else {
+                controller.insertAtBeginningOfEverySelectedLine('- ');
+              }
+            },
+            icon: const Icon(Icons.format_list_bulleted)),
+        IconButton(
+          onPressed: () => controller.surround('`'),
+          icon: const Icon(Icons.code),
+        ),
+        IconButton(
+          onPressed: () => controller.surround('~'),
+          icon: const Icon(Icons.subscript),
+        ),
+        IconButton(
+          onPressed: () => controller.surround('^'),
+          icon: const Icon(Icons.superscript),
+        ),
+        //spoiler
+        IconButton(onPressed: () {}, icon: const Icon(Icons.warning)),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.question_mark),
+        ),
+      ],
+    );
+  }
 }
 
 class AddLinkDialog extends HookWidget {
