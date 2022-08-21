@@ -389,7 +389,14 @@ class AddLinkDialog extends HookWidget {
     final urlController = useTextEditingController(text: url);
 
     void submit() {
-      final finalString = '(${titleController.text})[${urlController.text}]';
+      final link = () {
+        if (urlController.text.startsWith('http?s://')) {
+          return urlController.text;
+        } else {
+          return 'https://${urlController.text}';
+        }
+      }();
+      final finalString = '(${titleController.text})[$link]';
       Navigator.of(context).pop(Reformat(
         text: finalString,
         selectionBeginningShift: finalString.length,
