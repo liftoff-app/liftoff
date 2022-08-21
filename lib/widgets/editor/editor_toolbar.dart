@@ -4,11 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../formatter.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../util/async_store_listener.dart';
+import '../../util/extensions/api.dart';
 import '../../util/extensions/spaced.dart';
 import '../../util/files.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/text_lines_iterator.dart';
+import 'editor_picking_dialog.dart';
 import 'editor_toolbar_store.dart';
 
 class Reformat {
@@ -113,6 +115,9 @@ extension on TextEditingController {
       ),
     );
   }
+
+  void reformatSimple(String text) =>
+      reformat((selection) => Reformat(text: text));
 }
 
 class Toolbar extends HookWidget {
@@ -202,8 +207,7 @@ class _ToolbarBody extends HookWidget {
                         .uploadImage(pic.path, token);
 
                     if (picUrl != null) {
-                      controller.reformat(
-                          (selection) => Reformat(text: '![]($picUrl)'));
+                      controller.reformatSimple('![]($picUrl)');
                     }
                   }
                 } on Exception catch (_) {
@@ -218,11 +222,30 @@ class _ToolbarBody extends HookWidget {
           },
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () async {
+            final person = await PickPersonDialog.show(context);
+
+            if (person != null) {
+              final name =
+                  '@${person.person.name}@${person.person.originInstanceHost}';
+              final link = person.person.actorId;
+
+              controller.reformatSimple('[$name]($link)');
+            }
+          },
           icon: const Icon(Icons.person),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () async {
+            final community = await PickCommunityDialog.show(context);
+            if (community != null) {
+              final name =
+                  '!${community.community.name}@${community.community.originInstanceHost}';
+              final link = community.community.actorId;
+
+              controller.reformatSimple('[$name]($link)');
+            }
+          },
           icon: const Icon(Icons.home),
         ),
         IconButton(
