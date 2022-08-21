@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
@@ -62,6 +63,18 @@ extension on TextEditingController {
         text.getEndOfTheLine(selection.end));
   }
 
+  void insertAtBeginningOfFirstSelectedLine(String s) {
+    final lines = TextLinesIterator.fromController(this)..moveNext();
+    lines.current = s + lines.current;
+    value = value.copyWith(
+      text: lines.text,
+      selection: selection.copyWith(
+        baseOffset: selection.baseOffset + s.length,
+        extentOffset: selection.extentOffset + s.length,
+      ),
+    );
+  }
+
   void removeAtBeginningOfEverySelectedLine(String s) {
     final lines = TextLinesIterator.fromController(this);
     var linesCount = 0;
@@ -121,6 +134,18 @@ extension on TextEditingController {
 
   void reformatSimple(String text) =>
       reformat((selection) => Reformat(text: text));
+}
+
+enum HeaderLevel {
+  h1(1),
+  h2(2),
+  h3(3),
+  h4(4),
+  h5(5),
+  h6(6);
+
+  const HeaderLevel(this.value);
+  final int value;
 }
 
 class Toolbar extends HookWidget {
@@ -251,16 +276,31 @@ class _ToolbarBody extends HookWidget {
           },
           icon: const Icon(Icons.home),
         ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.h_mobiledata),
+        PopupMenuButton<HeaderLevel>(
+          itemBuilder: (context) => [
+            for (final h in HeaderLevel.values)
+              PopupMenuItem(
+                value: h,
+                child: Text(describeEnum(h).toUpperCase()),
+              ),
+          ],
+          onSelected: (val) {
+            final header = '${'#' * val.value} ';
+
+            if (!controller.firstSelectedLine.startsWith(header)) {
+              controller.insertAtBeginningOfFirstSelectedLine(header);
+            }
+          },
+          child: const Icon(Icons.h_mobiledata),
         ),
         IconButton(
           onPressed: () => controller.surround('~~'),
           icon: const Icon(Icons.format_strikethrough),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            controller.insertAtBeginningOfEverySelectedLine('> ');
+          },
           icon: const Icon(Icons.format_quote),
         ),
         IconButton(
