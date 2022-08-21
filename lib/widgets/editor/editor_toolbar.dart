@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 
 import '../../formatter.dart';
 import '../../hooks/logged_in_action.dart';
+import '../../l10n/l10n.dart';
 import '../../resources/links.dart';
 import '../../url_launcher.dart';
 import '../../util/async_store_listener.dart';
@@ -203,10 +204,12 @@ class _ToolbarBody extends HookWidget {
         IconButton(
           onPressed: () => controller.surround('**'),
           icon: const Icon(Icons.format_bold),
+          tooltip: L10n.of(context).editor_bold,
         ),
         IconButton(
           onPressed: () => controller.surround('*'),
           icon: const Icon(Icons.format_italic),
+          tooltip: L10n.of(context).editor_italics,
         ),
         IconButton(
           onPressed: () async {
@@ -215,6 +218,7 @@ class _ToolbarBody extends HookWidget {
             if (r != null) controller.reformat((_) => r);
           },
           icon: const Icon(Icons.link),
+          tooltip: L10n.of(context).editor_link,
         ),
         // Insert image
         ObserverBuilder<EditorToolbarStore>(
@@ -246,6 +250,7 @@ class _ToolbarBody extends HookWidget {
               icon: store.imageUploadState.isLoading
                   ? const CircularProgressIndicator.adaptive()
                   : const Icon(Icons.image),
+              tooltip: L10n.of(context).editor_image,
             );
           },
         ),
@@ -262,6 +267,7 @@ class _ToolbarBody extends HookWidget {
             }
           },
           icon: const Icon(Icons.person),
+          tooltip: L10n.of(context).editor_user,
         ),
         IconButton(
           onPressed: () async {
@@ -275,6 +281,7 @@ class _ToolbarBody extends HookWidget {
             }
           },
           icon: const Icon(Icons.home),
+          tooltip: L10n.of(context).editor_community,
         ),
         PopupMenuButton<HeaderLevel>(
           itemBuilder: (context) => [
@@ -291,63 +298,74 @@ class _ToolbarBody extends HookWidget {
               controller.insertAtBeginningOfFirstSelectedLine(header);
             }
           },
+          tooltip: L10n.of(context).editor_header,
           child: const Icon(Icons.h_mobiledata),
         ),
         IconButton(
           onPressed: () => controller.surround('~~'),
           icon: const Icon(Icons.format_strikethrough),
+          tooltip: L10n.of(context).editor_strikethrough,
         ),
         IconButton(
           onPressed: () {
             controller.insertAtBeginningOfEverySelectedLine('> ');
           },
           icon: const Icon(Icons.format_quote),
+          tooltip: L10n.of(context).editor_quote,
         ),
         IconButton(
-            onPressed: () {
-              final line = controller.firstSelectedLine;
+          onPressed: () {
+            final line = controller.firstSelectedLine;
 
-              if (line.startsWith(RegExp.escape('* '))) {
-                controller.removeAtBeginningOfEverySelectedLine('* ');
-              } else if (line.startsWith('- ')) {
-                controller.removeAtBeginningOfEverySelectedLine('- ');
-              } else {
-                controller.insertAtBeginningOfEverySelectedLine('- ');
-              }
-            },
-            icon: const Icon(Icons.format_list_bulleted)),
+            if (line.startsWith(RegExp.escape('* '))) {
+              controller.removeAtBeginningOfEverySelectedLine('* ');
+            } else if (line.startsWith('- ')) {
+              controller.removeAtBeginningOfEverySelectedLine('- ');
+            } else {
+              controller.insertAtBeginningOfEverySelectedLine('- ');
+            }
+          },
+          icon: const Icon(Icons.format_list_bulleted),
+          tooltip: L10n.of(context).editor_list,
+        ),
         IconButton(
           onPressed: () => controller.surround('`'),
           icon: const Icon(Icons.code),
+          tooltip: L10n.of(context).editor_code,
         ),
         IconButton(
           onPressed: () => controller.surround('~'),
           icon: const Icon(Icons.subscript),
+          tooltip: L10n.of(context).editor_subscript,
         ),
         IconButton(
           onPressed: () => controller.surround('^'),
           icon: const Icon(Icons.superscript),
+          tooltip: L10n.of(context).editor_superscript,
         ),
         //spoiler
         IconButton(
-            onPressed: () {
-              controller.reformat((selection) {
-                final insides = selection.isNotEmpty ? selection : '___';
-                Logger.root
-                    .info([21, 21 + insides.length, insides, insides.length]);
-                return Reformat(
-                  text: '\n::: spoiler spoiler\n$insides\n:::\n',
-                  selectionBeginningShift: 21,
-                  selectionEndingShift: 21 + insides.length - selection.length,
-                );
-              });
-            },
-            icon: const Icon(Icons.warning)),
+          onPressed: () {
+            controller.reformat((selection) {
+              final insides = selection.isNotEmpty ? selection : '___';
+              Logger.root
+                  .info([21, 21 + insides.length, insides, insides.length]);
+              return Reformat(
+                text: '\n::: spoiler spoiler\n$insides\n:::\n',
+                selectionBeginningShift: 21,
+                selectionEndingShift: 21 + insides.length - selection.length,
+              );
+            });
+          },
+          icon: const Icon(Icons.warning),
+          tooltip: L10n.of(context).editor_spoiler,
+        ),
         IconButton(
           onPressed: () {
             launchLink(link: markdownGuide, context: context);
           },
           icon: const Icon(Icons.question_mark),
+          tooltip: L10n.of(context).editor_help,
         ),
       ],
     );
