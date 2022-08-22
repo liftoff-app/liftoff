@@ -294,7 +294,7 @@ class _ToolbarBody extends HookWidget {
             for (final h in HeaderLevel.values)
               PopupMenuItem(
                 value: h,
-                child: Text(describeEnum(h).toUpperCase()),
+                child: Text(h.name.toUpperCase()),
               ),
           ],
           onSelected: (val) {
