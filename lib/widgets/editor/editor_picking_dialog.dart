@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
 import '../../../util/extensions/api.dart';
 import '../../../widgets/avatar.dart';
+import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import 'editor_toolbar_store.dart';
 
-class PickPersonDialog extends HookWidget {
+class PickPersonDialog extends StatelessWidget {
   final EditorToolbarStore store;
 
   const PickPersonDialog._(this.store);
@@ -20,7 +20,7 @@ class PickPersonDialog extends HookWidget {
         context.read<AccountsStore>().defaultUserDataFor(store.instanceHost);
 
     return AlertDialog(
-      title: const Text('Select User'),
+      title: Text(L10n.of(context).select_user),
       content: TypeAheadField<PersonViewSafe>(
         suggestionsCallback: (pattern) async {
           if (pattern.trim().isEmpty) return const Iterable.empty();
@@ -70,7 +70,7 @@ class PickPersonDialog extends HookWidget {
   }
 }
 
-class PickCommunityDialog extends HookWidget {
+class PickCommunityDialog extends StatelessWidget {
   final EditorToolbarStore store;
 
   const PickCommunityDialog._(this.store);
@@ -81,7 +81,7 @@ class PickCommunityDialog extends HookWidget {
         context.read<AccountsStore>().defaultUserDataFor(store.instanceHost);
 
     return AlertDialog(
-      title: const Text('Select Community'),
+      title: Text(L10n.of(context).select_community),
       content: TypeAheadField<CommunityView>(
         suggestionsCallback: (pattern) async {
           if (pattern.trim().isEmpty) return const Iterable.empty();

@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 
 extension Utilities on String {
-  int getBeginningOfTheLine(int startingIndex) {
-    if (startingIndex <= 0) return 0;
-    for (var i = startingIndex; i >= 0; i--) {
+  int getBeginningOfTheLine(int from) {
+    if (from <= 0) return 0;
+    for (var i = from; i >= 0; i--) {
       if (this[i] == '\n') return i + 1;
     }
     return 0;
@@ -17,9 +17,9 @@ extension Utilities on String {
     return length - 1;
   }
 
-  // returns the line that ends at endingIndex
-  String lineBefore(int endingIndex) {
-    return substring(getBeginningOfTheLine(endingIndex), endingIndex + 1);
+  /// returns the line that ends at endingIndex
+  String lineUpTo(int characterIndex) {
+    return substring(getBeginningOfTheLine(characterIndex), characterIndex + 1);
   }
 }
 
@@ -39,7 +39,7 @@ extension on TextEditingValue {
   }
 }
 
-/// Provides convinience formatting in markdown text fields
+/// Provides convenience formatting in markdown text fields
 class MarkdownFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -52,9 +52,10 @@ class MarkdownFormatter extends TextInputFormatter {
 
     if (char == '\n') {
       final lineBefore =
-          newValue.text.lineBefore(newValue.selection.baseOffset - 2);
+          newValue.text.lineUpTo(newValue.selection.baseOffset - 2);
 
-      TextEditingValue listContinuation(String listChar, TextEditingValue tev) {
+      TextEditingValue unorderedListContinuation(
+          String listChar, TextEditingValue tev) {
         final regex = RegExp(r'(\s*)' '${RegExp.escape(listChar)} ');
         final match = regex.matchAsPrefix(lineBefore);
         if (match == null) {
@@ -65,7 +66,7 @@ class MarkdownFormatter extends TextInputFormatter {
         return tev.append('$indent$listChar ');
       }
 
-      TextEditingValue numberedListContinuation(
+      TextEditingValue orderedListContinuation(
           String afterNumberChar, TextEditingValue tev) {
         final regex =
             RegExp(r'(\s*)(\d+)' '${RegExp.escape(afterNumberChar)} ');
@@ -74,15 +75,16 @@ class MarkdownFormatter extends TextInputFormatter {
           return tev;
         }
         final indent = match.group(1);
-        final number = int.parse(match.group(2)!) + 1;
+        final number = int.tryParse(match.group(2)!) ?? 0 + 1;
 
         return tev.append('$indent$number$afterNumberChar ');
       }
 
-      newVal = listContinuation('-', newVal);
-      newVal = listContinuation('*', newVal);
-      newVal = numberedListContinuation('.', newVal);
-      newVal = numberedListContinuation(')', newVal);
+      newVal = unorderedListContinuation('-', newVal);
+      newVal = unorderedListContinuation('*', newVal);
+      newVal = unorderedListContinuation('+', newVal);
+      newVal = orderedListContinuation('.', newVal);
+      newVal = orderedListContinuation(')', newVal);
     }
 
     return newVal;

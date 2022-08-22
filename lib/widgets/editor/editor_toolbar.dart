@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logging/logging.dart';
 
-import '../../formatter.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../markdown_formatter.dart';
 import '../../resources/links.dart';
 import '../../url_launcher.dart';
 import '../../util/async_store_listener.dart';
@@ -18,125 +16,15 @@ import '../../util/text_lines_iterator.dart';
 import 'editor_picking_dialog.dart';
 import 'editor_toolbar_store.dart';
 
-class Reformat {
+class _Reformat {
   final String text;
   final int selectionBeginningShift;
   final int selectionEndingShift;
-  Reformat({
+  _Reformat({
     required this.text,
     this.selectionBeginningShift = 0,
     this.selectionEndingShift = 0,
   });
-}
-
-extension on TextEditingController {
-  String get selectionText =>
-      text.substring(selection.baseOffset, selection.extentOffset);
-  String get beforeSelectionText => text.substring(0, selection.baseOffset);
-  String get afterSelectionText => text.substring(selection.extentOffset);
-
-  /// surroungs selection with given strings. If nothing is selected, placeholder is used in the middle
-  void surround({
-    required String before,
-    required String placeholder,
-
-    /// after = before if null
-    String? after,
-  }) {
-    after ??= before;
-    final beg = text.substring(0, selection.baseOffset);
-    final mid = () {
-      final m = text.substring(selection.baseOffset, selection.extentOffset);
-      if (m.isEmpty) return placeholder;
-      return m;
-    }();
-    final end = text.substring(selection.extentOffset);
-
-    value = value.copyWith(
-        text: '$beg$before$mid$after$end',
-        selection: selection.copyWith(
-          baseOffset: selection.baseOffset + before.length,
-          extentOffset: selection.baseOffset + before.length + mid.length,
-        ));
-  }
-
-  String get firstSelectedLine {
-    if (text.isEmpty) return '';
-    return text.substring(text.getBeginningOfTheLine(selection.start - 1),
-        text.getEndOfTheLine(selection.end));
-  }
-
-  void insertAtBeginningOfFirstSelectedLine(String s) {
-    final lines = TextLinesIterator.fromController(this)..moveNext();
-    lines.current = s + lines.current;
-    value = value.copyWith(
-      text: lines.text,
-      selection: selection.copyWith(
-        baseOffset: selection.baseOffset + s.length,
-        extentOffset: selection.extentOffset + s.length,
-      ),
-    );
-  }
-
-  void removeAtBeginningOfEverySelectedLine(String s) {
-    final lines = TextLinesIterator.fromController(this);
-    var linesCount = 0;
-    while (lines.moveNext()) {
-      if (lines.isWithinSelection) {
-        if (lines.current.startsWith(RegExp.escape(s))) {
-          lines.current = lines.current.substring(s.length);
-          linesCount++;
-        }
-      }
-    }
-
-    value = value.copyWith(
-      text: lines.text,
-      selection: selection.copyWith(
-        baseOffset: selection.baseOffset - s.length,
-        extentOffset: selection.extentOffset - s.length * linesCount,
-      ),
-    );
-  }
-
-  void insertAtBeginningOfEverySelectedLine(String s) {
-    final lines = TextLinesIterator.fromController(this);
-    var linesCount = 0;
-    while (lines.moveNext()) {
-      if (lines.isWithinSelection) {
-        if (!lines.current.startsWith(RegExp.escape(s))) {
-          lines.current = '$s${lines.current}';
-          linesCount++;
-        }
-      }
-    }
-
-    value = value.copyWith(
-      text: lines.text,
-      selection: selection.copyWith(
-        baseOffset: selection.baseOffset + s.length,
-        extentOffset: selection.extentOffset + s.length * linesCount,
-      ),
-    );
-  }
-
-  void reformat(Reformat Function(String selection) reformatter) {
-    final beg = beforeSelectionText;
-    final mid = selectionText;
-    final end = afterSelectionText;
-
-    final r = reformatter(mid);
-    value = value.copyWith(
-      text: '$beg${r.text}$end',
-      selection: selection.copyWith(
-        baseOffset: selection.baseOffset + r.selectionBeginningShift,
-        extentOffset: selection.extentOffset + r.selectionEndingShift,
-      ),
-    );
-  }
-
-  void reformatSimple(String text) =>
-      reformat((selection) => Reformat(text: text));
 }
 
 enum HeaderLevel {
@@ -151,21 +39,21 @@ enum HeaderLevel {
   final int value;
 }
 
-class Toolbar extends HookWidget {
+class EditorToolbar extends StatelessWidget {
   final TextEditingController controller;
   final String instanceHost;
   final EditorToolbarStore store;
   static const _height = 50.0;
 
-  Toolbar({
+  EditorToolbar({
     required this.controller,
     required this.instanceHost,
   }) : store = EditorToolbarStore(instanceHost);
 
   @override
   Widget build(BuildContext context) {
-    return MobxProvider.value(
-      value: store,
+    return MobxProvider(
+      create: (context) => store,
       child: AsyncStoreListener(
         asyncStore: store.imageUploadState,
         child: Container(
@@ -235,22 +123,19 @@ class _ToolbarBody extends HookWidget {
                   return;
                 }
                 try {
-                  // FIXME: for some reason it doesn't go past this line on iOS. idk why
                   final pic = await pickImage();
                   // pic is null when the picker was cancelled
 
                   if (pic != null) {
-                    final picUrl = await context
-                        .read<EditorToolbarStore>()
-                        .uploadImage(pic.path, token);
+                    final picUrl = await store.uploadImage(pic.path, token);
 
                     if (picUrl != null) {
                       controller.reformatSimple('![]($picUrl)');
                     }
                   }
                 } on Exception catch (_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Failed to upload image')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(L10n.of(context).failed_to_upload_image)));
                 }
               }),
               icon: store.imageUploadState.isLoading
@@ -366,9 +251,7 @@ class _ToolbarBody extends HookWidget {
           onPressed: () {
             controller.reformat((selection) {
               final insides = selection.isNotEmpty ? selection : '___';
-              Logger.root
-                  .info([21, 21 + insides.length, insides, insides.length]);
-              return Reformat(
+              return _Reformat(
                 text: '\n::: spoiler spoiler\n$insides\n:::\n',
                 selectionBeginningShift: 21,
                 selectionEndingShift: 21 + insides.length - selection.length,
@@ -391,31 +274,31 @@ class _ToolbarBody extends HookWidget {
 }
 
 class AddLinkDialog extends HookWidget {
-  final String title;
+  final String label;
   final String url;
   final String selection;
 
   static final _websiteRegex = RegExp(r'https?:\/\/', caseSensitive: false);
 
   AddLinkDialog(this.selection)
-      : title = selection.startsWith(_websiteRegex) ? '' : selection,
+      : label = selection.startsWith(_websiteRegex) ? '' : selection,
         url = selection.startsWith(_websiteRegex) ? selection : '';
 
   @override
   Widget build(BuildContext context) {
-    final titleController = useTextEditingController(text: title);
+    final labelController = useTextEditingController(text: label);
     final urlController = useTextEditingController(text: url);
 
     void submit() {
       final link = () {
-        if (urlController.text.startsWith('http?s://')) {
+        if (urlController.text.startsWith(RegExp('https?://'))) {
           return urlController.text;
         } else {
           return 'https://${urlController.text}';
         }
       }();
-      final finalString = '(${titleController.text})[$link]';
-      Navigator.of(context).pop(Reformat(
+      final finalString = '[${labelController.text}]($link)';
+      Navigator.of(context).pop(_Reformat(
         text: finalString,
         selectionBeginningShift: finalString.length,
         selectionEndingShift: finalString.length - selection.length,
@@ -423,13 +306,14 @@ class AddLinkDialog extends HookWidget {
     }
 
     return AlertDialog(
-      title: const Text('Add link'),
+      title: Text(L10n.of(context).add_link),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: titleController,
-            decoration: const InputDecoration(hintText: 'title'),
+            controller: labelController,
+            decoration: InputDecoration(
+                hintText: L10n.of(context).editor_add_link_label),
             textInputAction: TextInputAction.next,
             autofocus: true,
           ),
@@ -444,19 +328,129 @@ class AddLinkDialog extends HookWidget {
       actions: [
         TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel')),
+            child: Text(L10n.of(context).cancel)),
         ElevatedButton(
           onPressed: submit,
-          child: const Text('Add link'),
+          child: Text(L10n.of(context).add_link),
         )
       ],
     );
   }
 
-  static Future<Reformat?> show(BuildContext context, String selection) async {
+  static Future<_Reformat?> show(BuildContext context, String selection) async {
     return showDialog(
       context: context,
       builder: (context) => AddLinkDialog(selection),
     );
   }
+}
+
+extension on TextEditingController {
+  String get selectionText =>
+      text.substring(selection.baseOffset, selection.extentOffset);
+  String get beforeSelectionText => text.substring(0, selection.baseOffset);
+  String get afterSelectionText => text.substring(selection.extentOffset);
+
+  /// surrounds selection with given strings. If nothing is selected, placeholder is used in the middle
+  void surround({
+    required String before,
+    required String placeholder,
+
+    /// after = before if null
+    String? after,
+  }) {
+    after ??= before;
+    final beg = text.substring(0, selection.baseOffset);
+    final mid = () {
+      final m = text.substring(selection.baseOffset, selection.extentOffset);
+      if (m.isEmpty) return placeholder;
+      return m;
+    }();
+    final end = text.substring(selection.extentOffset);
+
+    value = value.copyWith(
+        text: '$beg$before$mid$after$end',
+        selection: selection.copyWith(
+          baseOffset: selection.baseOffset + before.length,
+          extentOffset: selection.baseOffset + before.length + mid.length,
+        ));
+  }
+
+  String get firstSelectedLine {
+    if (text.isEmpty) return '';
+    return text.substring(text.getBeginningOfTheLine(selection.start - 1),
+        text.getEndOfTheLine(selection.end));
+  }
+
+  void insertAtBeginningOfFirstSelectedLine(String s) {
+    final lines = TextLinesIterator.fromController(this)..moveNext();
+    lines.current = s + lines.current;
+    value = value.copyWith(
+      text: lines.text,
+      selection: selection.copyWith(
+        baseOffset: selection.baseOffset + s.length,
+        extentOffset: selection.extentOffset + s.length,
+      ),
+    );
+  }
+
+  void removeAtBeginningOfEverySelectedLine(String s) {
+    final lines = TextLinesIterator.fromController(this);
+    var linesCount = 0;
+    while (lines.moveNext()) {
+      if (lines.isWithinSelection) {
+        if (lines.current.startsWith(RegExp.escape(s))) {
+          lines.current = lines.current.substring(s.length);
+          linesCount++;
+        }
+      }
+    }
+
+    value = value.copyWith(
+      text: lines.text,
+      selection: selection.copyWith(
+        baseOffset: selection.baseOffset - s.length,
+        extentOffset: selection.extentOffset - s.length * linesCount,
+      ),
+    );
+  }
+
+  void insertAtBeginningOfEverySelectedLine(String s) {
+    final lines = TextLinesIterator.fromController(this);
+    var linesCount = 0;
+    while (lines.moveNext()) {
+      if (lines.isWithinSelection) {
+        if (!lines.current.startsWith(RegExp.escape(s))) {
+          lines.current = '$s${lines.current}';
+          linesCount++;
+        }
+      }
+    }
+
+    value = value.copyWith(
+      text: lines.text,
+      selection: selection.copyWith(
+        baseOffset: selection.baseOffset + s.length,
+        extentOffset: selection.extentOffset + s.length * linesCount,
+      ),
+    );
+  }
+
+  void reformat(_Reformat Function(String selection) reformatter) {
+    final beg = beforeSelectionText;
+    final mid = selectionText;
+    final end = afterSelectionText;
+
+    final r = reformatter(mid);
+    value = value.copyWith(
+      text: '$beg${r.text}$end',
+      selection: selection.copyWith(
+        baseOffset: selection.baseOffset + r.selectionBeginningShift,
+        extentOffset: selection.extentOffset + r.selectionEndingShift,
+      ),
+    );
+  }
+
+  void reformatSimple(String text) =>
+      reformat((selection) => _Reformat(text: text));
 }

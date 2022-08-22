@@ -415,5 +415,29 @@
   "insert_text_here_placeholder": "[write text here]",
   "@insert_text_here_placeholder": {
     "description": "placeholder for text in markdown editor when inserting stuff like * for italics or ** for bold, etc."
+  },
+  "select_user": "Select User",
+  "@select_user": {
+    "description": "Title on a popup that lets a user search and select another user"
+  },
+  "select_community": "Select Community",
+  "@select_community": {
+    "description": "Title on a popup that lets a user search and select a community"
+  },
+  "add_link": "Add link",
+  "@add_link": {
+    "description": "title on top of a link insertion popup in a markdown editor"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button on popup"
+  },
+  "editor_add_link_label": "label",
+  "@editor_add_link_label": {
+    "description": "palceholder for link label on an Add link popup in markdown editor"
+  },
+  "failed_to_upload_image": "Failed to upload image",
+  "@failed_to_upload_image": {
+    "description": "shows up on a snackbar when the image upload failed (duh)"
   }
 }

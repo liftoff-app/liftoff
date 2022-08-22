@@ -134,7 +134,7 @@ class CreatePostPage extends HookWidget {
                           )
                         ],
                       ),
-                      Toolbar.safeArea,
+                      EditorToolbar.safeArea,
                     ].spaced(6),
                   ),
                 ),
@@ -145,7 +145,7 @@ class CreatePostPage extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Spacer(),
-                  Toolbar(
+                  EditorToolbar(
                     controller: bodyController,
                     instanceHost: context.read<CreatePostStore>().instanceHost,
                   ),

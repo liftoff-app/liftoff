@@ -132,7 +132,7 @@ class WriteComment extends HookWidget {
                   )
                 ],
               ),
-              Toolbar.safeArea,
+              EditorToolbar.safeArea,
             ],
           ),
           SafeArea(
@@ -140,7 +140,7 @@ class WriteComment extends HookWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Spacer(),
-                Toolbar(
+                EditorToolbar(
                   controller: controller,
                   instanceHost: post.instanceHost,
                 ),
