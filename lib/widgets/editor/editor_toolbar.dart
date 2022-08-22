@@ -211,7 +211,7 @@ class _ToolbarBody extends HookWidget {
           onPressed: () {
             final line = controller.firstSelectedLine;
 
-            if (line.startsWith(RegExp.escape('* '))) {
+            if (line.startsWith('* ')) {
               controller.removeAtBeginningOfEverySelectedLine('* ');
             } else if (line.startsWith('- ')) {
               controller.removeAtBeginningOfEverySelectedLine('- ');
@@ -399,7 +399,7 @@ extension on TextEditingController {
     var linesCount = 0;
     while (lines.moveNext()) {
       if (lines.isWithinSelection) {
-        if (lines.current.startsWith(RegExp.escape(s))) {
+        if (lines.current.startsWith(s)) {
           lines.current = lines.current.substring(s.length);
           linesCount++;
         }
@@ -420,7 +420,7 @@ extension on TextEditingController {
     var linesCount = 0;
     while (lines.moveNext()) {
       if (lines.isWithinSelection) {
-        if (!lines.current.startsWith(RegExp.escape(s))) {
+        if (!lines.current.startsWith(s)) {
           lines.current = '$s${lines.current}';
           linesCount++;
         }
