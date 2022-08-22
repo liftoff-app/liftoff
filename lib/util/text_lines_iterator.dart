@@ -11,8 +11,8 @@ class TextLinesIterator extends Iterator {
       : end = -1,
         beg = -1;
 
-  factory TextLinesIterator.fromController(TextEditingController controller) =>
-      TextLinesIterator(controller.text, selection: controller.selection);
+  TextLinesIterator.fromController(TextEditingController controller) :
+      this(controller.text, selection: controller.selection);
 
   bool get isWithinSelection {
     final selection = this.selection;
