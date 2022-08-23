@@ -36,6 +36,7 @@ class WriteComment extends HookWidget {
     final showFancy = useState(false);
     final delayed = useDelayedLoading();
     final loggedInAction = useLoggedInAction(post.instanceHost);
+    final editorFocusNode = useFocusNode();
 
     final preview = () {
       final body = () {
@@ -117,6 +118,7 @@ class WriteComment extends HookWidget {
                 controller: controller,
                 autofocus: true,
                 fancy: showFancy.value,
+                focusNode: editorFocusNode,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -141,6 +143,7 @@ class WriteComment extends HookWidget {
               children: [
                 const Spacer(),
                 EditorToolbar(
+                  editorFocusNode: editorFocusNode,
                   controller: controller,
                   instanceHost: post.instanceHost,
                 ),

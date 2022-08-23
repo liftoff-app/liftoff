@@ -39,37 +39,50 @@ enum HeaderLevel {
   final int value;
 }
 
-class EditorToolbar extends StatelessWidget {
+class EditorToolbar extends HookWidget {
   final TextEditingController controller;
   final String instanceHost;
   final EditorToolbarStore store;
+  final FocusNode editorFocusNode;
   static const _height = 50.0;
 
   EditorToolbar({
     required this.controller,
     required this.instanceHost,
+    required this.editorFocusNode,
   }) : store = EditorToolbarStore(instanceHost);
 
   @override
   Widget build(BuildContext context) {
+    final visible = useState(editorFocusNode.hasFocus);
+    useEffect(() {
+      editorFocusNode.addListener(() {
+        visible.value = editorFocusNode.hasFocus;
+      });
+
+      return;
+    }, [editorFocusNode]);
+
     return MobxProvider(
       create: (context) => store,
       child: AsyncStoreListener(
         asyncStore: store.imageUploadState,
-        child: Container(
-          height: _height,
-          width: double.infinity,
-          color: Theme.of(context).cardColor,
-          child: Material(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: _ToolbarBody(
-                controller: controller,
-                instanceHost: instanceHost,
-              ),
-            ),
-          ),
-        ),
+        child: visible.value
+            ? Container(
+                height: _height,
+                width: double.infinity,
+                color: Theme.of(context).cardColor,
+                child: Material(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: _ToolbarBody(
+                      controller: controller,
+                      instanceHost: instanceHost,
+                    ),
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
       ),
     );
   }

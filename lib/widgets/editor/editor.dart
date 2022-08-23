@@ -52,18 +52,22 @@ class Editor extends HookWidget {
       );
     }
 
-    return TextField(
-      controller: actualController,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      keyboardType: TextInputType.multiline,
-      textCapitalization: TextCapitalization.sentences,
-      onChanged: onChanged,
-      onSubmitted: onSubmitted,
-      maxLines: maxLines,
-      minLines: minLines,
-      decoration: InputDecoration(labelText: labelText),
-      inputFormatters: [MarkdownFormatter()],
+    return FocusScope(
+      child: Focus(
+        focusNode: focusNode,
+        child: TextField(
+          controller: actualController,
+          autofocus: autofocus,
+          keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
+          onChanged: onChanged,
+          onSubmitted: onSubmitted,
+          maxLines: maxLines,
+          minLines: minLines,
+          decoration: InputDecoration(labelText: labelText),
+          inputFormatters: [MarkdownFormatter()],
+        ),
+      ),
     );
   }
 }

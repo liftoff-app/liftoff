@@ -31,6 +31,7 @@ class CreatePostPage extends HookWidget {
     );
 
     final titleFocusNode = useFocusNode();
+    final editorFocusNode = useFocusNode();
 
     handleSubmit(Jwt token) async {
       if (formKey.currentState!.validate()) {
@@ -63,6 +64,7 @@ class CreatePostPage extends HookWidget {
         labelText: L10n.of(context).body,
         instanceHost: store.instanceHost,
         fancy: store.showFancy,
+        focusNode: editorFocusNode,
       ),
     );
 
@@ -146,6 +148,7 @@ class CreatePostPage extends HookWidget {
                 children: [
                   const Spacer(),
                   EditorToolbar(
+                    editorFocusNode: editorFocusNode,
                     controller: bodyController,
                     instanceHost: context.read<CreatePostStore>().instanceHost,
                   ),

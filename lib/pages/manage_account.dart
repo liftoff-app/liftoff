@@ -234,150 +234,169 @@ class _ManageAccount extends HookWidget {
       }
     }
 
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+    return Stack(
       children: [
-        _ImagePicker(
-          user: user,
-          name: L10n.of(context).avatar,
-          initialUrl: avatar.value,
-          onChange: (value) => avatar.value = value,
-          informAcceptedRef: informAcceptedAvatarRef,
+        ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          children: [
+            _ImagePicker(
+              user: user,
+              name: L10n.of(context).avatar,
+              initialUrl: avatar.value,
+              onChange: (value) => avatar.value = value,
+              informAcceptedRef: informAcceptedAvatarRef,
+            ),
+            const SizedBox(height: 8),
+            _ImagePicker(
+              user: user,
+              name: L10n.of(context).banner,
+              initialUrl: banner.value,
+              onChange: (value) => banner.value = value,
+              informAcceptedRef: informAcceptedBannerRef,
+            ),
+            const SizedBox(height: 8),
+            Text(L10n.of(context).display_name,
+                style: theme.textTheme.headline6),
+            TextField(
+              controller: displayNameController,
+              onSubmitted: (_) => bioFocusNode.requestFocus(),
+            ),
+            const SizedBox(height: 8),
+            Text(L10n.of(context).bio, style: theme.textTheme.headline6),
+            Editor(
+              controller: bioController,
+              focusNode: bioFocusNode,
+              onSubmitted: (_) => emailFocusNode.requestFocus(),
+              instanceHost: user.instanceHost,
+              maxLines: 10,
+            ),
+            const SizedBox(height: 8),
+            Text(L10n.of(context).email, style: theme.textTheme.headline6),
+            TextField(
+              focusNode: emailFocusNode,
+              controller: emailController,
+              autofillHints: const [AutofillHints.email],
+              keyboardType: TextInputType.emailAddress,
+              onSubmitted: (_) => matrixUserFocusNode.requestFocus(),
+            ),
+            const SizedBox(height: 8),
+            Text(L10n.of(context).matrix_user,
+                style: theme.textTheme.headline6),
+            TextField(
+              focusNode: matrixUserFocusNode,
+              controller: matrixUserController,
+              onSubmitted: (_) => newPasswordFocusNode.requestFocus(),
+            ),
+            const SizedBox(height: 8),
+            // Text(L10n.of(context)!.new_password, style: theme.textTheme.headline6),
+            // TextField(
+            //   focusNode: newPasswordFocusNode,
+            //   controller: newPasswordController,
+            //   autofillHints: const [AutofillHints.newPassword],
+            //   keyboardType: TextInputType.visiblePassword,
+            //   obscureText: true,
+            //   onSubmitted: (_) => verifyPasswordFocusNode.requestFocus(),
+            // ),
+            // const SizedBox(height: 8),
+            // Text(L10n.of(context)!.verify_password,
+            //     style: theme.textTheme.headline6),
+            // TextField(
+            //   focusNode: verifyPasswordFocusNode,
+            //   controller: newPasswordVerifyController,
+            //   autofillHints: const [AutofillHints.newPassword],
+            //   keyboardType: TextInputType.visiblePassword,
+            //   obscureText: true,
+            //   onSubmitted: (_) => oldPasswordFocusNode.requestFocus(),
+            // ),
+            // const SizedBox(height: 8),
+            // Text(L10n.of(context)!.old_password, style: theme.textTheme.headline6),
+            // TextField(
+            //   focusNode: oldPasswordFocusNode,
+            //   controller: oldPasswordController,
+            //   autofillHints: const [AutofillHints.password],
+            //   keyboardType: TextInputType.visiblePassword,
+            //   obscureText: true,
+            // ),
+            // const SizedBox(height: 8),
+            SwitchListTile.adaptive(
+              value: showNsfw.value,
+              onChanged: (checked) {
+                showNsfw.value = checked;
+              },
+              title: Text(L10n.of(context).show_nsfw),
+              dense: true,
+            ),
+            const SizedBox(height: 8),
+            SwitchListTile.adaptive(
+              value: botAccount.value,
+              onChanged: (checked) {
+                botAccount.value = checked;
+              },
+              title: Text(L10n.of(context).bot_account),
+              dense: true,
+            ),
+            const SizedBox(height: 8),
+            SwitchListTile.adaptive(
+              value: showBotAccounts.value,
+              onChanged: (checked) {
+                showBotAccounts.value = checked;
+              },
+              title: Text(L10n.of(context).show_bot_accounts),
+              dense: true,
+            ),
+            const SizedBox(height: 8),
+            SwitchListTile.adaptive(
+              value: showReadPosts.value,
+              onChanged: (checked) {
+                showReadPosts.value = checked;
+              },
+              title: Text(L10n.of(context).show_read_posts),
+              dense: true,
+            ),
+            const SizedBox(height: 8),
+            SwitchListTile.adaptive(
+              value: sendNotificationsToEmail.value,
+              onChanged: (checked) {
+                sendNotificationsToEmail.value = checked;
+              },
+              title: Text(L10n.of(context).send_notifications_to_email),
+              dense: true,
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: saveDelayedLoading.loading ? null : handleSubmit,
+              child: saveDelayedLoading.loading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator.adaptive(),
+                    )
+                  : Text(L10n.of(context).save),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: deleteAccountDialog,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+              ),
+              child: Text(L10n.of(context).delete_account.toUpperCase()),
+            ),
+            const BottomSafe(),
+          ],
         ),
-        const SizedBox(height: 8),
-        _ImagePicker(
-          user: user,
-          name: L10n.of(context).banner,
-          initialUrl: banner.value,
-          onChange: (value) => banner.value = value,
-          informAcceptedRef: informAcceptedBannerRef,
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).display_name, style: theme.textTheme.headline6),
-        TextField(
-          controller: displayNameController,
-          onSubmitted: (_) => bioFocusNode.requestFocus(),
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).bio, style: theme.textTheme.headline6),
-        Editor(
-          controller: bioController,
-          focusNode: bioFocusNode,
-          onSubmitted: (_) => emailFocusNode.requestFocus(),
-          instanceHost: user.instanceHost,
-          maxLines: 10,
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).email, style: theme.textTheme.headline6),
-        TextField(
-          focusNode: emailFocusNode,
-          controller: emailController,
-          autofillHints: const [AutofillHints.email],
-          keyboardType: TextInputType.emailAddress,
-          onSubmitted: (_) => matrixUserFocusNode.requestFocus(),
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).matrix_user, style: theme.textTheme.headline6),
-        TextField(
-          focusNode: matrixUserFocusNode,
-          controller: matrixUserController,
-          onSubmitted: (_) => newPasswordFocusNode.requestFocus(),
-        ),
-        const SizedBox(height: 8),
-        // Text(L10n.of(context)!.new_password, style: theme.textTheme.headline6),
-        // TextField(
-        //   focusNode: newPasswordFocusNode,
-        //   controller: newPasswordController,
-        //   autofillHints: const [AutofillHints.newPassword],
-        //   keyboardType: TextInputType.visiblePassword,
-        //   obscureText: true,
-        //   onSubmitted: (_) => verifyPasswordFocusNode.requestFocus(),
-        // ),
-        // const SizedBox(height: 8),
-        // Text(L10n.of(context)!.verify_password,
-        //     style: theme.textTheme.headline6),
-        // TextField(
-        //   focusNode: verifyPasswordFocusNode,
-        //   controller: newPasswordVerifyController,
-        //   autofillHints: const [AutofillHints.newPassword],
-        //   keyboardType: TextInputType.visiblePassword,
-        //   obscureText: true,
-        //   onSubmitted: (_) => oldPasswordFocusNode.requestFocus(),
-        // ),
-        // const SizedBox(height: 8),
-        // Text(L10n.of(context)!.old_password, style: theme.textTheme.headline6),
-        // TextField(
-        //   focusNode: oldPasswordFocusNode,
-        //   controller: oldPasswordController,
-        //   autofillHints: const [AutofillHints.password],
-        //   keyboardType: TextInputType.visiblePassword,
-        //   obscureText: true,
-        // ),
-        // const SizedBox(height: 8),
-        SwitchListTile.adaptive(
-          value: showNsfw.value,
-          onChanged: (checked) {
-            showNsfw.value = checked;
-          },
-          title: Text(L10n.of(context).show_nsfw),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        SwitchListTile.adaptive(
-          value: botAccount.value,
-          onChanged: (checked) {
-            botAccount.value = checked;
-          },
-          title: Text(L10n.of(context).bot_account),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        SwitchListTile.adaptive(
-          value: showBotAccounts.value,
-          onChanged: (checked) {
-            showBotAccounts.value = checked;
-          },
-          title: Text(L10n.of(context).show_bot_accounts),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        SwitchListTile.adaptive(
-          value: showReadPosts.value,
-          onChanged: (checked) {
-            showReadPosts.value = checked;
-          },
-          title: Text(L10n.of(context).show_read_posts),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        SwitchListTile.adaptive(
-          value: sendNotificationsToEmail.value,
-          onChanged: (checked) {
-            sendNotificationsToEmail.value = checked;
-          },
-          title: Text(L10n.of(context).send_notifications_to_email),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: saveDelayedLoading.loading ? null : handleSubmit,
-          child: saveDelayedLoading.loading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator.adaptive(),
-                )
-              : Text(L10n.of(context).save),
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: deleteAccountDialog,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.red,
+        SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Spacer(),
+              EditorToolbar(
+                editorFocusNode: bioFocusNode,
+                controller: bioController,
+                instanceHost: user.instanceHost,
+              ),
+            ],
           ),
-          child: Text(L10n.of(context).delete_account.toUpperCase()),
         ),
-        const BottomSafe(),
       ],
     );
   }
