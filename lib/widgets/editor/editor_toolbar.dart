@@ -54,14 +54,7 @@ class EditorToolbar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final visible = useState(editorFocusNode.hasFocus);
-    useEffect(() {
-      editorFocusNode.addListener(() {
-        visible.value = editorFocusNode.hasFocus;
-      });
-
-      return;
-    }, [editorFocusNode]);
+    final visible = useListenable(editorFocusNode).hasFocus;
 
     return MobxProvider(
       create: (context) => store,
