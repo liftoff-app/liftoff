@@ -6,10 +6,34 @@ import '../markdown_text.dart';
 
 export 'editor_toolbar.dart';
 
+class EditorController {
+  final TextEditingController textEditingController;
+  final FocusNode focusNode;
+  final String instanceHost;
+
+  EditorController({
+    required this.textEditingController,
+    required this.focusNode,
+    required this.instanceHost,
+  });
+}
+
+EditorController useEditorController({
+  required String instanceHost,
+  String? text,
+}) {
+  final focusNode = useFocusNode();
+  final textEditingController = useTextEditingController(text: text);
+  return EditorController(
+      textEditingController: textEditingController,
+      focusNode: focusNode,
+      instanceHost: instanceHost);
+}
+
 /// A text field with added functionality for ease of editing
 class Editor extends HookWidget {
-  final TextEditingController? controller;
-  final FocusNode? focusNode;
+  final EditorController controller;
+
   final ValueChanged<String>? onSubmitted;
   final ValueChanged<String>? onChanged;
   final int? minLines;
@@ -20,12 +44,10 @@ class Editor extends HookWidget {
 
   /// Whether the editor should be preview the contents
   final bool fancy;
-  final String instanceHost;
 
   const Editor({
     super.key,
-    this.controller,
-    this.focusNode,
+    required this.controller,
     this.onSubmitted,
     this.onChanged,
     this.minLines = 5,
@@ -33,28 +55,24 @@ class Editor extends HookWidget {
     this.labelText,
     this.initialValue,
     this.fancy = false,
-    required this.instanceHost,
     this.autofocus = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final defaultController = useTextEditingController(text: initialValue);
-    final actualController = controller ?? defaultController;
-
     if (fancy) {
       return Padding(
         padding: const EdgeInsets.all(8),
         child: MarkdownText(
-          actualController.text,
-          instanceHost: instanceHost,
+          controller.textEditingController.text,
+          instanceHost: controller.instanceHost,
         ),
       );
     }
 
     return TextField(
-      focusNode: focusNode,
-      controller: actualController,
+      focusNode: controller.focusNode,
+      controller: controller.textEditingController,
       autofocus: autofocus,
       keyboardType: TextInputType.multiline,
       textCapitalization: TextCapitalization.sentences,

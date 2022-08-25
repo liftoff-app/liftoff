@@ -30,8 +30,10 @@ class CreatePostPage extends HookWidget {
       useStore((CreatePostStore store) => store.instanceHost),
     );
 
+    final editorController = useEditorController(
+        instanceHost: context.read<CreatePostStore>().instanceHost,
+        text: context.read<CreatePostStore>().body);
     final titleFocusNode = useFocusNode();
-    final editorFocusNode = useFocusNode();
 
     handleSubmit(Jwt token) async {
       if (formKey.currentState!.validate()) {
@@ -54,17 +56,12 @@ class CreatePostPage extends HookWidget {
       ),
     );
 
-    final bodyController =
-        useTextEditingController(text: context.read<CreatePostStore>().body);
-
     final body = ObserverBuilder<CreatePostStore>(
       builder: (context, store) => Editor(
-        controller: bodyController,
+        controller: editorController,
         onChanged: (body) => store.body = body,
         labelText: L10n.of(context).body,
-        instanceHost: store.instanceHost,
         fancy: store.showFancy,
-        focusNode: editorFocusNode,
       ),
     );
 
@@ -143,11 +140,7 @@ class CreatePostPage extends HookWidget {
               ),
             ),
             BottomSticky(
-              child: EditorToolbar(
-                editorFocusNode: editorFocusNode,
-                controller: bodyController,
-                instanceHost: context.read<CreatePostStore>().instanceHost,
-              ),
+              child: EditorToolbar(editorController),
             ),
           ],
         ),

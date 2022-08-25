@@ -99,7 +99,6 @@ class _ManageAccount extends HookWidget {
 
     final displayNameController =
         useTextEditingController(text: user.person.displayName);
-    final bioController = useTextEditingController(text: user.person.bio);
     final emailController =
         useTextEditingController(text: user.localUser.email);
     final matrixUserController =
@@ -122,12 +121,14 @@ class _ManageAccount extends HookWidget {
 
     final deleteAccountPasswordController = useTextEditingController();
 
-    final bioFocusNode = useFocusNode();
     final emailFocusNode = useFocusNode();
     final matrixUserFocusNode = useFocusNode();
     final newPasswordFocusNode = useFocusNode();
     // final verifyPasswordFocusNode = useFocusNode();
     // final oldPasswordFocusNode = useFocusNode();
+
+    final bioController = useEditorController(
+        instanceHost: user.instanceHost, text: user.person.bio);
 
     final token =
         accountsStore.userDataFor(user.instanceHost, user.person.name)!.jwt;
@@ -156,7 +157,9 @@ class _ManageAccount extends HookWidget {
           displayName: displayNameController.text.isEmpty
               ? null
               : displayNameController.text,
-          bio: bioController.text.isEmpty ? null : bioController.text,
+          bio: bioController.textEditingController.text.isEmpty
+              ? null
+              : bioController.textEditingController.text,
           email: emailController.text.isEmpty ? null : emailController.text,
         ));
 
@@ -259,15 +262,13 @@ class _ManageAccount extends HookWidget {
                 style: theme.textTheme.headline6),
             TextField(
               controller: displayNameController,
-              onSubmitted: (_) => bioFocusNode.requestFocus(),
+              onSubmitted: (_) => bioController.focusNode.requestFocus(),
             ),
             const SizedBox(height: 8),
             Text(L10n.of(context).bio, style: theme.textTheme.headline6),
             Editor(
               controller: bioController,
-              focusNode: bioFocusNode,
               onSubmitted: (_) => emailFocusNode.requestFocus(),
-              instanceHost: user.instanceHost,
               maxLines: 10,
             ),
             const SizedBox(height: 8),
@@ -385,11 +386,7 @@ class _ManageAccount extends HookWidget {
           ],
         ),
         BottomSticky(
-          child: EditorToolbar(
-            editorFocusNode: bioFocusNode,
-            controller: bioController,
-            instanceHost: user.instanceHost,
-          ),
+          child: EditorToolbar(bioController),
         )
       ],
     );

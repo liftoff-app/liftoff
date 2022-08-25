@@ -13,6 +13,7 @@ import '../../util/files.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/text_lines_iterator.dart';
+import 'editor.dart';
 import 'editor_picking_dialog.dart';
 import 'editor_toolbar_store.dart';
 
@@ -40,23 +41,18 @@ enum HeaderLevel {
 }
 
 class EditorToolbar extends HookWidget {
-  final TextEditingController controller;
-  final String instanceHost;
-  final FocusNode editorFocusNode;
+  final EditorController controller;
+
   static const _height = 50.0;
 
-  const EditorToolbar({
-    required this.controller,
-    required this.instanceHost,
-    required this.editorFocusNode,
-  });
+  const EditorToolbar(this.controller);
 
   @override
   Widget build(BuildContext context) {
-    final visible = useListenable(editorFocusNode).hasFocus;
+    final visible = useListenable(controller.focusNode).hasFocus;
 
     return MobxProvider(
-      create: (context) => EditorToolbarStore(instanceHost),
+      create: (context) => EditorToolbarStore(controller.instanceHost),
       child: Builder(builder: (context) {
         return AsyncStoreListener(
           asyncStore: context.read<EditorToolbarStore>().imageUploadState,
@@ -81,8 +77,8 @@ class EditorToolbar extends HookWidget {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: _ToolbarBody(
-                          controller: controller,
-                          instanceHost: instanceHost,
+                          controller: controller.textEditingController,
+                          instanceHost: controller.instanceHost,
                         ),
                       ),
                     ),

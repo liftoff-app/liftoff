@@ -31,12 +31,14 @@ class WriteComment extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        useTextEditingController(text: _isEdit ? comment?.content : null);
     final showFancy = useState(false);
     final delayed = useDelayedLoading();
     final loggedInAction = useLoggedInAction(post.instanceHost);
-    final editorFocusNode = useFocusNode();
+
+    final editorController = useEditorController(
+      instanceHost: post.instanceHost,
+      text: _isEdit ? comment?.content : null,
+    );
 
     final preview = () {
       final body = () {
@@ -70,12 +72,12 @@ class WriteComment extends HookWidget {
           if (_isEdit) {
             return api.run(EditComment(
               commentId: comment!.id,
-              content: controller.text,
+              content: editorController.textEditingController.text,
               auth: token.raw,
             ));
           } else {
             return api.run(CreateComment(
-              content: controller.text,
+              content: editorController.textEditingController.text,
               postId: post.id,
               parentId: comment?.id,
               auth: token.raw,
@@ -114,11 +116,9 @@ class WriteComment extends HookWidget {
               ),
               const Divider(),
               Editor(
-                instanceHost: post.instanceHost,
-                controller: controller,
+                controller: editorController,
                 autofocus: true,
                 fancy: showFancy.value,
-                focusNode: editorFocusNode,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -138,11 +138,7 @@ class WriteComment extends HookWidget {
             ],
           ),
           BottomSticky(
-            child: EditorToolbar(
-              editorFocusNode: editorFocusNode,
-              controller: controller,
-              instanceHost: post.instanceHost,
-            ),
+            child: EditorToolbar(editorController),
           ),
         ],
       ),
