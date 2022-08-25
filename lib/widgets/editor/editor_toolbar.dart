@@ -42,42 +42,53 @@ enum HeaderLevel {
 class EditorToolbar extends HookWidget {
   final TextEditingController controller;
   final String instanceHost;
-  final EditorToolbarStore store;
   final FocusNode editorFocusNode;
   static const _height = 50.0;
 
-  EditorToolbar({
+  const EditorToolbar({
     required this.controller,
     required this.instanceHost,
     required this.editorFocusNode,
-  }) : store = EditorToolbarStore(instanceHost);
+  });
 
   @override
   Widget build(BuildContext context) {
     final visible = useListenable(editorFocusNode).hasFocus;
 
     return MobxProvider(
-      create: (context) => store,
-      child: AsyncStoreListener(
-        asyncStore: store.imageUploadState,
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: visible
-              ? Container(
-                  height: _height,
-                  width: double.infinity,
-                  color: Theme.of(context).canvasColor,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: _ToolbarBody(
-                      controller: controller,
-                      instanceHost: instanceHost,
+      create: (context) => EditorToolbarStore(instanceHost),
+      child: ObserverBuilder<EditorToolbarStore>(builder: (context, store) {
+        return AsyncStoreListener(
+          asyncStore: store.imageUploadState,
+          child: AnimatedSwitcher(
+            duration: kThemeAnimationDuration,
+            transitionBuilder: (child, animation) {
+              final offsetAnimation =
+                  Tween<Offset>(begin: const Offset(0, 1.5), end: Offset.zero)
+                      .animate(animation);
+
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+            child: visible
+                ? Container(
+                    height: _height,
+                    width: double.infinity,
+                    color: Theme.of(context).canvasColor,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: _ToolbarBody(
+                        controller: controller,
+                        instanceHost: instanceHost,
+                      ),
                     ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-      ),
+                  )
+                : const SizedBox.shrink(),
+          ),
+        );
+      }),
     );
   }
 
