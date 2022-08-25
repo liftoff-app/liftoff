@@ -224,12 +224,21 @@ class _ToolbarBody extends HookWidget {
           onPressed: () {
             final line = controller.firstSelectedLine;
 
-            if (line.startsWith('* ')) {
-              controller.removeAtBeginningOfEverySelectedLine('* ');
-            } else if (line.startsWith('- ')) {
-              controller.removeAtBeginningOfEverySelectedLine('- ');
-            } else {
-              controller.insertAtBeginningOfEverySelectedLine('- ');
+            // if theres a list in place, remove it
+            final listRemoved = () {
+              for (final c in unorderedListTypes) {
+                if (line.startsWith('$c ')) {
+                  controller.removeAtBeginningOfEverySelectedLine('$c ');
+                  return true;
+                }
+              }
+              return false;
+            }();
+
+            // if no list, then let's add one
+            if (!listRemoved) {
+              controller.insertAtBeginningOfEverySelectedLine(
+                  '${unorderedListTypes.last} ');
             }
           },
           icon: const Icon(Icons.format_list_bulleted),

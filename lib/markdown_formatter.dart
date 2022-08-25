@@ -1,5 +1,8 @@
 import 'package:flutter/services.dart';
 
+const unorderedListTypes = ['*', '+', '-'];
+const orderedListTypes = [')', '.'];
+
 extension Utilities on String {
   int getBeginningOfTheLine(int from) {
     if (from <= 0) return 0;
@@ -80,11 +83,12 @@ class MarkdownFormatter extends TextInputFormatter {
         return tev.append('$indent$number$afterNumberChar ');
       }
 
-      newVal = unorderedListContinuation('-', newVal);
-      newVal = unorderedListContinuation('*', newVal);
-      newVal = unorderedListContinuation('+', newVal);
-      newVal = orderedListContinuation('.', newVal);
-      newVal = orderedListContinuation(')', newVal);
+      for (final c in unorderedListTypes) {
+        newVal = unorderedListContinuation(c, newVal);
+      }
+      for (final c in orderedListTypes) {
+        newVal = orderedListContinuation(c, newVal);
+      }
     }
 
     return newVal;
