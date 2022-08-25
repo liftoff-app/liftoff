@@ -73,15 +73,17 @@ class EditorToolbar extends HookWidget {
               );
             },
             child: visible
-                ? Container(
-                    height: _height,
-                    width: double.infinity,
+                ? Material(
                     color: Theme.of(context).canvasColor,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: _ToolbarBody(
-                        controller: controller,
-                        instanceHost: instanceHost,
+                    child: SizedBox(
+                      height: _height,
+                      width: double.infinity,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: _ToolbarBody(
+                          controller: controller,
+                          instanceHost: instanceHost,
+                        ),
                       ),
                     ),
                   )
