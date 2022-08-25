@@ -71,14 +71,16 @@ class EditorToolbar extends HookWidget {
             child: visible
                 ? Material(
                     color: Theme.of(context).canvasColor,
-                    child: SizedBox(
-                      height: _height,
-                      width: double.infinity,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: _ToolbarBody(
-                          controller: controller.textEditingController,
-                          instanceHost: controller.instanceHost,
+                    child: SafeArea(
+                      child: SizedBox(
+                        height: _height,
+                        width: double.infinity,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: _ToolbarBody(
+                            controller: controller.textEditingController,
+                            instanceHost: controller.instanceHost,
+                          ),
                         ),
                       ),
                     ),
@@ -98,13 +100,11 @@ class BottomSticky extends StatelessWidget {
   const BottomSticky({required this.child});
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Spacer(),
-            child,
-          ],
+  Widget build(BuildContext context) => Positioned(
+        bottom: 0,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: child,
         ),
       );
 }
