@@ -60,22 +60,25 @@ class EditorToolbar extends HookWidget {
       create: (context) => store,
       child: AsyncStoreListener(
         asyncStore: store.imageUploadState,
-        child: visible
-            ? Container(
-                height: _height,
-                width: double.infinity,
-                color: Theme.of(context).cardColor,
-                child: Material(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: _ToolbarBody(
-                      controller: controller,
-                      instanceHost: instanceHost,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: visible
+              ? Container(
+                  height: _height,
+                  width: double.infinity,
+                  color: Theme.of(context).cardColor,
+                  child: Material(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: _ToolbarBody(
+                        controller: controller,
+                        instanceHost: instanceHost,
+                      ),
                     ),
                   ),
-                ),
-              )
-            : const SizedBox.shrink(),
+                )
+              : const SizedBox.shrink(),
+        ),
       ),
     );
   }
