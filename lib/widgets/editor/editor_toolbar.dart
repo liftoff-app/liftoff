@@ -60,7 +60,7 @@ class EditorToolbar extends HookWidget {
       create: (context) => store,
       child: AsyncStoreListener(
         asyncStore: store.imageUploadState,
-        child: visible.value
+        child: visible
             ? Container(
                 height: _height,
                 width: double.infinity,
