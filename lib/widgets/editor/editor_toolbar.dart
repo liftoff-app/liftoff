@@ -57,9 +57,9 @@ class EditorToolbar extends HookWidget {
 
     return MobxProvider(
       create: (context) => EditorToolbarStore(instanceHost),
-      child: ObserverBuilder<EditorToolbarStore>(builder: (context, store) {
+      child: Builder(builder: (context) {
         return AsyncStoreListener(
-          asyncStore: store.imageUploadState,
+          asyncStore: context.read<EditorToolbarStore>().imageUploadState,
           child: AnimatedSwitcher(
             duration: kThemeAnimationDuration,
             transitionBuilder: (child, animation) {
@@ -214,15 +214,15 @@ class _ToolbarBody extends HookWidget {
               PopupMenuItem(
                 value: h,
                 child: Text(h.name.toUpperCase()),
+                onTap: () {
+                  final header = '${'#' * h.value} ';
+
+                  if (!controller.firstSelectedLine.startsWith(header)) {
+                    controller.insertAtBeginningOfFirstSelectedLine(header);
+                  }
+                },
               ),
           ],
-          onSelected: (val) {
-            final header = '${'#' * val.value} ';
-
-            if (!controller.firstSelectedLine.startsWith(header)) {
-              controller.insertAtBeginningOfFirstSelectedLine(header);
-            }
-          },
           tooltip: L10n.of(context).editor_header,
           child: const Icon(Icons.h_mobiledata),
         ),
@@ -424,9 +424,12 @@ extension on TextEditingController {
   }
 
   String get firstSelectedLine {
-    if (text.isEmpty) return '';
-    return text.substring(text.getBeginningOfTheLine(selection.start - 1),
-        text.getEndOfTheLine(selection.end));
+    if (text.isEmpty) {
+      return '';
+    }
+    final val = text.substring(text.getBeginningOfTheLine(selection.start - 1),
+        text.getEndOfTheLine(selection.end) - 1);
+    return val;
   }
 
   void insertAtBeginningOfFirstSelectedLine(String s) {

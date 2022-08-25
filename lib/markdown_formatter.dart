@@ -14,10 +14,10 @@ extension Utilities on String {
 
   int getEndOfTheLine(int from) {
     for (var i = from; i < length; i++) {
-      if (this[i] == '\n') return i;
+      if (this[i] == '\n') return i + 1;
     }
 
-    return length - 1;
+    return length;
   }
 
   /// returns the line that ends at endingIndex
