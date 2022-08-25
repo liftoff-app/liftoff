@@ -282,11 +282,15 @@ class _ToolbarBody extends HookWidget {
         IconButton(
           onPressed: () {
             controller.reformat((selection) {
-              final insides = selection.isNotEmpty ? selection : '___';
+              const textBeg = '\n::: spoiler spoiler\n';
+              final textMid = selection.isNotEmpty ? selection : '___';
+              const textEnd = '\n:::\n';
+
               return _Reformat(
-                text: '\n::: spoiler spoiler\n$insides\n:::\n',
-                selectionBeginningShift: 21,
-                selectionEndingShift: 21 + insides.length - selection.length,
+                text: textBeg + textMid + textEnd,
+                selectionBeginningShift: textBeg.length,
+                selectionEndingShift:
+                    textBeg.length + textMid.length - selection.length,
               );
             });
           },
