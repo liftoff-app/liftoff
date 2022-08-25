@@ -87,7 +87,23 @@ class EditorToolbar extends HookWidget {
     );
   }
 
-  static Widget safeArea = const SizedBox(height: _height);
+  static const safeArea = SizedBox(height: _height);
+}
+
+class BottomSticky extends StatelessWidget {
+  final Widget child;
+  const BottomSticky({required this.child});
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Spacer(),
+            child,
+          ],
+        ),
+      );
 }
 
 class _ToolbarBody extends HookWidget {

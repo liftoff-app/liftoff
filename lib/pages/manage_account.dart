@@ -384,19 +384,13 @@ class _ManageAccount extends HookWidget {
             const BottomSafe(),
           ],
         ),
-        SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Spacer(),
-              EditorToolbar(
-                editorFocusNode: bioFocusNode,
-                controller: bioController,
-                instanceHost: user.instanceHost,
-              ),
-            ],
+        BottomSticky(
+          child: EditorToolbar(
+            editorFocusNode: bioFocusNode,
+            controller: bioController,
+            instanceHost: user.instanceHost,
           ),
-        ),
+        )
       ],
     );
   }

@@ -137,17 +137,11 @@ class WriteComment extends HookWidget {
               EditorToolbar.safeArea,
             ],
           ),
-          SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Spacer(),
-                EditorToolbar(
-                  editorFocusNode: editorFocusNode,
-                  controller: controller,
-                  instanceHost: post.instanceHost,
-                ),
-              ],
+          BottomSticky(
+            child: EditorToolbar(
+              editorFocusNode: editorFocusNode,
+              controller: controller,
+              instanceHost: post.instanceHost,
             ),
           ),
         ],

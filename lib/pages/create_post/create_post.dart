@@ -142,17 +142,11 @@ class CreatePostPage extends HookWidget {
                 ),
               ),
             ),
-            SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Spacer(),
-                  EditorToolbar(
-                    editorFocusNode: editorFocusNode,
-                    controller: bodyController,
-                    instanceHost: context.read<CreatePostStore>().instanceHost,
-                  ),
-                ],
+            BottomSticky(
+              child: EditorToolbar(
+                editorFocusNode: editorFocusNode,
+                controller: bodyController,
+                instanceHost: context.read<CreatePostStore>().instanceHost,
               ),
             ),
           ],
