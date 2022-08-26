@@ -351,5 +351,93 @@
   "no_communities_found": "No communities found",
   "@no_communities_found": {},
   "network_error": "Network error",
-  "@network_error": {}
+  "@network_error": {},
+  "editor_bold": "bold",
+  "@editor_bold": {
+    "description": "tooltip for button making text bold in markdown editor toolbar"
+  },
+  "editor_italics": "italics",
+  "@editor_italics": {
+    "description": "tooltip for button making text italics in markdown editor toolbar"
+  },
+  "editor_link": "insert link",
+  "@editor_link": {
+    "description": "tooltip for button that inserts link in markdown editor toolbar"
+  },
+  "editor_image": "insert image",
+  "@editor_image": {
+    "description": "tooltip for button that inserts image in markdown editor toolbar"
+  },
+  "editor_user": "link user",
+  "@editor_user": {
+    "description": "tooltip for button that opens a popup to select user to be linked in markdown editor toolbar"
+  },
+  "editor_community": "link community",
+  "@editor_community": {
+    "description": "tooltip for button that opens a popup to select community to be linked in markdown editor toolbar"
+  },
+  "editor_header": "insert header",
+  "@editor_header": {
+    "description": "tooltip for button that inserts header in markdown editor toolbar"
+  },
+  "editor_strikethrough": "strikethrough",
+  "@editor_strikethrough": {
+    "description": "tooltip for button that makes text strikethrough in markdown editor toolbar"
+  },
+  "editor_quote": "quote",
+  "@editor_quote": {
+    "description": "tooltip for button that makes selected text into quote blocks in markdown editor toolbar"
+  },
+  "editor_list": "list",
+  "@editor_list": {
+    "description": "tooltip for button that makes selected text into list in markdown editor toolbar"
+  },
+  "editor_code": "code",
+  "@editor_code": {
+    "description": "tooltip for button that makes text into code in markdown editor toolbar"
+  },
+  "editor_subscript": "subscript",
+  "@editor_subscript": {
+    "description": "tooltip for button that makes text into subscript in markdown editor toolbar"
+  },
+  "editor_superscript": "superscript",
+  "@editor_superscript": {
+    "description": "tooltip for button that makes text into superscript in markdown editor toolbar"
+  },
+  "editor_spoiler": "spoiler",
+  "@editor_spoiler": {
+    "description": "tooltip for button that inserts spoiler in markdown editor toolbar"
+  },
+  "editor_help": "markdown guide",
+  "@editor_help": {
+    "description": "tooltip for button that goes to page containing a guide for markdown"
+  },
+  "insert_text_here_placeholder": "[write text here]",
+  "@insert_text_here_placeholder": {
+    "description": "placeholder for text in markdown editor when inserting stuff like * for italics or ** for bold, etc."
+  },
+  "select_user": "Select User",
+  "@select_user": {
+    "description": "Title on a popup that lets a user search and select another user"
+  },
+  "select_community": "Select Community",
+  "@select_community": {
+    "description": "Title on a popup that lets a user search and select a community"
+  },
+  "add_link": "Add link",
+  "@add_link": {
+    "description": "title on top of a link insertion popup in a markdown editor"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button on popup"
+  },
+  "editor_add_link_label": "label",
+  "@editor_add_link_label": {
+    "description": "palceholder for link label on an Add link popup in markdown editor"
+  },
+  "failed_to_upload_image": "Failed to upload image",
+  "@failed_to_upload_image": {
+    "description": "shows up on a snackbar when the image upload failed (duh)"
+  }
 }

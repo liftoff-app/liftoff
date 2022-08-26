@@ -11,7 +11,7 @@ import '../../util/async_store_listener.dart';
 import '../../util/extensions/spaced.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
-import '../../widgets/editor.dart';
+import '../../widgets/editor/editor.dart';
 import '../../widgets/markdown_mode_icon.dart';
 import 'create_post_community_picker.dart';
 import 'create_post_instance_picker.dart';
@@ -30,8 +30,10 @@ class CreatePostPage extends HookWidget {
       useStore((CreatePostStore store) => store.instanceHost),
     );
 
+    final editorController = useEditorController(
+        instanceHost: context.read<CreatePostStore>().instanceHost,
+        text: context.read<CreatePostStore>().body);
     final titleFocusNode = useFocusNode();
-    final bodyFocusNode = useFocusNode();
 
     handleSubmit(Jwt token) async {
       if (formKey.currentState!.validate()) {
@@ -47,7 +49,6 @@ class CreatePostPage extends HookWidget {
         textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.next,
         validator: Validators.required(L10n.of(context).required_field),
-        onFieldSubmitted: (_) => bodyFocusNode.requestFocus(),
         onChanged: (title) => store.title = title,
         minLines: 1,
         maxLines: 2,
@@ -57,11 +58,9 @@ class CreatePostPage extends HookWidget {
 
     final body = ObserverBuilder<CreatePostStore>(
       builder: (context, store) => Editor(
-        initialValue: store.body,
-        focusNode: bodyFocusNode,
+        controller: editorController,
         onChanged: (body) => store.body = body,
         labelText: L10n.of(context).body,
-        instanceHost: store.instanceHost,
         fancy: store.showFancy,
       ),
     );
@@ -82,59 +81,68 @@ class CreatePostPage extends HookWidget {
             ),
           ],
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(5),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  if (!context.read<CreatePostStore>().isEdit) ...const [
-                    CreatePostInstancePicker(),
-                    CreatePostCommunityPicker(),
-                  ],
-                  CreatePostUrlField(titleFocusNode),
-                  title,
-                  body,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(5),
+                child: Form(
+                  key: formKey,
+                  child: Column(
                     children: [
-                      ObserverBuilder<CreatePostStore>(
-                        builder: (context, store) => GestureDetector(
-                          onTap: () => store.nsfw = !store.nsfw,
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: store.nsfw,
-                                onChanged: (val) {
-                                  if (val != null) store.nsfw = val;
-                                },
+                      if (!context.read<CreatePostStore>().isEdit) ...const [
+                        CreatePostInstancePicker(),
+                        CreatePostCommunityPicker(),
+                      ],
+                      CreatePostUrlField(titleFocusNode),
+                      title,
+                      body,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ObserverBuilder<CreatePostStore>(
+                            builder: (context, store) => GestureDetector(
+                              onTap: () => store.nsfw = !store.nsfw,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                    value: store.nsfw,
+                                    onChanged: (val) {
+                                      if (val != null) store.nsfw = val;
+                                    },
+                                  ),
+                                  Text(L10n.of(context).nsfw)
+                                ],
                               ),
-                              Text(L10n.of(context).nsfw)
-                            ],
+                            ),
                           ),
-                        ),
+                          ObserverBuilder<CreatePostStore>(
+                            builder: (context, store) => TextButton(
+                              onPressed: store.submitState.isLoading
+                                  ? () {}
+                                  : loggedInAction(handleSubmit),
+                              child: store.submitState.isLoading
+                                  ? const CircularProgressIndicator.adaptive()
+                                  : Text(
+                                      store.isEdit
+                                          ? L10n.of(context).edit
+                                          : L10n.of(context).post,
+                                    ),
+                            ),
+                          )
+                        ],
                       ),
-                      ObserverBuilder<CreatePostStore>(
-                        builder: (context, store) => TextButton(
-                          onPressed: store.submitState.isLoading
-                              ? () {}
-                              : loggedInAction(handleSubmit),
-                          child: store.submitState.isLoading
-                              ? const CircularProgressIndicator.adaptive()
-                              : Text(
-                                  store.isEdit
-                                      ? L10n.of(context).edit
-                                      : L10n.of(context).post,
-                                ),
-                        ),
-                      )
-                    ],
+                      EditorToolbar.safeArea,
+                    ].spaced(6),
                   ),
-                ].spaced(6),
+                ),
               ),
             ),
-          ),
+            BottomSticky(
+              child: EditorToolbar(editorController),
+            ),
+          ],
         ),
       ),
     );

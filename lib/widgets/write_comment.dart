@@ -5,7 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
-import 'editor.dart';
+import 'editor/editor.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
 
@@ -31,11 +31,14 @@ class WriteComment extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        useTextEditingController(text: _isEdit ? comment?.content : null);
     final showFancy = useState(false);
     final delayed = useDelayedLoading();
     final loggedInAction = useLoggedInAction(post.instanceHost);
+
+    final editorController = useEditorController(
+      instanceHost: post.instanceHost,
+      text: _isEdit ? comment?.content : null,
+    );
 
     final preview = () {
       final body = () {
@@ -69,12 +72,12 @@ class WriteComment extends HookWidget {
           if (_isEdit) {
             return api.run(EditComment(
               commentId: comment!.id,
-              content: controller.text,
+              content: editorController.textEditingController.text,
               auth: token.raw,
             ));
           } else {
             return api.run(CreateComment(
-              content: controller.text,
+              content: editorController.textEditingController.text,
               postId: post.id,
               parentId: comment?.id,
               auth: token.raw,
@@ -99,36 +102,43 @@ class WriteComment extends HookWidget {
           ),
         ],
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * .35),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(8),
-              child: preview,
-            ),
-          ),
-          const Divider(),
-          Editor(
-            instanceHost: post.instanceHost,
-            controller: controller,
-            autofocus: true,
-            fancy: showFancy.value,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          ListView(
             children: [
-              TextButton(
-                onPressed:
-                    delayed.pending ? () {} : loggedInAction(handleSubmit),
-                child: delayed.loading
-                    ? const CircularProgressIndicator.adaptive()
-                    : Text(_isEdit
-                        ? L10n.of(context).edit
-                        : L10n.of(context).post),
-              )
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * .35),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(8),
+                  child: preview,
+                ),
+              ),
+              const Divider(),
+              Editor(
+                controller: editorController,
+                autofocus: true,
+                fancy: showFancy.value,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed:
+                        delayed.pending ? () {} : loggedInAction(handleSubmit),
+                    child: delayed.loading
+                        ? const CircularProgressIndicator.adaptive()
+                        : Text(_isEdit
+                            ? L10n.of(context).edit
+                            : L10n.of(context).post),
+                  )
+                ],
+              ),
+              EditorToolbar.safeArea,
             ],
+          ),
+          BottomSticky(
+            child: EditorToolbar(editorController),
           ),
         ],
       ),
