@@ -4,6 +4,7 @@
 
 - Create post community picker now has autocomplete
 - You can now add an instance from the three dots menu on the instance page
+- Eitor for writing comments, posts, and profile bio now has a toolbar with shortcuts to all the common markdown things
 
 ## v0.8.0 - 2022-01-14
 
