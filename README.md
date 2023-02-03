@@ -1,3 +1,9 @@
+# ⚠️ THIS PROJECT IS IN NOT MAINTAINED ANYMORE ⚠️
+
+This project has been officially dropped due to lack of interest and political differences. If anyone is interested in continuing developement, feel free to fork it.
+
+---
+
 <div align="center">
 
 [![](https://github.com/LemmurOrg/lemmur/workflows/ci/badge.svg)](https://github.com/LemmurOrg/lemmur/actions)
