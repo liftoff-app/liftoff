@@ -96,8 +96,9 @@ abstract class _ConfigStore with Store {
       return ThemeMode.light;
     }();
 
-    if (L10n.supportedLocales.contains(Locale(localUserSettings.lang))) {
-      locale = Locale(localUserSettings.lang);
+    if (L10n.supportedLocales
+        .contains(Locale(localUserSettings.interfaceLanguage))) {
+      locale = Locale(localUserSettings.interfaceLanguage);
     }
 
     showScores = localUserSettings.showScores;

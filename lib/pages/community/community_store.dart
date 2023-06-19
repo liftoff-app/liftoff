@@ -72,7 +72,7 @@ abstract class _CommunityStore with Store {
       instanceHost,
       FollowCommunity(
         communityId: communityView.community.id,
-        follow: !communityView.subscribed,
+        follow: !(communityView.subscribed == SubscribedType.subscribed),
         auth: token.raw,
       ),
     );

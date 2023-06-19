@@ -11,7 +11,7 @@ const _lemmyUserSettings = LocalUserSettings(
   theme: 'browser',
   defaultSortType: SortType.active,
   defaultListingType: PostListingType.local,
-  lang: 'en',
+  interfaceLanguage: 'en',
   showAvatars: true,
   showScores: true,
   sendNotificationsToEmail: true,

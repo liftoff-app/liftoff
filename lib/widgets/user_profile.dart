@@ -328,6 +328,11 @@ class _AboutTab extends HookWidget {
     final followsSnap = useMemoFuture<List<CommunityFollowerView>>(() async {
       if (token == null) return const [];
 
+      final testRes =
+          await LemmyApiV3(instanceHost).run(GetSite(auth: token.raw));
+
+      print(testRes);
+
       return LemmyApiV3(instanceHost)
           .run(GetSite(auth: token.raw))
           .then((value) => value.myUser!.follows);

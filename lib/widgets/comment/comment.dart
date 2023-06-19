@@ -173,7 +173,7 @@ class _CommentWidget extends StatelessWidget {
 
     return ObserverBuilder<CommentStore>(
       builder: (context, store) {
-        if (store.hideOnRead && store.comment.comment.read) {
+        if (store.hideOnRead && store.comment.comment.distinguished) {
           return const SizedBox();
         }
 

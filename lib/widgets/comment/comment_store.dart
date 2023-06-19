@@ -142,7 +142,7 @@ abstract class _CommentStore with Store {
         comment.instanceHost,
         MarkPersonMentionAsRead(
           personMentionId: userMentionId!,
-          read: !comment.comment.read,
+          read: !comment.comment.distinguished,
           auth: token.raw,
         ),
       );
@@ -155,7 +155,7 @@ abstract class _CommentStore with Store {
         comment.instanceHost,
         MarkCommentAsRead(
           commentId: comment.comment.id,
-          read: !comment.comment.read,
+          read: !comment.comment.distinguished,
           auth: token.raw,
         ),
       );
