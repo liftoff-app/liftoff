@@ -52,7 +52,7 @@ dependencies:
       url: https://github.com/zachatrocity/lemmy_api_client.git
       ref: master
     # path: ../lemmy_api_client
-  intl: ^0.17.0
+  intl: ^0.18.0
   matrix4_transform: ^2.0.0
   json_annotation: ^4.5.0
   keyboard_dismisser: ^3.0.0
