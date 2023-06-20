@@ -472,9 +472,11 @@ packages:
   lemmy_api_client:
     dependency: "direct main"
     description:
-      path: "C:\\Users\\zachr\\Development\\lemmy-stack\\lemmy_api_client"
-      relative: false
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: e2e94f1a51728351bcc5adf64102d2e4e6d6aa31
+      url: "https://github.com/zachatrocity/lemmy_api_client.git"
+    source: git
     version: "0.21.0"
   logging:
     dependency: "direct main"
