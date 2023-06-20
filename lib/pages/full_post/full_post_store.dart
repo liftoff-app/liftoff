@@ -33,6 +33,9 @@ abstract class _FullPostStore with Store {
   FullPostView? fullPostView;
 
   @observable
+  List<CommentView>? postComments;
+
+  @observable
   ObservableList<CommentView> newComments = ObservableList<CommentView>();
 
   @observable
@@ -42,6 +45,7 @@ abstract class _FullPostStore with Store {
   PostStore? postStore;
 
   final fullPostState = AsyncStore<FullPostView>();
+  final commentsState = AsyncStore<List<CommentView>>();
   final communityBlockingState = AsyncStore<BlockedCommunity>();
 
   @action
@@ -53,7 +57,8 @@ abstract class _FullPostStore with Store {
   @computed
   List<CommentTree>? get commentTree {
     if (fullPostView == null) return null;
-    return CommentTree.fromList(fullPostView!.comments);
+    if (postComments == null) return null;
+    return CommentTree.fromList(postComments!);
   }
 
   @computed
@@ -65,19 +70,24 @@ abstract class _FullPostStore with Store {
   PostView? get postView => postStore?.postView;
 
   @computed
-  Iterable<CommentView>? get comments =>
-      fullPostView?.comments.followedBy(newComments);
+  Iterable<CommentView>? get comments => postComments?.followedBy(newComments);
 
   @action
   Future<void> refresh([Jwt? token]) async {
     final result = await fullPostState.runLemmy(
         instanceHost, GetPost(id: postId, auth: token?.raw));
 
+    final commentsResult =
+        await commentsState.runLemmy(instanceHost, GetComments(postId: postId));
+
     if (result != null) {
       postStore ??= PostStore(result.postView);
-
       fullPostView = result;
       postStore!.updatePostView(result.postView);
+    }
+
+    if (commentsResult != null) {
+      postComments = commentsResult;
     }
   }
 

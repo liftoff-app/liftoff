@@ -63,10 +63,10 @@ class CommentActions extends HookWidget {
               TileAction(
                 icon: Icons.check,
                 onPressed: loggedInAction(store.markAsRead),
-                iconColor: comment.read
+                iconColor: comment.distinguished
                     ? Theme.of(context).colorScheme.secondary
                     : null,
-                tooltip: comment.read
+                tooltip: comment.distinguished
                     ? L10n.of(context).mark_as_unread
                     : L10n.of(context).mark_as_read,
               ),

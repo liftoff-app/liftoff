@@ -279,8 +279,7 @@ class InfiniteHomeList extends HookWidget {
       SortType sort,
       PostListingType listingType,
     ) async {
-      assert(
-          listingType != PostListingType.community, 'only subscribed or all');
+      assert(listingType != PostListingType.local, 'only subscribed or all');
 
       final instances = () {
         if (listingType == PostListingType.subscribed) {
@@ -298,7 +297,7 @@ class InfiniteHomeList extends HookWidget {
             page: page,
             limit: limit,
             savedOnly: false,
-            auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+            // auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
           ))
       ];
       final instancePosts = await Future.wait(futures);

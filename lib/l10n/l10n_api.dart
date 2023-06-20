@@ -37,8 +37,6 @@ extension PostListingTypeL10n on PostListingType {
     switch (this) {
       case PostListingType.all:
         return L10n.of(context).all;
-      case PostListingType.community:
-        return L10n.of(context).community;
       case PostListingType.local:
         return L10n.of(context).local;
       case PostListingType.subscribed:

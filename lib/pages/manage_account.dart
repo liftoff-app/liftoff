@@ -142,7 +142,7 @@ class _ManageAccount extends HookWidget {
           theme: user.localUser.theme,
           defaultSortType: user.localUser.defaultSortType,
           defaultListingType: user.localUser.defaultListingType,
-          lang: user.localUser.lang,
+          interfaceLanguage: user.localUser.interfaceLanguage,
           showAvatars: user.localUser.showAvatars,
           botAccount: botAccount.value,
           showBotAccounts: showBotAccounts.value,

@@ -11,7 +11,7 @@ const _lemmyUserSettings = LocalUserSettings(
   theme: 'browser',
   defaultSortType: SortType.active,
   defaultListingType: PostListingType.local,
-  lang: 'en',
+  interfaceLanguage: 'en',
   showAvatars: true,
   showScores: true,
   sendNotificationsToEmail: true,
@@ -106,7 +106,7 @@ void main() {
         store
           ..locale = const Locale('en')
           ..copyLemmyUserSettings(
-              _lemmyUserSettings.copyWith(lang: 'qweqweqwe'));
+              _lemmyUserSettings.copyWith(interfaceLanguage: 'qweqweqwe'));
 
         expect(store.locale, const Locale('en'));
       });

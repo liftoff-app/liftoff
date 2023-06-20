@@ -328,9 +328,13 @@ class _AboutTab extends HookWidget {
     final followsSnap = useMemoFuture<List<CommunityFollowerView>>(() async {
       if (token == null) return const [];
 
-      return LemmyApiV3(instanceHost)
-          .run(GetSite(auth: token.raw))
-          .then((value) => value.myUser!.follows);
+      try {
+        return LemmyApiV3(instanceHost)
+            .run(GetSite(auth: token.raw))
+            .then((value) => value.myUser!.follows);
+      } catch (e) {
+        return List.empty();
+      }
     }, [token]);
 
     const wallPadding = EdgeInsets.symmetric(horizontal: 15);
@@ -390,7 +394,7 @@ class _AboutTab extends HookWidget {
             ),
           ),
           for (final comm
-              in userDetails.moderates
+              in List.from(userDetails.moderates)
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
                 comm.community.name, comm.community.icon, comm.community.id),
@@ -406,7 +410,7 @@ class _AboutTab extends HookWidget {
             ),
           ),
           for (final comm
-              in followsSnap.data!
+              in List.from(followsSnap.data!)
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
                 comm.community.name, comm.community.icon, comm.community.id)
