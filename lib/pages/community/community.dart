@@ -124,7 +124,7 @@ class CommunityPage extends HookWidget {
                   InfinitePostList(
                     fetcher: (page, batchSize, sort) =>
                         LemmyApiV3(community.instanceHost).run(GetPosts(
-                      type: PostListingType.community,
+                      type: PostListingType.local,
                       sort: sort,
                       communityId: community.community.id,
                       page: page,
@@ -140,7 +140,7 @@ class CommunityPage extends HookWidget {
                                 .defaultUserDataFor(community.instanceHost)
                                 ?.jwt
                                 .raw,
-                            type: CommentListingType.community,
+                            type: CommentListingType.local,
                             sort: sortType,
                             limit: batchSize,
                             page: page,

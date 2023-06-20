@@ -34,6 +34,7 @@ class CommentSection extends StatelessWidget {
     return ObserverBuilder<FullPostStore>(
       builder: (context, store) {
         final fullPostView = store.fullPostView;
+        final postComments = store.postComments;
 
         // error & spinner handling
         if (fullPostView == null) {
@@ -96,7 +97,7 @@ class CommentSection extends StatelessWidget {
               ),
             ),
             // sorting menu goes here
-            if (fullPostView.comments.isEmpty)
+            if (postComments != null && postComments.isEmpty)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 50),
                 child: Text(
@@ -112,7 +113,7 @@ class CommentSection extends StatelessWidget {
                   key: ValueKey(com),
                 ),
               if (store.sorting == CommentSortType.chat)
-                for (final com in fullPostView.comments)
+                for (final com in postComments!)
                   CommentWidget.fromCommentView(
                     com,
                     detached: false,

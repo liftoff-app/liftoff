@@ -279,8 +279,7 @@ class InfiniteHomeList extends HookWidget {
       SortType sort,
       PostListingType listingType,
     ) async {
-      assert(
-          listingType != PostListingType.community, 'only subscribed or all');
+      assert(listingType != PostListingType.local, 'only subscribed or all');
 
       final instances = () {
         if (listingType == PostListingType.subscribed) {
