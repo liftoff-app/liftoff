@@ -71,7 +71,7 @@ class CommunityPage extends HookWidget {
         final fullCommunityView = communityAsyncState.data;
         final community = fullCommunityView.communityView;
 
-        void _share() => share(community.community.actorId, context: context);
+        void doShare() => share(community.community.actorId, context: context);
 
         return Scaffold(
           floatingActionButton: CreatePostFab(community: community),
@@ -95,7 +95,7 @@ class CommunityPage extends HookWidget {
                     ),
                   ),
                   actions: [
-                    IconButton(icon: Icon(shareIcon), onPressed: _share),
+                    IconButton(icon: Icon(shareIcon), onPressed: doShare),
                     IconButton(
                         icon: Icon(moreIcon),
                         onPressed: () =>

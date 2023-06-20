@@ -40,7 +40,7 @@ class BottomModal extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 70),
                       child: Text(
                         title!,
-                        style: theme.textTheme.subtitle2,
+                        style: theme.textTheme.titleSmall,
                         textAlign: TextAlign.left,
                       ),
                     ),

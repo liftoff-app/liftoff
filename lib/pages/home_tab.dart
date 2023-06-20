@@ -95,7 +95,7 @@ class HomeTab extends HookWidget {
                   L10n.of(context).subscribed,
                   style: TextStyle(
                     color: accStore.hasNoAccount
-                        ? theme.textTheme.bodyText1?.color?.withOpacity(0.4)
+                        ? theme.textTheme.bodyLarge?.color?.withOpacity(0.4)
                         : null,
                   ),
                 ),
@@ -127,7 +127,7 @@ class HomeTab extends HookWidget {
                     instance.toUpperCase(),
                     style: TextStyle(
                         color:
-                            theme.textTheme.bodyText1?.color?.withOpacity(0.7)),
+                            theme.textTheme.bodyLarge?.color?.withOpacity(0.7)),
                   ),
                   onTap: () => Navigator.of(context).push(
                     InstancePage.route(instance),
@@ -157,7 +157,7 @@ class HomeTab extends HookWidget {
                     L10n.of(context).subscribed,
                     style: TextStyle(
                         color: accStore.isAnonymousFor(instance)
-                            ? theme.textTheme.bodyText1?.color?.withOpacity(0.4)
+                            ? theme.textTheme.bodyLarge?.color?.withOpacity(0.4)
                             : null),
                   ),
                   onTap: accStore.isAnonymousFor(instance)
@@ -206,10 +206,10 @@ class HomeTab extends HookWidget {
     }();
 
     if (accStore.instances.isEmpty) {
-      return Scaffold(
+      return const Scaffold(
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Center(child: Text('there needs to be at least one instance')),
           ],
         ),

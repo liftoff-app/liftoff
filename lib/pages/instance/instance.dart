@@ -122,11 +122,11 @@ class InstancePage extends HookWidget {
                                     ),
                                     Text(
                                       siteView.site.name,
-                                      style: theme.textTheme.headline6,
+                                      style: theme.textTheme.titleLarge,
                                     ),
                                     Text(
                                       store.instanceHost,
-                                      style: theme.textTheme.caption,
+                                      style: theme.textTheme.bodySmall,
                                     )
                                   ],
                                 ),

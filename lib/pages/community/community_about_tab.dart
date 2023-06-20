@@ -94,7 +94,7 @@ class CommmunityAboutTab extends StatelessWidget {
             title: Center(
               child: Text(
                 L10n.of(context).modlog,
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             onTap: () => Navigator.of(context).push(

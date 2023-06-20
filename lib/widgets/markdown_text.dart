@@ -33,7 +33,7 @@ class MarkdownText extends StatelessWidget {
             left: BorderSide(width: 2, color: theme.colorScheme.secondary),
           ),
         ),
-        code: theme.textTheme.bodyText1
+        code: theme.textTheme.bodyLarge
             // TODO: use a font from google fonts maybe? the defaults aren't very pretty
             ?.copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),
       ),
@@ -45,7 +45,7 @@ class MarkdownText extends StatelessWidget {
                       content: Row(
                         children: [
                           const Icon(Icons.warning),
-                          Text("couldn't open link, ${e.toString()}"),
+                          Text("couldn't open link, $e"),
                         ],
                       ),
                     )));
@@ -57,7 +57,7 @@ class MarkdownText extends StatelessWidget {
           errorBuilder: (context, error) => Row(
             children: [
               const Icon(Icons.warning),
-              Text("couldn't load image, ${error.toString()}")
+              Text("couldn't load image, $error")
             ],
           ),
         ),

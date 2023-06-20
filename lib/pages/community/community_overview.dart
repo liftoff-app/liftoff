@@ -75,7 +75,8 @@ class CommunityOverview extends StatelessWidget {
               RichText(
                 overflow: TextOverflow.ellipsis,
                 text: TextSpan(
-                  style: theme.textTheme.subtitle1?.copyWith(shadows: [shadow]),
+                  style:
+                      theme.textTheme.titleMedium?.copyWith(shadows: [shadow]),
                   children: [
                     const TextSpan(
                       text: '!',

@@ -72,10 +72,10 @@ class _Post extends StatelessWidget {
           color: theme.cardColor,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
-        child: Material(
+        child: const Material(
           type: MaterialType.transparency,
           child: Column(
-            children: const [
+            children: [
               PostInfoSection(),
               PostTitle(),
               PostMedia(),

@@ -72,7 +72,7 @@ class CommentSection extends StatelessWidget {
                             for (final e in sortPairs.entries)
                               ListTile(
                                 leading: Icon(e.value.icon),
-                                title: Text((e.value.term).tr(context)),
+                                title: Text(e.value.term.tr(context)),
                                 trailing: store.sorting == e.key
                                     ? const Icon(Icons.check)
                                     : null,
@@ -87,7 +87,7 @@ class CommentSection extends StatelessWidget {
                     },
                     child: Row(
                       children: [
-                        Text((sortPairs[store.sorting]!.term).tr(context)),
+                        Text(sortPairs[store.sorting]!.term.tr(context)),
                         const Icon(Icons.arrow_drop_down),
                       ],
                     ),
