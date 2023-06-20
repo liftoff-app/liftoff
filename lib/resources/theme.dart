@@ -63,9 +63,9 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: theme.colorScheme.secondary,
+        backgroundColor: theme.colorScheme.background,
         foregroundColor:
-            textColorBasedOnBackground(theme.colorScheme.secondary),
+            textColorBasedOnBackground(theme.colorScheme.background),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -73,7 +73,8 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        backgroundColor: theme.colorScheme.onSurface,
+        backgroundColor: theme.colorScheme.background,
+        foregroundColor: theme.colorScheme.onSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -81,7 +82,7 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: TextButton.styleFrom(
-        backgroundColor: theme.colorScheme.onSurface,
+        backgroundColor: theme.colorScheme.background,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

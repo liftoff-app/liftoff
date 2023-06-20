@@ -238,6 +238,7 @@ class _UserOverview extends HookWidget {
                   )
                 ],
               ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

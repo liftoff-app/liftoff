@@ -28,7 +28,7 @@ dependencies:
   markdown: ^7.1.0
   flutter_markdown: ^0.6.1
   flutter_typeahead: ^4.0.0
-  modal_bottom_sheet: ^2.0.0
+  modal_bottom_sheet: ^3.0.0-pre
 
   # native
   share_plus: ^7.0.2
