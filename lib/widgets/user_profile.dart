@@ -269,8 +269,9 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          L10n.of(context)
-                              .number_of_comments(userView.counts.commentCount),
+                          L10n.of(context).number_of_comments(
+                              userView.counts.commentCount,
+                              userView.counts.commentCount),
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),
                       ],

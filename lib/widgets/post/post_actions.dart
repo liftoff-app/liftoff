@@ -27,8 +27,9 @@ class PostActions extends HookWidget {
             const SizedBox(width: 6),
             Expanded(
               child: Text(
-                L10n.of(context)
-                    .number_of_comments(store.postView.counts.comments),
+                L10n.of(context).number_of_comments(
+                    store.postView.counts.comments,
+                    store.postView.counts.comments),
                 overflow: TextOverflow.fade,
                 softWrap: false,
               ),

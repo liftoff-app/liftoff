@@ -117,7 +117,8 @@ class InstanceAboutTab extends HookWidget {
                     ),
                     Chip(
                       label: Text(
-                        l10n.number_of_comments(siteView.counts.comments),
+                        l10n.number_of_comments(
+                            siteView.counts.comments, siteView.counts.comments),
                       ),
                     ),
                   ].spaced(8),
