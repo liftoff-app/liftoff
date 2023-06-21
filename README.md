@@ -8,8 +8,8 @@ A fork of the original lemmur app we all knew and loved. It was unfortunately ab
 - Currently there are no binary downloads available as this is just the start of this fork. However, you can reference the old readme [here](README.md.old).
 
 ## Screenshots
-<img src="assets/screenshots/screenshot1.webp"/>
-<img src="assets/screenshots/screenshot2.png"/>
+<img width=360px height=780px src="assets/screenshots/screenshot1.webp"/>
+<img width=360px height=780px src="assets/screenshots/screenshot2.png"/>
 ## License
 
 
