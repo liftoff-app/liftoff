@@ -23,7 +23,7 @@
 - Blocking of users and communities (from post and from comment)
 - Reporting posts and comments
 - Android theme-aware splash screen (thanks to [@mimi89999](https://github.com/mimi89999))
-- Logging: local logs about some actions/errors. Can be accessed from **settings > about lemmur > logs**
+- Logging: local logs about some actions/errors. Can be accessed from **settings > about lemmynade > logs**
 
 ### Fixed
 
@@ -93,7 +93,7 @@
 ### Added
 
 - Share buttons on windows/linux now copy the data to the clipboard
-- Initial translations have been incorporated into lemmur. It is not yet possible to contribute translation strings
+- Initial translations have been incorporated into lemmynade. It is not yet possible to contribute translation strings
 
 ### Changed
 
@@ -132,7 +132,7 @@ WARNING: due to some internal changes your local settings will be reset (logged 
 
 ## v0.2.3 - 2021-02-09
 
-Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid](https://f-droid.org/packages/com.krawieck.lemmur)
+Lemmynade is now available on the [play store](https://play.google.com/store/apps/details?id=com.zachatrocity.lemmynade) and [f-droid](https://f-droid.org/packages/com.zachatrocity.lemmynade)
 
 ### Changed
 
@@ -141,7 +141,7 @@ Lemmur is now available on the [play store](https://play.google.com/store/apps/d
 
 ### Fixed
 
-- Fixed issue where the "About lemmur" tile would not appear on Windows/Linux
+- Fixed issue where the "About lemmynade" tile would not appear on Windows/Linux
 - Added a bigger bottom margin in the comment section to prevent the floating action button from covering the last comment
 
 ## v0.2.2 - 2021-02-03
@@ -168,7 +168,7 @@ Minimum Lemmy version supported: `v0.9.4`
 
 ### Breaking changes
 
-- Lemmur now works exclusively with Lemmy API v2
+- Lemmynade now works exclusively with Lemmy API v2
 
 ### Added
 

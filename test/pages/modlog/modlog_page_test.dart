@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lemmur/pages/modlog/modlog_page_store.dart';
-import 'package:lemmur/util/async_store.dart';
+import 'package:lemmynade/pages/modlog/modlog_page_store.dart';
+import 'package:lemmynade/util/async_store.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 void main() {

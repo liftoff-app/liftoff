@@ -194,10 +194,10 @@ Future<void> main(List<String> args) async {
   final repoCleanup = await cloneLemmyTranslations();
 
   final lemmyTranslations = await loadLemmyStrings();
-  final lemmurTranslations = await loadLemmurStrings();
-  portStrings(lemmyTranslations, lemmurTranslations, force: force);
+  final lemmynadeTranslations = await loadLemmynadeStrings();
+  portStrings(lemmyTranslations, lemmynadeTranslations, force: force);
 
-  await save(lemmurTranslations);
+  await save(lemmynadeTranslations);
 
   await repoCleanup();
 
@@ -252,7 +252,7 @@ Future<Map<String, Map<String, String>>> loadLemmyStrings() async {
 }
 
 /// Map<languageTag, Map<stringKey, stringValue>> + some metadata
-Future<Map<String, Map<String, dynamic>>> loadLemmurStrings() async {
+Future<Map<String, Map<String, dynamic>>> loadLemmynadeStrings() async {
   final translationsDir = Directory(outDir);
   final translations = <String, Map<String, dynamic>>{};
 
@@ -274,16 +274,16 @@ Future<Map<String, Map<String, dynamic>>> loadLemmurStrings() async {
   return translations;
 }
 
-/// will port them into `lemmurTranslations`
+/// will port them into `lemmynadeTranslations`
 void portStrings(
   Map<String, Map<String, String>> lemmyTranslations,
-  Map<String, Map<String, dynamic>> lemmurTranslations, {
+  Map<String, Map<String, dynamic>> lemmynadeTranslations, {
   bool force = false,
 }) {
   // port all languages
   for (final language in lemmyTranslations.keys) {
-    if (!lemmurTranslations.containsKey(language)) {
-      lemmurTranslations[language] = {'@@locale': language};
+    if (!lemmynadeTranslations.containsKey(language)) {
+      lemmynadeTranslations[language] = {'@@locale': language};
     }
   }
 
@@ -294,9 +294,9 @@ void portStrings(
       printError('"${migrate.key}" does not exist in $repoName');
     }
 
-    if (lemmurTranslations[baseLanguage]!.containsKey(migrate.renamedKey) &&
+    if (lemmynadeTranslations[baseLanguage]!.containsKey(migrate.renamedKey) &&
         !force) {
-      confirm('"${migrate.key}" already exists in lemmur, overwrite?');
+      confirm('"${migrate.key}" already exists in lemmynade, overwrite?');
     }
 
     final variableName = RegExp(r'{{([\w_]+)}|')
@@ -345,22 +345,24 @@ void portStrings(
       final language = trans.key;
       final strings = trans.value;
 
-      lemmurTranslations[language]![migrate.renamedKey] = transformer(strings);
+      lemmynadeTranslations[language]![migrate.renamedKey] =
+          transformer(strings);
     }
     final transformed = transformer(baseTranslations);
     if (transformed != null) {
-      lemmurTranslations[baseLanguage]![migrate.renamedKey] =
+      lemmynadeTranslations[baseLanguage]![migrate.renamedKey] =
           migrate.transform(transformed);
     }
-    lemmurTranslations[baseLanguage]!['@${migrate.renamedKey}'] = metadata;
+    lemmynadeTranslations[baseLanguage]!['@${migrate.renamedKey}'] = metadata;
   }
 }
 
-Future<void> save(Map<String, Map<String, dynamic>> lemmurTranslations) async {
+Future<void> save(
+    Map<String, Map<String, dynamic>> lemmynadeTranslations) async {
   // remove null fields
   // Vec<(language, key)>
   final toRemove = <List<String>>[];
-  for (final translations in lemmurTranslations.entries) {
+  for (final translations in lemmynadeTranslations.entries) {
     final language = translations.key;
 
     for (final strings in translations.value.entries) {
@@ -370,11 +372,11 @@ Future<void> save(Map<String, Map<String, dynamic>> lemmurTranslations) async {
     }
   }
   for (final rem in toRemove) {
-    lemmurTranslations[rem[0]]?.remove(rem[1]);
+    lemmynadeTranslations[rem[0]]?.remove(rem[1]);
   }
 
-  for (final language in lemmurTranslations.keys) {
+  for (final language in lemmynadeTranslations.keys) {
     await File('$outDir/$flutterIntlPrefix$language.arb')
-        .writeAsString(jsonEncode(lemmurTranslations[language]));
+        .writeAsString(jsonEncode(lemmynadeTranslations[language]));
   }
 }

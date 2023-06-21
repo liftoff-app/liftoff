@@ -4,7 +4,7 @@
 
 ## Issue tracking / Repository
 
-From issues to wikis: everything is on [GitHub](https://github.com/LemmurOrg/lemmur)
+From issues to wikis: everything is on [GitHub](https://github.com/zachatrocity/lemmynade)
 
 ## Linting / Formatting
 
@@ -14,7 +14,7 @@ Everything is formatted with `dart format` (no flags) and linted with `dart anal
 
 ### Weblate
 
-Lemmy devs are kindly hosting lemmur translation strings on their [Weblate instance](https://weblate.yerbamate.ml/projects/lemmur/lemmur/). Feel free to contribute strings there, we regularly sync string changes with Weblate.
+Lemmy devs are kindly hosting lemmynade translation strings on their [Weblate instance](https://weblate.yerbamate.ml/projects/lemmynade/lemmynade/). Feel free to contribute strings there, we regularly sync string changes with Weblate.
 
 We use flutter's native file format for translations: ARB, which itself uses the ICU message syntax. In most cases you will be able to deduce the syntax based on the source string. Here are 3 important examples:
 
@@ -38,7 +38,7 @@ To contribute time ago strings please send a PR containing a class that implemen
 
 ## Architecture
 
-Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/LemmurOrg/lemmy_api_client) is used.
+Lemmynade is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/zachatrocity/lemmy_api_client) is used.
 
 ### State management
 
@@ -58,12 +58,12 @@ Lemmur is written in Dart using [Flutter](https://flutter.dev/docs). To communic
 
 ### Things to keep in mind
 
-- Be aware that Lemmur supports arbitrary Lemmy instances, don't hardcode instance urls
+- Be aware that Lemmynade supports arbitrary Lemmy instances, don't hardcode instance urls
 - Remember that a user is not obligated to be logged in, contributed widgets should handle this case
 
 ### Lemmy API
 
-LAC (Lemmy API Client) is used to communicate with Lemmy backends, more information can be found [here](https://github.com/LemmurOrg/lemmy_api_client).
+LAC (Lemmy API Client) is used to communicate with Lemmy backends, more information can be found [here](https://github.com/zachatrocity/lemmy_api_client).
 
 ### For React developers
 

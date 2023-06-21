@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lemmur/util/async_store.dart';
+import 'package:lemmynade/util/async_store.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 void main() {

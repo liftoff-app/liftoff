@@ -64,15 +64,15 @@ jobs:
         run: |
           flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
 
-          mv build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
-          mv build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
-          mv build/app/outputs/flutter-apk/app-x86_64-prod-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
+          mv build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk lemmynade-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
+          mv build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk lemmynade-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
+          mv build/app/outputs/flutter-apk/app-x86_64-prod-release.apk lemmynade-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
 
       - uses: actions/upload-artifact@v2
         with:
           name: android-build
           path: |
-            lemmur-*.apk
+            lemmynade-*.apk
 
   linux-build:
     name: Linux build
@@ -97,12 +97,12 @@ jobs:
       - name: Archive
         working-directory: build/linux/x64/release/bundle
         run: |
-          tar -czf lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-linux.tar.gz *
+          tar -czf lemmynade-${{ needs.get-vars.outputs.tag }}-x86_64-linux.tar.gz *
 
       - uses: actions/upload-artifact@v2
         with:
           name: linux-build
-          path: build/linux/x64/release/bundle/lemmur-*.tar.gz
+          path: build/linux/x64/release/bundle/lemmynade-*.tar.gz
 
   windows-build:
     name: Windows build
@@ -122,12 +122,12 @@ jobs:
       - name: Archive
         working-directory: build/windows/runner/Release
         run: |
-          7z a lemmur-${{ needs.get-vars.outputs.tag }}-x86_64-windows.zip *
+          7z a lemmynade-${{ needs.get-vars.outputs.tag }}-x86_64-windows.zip *
 
       - uses: actions/upload-artifact@v2
         with:
           name: windows-build
-          path: build/windows/runner/Release/lemmur-*.zip
+          path: build/windows/runner/Release/lemmynade-*.zip
 
   release:
     name: Release
@@ -137,7 +137,7 @@ jobs:
       - linux-build
       - windows-build
     runs-on: ubuntu-latest
-    if: github.repository == 'LemmurOrg/lemmur'
+    if: github.repository == 'zachatrocity/lem'
     steps:
       - uses: actions/checkout@v2
 

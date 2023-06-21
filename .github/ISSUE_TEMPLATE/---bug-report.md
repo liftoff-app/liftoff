@@ -11,7 +11,7 @@ assignees: ""
 - OS: [eg. iOS/Android]
 - OS version: [eg. 10]
 - Device: [eg. OnePlus 6]
-- Lemmur version: [eg. v1.2.3]
+- Lemmynade version: [eg. v1.2.3]
 
 ### Describe the bug
 
@@ -29,7 +29,7 @@ A clear and concise description of what the bug is.
 <details>
   <summary>Logs</summary>
   
-  Paste your logs here. Logs can be found in lemmur: settings > about lemmur > logs.
+  Paste your logs here. Logs can be found in lemmynade: settings > about lemmynade > logs.
 </details>
 
 ### Expected behavior

@@ -1,6 +1,6 @@
 ---
 name: "\U0001F680 Feature request"
-about: Suggest an idea for Lemmur
+about: Suggest an idea for Lemmynade
 title: ""
 labels: enhancement
 assignees: ""

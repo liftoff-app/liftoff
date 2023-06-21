@@ -6,24 +6,24 @@ This project has been officially dropped due to lack of interest and political d
 
 <div align="center">
 
-[![](https://github.com/LemmurOrg/lemmur/workflows/ci/badge.svg)](https://github.com/LemmurOrg/lemmur/actions)
-[![Translation status](http://weblate.yerbamate.ml/widgets/lemmur/-/lemmur/svg-badge.svg)](http://weblate.yerbamate.ml/engage/lemmur/)
+[![](https://github.com/zachatrocity/lemmynade/workflows/ci/badge.svg)](https://github.com/zachatrocity/lemmynade/actions)
+[![Translation status](http://weblate.yerbamate.ml/widgets/lemmynade/-/lemmynade/svg-badge.svg)](http://weblate.yerbamate.ml/engage/lemmynade/)
 
-<img width=200px height=200px src="https://raw.githubusercontent.com/LemmurOrg/lemmur/master/assets/readme_icon.svg"/>
+<img width=200px height=200px src="https://raw.githubusercontent.com/LemmynadeOrg/lemmynade/master/assets/readme_icon.svg"/>
 
-# lemmur
+# lemmynade
 
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LemmurOrg.lemmur)
-[<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.LemmurOrg.lemmur)
-[<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/LemmurOrg/lemmur/releases/latest)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LemmynadeOrg.lemmynade)
+[<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.LemmynadeOrg.lemmynade)
+[<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/zachatrocity/lemmynade/releases/latest)
 
 A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative
 
-<a href="https://www.buymeacoffee.com/lemmur" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+<a href=https://www.buymeacoffee.com/zachatrocity" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
 </div>
 
-- [lemmur](#lemmur)
+- [lemmynade](#lemmynade)
   - [Build from source](#build-from-source)
     - [Prerequisites](#prerequisites)
     - [Android](#android)
@@ -38,8 +38,8 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
 ### Prerequisites
 
 - Install [flutter](https://flutter.dev/docs/get-started/install): To check if this step was successful run `flutter doctor` (Installing android studio is not required if you setup the android SDK yourself)
-- Clone this repo: `git clone https://github.com/LemmurOrg/lemmur`
-- Enter the repo: `cd lemmur`
+- Clone this repo: `git clone https://github.com/zachatrocity/lemmynade`
+- Enter the repo: `cd lemmynade`
 
 ### Android
 
@@ -52,14 +52,14 @@ The apk will be in `build/app/outputs/flutter-apk/app-prod-release.apk`
 1. Make sure you have the additional [linux requirements](https://flutter.dev/desktop#additional-linux-requirements) (verify with `flutter doctor`)
 2. Build: `flutter build linux --target lib/main_prod.dart --release`
 
-The executable will be in `build/linux/x64/release/bundle/lemmur` (be aware, however, that this executable is not standalone)
+The executable will be in `build/linux/x64/release/bundle/lemmynade` (be aware, however, that this executable is not standalone)
 
 ### Windows
 
 1. Make sure you have the additional [windows requirements](https://flutter.dev/desktop#additional-windows-requirements) (verify with `flutter doctor`)
 2. Build: `flutter build windows --target lib/main_prod.dart --release`
 
-The executable will be in `build\windows\runner\Release\lemmur.exe` (be aware, however, that this executable is not standalone)
+The executable will be in `build\windows\runner\Release\lemmynade.exe` (be aware, however, that this executable is not standalone)
 
 ## FAQ
 
@@ -69,4 +69,4 @@ We have no control over F-droid's build process. This process is automatic and n
 
 ### "App not installed" - what to do?
 
-When installing the APK directly you might get this message. This happens when you are trying to update lemmur from a different source than where you originally got it from. To fix it simply uninstall the previous version (you will lose all local data) and then install the new one. Always make sure to install lemmur APKs only from verified sources.
+When installing the APK directly you might get this message. This happens when you are trying to update lemmynade from a different source than where you originally got it from. To fix it simply uninstall the previous version (you will lose all local data) and then install the new one. Always make sure to install lemmynade APKs only from verified sources.
