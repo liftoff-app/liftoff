@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lemmynade/stores/config_store.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:lemmynade/stores/config_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _lemmyUserSettings = LocalUserSettings(
