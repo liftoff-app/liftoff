@@ -10,6 +10,7 @@ A fork of the original lemmur app we all knew and loved. It was unfortunately ab
 ## Screenshots
 <img width=360px height=780px src="assets/screenshots/screenshot1.webp"/>
 <img width=360px height=780px src="assets/screenshots/screenshot2.png"/>
+
 ## License
 
 
