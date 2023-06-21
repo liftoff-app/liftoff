@@ -33,6 +33,10 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
     - [Version x.x.x was released, why is it not yet on F-droid?](#version-xxx-was-released-why-is-it-not-yet-on-f-droid)
     - ["App not installed" - what to do?](#app-not-installed---what-to-do)
 
+
+# Contributing
+Please consider contributing! Even if you don't know flutter well use this as a chance to learn! [Contributing Guide](https://github.com/zachatrocity/lemmynade/CONTRIBUTING.md)
+
 ## Build from source
 
 ### Prerequisites
