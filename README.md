@@ -5,7 +5,7 @@
 A fork of the original lemmur app we all knew and loved. It was unfortunately abandoned but this project aims to keep the legacy it started.
 
 ## How to Install
-- Currently there are no binary downloads available as this is just the start of this fork. However, you can reference the old readme [here](https://github.com/zachatrocity/lemmynade/raw/master/README.md.old).
+- Currently there are no binary downloads available as this is just the start of this fork. However, you can reference the old readme [here](OLDREADME.md).
 
 ## Screenshots
 <img width=360px height=780px src="assets/screenshots/screenshot1.webp"/>
