@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
-import 'package:provider/provider.dart';
 
 import '../../pages/full_post/full_post.dart';
 import '../../stores/config_store.dart';

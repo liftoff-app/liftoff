@@ -16,7 +16,7 @@ class PostTitle extends StatelessWidget {
         final post = store.postView.post;
         final thumbnailUrl = post.thumbnailUrl;
         final url = post.url;
-        print(store.hasMedia);
+
         return Padding(
           padding: const EdgeInsets.all(10).copyWith(top: 0),
           child: Row(
