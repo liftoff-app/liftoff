@@ -96,6 +96,29 @@ class AppearanceConfigPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 12),
+            const _SectionHeading('Post Style'),
+            SwitchListTile.adaptive(
+              title: Text(L10n.of(context).post_style_compact),
+              value: store.compactPostView,
+              onChanged: (checked) {
+                store.compactPostView = checked;
+              },
+            ),
+            SwitchListTile.adaptive(
+              title: Text(L10n.of(context).post_style_rounded_corners),
+              value: store.postRoundedCorners,
+              onChanged: (checked) {
+                store.postRoundedCorners = checked;
+              },
+            ),
+            SwitchListTile.adaptive(
+              title: Text(L10n.of(context).post_style_shadow),
+              value: store.postCardShadow,
+              onChanged: (checked) {
+                store.postCardShadow = checked;
+              },
+            ),
+            const SizedBox(height: 12),
             const _SectionHeading('Other'),
             SwitchListTile.adaptive(
               title: Text(L10n.of(context).show_avatars),

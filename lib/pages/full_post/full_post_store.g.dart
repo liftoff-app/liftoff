@@ -54,6 +54,22 @@ mixin _$FullPostStore on _FullPostStore, Store {
     });
   }
 
+  late final _$postCommentsAtom =
+      Atom(name: '_FullPostStore.postComments', context: context);
+
+  @override
+  List<CommentView>? get postComments {
+    _$postCommentsAtom.reportRead();
+    return super.postComments;
+  }
+
+  @override
+  set postComments(List<CommentView>? value) {
+    _$postCommentsAtom.reportWrite(value, super.postComments, () {
+      super.postComments = value;
+    });
+  }
+
   late final _$newCommentsAtom =
       Atom(name: '_FullPostStore.newComments', context: context);
 
@@ -147,6 +163,7 @@ mixin _$FullPostStore on _FullPostStore, Store {
   String toString() {
     return '''
 fullPostView: ${fullPostView},
+postComments: ${postComments},
 newComments: ${newComments},
 sorting: ${sorting},
 postStore: ${postStore},
