@@ -1,0 +1,11 @@
+- Upgraded SDK and kotlin
+- Various API changes due to app being stale for 4 months
+- Reconfigured build pipeline to support new app name
+- App renamed to Lemmynade
+
+### Added
+
+- Create post community picker now has autocomplete
+- You can now add an instance from the three dots menu on the instance page
+- Editor for writing comments, posts, and profile bio now has a toolbar with shortcuts to all the common markdown things
+
