@@ -6,7 +6,7 @@ import 'package:lemmynade/util/async_store.dart';
 void main() {
   group('ModlogPageStore', () {
     late ModlogPageStore store;
-    const instanceHost = 'lemmy.ml';
+    const instanceHost = 'lemmy.world';
 
     setUp(() {
       store = ModlogPageStore(instanceHost);
