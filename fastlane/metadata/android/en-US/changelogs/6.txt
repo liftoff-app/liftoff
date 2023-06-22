@@ -1,0 +1,5 @@
+- Added compact post view
+- Added settings option for post border radius
+- Added settings option for post shadow
+- Added thumbmail for media posts in compact view
+
