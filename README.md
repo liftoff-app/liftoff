@@ -1,25 +1,23 @@
-# ⚠️ THIS PROJECT IS NOT MAINTAINED ANYMORE ⚠️
-
-This project has been officially dropped due to lack of interest and political differences. If anyone is interested in continuing developement, feel free to fork it. For any questions you can message [krawieck](https://matrix.to/#/@krawieck:matrix.org) (who was responsible for the flutter app) or [shilangyu](https://matrix.to/#/@shilangyu:matrix.org) (who was responsible for lemmy_api_client).
-
----
-
 <div align="center">
 
 [![](https://github.com/zachatrocity/lemmynade/workflows/ci/badge.svg)](https://github.com/zachatrocity/lemmynade/actions)
+<!--
 [![Translation status](http://weblate.yerbamate.ml/widgets/lemmynade/-/lemmynade/svg-badge.svg)](http://weblate.yerbamate.ml/engage/lemmynade/)
+-->
 
-<img width=200px height=200px src="https://raw.githubusercontent.com/LemmynadeOrg/lemmynade/master/assets/readme_icon.svg"/>
+<img width=200px height=200px src="https://raw.githubusercontent.com/zachatrocity/lemmynade/master/assets/readme_icon.svg"/>
 
 # lemmynade
 
+<!--
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LemmynadeOrg.lemmynade)
 [<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.LemmynadeOrg.lemmynade)
+-->
 [<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/zachatrocity/lemmynade/releases/latest)
 
-A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative
+A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative 
 
-<a href=https://www.buymeacoffee.com/zachatrocity" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+<a href="https://www.buymeacoffee.com/zachatrocity" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
 </div>
 
