@@ -5,6 +5,9 @@ on:
     tags:
       - "v*.*.*"
 
+permissions:
+  contents: write
+
 jobs:
   get-vars:
     name: Get vars
@@ -151,8 +154,6 @@ jobs:
 
       - name: Release to GitHub
         uses: softprops/action-gh-release@v1
-        permissions:
-          contents: write
         with:
           files: |
             android-build/*
