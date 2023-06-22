@@ -1,4 +1,9 @@
 ## Unreleased
+- Support for Lemmy v0.17.x
+- Upgraded SDK and kotlin
+- Various API changes due to app being stale for 4 months
+- Reconfigured build pipeline to support new app name
+- App renamed to Lemmynade
 
 ### Added
 
