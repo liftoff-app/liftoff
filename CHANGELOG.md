@@ -1,5 +1,8 @@
 ## Unreleased
-- Fixed comment nesting bug due to old API schema Issue: 6
+- Fixed comment nesting bug due to old API schema Issue
+- Added compact post view
+- Added settings option for post border radius
+- Added settings option for post shadow
 
 
 ## v0.9.4 - 2023-06-21
