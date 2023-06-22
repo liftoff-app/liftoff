@@ -41,15 +41,15 @@ class PostLinkPreview extends StatelessWidget {
                       children: [
                         const Spacer(),
                         Text('${store.urlDomain} ',
-                            style: theme.textTheme.caption
+                            style: theme.textTheme.bodySmall
                                 ?.apply(fontStyle: FontStyle.italic)),
                         const Icon(Icons.launch, size: 12),
                       ],
                     ),
                     Text(
                       store.postView.post.embedTitle ?? '',
-                      style:
-                          theme.textTheme.subtitle1?.apply(fontWeightDelta: 2),
+                      style: theme.textTheme.titleMedium
+                          ?.apply(fontWeightDelta: 2),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),

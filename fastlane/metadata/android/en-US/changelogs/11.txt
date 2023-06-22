@@ -1,4 +1,4 @@
-Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid](https://f-droid.org/packages/com.krawieck.lemmur)
+Lemmynade is now available on the [play store](https://play.google.com/store/apps/details?id=com.zachatrocity.lemmynade) and [f-droid](https://f-droid.org/packages/com.zachatrocity.lemmynade)
 
 ### Changed
 
@@ -7,5 +7,5 @@ Lemmur is now available on the [play store](https://play.google.com/store/apps/d
 
 ### Fixed
 
-- Fixed issue where the "About lemmur" tile would not appear on Windows/Linux
+- Fixed issue where the "About lemmynade" tile would not appear on Windows/Linux
 - Added a bigger bottom margin in the comment section to prevent the floating action button from covering the last comment

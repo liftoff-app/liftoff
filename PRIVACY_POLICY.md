@@ -2,4 +2,4 @@
 
 We don't store your data. We don't use any intermediary services that could store your data.
 
-For any questions contact us at lemmurapp@protonmail.com
+For any questions contact us at lemmynadeapp@protonmail.com

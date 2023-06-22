@@ -58,7 +58,7 @@ class SearchTab extends HookWidget {
             children: [
               Expanded(
                 child: Text('instance:',
-                    style: Theme.of(context).textTheme.subtitle1),
+                    style: Theme.of(context).textTheme.titleMedium),
               ),
               Expanded(
                 child: RadioPicker<String>(

@@ -88,9 +88,9 @@ class CreatePostCommunityPicker extends HookWidget {
                 ),
               ),
             ),
-            loadingBuilder: (context) => Row(
+            loadingBuilder: (context) => const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Padding(
                   padding: EdgeInsets.all(8),
                   child: CircularProgressIndicator.adaptive(),

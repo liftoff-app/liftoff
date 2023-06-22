@@ -35,7 +35,7 @@ class ManageAccountPage extends HookWidget {
       return site.myUser!.localUserView;
     });
 
-    void _openMoreMenu() {
+    void openMoreMenu() {
       showBottomModal(
         context: context,
         builder: (context) => Column(
@@ -65,14 +65,14 @@ class ManageAccountPage extends HookWidget {
       appBar: AppBar(
         title: Text('$username@$instanceHost'),
         actions: [
-          IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
+          IconButton(icon: Icon(moreIcon), onPressed: openMoreMenu),
         ],
       ),
       body: FutureBuilder<LocalUserSettingsView>(
         future: userFuture,
         builder: (_, userSnap) {
           if (userSnap.hasError) {
-            return Center(child: Text('Error: ${userSnap.error?.toString()}'));
+            return Center(child: Text('Error: ${userSnap.error}'));
           }
           if (!userSnap.hasData) {
             return const Center(child: CircularProgressIndicator.adaptive());
@@ -259,20 +259,20 @@ class _ManageAccount extends HookWidget {
             ),
             const SizedBox(height: 8),
             Text(L10n.of(context).display_name,
-                style: theme.textTheme.headline6),
+                style: theme.textTheme.titleLarge),
             TextField(
               controller: displayNameController,
               onSubmitted: (_) => bioController.focusNode.requestFocus(),
             ),
             const SizedBox(height: 8),
-            Text(L10n.of(context).bio, style: theme.textTheme.headline6),
+            Text(L10n.of(context).bio, style: theme.textTheme.titleLarge),
             Editor(
               controller: bioController,
               onSubmitted: (_) => emailFocusNode.requestFocus(),
               maxLines: 10,
             ),
             const SizedBox(height: 8),
-            Text(L10n.of(context).email, style: theme.textTheme.headline6),
+            Text(L10n.of(context).email, style: theme.textTheme.titleLarge),
             TextField(
               focusNode: emailFocusNode,
               controller: emailController,
@@ -282,14 +282,14 @@ class _ManageAccount extends HookWidget {
             ),
             const SizedBox(height: 8),
             Text(L10n.of(context).matrix_user,
-                style: theme.textTheme.headline6),
+                style: theme.textTheme.titleLarge),
             TextField(
               focusNode: matrixUserFocusNode,
               controller: matrixUserController,
               onSubmitted: (_) => newPasswordFocusNode.requestFocus(),
             ),
             const SizedBox(height: 8),
-            // Text(L10n.of(context)!.new_password, style: theme.textTheme.headline6),
+            // Text(L10n.of(context)!.new_password, style: theme.textTheme.titleLarge),
             // TextField(
             //   focusNode: newPasswordFocusNode,
             //   controller: newPasswordController,
@@ -300,7 +300,7 @@ class _ManageAccount extends HookWidget {
             // ),
             // const SizedBox(height: 8),
             // Text(L10n.of(context)!.verify_password,
-            //     style: theme.textTheme.headline6),
+            //     style: theme.textTheme.titleLarge),
             // TextField(
             //   focusNode: verifyPasswordFocusNode,
             //   controller: newPasswordVerifyController,
@@ -310,7 +310,7 @@ class _ManageAccount extends HookWidget {
             //   onSubmitted: (_) => oldPasswordFocusNode.requestFocus(),
             // ),
             // const SizedBox(height: 8),
-            // Text(L10n.of(context)!.old_password, style: theme.textTheme.headline6),
+            // Text(L10n.of(context)!.old_password, style: theme.textTheme.titleLarge),
             // TextField(
             //   focusNode: oldPasswordFocusNode,
             //   controller: oldPasswordController,
@@ -378,7 +378,7 @@ class _ManageAccount extends HookWidget {
             ElevatedButton(
               onPressed: deleteAccountDialog,
               style: ElevatedButton.styleFrom(
-                primary: Colors.red,
+                backgroundColor: Colors.red,
               ),
               child: Text(L10n.of(context).delete_account.toUpperCase()),
             ),
@@ -488,7 +488,7 @@ class _ImagePicker extends HookWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(name, style: theme.textTheme.headline6),
+            Text(name, style: theme.textTheme.titleLarge),
             if (pictrsDeleteToken.value == null)
               ElevatedButton(
                 onPressed: delayedLoading.loading ? null : uploadImage,
@@ -497,8 +497,8 @@ class _ImagePicker extends HookWidget {
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator.adaptive())
-                    : Row(
-                        children: const [Text('upload'), Icon(Icons.publish)],
+                    : const Row(
+                        children: [Text('upload'), Icon(Icons.publish)],
                       ),
               )
             else

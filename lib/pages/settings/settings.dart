@@ -246,7 +246,7 @@ class _AccountOptions extends HookWidget {
                       child: CircularProgressIndicator.adaptive(),
                     )
                   : const Icon(Icons.cloud_download),
-              title: const Text('Import settings to lemmur'),
+              title: const Text('Import settings to lemmynade'),
               onTap: () async {
                 await context.read<ConfigStore>().importLemmyUserSettings(
                       accountsStore.userDataFor(instanceHost, username)!.jwt,
@@ -414,7 +414,7 @@ class _SectionHeading extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Text(text.toUpperCase(),
-          style: theme.textTheme.subtitle2
+          style: theme.textTheme.titleSmall
               ?.copyWith(color: theme.colorScheme.secondary)),
     );
   }

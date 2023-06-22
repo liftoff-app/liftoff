@@ -1,4 +1,4 @@
-package com.krawieck.lemmur
+package com.zachatrocity.lemmynade
 
 import io.flutter.embedding.android.FlutterActivity
 

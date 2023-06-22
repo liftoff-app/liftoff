@@ -24,7 +24,7 @@ class CommunityFollowButton extends HookWidget {
         data: ElevatedButtonThemeData(
           style: theme.elevatedButtonTheme.style?.copyWith(
             shape: MaterialStateProperty.all(const StadiumBorder()),
-            textStyle: MaterialStateProperty.all(theme.textTheme.subtitle1),
+            textStyle: MaterialStateProperty.all(theme.textTheme.titleMedium),
           ),
         ),
         child: Center(

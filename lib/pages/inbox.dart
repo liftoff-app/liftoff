@@ -283,7 +283,7 @@ class PrivateMessageTile extends HookWidget {
             children: [
               Text(
                 '${toMe ? L10n.of(context).from : L10n.of(context).to} ',
-                style: TextStyle(color: theme.textTheme.caption?.color),
+                style: TextStyle(color: theme.textTheme.bodySmall?.color),
               ),
               InkWell(
                 borderRadius: BorderRadius.circular(10),

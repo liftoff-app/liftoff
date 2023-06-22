@@ -317,7 +317,7 @@ class _CommentTag extends StatelessWidget {
           text,
           style: TextStyle(
             color: textColorBasedOnBackground(backgroundColor),
-            fontSize: Theme.of(context).textTheme.bodyText1!.fontSize! - 5,
+            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize! - 5,
             fontWeight: FontWeight.w800,
           ),
         ),

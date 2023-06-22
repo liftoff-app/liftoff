@@ -11,9 +11,9 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>$(BUNDLE_NAME)</string>
+	<string>Lemmynade</string>
 		<key>CFBundleDisplayName</key>
-		<string>$(BUNDLE_NAME)</string>
+	<string>Lemmynade</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>

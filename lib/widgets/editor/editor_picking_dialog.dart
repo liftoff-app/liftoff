@@ -44,9 +44,9 @@ class PickPersonDialog extends StatelessWidget {
         },
         onSuggestionSelected: (suggestion) =>
             Navigator.of(context).pop(suggestion),
-        loadingBuilder: (context) => Row(
+        loadingBuilder: (context) => const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Padding(
               padding: EdgeInsets.all(16),
               child: CircularProgressIndicator.adaptive(),
@@ -105,9 +105,9 @@ class PickCommunityDialog extends StatelessWidget {
         },
         onSuggestionSelected: (suggestion) =>
             Navigator.of(context).pop(suggestion),
-        loadingBuilder: (context) => Row(
+        loadingBuilder: (context) => const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Padding(
               padding: EdgeInsets.all(16),
               child: CircularProgressIndicator.adaptive(),

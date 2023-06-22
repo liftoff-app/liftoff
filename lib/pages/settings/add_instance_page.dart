@@ -80,11 +80,11 @@ class AddInstancePage extends HookWidget {
                   ),
                 ))
           else if (isSite.value == false)
-            SizedBox(
+            const SizedBox(
               height: 150,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.close, color: Colors.red),
                   Text('instance not found')
                 ],

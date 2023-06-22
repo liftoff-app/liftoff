@@ -1,6 +1,6 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.krawieck.lemmur">
+  package="com.zachatrocity.lemmynade">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <!-- Needed for url_launcher to work on android 11 -->
@@ -8,7 +8,7 @@
 
   <application
     android:name="${applicationName}"
-    android:label="${appName}"
+        android:label="Lemmynade"
     android:icon="@mipmap/ic_launcher">
 
     <activity

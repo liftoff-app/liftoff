@@ -44,7 +44,7 @@ class AboutTile extends HookWidget {
           icon: const Icon(Icons.code),
           label: const Text('source code'),
           onPressed: () =>
-              launchLink(link: lemmurRepositoryUrl, context: context),
+              launchLink(link: lemmynadeRepositoryUrl, context: context),
         ),
         TextButton.icon(
           icon: const Icon(Icons.monetization_on),
@@ -56,13 +56,6 @@ class AboutTile extends HookWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextButton(
-                      onPressed: () => launchLink(
-                        link: patreonUrl,
-                        context: context,
-                      ),
-                      child: const Text('Patreon'),
-                    ),
                     TextButton(
                       onPressed: () => launchLink(
                         link: buyMeACoffeeUrl,

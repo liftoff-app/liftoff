@@ -11,7 +11,7 @@ import 'package:lemmy_api_client/v3.dart';
 double _calculateHotRank(int score, DateTime time) {
   log10(num x) => log(x) / ln10;
 
-  final elapsed = (time.difference(DateTime.now()).inMilliseconds).abs() / 36e5;
+  final elapsed = time.difference(DateTime.now()).inMilliseconds.abs() / 36e5;
 
   return (10000 * log10(max(1, 3 + score))) / pow(elapsed + 2, 1.8);
 }

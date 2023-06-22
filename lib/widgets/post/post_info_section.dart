@@ -45,7 +45,7 @@ class PostInfoSection extends StatelessWidget {
                     text: TextSpan(
                       style: TextStyle(
                         fontSize: 15,
-                        color: theme.textTheme.bodyText1?.color,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                       children: [
                         const TextSpan(
@@ -83,7 +83,7 @@ class PostInfoSection extends StatelessWidget {
                     text: TextSpan(
                       style: TextStyle(
                         fontSize: 13,
-                        color: theme.textTheme.bodyText1?.color,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                       children: [
                         TextSpan(

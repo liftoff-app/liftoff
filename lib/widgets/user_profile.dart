@@ -215,7 +215,7 @@ class _UserOverview extends HookWidget {
                 const SizedBox(height: 80),
               Text(
                 '${userView.person.preferredName}${userView.person.isCakeDay ? ' 🍰' : ''}',
-                style: theme.textTheme.headline6,
+                style: theme.textTheme.titleLarge,
               ),
               const SizedBox(height: 4),
               Row(
@@ -223,7 +223,7 @@ class _UserOverview extends HookWidget {
                 children: [
                   Text(
                     '@${userView.person.name}@',
-                    style: theme.textTheme.caption,
+                    style: theme.textTheme.bodySmall,
                   ),
                   InkWell(
                     onTap: () => Navigator.of(context).push(
@@ -233,11 +233,12 @@ class _UserOverview extends HookWidget {
                     ),
                     child: Text(
                       userView.person.originInstanceHost,
-                      style: theme.textTheme.caption,
+                      style: theme.textTheme.bodySmall,
                     ),
                   )
                 ],
               ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -269,8 +270,9 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          L10n.of(context)
-                              .number_of_comments(userView.counts.commentCount),
+                          L10n.of(context).number_of_comments(
+                              userView.counts.commentCount,
+                              userView.counts.commentCount),
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),
                       ],
@@ -281,7 +283,7 @@ class _UserOverview extends HookWidget {
               const SizedBox(height: 15),
               Text(
                 'Joined ${userView.person.published.timeago(context)}',
-                style: theme.textTheme.bodyText1,
+                style: theme.textTheme.bodyLarge,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -295,7 +297,7 @@ class _UserOverview extends HookWidget {
                     DateFormat.yMMMMd(
                       Localizations.localeOf(context).toLanguageTag(),
                     ).format(userView.person.published),
-                    style: theme.textTheme.bodyText1,
+                    style: theme.textTheme.bodyLarge,
                   ),
                 ],
               ),
@@ -362,9 +364,9 @@ class _AboutTab extends HookWidget {
       children: [
         if (isOwnedAccount)
           ListTile(
-            title: Row(
+            title: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(Icons.edit),
                 SizedBox(width: 10),
                 Text('edit profile'),
@@ -389,7 +391,7 @@ class _AboutTab extends HookWidget {
             title: Center(
               child: Text(
                 'Moderates:',
-                style: theme.textTheme.headline6?.copyWith(fontSize: 18),
+                style: theme.textTheme.titleLarge?.copyWith(fontSize: 18),
               ),
             ),
           ),
@@ -405,7 +407,7 @@ class _AboutTab extends HookWidget {
             title: Center(
               child: Text(
                 'Subscribed:',
-                style: theme.textTheme.headline6?.copyWith(fontSize: 18),
+                style: theme.textTheme.titleLarge?.copyWith(fontSize: 18),
               ),
             ),
           ),

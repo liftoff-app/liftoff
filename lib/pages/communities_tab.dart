@@ -187,7 +187,7 @@ class CommunitiesTab extends HookWidget {
                           ),
                           title: Text(
                             instances[i].name,
-                            style: theme.textTheme.headline6,
+                            style: theme.textTheme.titleLarge,
                           ),
                           trailing: IconButton(
                             icon: Icon(isCollapsed.value[i]

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(lemmur LANGUAGES CXX)
+project(lemmynade LANGUAGES CXX)
 
-set(BINARY_NAME "lemmur")
+set(BINARY_NAME "lemmynade")
 
 cmake_policy(SET CMP0063 NEW)
 
