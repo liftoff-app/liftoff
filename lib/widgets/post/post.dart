@@ -81,12 +81,23 @@ class _Post extends StatelessWidget {
             type: MaterialType.transparency,
             child: Column(
               children: [
-                const PostInfoSection(),
-                const PostTitle(),
-                if (!store.compactPostView) const PostMedia(),
-                if (!store.compactPostView) const PostLinkPreview(),
-                if (!store.compactPostView) const PostBody(),
-                const PostActions(),
+                if (isFullPost) ...[
+                  const PostInfoSection(),
+                  const PostTitle(),
+                  const PostMedia(),
+                  const PostLinkPreview(),
+                  const PostBody(),
+                  const PostActions(),
+                ] else ...[
+                  const PostInfoSection(),
+                  const PostTitle(),
+                  if (!store.compactPostView) ...[
+                    const PostMedia(),
+                    const PostLinkPreview(),
+                    const PostBody(),
+                  ],
+                  const PostActions(),
+                ]
               ],
             ),
           ),
