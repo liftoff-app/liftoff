@@ -53,6 +53,19 @@ abstract class _ConfigStore with Store {
   @observable
   Locale locale = const Locale('en');
 
+  // post style
+  @observable
+  @JsonKey(defaultValue: false)
+  bool compactPostView = false;
+
+  @observable
+  @JsonKey(defaultValue: true)
+  bool postRoundedCorners = true;
+
+  @observable
+  @JsonKey(defaultValue: true)
+  bool postCardShadow = true;
+
   @observable
   @JsonKey(defaultValue: true)
   bool showAvatars = true;

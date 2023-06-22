@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
-import 'package:provider/provider.dart';
 
 import '../../pages/full_post/full_post.dart';
+import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/mobx_provider.dart';
+import '../../util/observer_consumers.dart';
 import 'post_actions.dart';
 import 'post_body.dart';
 import 'post_info_section.dart';
@@ -57,7 +58,6 @@ class _Post extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isFullPost = context.read<IsFullPost>();
-
     return GestureDetector(
       onTap: isFullPost
           ? null
@@ -66,23 +66,29 @@ class _Post extends StatelessWidget {
               Navigator.of(context)
                   .push(FullPostPage.fromPostStoreRoute(postStore));
             },
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black45)],
-          color: theme.cardColor,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-        ),
-        child: const Material(
-          type: MaterialType.transparency,
-          child: Column(
-            children: [
-              PostInfoSection(),
-              PostTitle(),
-              PostMedia(),
-              PostLinkPreview(),
-              PostBody(),
-              PostActions(),
-            ],
+      child: ObserverBuilder<ConfigStore>(
+        builder: (context, store) => DecoratedBox(
+          decoration: BoxDecoration(
+            boxShadow: store.postCardShadow
+                ? const [BoxShadow(blurRadius: 15, color: Colors.black45)]
+                : null,
+            color: theme.cardColor,
+            borderRadius: store.postRoundedCorners
+                ? const BorderRadius.all(Radius.circular(10))
+                : null,
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: Column(
+              children: [
+                const PostInfoSection(),
+                const PostTitle(),
+                if (!store.compactPostView) const PostMedia(),
+                if (!store.compactPostView) const PostLinkPreview(),
+                if (!store.compactPostView) const PostBody(),
+                const PostActions(),
+              ],
+            ),
           ),
         ),
       ),

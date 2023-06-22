@@ -177,7 +177,7 @@ class _UserOverview extends HookWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(40),
+                  top: Radius.circular(15),
                 ),
                 color: theme.cardColor,
               ),

@@ -1,6 +1,9 @@
 ## Unreleased
-- Fixed comment nesting bug due to old API schema Issue: 6
-
+- Fixed comment nesting bug due to old API schema Issue
+- Added compact post view
+- Added settings option for post border radius
+- Added settings option for post shadow
+- Added thumbmail for media posts in compact view
 
 ## v0.9.4 - 2023-06-21
 - Support for Lemmy v0.17.x

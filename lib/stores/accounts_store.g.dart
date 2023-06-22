@@ -16,7 +16,7 @@ AccountsStore _$AccountsStoreFromJson(Map<String, dynamic> json) =>
                       MapEntry(k, UserData.fromJson(e as Map<String, dynamic>)),
                 )),
           ) ??
-          {'lemmy.ml': {}}
+          {'lemmy.world': {}}
       ..defaultAccounts =
           (json['defaultAccounts'] as Map<String, dynamic>?)?.map(
                 (k, e) => MapEntry(k, e as String),
