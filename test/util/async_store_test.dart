@@ -4,7 +4,7 @@ import 'package:lemmynade/util/async_store.dart';
 
 void main() {
   group('AsyncStore', () {
-    const instanceHost = 'lemmy.ml';
+    const instanceHost = 'bigfoot.ninja';
     const badInstanceHost = 'does.not.exist';
 
     test('runLemmy works properly all the way through', () async {
@@ -14,7 +14,7 @@ void main() {
       expect(store.isLoading, false);
       expect(store.errorTerm, null);
 
-      final fut = store.runLemmy(instanceHost, const GetPost(id: 91588));
+      final fut = store.runLemmy(instanceHost, const GetPost(id: 3711));
 
       expect(store.asyncState, isA<AsyncStateLoading>());
       expect(store.isLoading, true);
@@ -71,7 +71,7 @@ void main() {
     test('succeeds then fails on refresh, and then succeeds', () async {
       final store = AsyncStore<FullPostView>();
 
-      final res = await store.runLemmy(instanceHost, const GetPost(id: 91588));
+      final res = await store.runLemmy(instanceHost, const GetPost(id: 3711));
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, null);
@@ -80,7 +80,7 @@ void main() {
 
       await store.runLemmy(
         badInstanceHost,
-        const GetPost(id: 91588),
+        const GetPost(id: 3711),
         refresh: true,
       );
 
@@ -90,7 +90,7 @@ void main() {
 
       final res2 = await store.runLemmy(
         instanceHost,
-        const GetPost(id: 91588),
+        const GetPost(id: 3711),
         refresh: true,
       );
 

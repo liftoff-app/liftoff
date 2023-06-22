@@ -1,4 +1,8 @@
 ## Unreleased
+- Fixed comment nesting bug due to old API schema Issue: 6
+
+
+## v0.9.4 - 2023-06-21
 - Support for Lemmy v0.17.x
 - Upgraded SDK and kotlin
 - Various API changes due to app being stale for 4 months
