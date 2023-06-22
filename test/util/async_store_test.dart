@@ -4,7 +4,7 @@ import 'package:lemmynade/util/async_store.dart';
 
 void main() {
   group('AsyncStore', () {
-    const instanceHost = 'lemmy.ml';
+    const instanceHost = 'lemmy.world';
     const badInstanceHost = 'does.not.exist';
 
     test('runLemmy works properly all the way through', () async {

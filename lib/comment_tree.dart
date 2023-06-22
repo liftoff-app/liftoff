@@ -55,15 +55,20 @@ class CommentTree {
   static List<CommentTree> fromList(List<CommentView> comments) {
     CommentTree gatherChildren(CommentTree parent) {
       for (final el in comments) {
-        if (el.comment.parentId == parent.comment.comment.id) {
+        // comments store a parth variable that can be used to traverse the comment tree
+        // example: path: "0.{commentId}.{otherCommentId}.{yetAnotherCommentId]"
+        final commentHierarchy = el.comment.path.split('.');
+        if (int.parse(commentHierarchy[commentHierarchy.length - 2]) ==
+            parent.comment.comment.id) {
           parent.children.add(gatherChildren(CommentTree(el)));
         }
       }
       return parent;
     }
 
-    final topLevelParents =
-        comments.where((e) => e.comment.parentId == null).map(CommentTree.new);
+    final topLevelParents = comments
+        .where((e) => e.comment.path.split('.').length == 2)
+        .map(CommentTree.new);
 
     final result = topLevelParents.map(gatherChildren).toList();
     return result;

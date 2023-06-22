@@ -77,8 +77,10 @@ abstract class _FullPostStore with Store {
     final result = await fullPostState.runLemmy(
         instanceHost, GetPost(id: postId, auth: token?.raw));
 
-    final commentsResult =
-        await commentsState.runLemmy(instanceHost, GetComments(postId: postId));
+    final commentsResult = await commentsState.runLemmy(
+        instanceHost,
+        GetComments(
+            postId: postId, type: CommentListingType.all, maxDepth: 20));
 
     if (result != null) {
       postStore ??= PostStore(result.postView);
