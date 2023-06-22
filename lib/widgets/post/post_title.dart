@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../url_launcher.dart';
 import '../../util/observer_consumers.dart';
 import '../cached_network_image.dart';
+import '../fullscreenable_image.dart';
 import 'post_store.dart';
 
 class PostTitle extends StatelessWidget {
@@ -15,7 +16,7 @@ class PostTitle extends StatelessWidget {
         final post = store.postView.post;
         final thumbnailUrl = post.thumbnailUrl;
         final url = post.url;
-
+        print(store.hasMedia);
         return Padding(
           padding: const EdgeInsets.all(10).copyWith(top: 0),
           child: Row(
@@ -61,6 +62,20 @@ class PostTitle extends StatelessWidget {
                   ),
                 ),
               ],
+              if (store.hasMedia && url != null) ...[
+                FullscreenableImage(
+                  url: url,
+                  child: CachedNetworkImage(
+                    width: 70,
+                    height: 70,
+                    imageUrl: url,
+                    errorBuilder: (_, ___) => const Icon(Icons.warning),
+                    loadingBuilder: (context, progress) =>
+                        CircularProgressIndicator.adaptive(
+                            value: progress?.progress),
+                  ),
+                )
+              ]
             ],
           ),
         );

@@ -84,7 +84,7 @@ class _Post extends StatelessWidget {
               children: [
                 const PostInfoSection(),
                 const PostTitle(),
-                const PostMedia(),
+                if (!store.compactPostView) const PostMedia(),
                 if (!store.compactPostView) const PostLinkPreview(),
                 if (!store.compactPostView) const PostBody(),
                 const PostActions(),
