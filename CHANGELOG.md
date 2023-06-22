@@ -1,3 +1,6 @@
+## Unreleased
+- Fixed issue with compact mode not showing full post items
+
 ## v0.9.5 - 2023-06-22
 - Fixed comment nesting bug due to old API schema Issue
 - Added compact post view
