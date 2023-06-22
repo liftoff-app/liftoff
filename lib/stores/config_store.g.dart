@@ -11,6 +11,9 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
       $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ?? ThemeMode.system
   ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
+  ..compactPostView = json['compactPostView'] as bool? ?? false
+  ..postRoundedCorners = json['postRoundedCorners'] as bool? ?? false
+  ..postCardShadow = json['postCardShadow'] as bool? ?? true
   ..showAvatars = json['showAvatars'] as bool? ?? true
   ..showScores = json['showScores'] as bool? ?? true
   ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
@@ -22,6 +25,9 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'theme': _$ThemeModeEnumMap[instance.theme]!,
       'amoledDarkMode': instance.amoledDarkMode,
       'locale': const LocaleConverter().toJson(instance.locale),
+      'compactPostView': instance.compactPostView,
+      'postRoundedCorners': instance.postRoundedCorners,
+      'postCardShadow': instance.postCardShadow,
       'showAvatars': instance.showAvatars,
       'showScores': instance.showScores,
       'defaultSortType': instance.defaultSortType,
@@ -84,6 +90,54 @@ mixin _$ConfigStore on _ConfigStore, Store {
   set locale(Locale value) {
     _$localeAtom.reportWrite(value, super.locale, () {
       super.locale = value;
+    });
+  }
+
+  late final _$compactPostViewAtom =
+      Atom(name: '_ConfigStore.compactPostView', context: context);
+
+  @override
+  bool get compactPostView {
+    _$compactPostViewAtom.reportRead();
+    return super.compactPostView;
+  }
+
+  @override
+  set compactPostView(bool value) {
+    _$compactPostViewAtom.reportWrite(value, super.compactPostView, () {
+      super.compactPostView = value;
+    });
+  }
+
+  late final _$postRoundedCornersAtom =
+      Atom(name: '_ConfigStore.postRoundedCorners', context: context);
+
+  @override
+  bool get postRoundedCorners {
+    _$postRoundedCornersAtom.reportRead();
+    return super.postRoundedCorners;
+  }
+
+  @override
+  set postRoundedCorners(bool value) {
+    _$postRoundedCornersAtom.reportWrite(value, super.postRoundedCorners, () {
+      super.postRoundedCorners = value;
+    });
+  }
+
+  late final _$postCardShadowAtom =
+      Atom(name: '_ConfigStore.postCardShadow', context: context);
+
+  @override
+  bool get postCardShadow {
+    _$postCardShadowAtom.reportRead();
+    return super.postCardShadow;
+  }
+
+  @override
+  set postCardShadow(bool value) {
+    _$postCardShadowAtom.reportWrite(value, super.postCardShadow, () {
+      super.postCardShadow = value;
     });
   }
 
@@ -180,6 +234,9 @@ mixin _$ConfigStore on _ConfigStore, Store {
 theme: ${theme},
 amoledDarkMode: ${amoledDarkMode},
 locale: ${locale},
+compactPostView: ${compactPostView},
+postRoundedCorners: ${postRoundedCorners},
+postCardShadow: ${postCardShadow},
 showAvatars: ${showAvatars},
 showScores: ${showScores},
 defaultSortType: ${defaultSortType},

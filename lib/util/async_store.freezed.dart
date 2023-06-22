@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'async_store.dart';
 
@@ -26,10 +26,10 @@ mixin _$AsyncState<T> {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(T data, String? errorTerm)? data,
-    TResult Function()? loading,
-    TResult Function(String errorTerm)? error,
+    TResult? Function()? initial,
+    TResult? Function(T data, String? errorTerm)? data,
+    TResult? Function()? loading,
+    TResult? Function(String errorTerm)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,10 +51,10 @@ mixin _$AsyncState<T> {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(AsyncStateInitial<T> value)? initial,
-    TResult Function(AsyncStateData<T> value)? data,
-    TResult Function(AsyncStateLoading<T> value)? loading,
-    TResult Function(AsyncStateError<T> value)? error,
+    TResult? Function(AsyncStateInitial<T> value)? initial,
+    TResult? Function(AsyncStateData<T> value)? data,
+    TResult? Function(AsyncStateLoading<T> value)? loading,
+    TResult? Function(AsyncStateError<T> value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -72,17 +72,18 @@ mixin _$AsyncState<T> {
 abstract class $AsyncStateCopyWith<T, $Res> {
   factory $AsyncStateCopyWith(
           AsyncState<T> value, $Res Function(AsyncState<T>) then) =
-      _$AsyncStateCopyWithImpl<T, $Res>;
+      _$AsyncStateCopyWithImpl<T, $Res, AsyncState<T>>;
 }
 
 /// @nodoc
-class _$AsyncStateCopyWithImpl<T, $Res>
+class _$AsyncStateCopyWithImpl<T, $Res, $Val extends AsyncState<T>>
     implements $AsyncStateCopyWith<T, $Res> {
   _$AsyncStateCopyWithImpl(this._value, this._then);
 
-  final AsyncState<T> _value;
   // ignore: unused_field
-  final $Res Function(AsyncState<T>) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
@@ -94,14 +95,11 @@ abstract class _$$AsyncStateInitialCopyWith<T, $Res> {
 
 /// @nodoc
 class __$$AsyncStateInitialCopyWithImpl<T, $Res>
-    extends _$AsyncStateCopyWithImpl<T, $Res>
+    extends _$AsyncStateCopyWithImpl<T, $Res, _$AsyncStateInitial<T>>
     implements _$$AsyncStateInitialCopyWith<T, $Res> {
   __$$AsyncStateInitialCopyWithImpl(_$AsyncStateInitial<T> _value,
       $Res Function(_$AsyncStateInitial<T>) _then)
-      : super(_value, (v) => _then(v as _$AsyncStateInitial<T>));
-
-  @override
-  _$AsyncStateInitial<T> get _value => super._value as _$AsyncStateInitial<T>;
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -145,10 +143,10 @@ class _$AsyncStateInitial<T>
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(T data, String? errorTerm)? data,
-    TResult Function()? loading,
-    TResult Function(String errorTerm)? error,
+    TResult? Function()? initial,
+    TResult? Function(T data, String? errorTerm)? data,
+    TResult? Function()? loading,
+    TResult? Function(String errorTerm)? error,
   }) {
     return initial?.call();
   }
@@ -182,10 +180,10 @@ class _$AsyncStateInitial<T>
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(AsyncStateInitial<T> value)? initial,
-    TResult Function(AsyncStateData<T> value)? data,
-    TResult Function(AsyncStateLoading<T> value)? loading,
-    TResult Function(AsyncStateError<T> value)? error,
+    TResult? Function(AsyncStateInitial<T> value)? initial,
+    TResult? Function(AsyncStateData<T> value)? data,
+    TResult? Function(AsyncStateLoading<T> value)? loading,
+    TResult? Function(AsyncStateError<T> value)? error,
   }) {
     return initial?.call(this);
   }
@@ -215,31 +213,30 @@ abstract class _$$AsyncStateDataCopyWith<T, $Res> {
   factory _$$AsyncStateDataCopyWith(
           _$AsyncStateData<T> value, $Res Function(_$AsyncStateData<T>) then) =
       __$$AsyncStateDataCopyWithImpl<T, $Res>;
+  @useResult
   $Res call({T data, String? errorTerm});
 }
 
 /// @nodoc
 class __$$AsyncStateDataCopyWithImpl<T, $Res>
-    extends _$AsyncStateCopyWithImpl<T, $Res>
+    extends _$AsyncStateCopyWithImpl<T, $Res, _$AsyncStateData<T>>
     implements _$$AsyncStateDataCopyWith<T, $Res> {
   __$$AsyncStateDataCopyWithImpl(
       _$AsyncStateData<T> _value, $Res Function(_$AsyncStateData<T>) _then)
-      : super(_value, (v) => _then(v as _$AsyncStateData<T>));
+      : super(_value, _then);
 
-  @override
-  _$AsyncStateData<T> get _value => super._value as _$AsyncStateData<T>;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? data = freezed,
     Object? errorTerm = freezed,
   }) {
     return _then(_$AsyncStateData<T>(
-      data == freezed
+      freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
               as T,
-      errorTerm == freezed
+      freezed == errorTerm
           ? _value.errorTerm
           : errorTerm // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -279,17 +276,17 @@ class _$AsyncStateData<T>
         (other.runtimeType == runtimeType &&
             other is _$AsyncStateData<T> &&
             const DeepCollectionEquality().equals(other.data, data) &&
-            const DeepCollectionEquality().equals(other.errorTerm, errorTerm));
+            (identical(other.errorTerm, errorTerm) ||
+                other.errorTerm == errorTerm));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(data),
-      const DeepCollectionEquality().hash(errorTerm));
+      runtimeType, const DeepCollectionEquality().hash(data), errorTerm);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$AsyncStateDataCopyWith<T, _$AsyncStateData<T>> get copyWith =>
       __$$AsyncStateDataCopyWithImpl<T, _$AsyncStateData<T>>(this, _$identity);
 
@@ -307,10 +304,10 @@ class _$AsyncStateData<T>
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(T data, String? errorTerm)? data,
-    TResult Function()? loading,
-    TResult Function(String errorTerm)? error,
+    TResult? Function()? initial,
+    TResult? Function(T data, String? errorTerm)? data,
+    TResult? Function()? loading,
+    TResult? Function(String errorTerm)? error,
   }) {
     return data?.call(this.data, errorTerm);
   }
@@ -344,10 +341,10 @@ class _$AsyncStateData<T>
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(AsyncStateInitial<T> value)? initial,
-    TResult Function(AsyncStateData<T> value)? data,
-    TResult Function(AsyncStateLoading<T> value)? loading,
-    TResult Function(AsyncStateError<T> value)? error,
+    TResult? Function(AsyncStateInitial<T> value)? initial,
+    TResult? Function(AsyncStateData<T> value)? data,
+    TResult? Function(AsyncStateLoading<T> value)? loading,
+    TResult? Function(AsyncStateError<T> value)? error,
   }) {
     return data?.call(this);
   }
@@ -388,14 +385,11 @@ abstract class _$$AsyncStateLoadingCopyWith<T, $Res> {
 
 /// @nodoc
 class __$$AsyncStateLoadingCopyWithImpl<T, $Res>
-    extends _$AsyncStateCopyWithImpl<T, $Res>
+    extends _$AsyncStateCopyWithImpl<T, $Res, _$AsyncStateLoading<T>>
     implements _$$AsyncStateLoadingCopyWith<T, $Res> {
   __$$AsyncStateLoadingCopyWithImpl(_$AsyncStateLoading<T> _value,
       $Res Function(_$AsyncStateLoading<T>) _then)
-      : super(_value, (v) => _then(v as _$AsyncStateLoading<T>));
-
-  @override
-  _$AsyncStateLoading<T> get _value => super._value as _$AsyncStateLoading<T>;
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -439,10 +433,10 @@ class _$AsyncStateLoading<T>
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(T data, String? errorTerm)? data,
-    TResult Function()? loading,
-    TResult Function(String errorTerm)? error,
+    TResult? Function()? initial,
+    TResult? Function(T data, String? errorTerm)? data,
+    TResult? Function()? loading,
+    TResult? Function(String errorTerm)? error,
   }) {
     return loading?.call();
   }
@@ -476,10 +470,10 @@ class _$AsyncStateLoading<T>
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(AsyncStateInitial<T> value)? initial,
-    TResult Function(AsyncStateData<T> value)? data,
-    TResult Function(AsyncStateLoading<T> value)? loading,
-    TResult Function(AsyncStateError<T> value)? error,
+    TResult? Function(AsyncStateInitial<T> value)? initial,
+    TResult? Function(AsyncStateData<T> value)? data,
+    TResult? Function(AsyncStateLoading<T> value)? loading,
+    TResult? Function(AsyncStateError<T> value)? error,
   }) {
     return loading?.call(this);
   }
@@ -509,26 +503,25 @@ abstract class _$$AsyncStateErrorCopyWith<T, $Res> {
   factory _$$AsyncStateErrorCopyWith(_$AsyncStateError<T> value,
           $Res Function(_$AsyncStateError<T>) then) =
       __$$AsyncStateErrorCopyWithImpl<T, $Res>;
+  @useResult
   $Res call({String errorTerm});
 }
 
 /// @nodoc
 class __$$AsyncStateErrorCopyWithImpl<T, $Res>
-    extends _$AsyncStateCopyWithImpl<T, $Res>
+    extends _$AsyncStateCopyWithImpl<T, $Res, _$AsyncStateError<T>>
     implements _$$AsyncStateErrorCopyWith<T, $Res> {
   __$$AsyncStateErrorCopyWithImpl(
       _$AsyncStateError<T> _value, $Res Function(_$AsyncStateError<T>) _then)
-      : super(_value, (v) => _then(v as _$AsyncStateError<T>));
+      : super(_value, _then);
 
-  @override
-  _$AsyncStateError<T> get _value => super._value as _$AsyncStateError<T>;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? errorTerm = freezed,
+    Object? errorTerm = null,
   }) {
     return _then(_$AsyncStateError<T>(
-      errorTerm == freezed
+      null == errorTerm
           ? _value.errorTerm
           : errorTerm // ignore: cast_nullable_to_non_nullable
               as String,
@@ -564,15 +557,16 @@ class _$AsyncStateError<T>
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AsyncStateError<T> &&
-            const DeepCollectionEquality().equals(other.errorTerm, errorTerm));
+            (identical(other.errorTerm, errorTerm) ||
+                other.errorTerm == errorTerm));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(errorTerm));
+  int get hashCode => Object.hash(runtimeType, errorTerm);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$AsyncStateErrorCopyWith<T, _$AsyncStateError<T>> get copyWith =>
       __$$AsyncStateErrorCopyWithImpl<T, _$AsyncStateError<T>>(
           this, _$identity);
@@ -591,10 +585,10 @@ class _$AsyncStateError<T>
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(T data, String? errorTerm)? data,
-    TResult Function()? loading,
-    TResult Function(String errorTerm)? error,
+    TResult? Function()? initial,
+    TResult? Function(T data, String? errorTerm)? data,
+    TResult? Function()? loading,
+    TResult? Function(String errorTerm)? error,
   }) {
     return error?.call(errorTerm);
   }
@@ -628,10 +622,10 @@ class _$AsyncStateError<T>
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(AsyncStateInitial<T> value)? initial,
-    TResult Function(AsyncStateData<T> value)? data,
-    TResult Function(AsyncStateLoading<T> value)? loading,
-    TResult Function(AsyncStateError<T> value)? error,
+    TResult? Function(AsyncStateInitial<T> value)? initial,
+    TResult? Function(AsyncStateData<T> value)? data,
+    TResult? Function(AsyncStateLoading<T> value)? loading,
+    TResult? Function(AsyncStateError<T> value)? error,
   }) {
     return error?.call(this);
   }
