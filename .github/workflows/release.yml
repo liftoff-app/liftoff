@@ -137,7 +137,7 @@ jobs:
       - linux-build
       - windows-build
     runs-on: ubuntu-latest
-    if: github.repository == 'zachatrocity/lem'
+    if: github.repository == 'zachatrocity/lemmynade'
     steps:
       - uses: actions/checkout@v2
 
