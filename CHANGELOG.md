@@ -1,9 +1,12 @@
-## v0.9.1 - 2023-06-21
+## Unreleased
 - Support for Lemmy v0.17.x
 - Upgraded SDK and kotlin
 - Various API changes due to app being stale for 4 months
 - Reconfigured build pipeline to support new app name
 - App renamed to Lemmynade
+
+## v0.9.1 - 2023-06-21
+- Zach learns how to make mistakes
 
 ### Added
 
