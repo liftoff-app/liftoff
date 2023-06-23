@@ -1,4 +1,4 @@
-## Unreleased
+## v0.9.7 - 2023-06-23
 - Fixed comments not loading when there is a pinned comment on the post
 - added initial ios support
 
