@@ -2,7 +2,7 @@
 
 [![](https://github.com/zachatrocity/lemmynade/workflows/ci/badge.svg)](https://github.com/zachatrocity/lemmynade/actions)
 
-[![Chat on Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#lemmynade-dev:matrix.org)
+[![Chat on Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#liftoff-dev:matrix.org)
 <!--
 [![Translation status](http://weblate.yerbamate.ml/widgets/lemmynade/-/lemmynade/svg-badge.svg)](http://weblate.yerbamate.ml/engage/lemmynade/)
 -->
@@ -35,7 +35,7 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
 # Contributing
 Please consider contributing! Even if you don't know flutter well use this as a chance to learn! [Contributing Guide](https://github.com/zachatrocity/lemmynade/CONTRIBUTING.md)
 
-Join us on the matrix for support in contributions! [#lemmynade-dev:matrix.org](https://matrix.to/#/#lemmynade-dev:matrix.org)
+Join us on the matrix for support in contributions! [#liftoff-dev:matrix.org](https://matrix.to/#/#liftoff-dev:matrix.org)
 
 ## Build from source
 
