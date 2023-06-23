@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.krawieck" "\0"
-            VALUE "FileDescription", "Lemmynade" "\0"
+            VALUE "FileDescription", "Liftoff" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Lemmynade" "\0"
+            VALUE "InternalName", "Liftoff" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2020 com.zachatrocity. All rights reserved." "\0"
             VALUE "OriginalFilename", "lemmynade.exe" "\0"
-            VALUE "ProductName", "Lemmynade" "\0"
+            VALUE "ProductName", "Liftoff" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

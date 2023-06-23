@@ -1,3 +1,6 @@
+## Unreleased
+- Fixed comments not loading when there is a pinned comment on the post
+
 ## v0.9.6 - 2023-06-22
 - Fixed issue with compact mode not showing full post items
 - Fixed issue with adding v0.18.x instances
@@ -14,7 +17,7 @@
 - Upgraded SDK and kotlin
 - Various API changes due to app being stale for 4 months
 - Reconfigured build pipeline to support new app name
-- App renamed to Lemmynade
+- App renamed to Liftoff
 
 ## v0.9.1 - 2023-06-21
 - Zach learns how to make mistakes
@@ -151,7 +154,7 @@ WARNING: due to some internal changes your local settings will be reset (logged 
 
 ## v0.2.3 - 2021-02-09
 
-Lemmynade is now available on the [play store](https://play.google.com/store/apps/details?id=com.zachatrocity.lemmynade) and [f-droid](https://f-droid.org/packages/com.zachatrocity.lemmynade)
+Liftoff is now available on the [play store](https://play.google.com/store/apps/details?id=com.zachatrocity.lemmynade) and [f-droid](https://f-droid.org/packages/com.zachatrocity.lemmynade)
 
 ### Changed
 
@@ -187,7 +190,7 @@ Minimum Lemmy version supported: `v0.9.4`
 
 ### Breaking changes
 
-- Lemmynade now works exclusively with Lemmy API v2
+- Liftoff now works exclusively with Lemmy API v2
 
 ### Added
 

@@ -194,7 +194,7 @@ Future<void> main(List<String> args) async {
   final repoCleanup = await cloneLemmyTranslations();
 
   final lemmyTranslations = await loadLemmyStrings();
-  final lemmynadeTranslations = await loadLemmynadeStrings();
+  final lemmynadeTranslations = await loadLiftoffStrings();
   portStrings(lemmyTranslations, lemmynadeTranslations, force: force);
 
   await save(lemmynadeTranslations);
@@ -252,7 +252,7 @@ Future<Map<String, Map<String, String>>> loadLemmyStrings() async {
 }
 
 /// Map<languageTag, Map<stringKey, stringValue>> + some metadata
-Future<Map<String, Map<String, dynamic>>> loadLemmynadeStrings() async {
+Future<Map<String, Map<String, dynamic>>> loadLiftoffStrings() async {
   final translationsDir = Directory(outDir);
   final translations = <String, Map<String, dynamic>>{};
 

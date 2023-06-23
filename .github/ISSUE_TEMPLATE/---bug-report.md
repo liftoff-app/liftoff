@@ -11,7 +11,7 @@ assignees: ""
 - OS: [eg. iOS/Android]
 - OS version: [eg. 10]
 - Device: [eg. OnePlus 6]
-- Lemmynade version: [eg. v1.2.3]
+- Liftoff version: [eg. v1.2.3]
 
 ### Describe the bug
 

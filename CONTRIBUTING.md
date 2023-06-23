@@ -38,7 +38,7 @@ To contribute time ago strings please send a PR containing a class that implemen
 
 ## Architecture
 
-Lemmynade is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/zachatrocity/lemmy_api_client) is used.
+Liftoff is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/zachatrocity/lemmy_api_client) is used.
 
 ### State management
 
@@ -58,7 +58,7 @@ Lemmynade is written in Dart using [Flutter](https://flutter.dev/docs). To commu
 
 ### Things to keep in mind
 
-- Be aware that Lemmynade supports arbitrary Lemmy instances, don't hardcode instance urls
+- Be aware that Liftoff supports arbitrary Lemmy instances, don't hardcode instance urls
 - Remember that a user is not obligated to be logged in, contributed widgets should handle this case
 
 ### Lemmy API
