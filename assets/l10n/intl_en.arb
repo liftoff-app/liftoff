@@ -104,6 +104,8 @@
   "@chat": {},
   "admin": "admin",
   "@admin": {},
+  "pinned": "pinned",
+  "@pinned": {},
   "by": "by",
   "@by": {},
   "not_a_mod_or_admin": "Not a moderator or admin.",

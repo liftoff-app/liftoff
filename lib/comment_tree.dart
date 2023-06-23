@@ -58,16 +58,19 @@ class CommentTree {
         // comments store a parth variable that can be used to traverse the comment tree
         // example: path: "0.{commentId}.{otherCommentId}.{yetAnotherCommentId]"
         final commentHierarchy = el.comment.path.split('.');
-        if (int.parse(commentHierarchy[commentHierarchy.length - 2]) ==
-            parent.comment.comment.id) {
+        if (commentHierarchy.length - 2 > 0 &&
+            int.parse(commentHierarchy[commentHierarchy.length - 2]) ==
+                parent.comment.comment.id) {
           parent.children.add(gatherChildren(CommentTree(el)));
         }
       }
       return parent;
     }
 
+    // pinned comment denoted by a path of 0
     final topLevelParents = comments
-        .where((e) => e.comment.path.split('.').length == 2)
+        .where((e) =>
+            e.comment.path.split('.').length == 2 || e.comment.path == '0')
         .map(CommentTree.new);
 
     final result = topLevelParents.map(gatherChildren).toList();

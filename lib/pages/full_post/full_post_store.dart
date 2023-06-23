@@ -36,6 +36,9 @@ abstract class _FullPostStore with Store {
   List<CommentView>? postComments;
 
   @observable
+  List<CommentView>? pinnedComments;
+
+  @observable
   ObservableList<CommentView> newComments = ObservableList<CommentView>();
 
   @observable
@@ -80,7 +83,7 @@ abstract class _FullPostStore with Store {
     final commentsResult = await commentsState.runLemmy(
         instanceHost,
         GetComments(
-            postId: postId, type: CommentListingType.all, maxDepth: 20));
+            postId: postId, type: CommentListingType.all, maxDepth: 10));
 
     if (result != null) {
       postStore ??= PostStore(result.postView);
@@ -90,6 +93,9 @@ abstract class _FullPostStore with Store {
 
     if (commentsResult != null) {
       postComments = commentsResult;
+      pinnedComments = commentsResult
+          .where((element) => element.comment.path == '0')
+          .toList();
     }
   }
 
