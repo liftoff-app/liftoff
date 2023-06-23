@@ -77,7 +77,8 @@ class InstanceAboutTab extends HookWidget {
                   children: [
                     Chip(
                       label: Text(
-                        l10n.number_of_users_online(site.online),
+                        // TODO: v0.18.x migration
+                        l10n.number_of_users_online(site.online ?? 0),
                       ),
                     ),
                     Chip(

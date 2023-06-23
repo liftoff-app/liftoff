@@ -50,8 +50,9 @@ class CommmunityAboutTab extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               children: [
                 Chip(
-                    label: Text(
-                        L10n.of(context).number_of_users_online(onlineUsers))),
+                    // TODO: v0.18.x migration
+                    label: Text(L10n.of(context)
+                        .number_of_users_online(onlineUsers ?? 0))),
                 Chip(
                     label:
                         Text('${community.counts.usersActiveDay} users / day')),
