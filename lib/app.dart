@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return KeyboardDismisser(
       child: ObserverBuilder<ConfigStore>(
         builder: (context, store) => MaterialApp(
-          title: 'lemmynade',
+          title: 'liftoff',
           supportedLocales: L10n.supportedLocales,
           localizationsDelegates: L10n.localizationsDelegates,
           themeMode: store.theme,

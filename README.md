@@ -1,27 +1,27 @@
 <div align="center">
 
-[![](https://github.com/zachatrocity/lemmynade/workflows/ci/badge.svg)](https://github.com/zachatrocity/lemmynade/actions)
+[![](https://github.com/liftoff-app/liftoff/workflows/ci/badge.svg)](https://github.com/liftoff-app/liftoff/actions)
 
 [![Chat on Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#liftoff-dev:matrix.org)
 <!--
-[![Translation status](http://weblate.yerbamate.ml/widgets/lemmynade/-/lemmynade/svg-badge.svg)](http://weblate.yerbamate.ml/engage/lemmynade/)
+[![Translation status](http://weblate.yerbamate.ml/widgets/liftoff/-/liftoff/svg-badge.svg)](http://weblate.yerbamate.ml/engage/liftoff/)
 -->
 
-<img width=200px height=200px src="https://raw.githubusercontent.com/zachatrocity/lemmynade/master/assets/readme_icon.svg"/>
+<img width=200px height=200px src="https://raw.githubusercontent.com/liftoff-app/liftoff/master/assets/readme_icon.svg"/>
 
-# lemmynade
+# liftoff
 
 <!--
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LiftoffOrg.lemmynade)
-[<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.LiftoffOrg.lemmynade)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LiftoffOrg.liftoff)
+[<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.LiftoffOrg.liftoff)
 -->
-[<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/zachatrocity/lemmynade/releases/latest)
+[<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/liftoff-app/liftoff/releases/latest)
 
 A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative 
 
 </div>
 
-- [lemmynade](#lemmynade)
+- [liftoff](#liftoff)
   - [Build from source](#build-from-source)
     - [Prerequisites](#prerequisites)
     - [Android](#android)
@@ -33,7 +33,7 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
 
 
 # Contributing
-Please consider contributing! Even if you don't know flutter well use this as a chance to learn! [Contributing Guide](https://github.com/zachatrocity/lemmynade/CONTRIBUTING.md)
+Please consider contributing! Even if you don't know flutter well use this as a chance to learn! [Contributing Guide](https://github.com/liftoff-app/liftoff/CONTRIBUTING.md)
 
 Join us on the matrix for support in contributions! [#liftoff-dev:matrix.org](https://matrix.to/#/#liftoff-dev:matrix.org)
 
@@ -42,8 +42,8 @@ Join us on the matrix for support in contributions! [#liftoff-dev:matrix.org](ht
 ### Prerequisites
 
 - Install [flutter](https://flutter.dev/docs/get-started/install): To check if this step was successful run `flutter doctor` (Installing android studio is not required if you setup the android SDK yourself)
-- Clone this repo: `git clone https://github.com/zachatrocity/lemmynade`
-- Enter the repo: `cd lemmynade`
+- Clone this repo: `git clone https://github.com/liftoff-app/liftoff`
+- Enter the repo: `cd liftoff`
 
 ### Android
 
@@ -56,14 +56,14 @@ The apk will be in `build/app/outputs/flutter-apk/app-prod-release.apk`
 1. Make sure you have the additional [linux requirements](https://flutter.dev/desktop#additional-linux-requirements) (verify with `flutter doctor`)
 2. Build: `flutter build linux --target lib/main_prod.dart --release`
 
-The executable will be in `build/linux/x64/release/bundle/lemmynade` (be aware, however, that this executable is not standalone)
+The executable will be in `build/linux/x64/release/bundle/liftoff` (be aware, however, that this executable is not standalone)
 
 ### Windows
 
 1. Make sure you have the additional [windows requirements](https://flutter.dev/desktop#additional-windows-requirements) (verify with `flutter doctor`)
 2. Build: `flutter build windows --target lib/main_prod.dart --release`
 
-The executable will be in `build\windows\runner\Release\lemmynade.exe` (be aware, however, that this executable is not standalone)
+The executable will be in `build\windows\runner\Release\liftoff.exe` (be aware, however, that this executable is not standalone)
 
 ## FAQ
 
@@ -73,4 +73,4 @@ We have no control over F-droid's build process. This process is automatic and n
 
 ### "App not installed" - what to do?
 
-When installing the APK directly you might get this message. This happens when you are trying to update lemmynade from a different source than where you originally got it from. To fix it simply uninstall the previous version (you will lose all local data) and then install the new one. Always make sure to install lemmynade APKs only from verified sources.
+When installing the APK directly you might get this message. This happens when you are trying to update liftoff from a different source than where you originally got it from. To fix it simply uninstall the previous version (you will lose all local data) and then install the new one. Always make sure to install liftoff APKs only from verified sources.

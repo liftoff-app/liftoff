@@ -4,7 +4,7 @@
 
 ## Issue tracking / Repository
 
-From issues to wikis: everything is on [GitHub](https://github.com/zachatrocity/lemmynade)
+From issues to wikis: everything is on [GitHub](https://github.com/liftoff-app/liftoff)
 
 ## Linting / Formatting
 
@@ -14,7 +14,7 @@ Everything is formatted with `dart format` (no flags) and linted with `dart anal
 
 ### Weblate
 
-Lemmy devs are kindly hosting lemmynade translation strings on their [Weblate instance](https://weblate.yerbamate.ml/projects/lemmynade/lemmynade/). Feel free to contribute strings there, we regularly sync string changes with Weblate.
+Lemmy devs are kindly hosting liftoff translation strings on their [Weblate instance](https://weblate.yerbamate.ml/projects/liftoff/liftoff/). Feel free to contribute strings there, we regularly sync string changes with Weblate.
 
 We use flutter's native file format for translations: ARB, which itself uses the ICU message syntax. In most cases you will be able to deduce the syntax based on the source string. Here are 3 important examples:
 

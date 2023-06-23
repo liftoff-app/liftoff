@@ -44,7 +44,7 @@ class AboutTile extends HookWidget {
           icon: const Icon(Icons.code),
           label: const Text('source code'),
           onPressed: () =>
-              launchLink(link: lemmynadeRepositoryUrl, context: context),
+              launchLink(link: liftoffRepositoryUrl, context: context),
         ),
         TextButton.icon(
           icon: const Icon(Icons.monetization_on),

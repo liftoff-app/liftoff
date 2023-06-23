@@ -29,7 +29,7 @@ A clear and concise description of what the bug is.
 <details>
   <summary>Logs</summary>
   
-  Paste your logs here. Logs can be found in lemmynade: settings > about lemmynade > logs.
+  Paste your logs here. Logs can be found in liftoff: settings > about liftoff > logs.
 </details>
 
 ### Expected behavior

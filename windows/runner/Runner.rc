@@ -94,7 +94,7 @@ BEGIN
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "Liftoff" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2020 com.zachatrocity. All rights reserved." "\0"
-            VALUE "OriginalFilename", "lemmynade.exe" "\0"
+            VALUE "OriginalFilename", "liftoff.exe" "\0"
             VALUE "ProductName", "Liftoff" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END

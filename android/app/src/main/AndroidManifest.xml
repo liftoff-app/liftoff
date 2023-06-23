@@ -1,6 +1,6 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.zachatrocity.lemmynade">
+  package="com.liftoffapp.liftoff">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <!-- Needed for url_launcher to work on android 11 -->

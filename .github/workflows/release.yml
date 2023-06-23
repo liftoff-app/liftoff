@@ -67,15 +67,15 @@ jobs:
         run: |
           flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
 
-          mv build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk lemmynade-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
-          mv build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk lemmynade-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
-          mv build/app/outputs/flutter-apk/app-x86_64-prod-release.apk lemmynade-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
+          mv build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk liftoff-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
+          mv build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk liftoff-${{ needs.get-vars.outputs.tag }}-armeabi-v7a-android.apk
+          mv build/app/outputs/flutter-apk/app-x86_64-prod-release.apk liftoff-${{ needs.get-vars.outputs.tag }}-x86_64-android.apk
 
       - uses: actions/upload-artifact@v2
         with:
           name: android-build
           path: |
-            lemmynade-*.apk
+            liftoff-*.apk
 
   linux-build:
     name: Linux build
@@ -100,12 +100,12 @@ jobs:
       - name: Archive
         working-directory: build/linux/x64/release/bundle
         run: |
-          tar -czf lemmynade-${{ needs.get-vars.outputs.tag }}-x86_64-linux.tar.gz *
+          tar -czf liftoff-${{ needs.get-vars.outputs.tag }}-x86_64-linux.tar.gz *
 
       - uses: actions/upload-artifact@v2
         with:
           name: linux-build
-          path: build/linux/x64/release/bundle/lemmynade-*.tar.gz
+          path: build/linux/x64/release/bundle/liftoff-*.tar.gz
 
   windows-build:
     name: Windows build
@@ -125,12 +125,12 @@ jobs:
       - name: Archive
         working-directory: build/windows/runner/Release
         run: |
-          7z a lemmynade-${{ needs.get-vars.outputs.tag }}-x86_64-windows.zip *
+          7z a liftoff-${{ needs.get-vars.outputs.tag }}-x86_64-windows.zip *
 
       - uses: actions/upload-artifact@v2
         with:
           name: windows-build
-          path: build/windows/runner/Release/lemmynade-*.zip
+          path: build/windows/runner/Release/liftoff-*.zip
 
   release:
     name: Release
@@ -140,7 +140,7 @@ jobs:
       - linux-build
       - windows-build
     runs-on: ubuntu-latest
-    if: github.repository == 'zachatrocity/lemmynade'
+    if: github.repository == 'liftoff-app/liftoff'
     steps:
       - uses: actions/checkout@v2
 

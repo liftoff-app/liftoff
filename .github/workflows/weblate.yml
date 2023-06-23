@@ -22,7 +22,7 @@
 
 #       - name: Fetch changes
 #         run: |
-#           git remote add weblate https://weblate.yerbamate.ml/git/lemmynade/lemmynade/
+#           git remote add weblate https://weblate.yerbamate.ml/git/liftoff/liftoff/
 #           git fetch weblate
 #           git merge weblate/master
 

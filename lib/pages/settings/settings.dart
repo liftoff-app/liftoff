@@ -269,7 +269,7 @@ class _AccountOptions extends HookWidget {
                       child: CircularProgressIndicator.adaptive(),
                     )
                   : const Icon(Icons.cloud_download),
-              title: const Text('Import settings to lemmynade'),
+              title: const Text('Import settings to liftoff'),
               onTap: () async {
                 await context.read<ConfigStore>().importLemmyUserSettings(
                       accountsStore.userDataFor(instanceHost, username)!.jwt,

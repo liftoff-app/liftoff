@@ -46,7 +46,7 @@ android {
     }
    
     defaultConfig {
-        applicationId "com.zachatrocity.lemmynade"
+        applicationId "com.liftoffapp.liftoff"
         minSdkVersion Math.max(flutter.minSdkVersion, 19)
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -79,7 +79,7 @@ android {
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
             manifestPlaceholders = [
-                appName: "lemmynade DEV"
+                appName: "liftoff DEV"
             ]
             signingConfig signingConfigs.debug
         }
@@ -87,7 +87,7 @@ android {
         prod {
             dimension "app"
             manifestPlaceholders = [
-                appName: "lemmynade"
+                appName: "liftoff"
             ]
             signingConfig signingConfigs.prod
         }
