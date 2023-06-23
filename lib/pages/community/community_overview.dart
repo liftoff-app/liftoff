@@ -130,7 +130,8 @@ class CommunityOverview extends StatelessWidget {
                       const Spacer(flex: 4),
                       const Icon(Icons.record_voice_over, size: 20),
                       const SizedBox(width: 3),
-                      Text(fullCommunityView.online.compact(context)),
+                      // TODO: v0.18.x migration
+                      Text((fullCommunityView.online ?? 0).compact(context)),
                       const Spacer(),
                     ],
                   ),
