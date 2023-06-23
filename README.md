@@ -7,9 +7,9 @@
 [![Translation status](http://weblate.yerbamate.ml/widgets/liftoff/-/liftoff/svg-badge.svg)](http://weblate.yerbamate.ml/engage/liftoff/)
 -->
 
-<img width=200px height=200px src="https://raw.githubusercontent.com/liftoff-app/liftoff/master/assets/readme_icon.svg"/>
+<img width=200px height=200px src="https://raw.githubusercontent.com/liftoff-app/liftoff/master/assets/app_icon.svg"/>
 
-# liftoff
+# Liftoff!
 
 <!--
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LiftoffOrg.liftoff)
