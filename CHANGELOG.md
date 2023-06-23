@@ -1,5 +1,6 @@
 ## Unreleased
 - Fixed comments not loading when there is a pinned comment on the post
+- added initial ios support
 
 ## v0.9.6 - 2023-06-22
 - Fixed issue with compact mode not showing full post items
