@@ -106,6 +106,11 @@ class CommentSection extends StatelessWidget {
                 ),
               )
             else ...[
+              for (final com in store.pinnedComments!)
+                CommentWidget.fromCommentView(
+                  com,
+                  key: ValueKey(com),
+                ),
               for (final com in store.newComments)
                 CommentWidget.fromCommentView(
                   com,

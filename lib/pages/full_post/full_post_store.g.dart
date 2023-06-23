@@ -70,6 +70,22 @@ mixin _$FullPostStore on _FullPostStore, Store {
     });
   }
 
+  late final _$pinnedCommentsAtom =
+      Atom(name: '_FullPostStore.pinnedComments', context: context);
+
+  @override
+  List<CommentView>? get pinnedComments {
+    _$pinnedCommentsAtom.reportRead();
+    return super.pinnedComments;
+  }
+
+  @override
+  set pinnedComments(List<CommentView>? value) {
+    _$pinnedCommentsAtom.reportWrite(value, super.pinnedComments, () {
+      super.pinnedComments = value;
+    });
+  }
+
   late final _$newCommentsAtom =
       Atom(name: '_FullPostStore.newComments', context: context);
 
@@ -164,6 +180,7 @@ mixin _$FullPostStore on _FullPostStore, Store {
     return '''
 fullPostView: ${fullPostView},
 postComments: ${postComments},
+pinnedComments: ${pinnedComments},
 newComments: ${newComments},
 sorting: ${sorting},
 postStore: ${postStore},

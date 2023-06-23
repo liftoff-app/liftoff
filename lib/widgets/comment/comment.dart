@@ -234,6 +234,11 @@ class _CommentWidget extends StatelessWidget {
                           L10n.of(context).admin.toUpperCase(),
                           theme.colorScheme.secondary,
                         ),
+                      if (comment.path == '0')
+                        _CommentTag(
+                          L10n.of(context).pinned.toUpperCase(),
+                          Colors.orangeAccent,
+                        ),
                       if (creator.banned)
                         const _CommentTag('BANNED', Colors.red),
                       if (store.comment.creatorBannedFromCommunity)
