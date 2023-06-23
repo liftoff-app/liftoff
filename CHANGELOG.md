@@ -1,4 +1,4 @@
-## Unreleased
+## v0.9.6 - 2023-06-22
 - Fixed issue with compact mode not showing full post items
 - Fixed issue with adding v0.18.x instances
 
