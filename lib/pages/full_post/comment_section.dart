@@ -24,7 +24,7 @@ class CommentSection extends StatelessWidget {
     CommentSortType.new_: _SortSelection(Icons.new_releases, L10nStrings.new_),
     CommentSortType.old: _SortSelection(Icons.calendar_today, L10nStrings.old),
     CommentSortType.top: _SortSelection(Icons.trending_up, L10nStrings.top),
-    CommentSortType.chat: _SortSelection(Icons.chat, L10nStrings.chat),
+    // CommentSortType.chat: _SortSelection(Icons.chat, L10nStrings.chat),
   };
 
   const CommentSection({super.key});
@@ -112,19 +112,19 @@ class CommentSection extends StatelessWidget {
                   detached: false,
                   key: ValueKey(com),
                 ),
-              if (store.sorting == CommentSortType.chat)
-                for (final com in postComments!)
-                  CommentWidget.fromCommentView(
-                    com,
-                    detached: false,
-                    key: ValueKey(com),
-                  )
-              else
-                for (final com in store.sortedCommentTree!)
-                  CommentWidget(
-                    com,
-                    key: ValueKey(com),
-                  ),
+              // if (store.sorting == CommentSortType.chat)
+              //   for (final com in postComments!)
+              //     CommentWidget.fromCommentView(
+              //       com,
+              //       detached: false,
+              //       key: ValueKey(com),
+              //     )
+              // else
+              for (final com in store.sortedCommentTree!)
+                CommentWidget(
+                  com,
+                  key: ValueKey(com),
+                ),
               const BottomSafe.fab(),
             ]
           ],

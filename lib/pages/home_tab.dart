@@ -282,7 +282,8 @@ class InfiniteHomeList extends HookWidget {
       SortType sort,
       PostListingType listingType,
     ) async {
-      assert(listingType != PostListingType.local, 'only subscribed or all');
+      // MYKL No longer true?
+      // assert(listingType != PostListingType.local, 'only subscribed or all');
 
       final instances = () {
         if (listingType == PostListingType.subscribed) {

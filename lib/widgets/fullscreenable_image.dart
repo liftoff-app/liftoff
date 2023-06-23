@@ -17,9 +17,12 @@ class FullscreenableImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InkWell(
         onTap: () => goToMedia(context, url),
-        child: Hero(
-          tag: url,
-          child: child,
-        ),
+        child: child,
+        // FIXME: MYKL had to disable Heroing as duplicate tags exist
+        // which causes error on iOS
+        //  Hero(
+        //   tag: url,
+        //   child: child,
+        // ),
       );
 }
