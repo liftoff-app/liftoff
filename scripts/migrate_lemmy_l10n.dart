@@ -345,8 +345,7 @@ void portStrings(
       final language = trans.key;
       final strings = trans.value;
 
-      liftoffTranslations[language]![migrate.renamedKey] =
-          transformer(strings);
+      liftoffTranslations[language]![migrate.renamedKey] = transformer(strings);
     }
     final transformed = transformer(baseTranslations);
     if (transformed != null) {
@@ -357,8 +356,7 @@ void portStrings(
   }
 }
 
-Future<void> save(
-    Map<String, Map<String, dynamic>> liftoffTranslations) async {
+Future<void> save(Map<String, Map<String, dynamic>> liftoffTranslations) async {
   // remove null fields
   // Vec<(language, key)>
   final toRemove = <List<String>>[];
