@@ -1,0 +1,2 @@
+- Fixes login stalling on 0.18.x instances
+

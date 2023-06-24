@@ -1,4 +1,4 @@
-## Unreleased
+## v0.9.11 - 2023-06-24
 - Updated api client to better support 0.18.x
 - Fixes login stalling on 0.18.x instances
 
