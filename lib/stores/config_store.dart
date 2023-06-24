@@ -49,6 +49,10 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: false)
   bool amoledDarkMode = false;
 
+  @observable
+  @JsonKey(defaultValue: false)
+  bool disableAnimations = false;
+
   // default value is set in the `LocaleConverter.fromJson`
   @observable
   Locale locale = const Locale('en');

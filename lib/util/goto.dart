@@ -6,6 +6,9 @@ import '../pages/full_post/full_post.dart';
 import '../pages/media_view.dart';
 import '../pages/user.dart';
 
+import '../stores/config_store.dart';
+import '../util/observer_consumers.dart';
+
 /// Pushes onto the navigator stack the given widget
 Future<dynamic> goTo(
   BuildContext context,
@@ -55,12 +58,28 @@ abstract class goToUser {
 void goToPost(BuildContext context, String instanceHost, int postId) =>
     Navigator.of(context).push(FullPostPage.route(postId, instanceHost));
 
-void goToMedia(BuildContext context, String url) => Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => MediaViewPage(url),
-        opaque: false,
-        transitionsBuilder: (_, animation, __, child) =>
-            FadeTransition(opacity: animation, child: child),
+void goToMedia(BuildContext context, String url) {
+  final store = Provider.of<ConfigStore>(context, listen: false);
+
+  Navigator.push(
+    context,
+    PageRouteBuilder(
+      pageBuilder: (_, __, ___) => MediaViewPage(url),
+      opaque: false,
+      transitionsBuilder: (_, animation, __, child) =>
+          TweenAnimationBuilder<double>(
+        duration: Duration(
+          milliseconds: store.disableAnimations ? 1 : 2000,
+        ),
+        tween: Tween<double>(begin: 0, end: 1),
+        builder: (_, value, child) {
+          return Opacity(
+            opacity: value,
+            child: child,
+          );
+        },
+        child: child,
       ),
-    );
+    ),
+  );
+}
