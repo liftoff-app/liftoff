@@ -69,7 +69,7 @@ void goToMedia(BuildContext context, String url) {
       transitionsBuilder: (_, animation, __, child) =>
           TweenAnimationBuilder<double>(
         duration: Duration(
-          milliseconds: store.disableAnimations ? 1 : 2000,
+          milliseconds: store.disableAnimations ? 1 : 200,
         ),
         tween: Tween<double>(begin: 0, end: 1),
         builder: (_, value, child) {
