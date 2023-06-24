@@ -38,7 +38,7 @@ To contribute time ago strings please send a PR containing a class that implemen
 
 ## Architecture
 
-Liftoff is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/zachatrocity/lemmy_api_client) is used.
+Liftoff is written in Dart using [Flutter](https://flutter.dev/docs). To communicate with Lemmy instances [lemmy_api_client](https://github.com/liftoff-app/lemmy_api_client) is used.
 
 ### State management
 
@@ -63,7 +63,7 @@ Liftoff is written in Dart using [Flutter](https://flutter.dev/docs). To communi
 
 ### Lemmy API
 
-LAC (Lemmy API Client) is used to communicate with Lemmy backends, more information can be found [here](https://github.com/zachatrocity/lemmy_api_client).
+LAC (Lemmy API Client) is used to communicate with Lemmy backends, more information can be found [here](https://github.com/liftoff-app/lemmy_api_client).
 
 ### For React developers
 

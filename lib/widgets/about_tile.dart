@@ -50,29 +50,6 @@ class AboutTile extends HookWidget {
               launchLink(link: liftoffRepositoryUrl, context: context),
         ),
         TextButton.icon(
-          icon: const Icon(Icons.monetization_on),
-          label: const Text('support development'),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => Dialog(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
-                      onPressed: () => launchLink(
-                        link: buyMeACoffeeUrl,
-                        context: context,
-                      ),
-                      child: const Text('Buy Me a Coffee'),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-        TextButton.icon(
           icon: const Icon(Icons.list_alt),
           label: const Text('logs'),
           onPressed: () {
