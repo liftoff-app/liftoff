@@ -1,3 +1,7 @@
+## Unreleased
+- Updated api client to better support 0.18.x
+- Fixes login stalling on 0.18.x instances
+
 ## v0.9.8 - 2023-06-23
 - Updated app icon 
 
