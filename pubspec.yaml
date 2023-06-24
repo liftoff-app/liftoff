@@ -51,8 +51,7 @@ dependencies:
     git:
       url: https://github.com/zachatrocity/lemmy_api_client.git
       ref: master
-  # lemmy_api_client:
-  #   path: ../lemmy_api_client
+    # path: ../lemmy_api_client
   intl: ^0.18.0
   matrix4_transform: ^2.0.0
   json_annotation: ^4.8.1
