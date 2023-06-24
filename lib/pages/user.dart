@@ -26,6 +26,7 @@ class UserPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final userDetailsSnap = useFuture(_userDetails);
+    final shareButtonKey = GlobalKey();
 
     final body = () {
       if (userDetailsSnap.hasData) {
@@ -36,6 +37,16 @@ class UserPage extends HookWidget {
         return const Center(child: CircularProgressIndicator.adaptive());
       }
     }();
+    shareUserSnap() {
+      final renderbox =
+          shareButtonKey.currentContext!.findRenderObject()! as RenderBox;
+      final position = renderbox.localToGlobal(Offset.zero);
+
+      return share(userDetailsSnap.data!.personView.person.actorId,
+          context: context,
+          sharePositionOrigin: Rect.fromPoints(position,
+              position.translate(renderbox.size.width, renderbox.size.height)));
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -44,11 +55,9 @@ class UserPage extends HookWidget {
           if (userDetailsSnap.hasData) ...[
             SendMessageButton(userDetailsSnap.data!.personView.person),
             IconButton(
+              key: shareButtonKey,
               icon: Icon(shareIcon),
-              onPressed: () => share(
-                userDetailsSnap.data!.personView.person.actorId,
-                context: context,
-              ),
+              onPressed: shareUserSnap,
             ),
           ]
         ],

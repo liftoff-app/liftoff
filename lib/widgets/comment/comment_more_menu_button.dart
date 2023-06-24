@@ -22,14 +22,19 @@ class CommentMoreMenuButton extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final moreButtonKey = GlobalKey();
     return ObserverBuilder<CommentStore>(
       builder: (context, store) {
         return TileAction(
+          key: moreButtonKey,
           icon: Icons.more_horiz,
           onPressed: () {
             showBottomModal(
               context: context,
-              builder: (context) => _CommentMoreMenuPopup(store: store),
+              builder: (context) => _CommentMoreMenuPopup(
+                store: store,
+                moreButtonKey: moreButtonKey,
+              ),
             );
           },
           loading: store.deletingState.isLoading,
@@ -42,9 +47,11 @@ class CommentMoreMenuButton extends HookWidget {
 
 class _CommentMoreMenuPopup extends HookWidget {
   final CommentStore store;
+  final GlobalKey moreButtonKey;
 
   const _CommentMoreMenuPopup({
     required this.store,
+    required this.moreButtonKey,
   });
 
   @override
@@ -76,6 +83,12 @@ class _CommentMoreMenuPopup extends HookWidget {
           }
         }
 
+        final renderbox =
+            moreButtonKey.currentContext!.findRenderObject()! as RenderBox;
+        final position = renderbox.localToGlobal(Offset.zero);
+        final targetRect = Rect.fromPoints(position,
+            position.translate(renderbox.size.width, renderbox.size.height));
+
         return Column(
           children: [
             ListTile(
@@ -91,7 +104,11 @@ class _CommentMoreMenuPopup extends HookWidget {
               leading: Icon(shareIcon),
               title: const Text('Share url'),
               onTap: () {
-                share(comment.link, context: context);
+                share(
+                  comment.link,
+                  sharePositionOrigin: targetRect,
+                  context: context,
+                );
                 Navigator.of(context).pop();
               },
             ),
@@ -99,7 +116,11 @@ class _CommentMoreMenuPopup extends HookWidget {
               leading: Icon(shareIcon),
               title: const Text('Share text'),
               onTap: () {
-                share(comment.content, context: context);
+                share(
+                  comment.content,
+                  sharePositionOrigin: targetRect,
+                  context: context,
+                );
                 Navigator.of(context).pop();
               },
             ),

@@ -19,7 +19,7 @@ class AccountsStore extends ChangeNotifier {
   /// for that account.
   /// `accounts['instanceHost']['username']`
   @protected
-  @JsonKey(defaultValue: {'lemmy.world': {}})
+  @JsonKey(defaultValue: {'lemmy.world': {}, 'lemmy.ml': {}, 'beehaw.org': {}})
   late Map<String, Map<String, UserData>> accounts;
 
   /// default account for a given instance
@@ -137,6 +137,14 @@ class AccountsStore extends ChangeNotifier {
   /// sets globally default account
   Future<void> setDefaultAccount(String instanceHost, String username) {
     defaultAccount = '$username@$instanceHost';
+
+    notifyListeners();
+    return save();
+  }
+
+  /// clear the globally default account
+  Future<void> clearDefaultAccount() {
+    defaultAccount = null;
 
     notifyListeners();
     return save();

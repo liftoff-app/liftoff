@@ -42,7 +42,8 @@ class CommentSection extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
               child: FailedToLoad(
-                  message: 'Comments failed to load',
+                  message: 'ERROR: Comments failed to load. '
+                      '${store.fullPostState.errorTerm}',
                   refresh: () => store.refresh(context
                       .read<AccountsStore>()
                       .defaultUserDataFor(store.instanceHost)
@@ -56,83 +57,89 @@ class CommentSection extends StatelessWidget {
           }
         }
 
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: Row(
-                children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      showBottomModal(
-                        title: 'sort by',
-                        context: context,
-                        builder: (context) => Column(
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Row(
+                    children: [
+                      OutlinedButton(
+                        onPressed: () {
+                          showBottomModal(
+                            title: 'sort by',
+                            context: context,
+                            builder: (context) => Column(
+                              children: [
+                                for (final e in sortPairs.entries)
+                                  ListTile(
+                                    leading: Icon(e.value.icon),
+                                    title: Text(e.value.term.tr(context)),
+                                    trailing: store.sorting == e.key
+                                        ? const Icon(Icons.check)
+                                        : null,
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                      store.updateSorting(e.key);
+                                    },
+                                  )
+                              ],
+                            ),
+                          );
+                        },
+                        child: Row(
                           children: [
-                            for (final e in sortPairs.entries)
-                              ListTile(
-                                leading: Icon(e.value.icon),
-                                title: Text(e.value.term.tr(context)),
-                                trailing: store.sorting == e.key
-                                    ? const Icon(Icons.check)
-                                    : null,
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  store.updateSorting(e.key);
-                                },
-                              )
+                            Text(sortPairs[store.sorting]!.term.tr(context)),
+                            const Icon(Icons.arrow_drop_down),
                           ],
                         ),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Text(sortPairs[store.sorting]!.term.tr(context)),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
+                      ),
+                      const Spacer(),
+                    ],
                   ),
-                  const Spacer(),
-                ],
-              ),
+                ),
+                // sorting menu goes here
+                if (postComments != null && postComments.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    child: Text(
+                      'no comments yet',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  )
+                else ...[
+                  for (final com in store.pinnedComments!)
+                    CommentWidget.fromCommentView(
+                      com,
+                      key: ValueKey(com),
+                    ),
+                  for (final com in store.newComments)
+                    CommentWidget.fromCommentView(
+                      com,
+                      detached: false,
+                      key: ValueKey(com),
+                    ),
+                  // if (store.sorting == CommentSortType.chat)
+                  //   for (final com in postComments!)
+                  //     CommentWidget.fromCommentView(
+                  //       com,
+                  //       detached: false,
+                  //       key: ValueKey(com),
+                  //     )
+                  // else
+                  for (final com in store.sortedCommentTree!)
+                    CommentWidget(
+                      com,
+                      key: ValueKey(com),
+                    ),
+                  const BottomSafe.fab(),
+                ]
+              ],
             ),
-            // sorting menu goes here
-            if (postComments != null && postComments.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 50),
-                child: Text(
-                  'no comments yet',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              )
-            else ...[
-              for (final com in store.pinnedComments!)
-                CommentWidget.fromCommentView(
-                  com,
-                  key: ValueKey(com),
-                ),
-              for (final com in store.newComments)
-                CommentWidget.fromCommentView(
-                  com,
-                  detached: false,
-                  key: ValueKey(com),
-                ),
-              // if (store.sorting == CommentSortType.chat)
-              //   for (final com in postComments!)
-              //     CommentWidget.fromCommentView(
-              //       com,
-              //       detached: false,
-              //       key: ValueKey(com),
-              //     )
-              // else
-              for (final com in store.sortedCommentTree!)
-                CommentWidget(
-                  com,
-                  key: ValueKey(com),
-                ),
-              const BottomSafe.fab(),
-            ]
-          ],
+          ),
         );
       },
     );

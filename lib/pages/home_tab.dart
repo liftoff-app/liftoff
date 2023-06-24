@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/infinite_scroll.dart';
+import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
@@ -14,6 +16,8 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
+import 'create_post/create_post.dart';
+import 'full_post/full_post.dart';
 import 'inbox.dart';
 import 'instance/instance.dart';
 import 'settings/add_account_page.dart';
@@ -25,9 +29,14 @@ class HomeTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loggedInAction = useAnyLoggedInAction();
+
     final accStore = useAccountsStore();
     final defaultListingType =
         useStore((ConfigStore store) => store.defaultListingType);
+    final showEverythingFeed =
+        useStore((ConfigStore store) => store.showEverythingFeed);
+
     final selectedList = useState(_SelectedList(
         listingType: accStore.hasNoAccount &&
                 defaultListingType == PostListingType.subscribed
@@ -79,44 +88,47 @@ class HomeTab extends HookWidget {
         builder: (context) {
           pop(_SelectedList thing) => Navigator.of(context).pop(thing);
 
+          final everythingChoices = [
+            const ListTile(
+              title: Text('EVERYTHING'),
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              visualDensity:
+                  VisualDensity(vertical: VisualDensity.minimumDensity),
+              leading: SizedBox.shrink(),
+            ),
+            ListTile(
+              title: Text(
+                L10n.of(context).subscribed,
+                style: TextStyle(
+                  color: accStore.hasNoAccount
+                      ? theme.textTheme.bodyLarge?.color?.withOpacity(0.4)
+                      : null,
+                ),
+              ),
+              onTap: accStore.hasNoAccount
+                  ? null
+                  : () => pop(
+                        const _SelectedList(
+                          listingType: PostListingType.subscribed,
+                        ),
+                      ),
+              leading: const SizedBox(width: 20),
+            ),
+            for (final listingType in [
+              PostListingType.local,
+              PostListingType.all,
+            ])
+              ListTile(
+                title: Text(listingType.value),
+                leading: const SizedBox(width: 20, height: 20),
+                onTap: () => pop(_SelectedList(listingType: listingType)),
+              ),
+          ];
           return Column(
             children: [
               const SizedBox(height: 5),
-              const ListTile(
-                title: Text('EVERYTHING'),
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                visualDensity:
-                    VisualDensity(vertical: VisualDensity.minimumDensity),
-                leading: SizedBox.shrink(),
-              ),
-              ListTile(
-                title: Text(
-                  L10n.of(context).subscribed,
-                  style: TextStyle(
-                    color: accStore.hasNoAccount
-                        ? theme.textTheme.bodyLarge?.color?.withOpacity(0.4)
-                        : null,
-                  ),
-                ),
-                onTap: accStore.hasNoAccount
-                    ? null
-                    : () => pop(
-                          const _SelectedList(
-                            listingType: PostListingType.subscribed,
-                          ),
-                        ),
-                leading: const SizedBox(width: 20),
-              ),
-              for (final listingType in [
-                PostListingType.local,
-                PostListingType.all,
-              ])
-                ListTile(
-                  title: Text(listingType.value),
-                  leading: const SizedBox(width: 20, height: 20),
-                  onTap: () => pop(_SelectedList(listingType: listingType)),
-                ),
+              if (showEverythingFeed) ...everythingChoices,
               for (final instance in accStore.instances) ...[
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -220,6 +232,20 @@ class HomeTab extends HookWidget {
       // TODO: make appbar autohide when scrolling down
       appBar: AppBar(
         actions: [
+          if (!Platform.isAndroid) // Replaces FAB
+            IconButton(
+              icon: const Icon(Icons.add_box_outlined),
+              onPressed: loggedInAction((_) async {
+                final postView = await Navigator.of(context).push(
+                  CreatePostPage.route(),
+                );
+
+                if (postView != null) {
+                  await Navigator.of(context)
+                      .push(FullPostPage.fromPostViewRoute(postView));
+                }
+              }),
+            ),
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () => goTo(context, (_) => const InboxPage()),

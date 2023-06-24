@@ -72,9 +72,14 @@ class PostBody extends StatelessWidget {
             } else {
               return Padding(
                 padding: const EdgeInsets.all(10),
-                child: MarkdownText(
-                  body,
-                  instanceHost: store.postView.instanceHost,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 400),
+                  child: SingleChildScrollView(
+                    child: MarkdownText(
+                      body,
+                      instanceHost: store.postView.instanceHost,
+                    ),
+                  ),
                 ),
               );
             }

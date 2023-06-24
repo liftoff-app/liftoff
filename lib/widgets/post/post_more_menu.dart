@@ -72,7 +72,10 @@ class PostMoreMenu extends HookWidget {
               ListTile(
                 leading: const Icon(Icons.open_in_browser),
                 title: const Text('Open in browser'),
-                onTap: () => launchLink(link: post.post.apId, context: context),
+                onTap: () {
+                  launchLink(link: post.post.apId, context: context);
+                  Navigator.of(context).pop();
+                },
               ),
               if (isMine)
                 ListTile(

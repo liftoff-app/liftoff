@@ -74,6 +74,12 @@ class PostInfoSection extends StatelessWidget {
                                   ),
                                 ),
                         ),
+                        if (post.post.originInstanceHost !=
+                            post.post.instanceHost)
+                          TextSpan(
+                            style: const TextStyle(fontSize: 13),
+                            text: ' · via ${post.post.instanceHost}',
+                          ),
                       ],
                     ),
                   ),

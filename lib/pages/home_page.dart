@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -60,8 +62,9 @@ class HomePage extends HookWidget {
           const SizedBox(height: kMinInteractiveDimension / 2),
         ],
       ),
-      floatingActionButton: const CreatePostFab(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Platform.isAndroid ? const CreatePostFab() : null,
+      floatingActionButtonLocation:
+          Platform.isAndroid ? FloatingActionButtonLocation.centerDocked : null,
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 7,
@@ -72,8 +75,8 @@ class HomePage extends HookWidget {
             children: [
               tabButton(Icons.home),
               tabButton(Icons.list),
-              const SizedBox.shrink(),
-              const SizedBox.shrink(),
+              if (Platform.isAndroid) const SizedBox.shrink(),
+              if (Platform.isAndroid) const SizedBox.shrink(),
               tabButton(Icons.search),
               tabButton(Icons.person),
             ],

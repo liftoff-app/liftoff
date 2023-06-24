@@ -16,14 +16,14 @@ class PostActions extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final fullPost = context.read<IsFullPost>();
-
+    final shareButtonKey = GlobalKey();
     // assemble actions section
     return ObserverBuilder<PostStore>(builder: (context, store) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Row(
           children: [
-            const Icon(Icons.comment),
+            const Icon(Icons.comment_rounded),
             const SizedBox(width: 6),
             Expanded(
               child: Text(
@@ -36,9 +36,19 @@ class PostActions extends HookWidget {
             ),
             if (!fullPost)
               IconButton(
+                key: shareButtonKey,
                 icon: Icon(shareIcon),
-                onPressed: () =>
-                    share(store.postView.post.apId, context: context),
+                onPressed: () {
+                  final renderbox = shareButtonKey.currentContext!
+                      .findRenderObject()! as RenderBox;
+                  final position = renderbox.localToGlobal(Offset.zero);
+                  share(store.postView.post.apId,
+                      context: context,
+                      sharePositionOrigin: Rect.fromPoints(
+                          position,
+                          position.translate(
+                              renderbox.size.width, renderbox.size.height)));
+                },
               ),
             if (!fullPost) const SavePostButton(),
             const PostVoting(),

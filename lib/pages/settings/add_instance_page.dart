@@ -67,66 +67,77 @@ class AddInstancePage extends HookWidget {
         leading: const CloseButton(),
         title: const Text('Add instance'),
       ),
-      body: ListView(
+      body: Column(
         children: [
-          if (isSite.value == true && icon.value != null)
-            SizedBox(
-                height: 150,
-                child: FullscreenableImage(
-                  url: icon.value!,
-                  child: CachedNetworkImage(
-                    imageUrl: icon.value!,
-                    errorBuilder: (_, ___) => const SizedBox.shrink(),
-                  ),
-                ))
-          else if (isSite.value == false)
-            const SizedBox(
-              height: 150,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.close, color: Colors.red),
-                  Text('instance not found')
-                ],
-              ),
-            )
-          else
-            const SizedBox(height: 150),
-          const SizedBox(height: 15),
-          SizedBox(
-            height: 40,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                autofocus: true,
-                controller: instanceController,
-                autofillHints: const [AutofillHints.url],
-                keyboardType: TextInputType.url,
-                onSubmitted: (_) => handleAdd?.call(),
-                autocorrect: false,
-                decoration: const InputDecoration(labelText: 'instance url'),
-              ),
-            ),
+          const Padding(
+            padding: EdgeInsets.all(8),
+            child: Text('Please note that kbin instances are '
+                'not supported at present.'),
           ),
-          const SizedBox(height: 5),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: SizedBox(
-              height: 40,
-              child: ElevatedButton(
-                onPressed: handleAdd,
-                child: !debounce.loading
-                    ? const Text('Add')
-                    : SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator.adaptive(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(theme.canvasColor),
-                        ),
+          ListView(
+            shrinkWrap: true,
+            children: [
+              if (isSite.value == true && icon.value != null)
+                SizedBox(
+                    height: 150,
+                    child: FullscreenableImage(
+                      url: icon.value!,
+                      child: CachedNetworkImage(
+                        imageUrl: icon.value!,
+                        errorBuilder: (_, ___) => const SizedBox.shrink(),
                       ),
+                    ))
+              else if (isSite.value == false)
+                const SizedBox(
+                  height: 150,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.close, color: Colors.red),
+                      Text('instance not found')
+                    ],
+                  ),
+                )
+              else
+                const SizedBox(height: 150),
+              const SizedBox(height: 15),
+              SizedBox(
+                height: 40,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: TextField(
+                    autofocus: true,
+                    controller: instanceController,
+                    autofillHints: const [AutofillHints.url],
+                    keyboardType: TextInputType.url,
+                    onSubmitted: (_) => handleAdd?.call(),
+                    autocorrect: false,
+                    decoration:
+                        const InputDecoration(labelText: 'instance url'),
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: handleAdd,
+                    child: !debounce.loading
+                        ? const Text('Add')
+                        : SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  theme.canvasColor),
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

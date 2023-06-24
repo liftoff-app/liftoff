@@ -72,6 +72,7 @@ class CreatePostPage extends HookWidget {
       },
       child: Scaffold(
         appBar: AppBar(
+          title: const Text('Create post'),
           actions: [
             ObserverBuilder<CreatePostStore>(
               builder: (context, store) => IconButton(
@@ -81,68 +82,76 @@ class CreatePostPage extends HookWidget {
             ),
           ],
         ),
-        body: Stack(
-          children: [
-            SafeArea(
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(5),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      if (!context.read<CreatePostStore>().isEdit) ...const [
-                        CreatePostInstancePicker(),
-                        CreatePostCommunityPicker(),
-                      ],
-                      CreatePostUrlField(titleFocusNode),
-                      title,
-                      body,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Stack(
+              children: [
+                SafeArea(
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(5),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
                         children: [
-                          ObserverBuilder<CreatePostStore>(
-                            builder: (context, store) => GestureDetector(
-                              onTap: () => store.nsfw = !store.nsfw,
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                    value: store.nsfw,
-                                    onChanged: (val) {
-                                      if (val != null) store.nsfw = val;
-                                    },
+                          if (!context
+                              .read<CreatePostStore>()
+                              .isEdit) ...const [
+                            CreatePostInstancePicker(),
+                            CreatePostCommunityPicker(),
+                          ],
+                          CreatePostUrlField(titleFocusNode),
+                          title,
+                          body,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ObserverBuilder<CreatePostStore>(
+                                builder: (context, store) => GestureDetector(
+                                  onTap: () => store.nsfw = !store.nsfw,
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                        value: store.nsfw,
+                                        onChanged: (val) {
+                                          if (val != null) store.nsfw = val;
+                                        },
+                                      ),
+                                      Text(L10n.of(context).nsfw)
+                                    ],
                                   ),
-                                  Text(L10n.of(context).nsfw)
-                                ],
+                                ),
                               ),
-                            ),
+                              ObserverBuilder<CreatePostStore>(
+                                builder: (context, store) => TextButton(
+                                  onPressed: store.submitState.isLoading
+                                      ? () {}
+                                      : loggedInAction(handleSubmit),
+                                  child: store.submitState.isLoading
+                                      ? const CircularProgressIndicator
+                                          .adaptive()
+                                      : Text(
+                                          store.isEdit
+                                              ? L10n.of(context).edit
+                                              : L10n.of(context).post,
+                                        ),
+                                ),
+                              )
+                            ],
                           ),
-                          ObserverBuilder<CreatePostStore>(
-                            builder: (context, store) => TextButton(
-                              onPressed: store.submitState.isLoading
-                                  ? () {}
-                                  : loggedInAction(handleSubmit),
-                              child: store.submitState.isLoading
-                                  ? const CircularProgressIndicator.adaptive()
-                                  : Text(
-                                      store.isEdit
-                                          ? L10n.of(context).edit
-                                          : L10n.of(context).post,
-                                    ),
-                            ),
-                          )
-                        ],
+                          EditorToolbar.safeArea,
+                        ].spaced(6),
                       ),
-                      EditorToolbar.safeArea,
-                    ].spaced(6),
+                    ),
                   ),
                 ),
-              ),
+                BottomSticky(
+                  child: EditorToolbar(editorController),
+                ),
+              ],
             ),
-            BottomSticky(
-              child: EditorToolbar(editorController),
-            ),
-          ],
+          ),
         ),
       ),
     );

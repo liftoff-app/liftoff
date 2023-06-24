@@ -99,66 +99,77 @@ class InboxPage extends HookWidget {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            SortableInfiniteList<CommentView>(
-              noItems: const Text('no replies'),
-              controller: isc,
-              defaultSort: SortType.new_,
-              fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(selectedInstance).run(GetReplies(
-                auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
-                sort: sortType,
-                limit: batchSize,
-                page: page,
-                unreadOnly: unreadOnly.value,
-              )),
-              itemBuilder: (cv) => CommentWidget.fromCommentView(
-                cv,
-                canBeMarkedAsRead: true,
-                hideOnRead: unreadOnly.value,
-              ),
-              uniqueProp: (item) => item.comment.apId,
-            ),
-            SortableInfiniteList<PersonMentionView>(
-              noItems: const Text('no mentions'),
-              controller: isc,
-              defaultSort: SortType.new_,
-              fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(selectedInstance).run(GetPersonMentions(
-                auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
-                sort: sortType,
-                limit: batchSize,
-                page: page,
-                unreadOnly: unreadOnly.value,
-              )),
-              itemBuilder: (umv) => CommentWidget.fromPersonMentionView(
-                umv,
-                hideOnRead: unreadOnly.value,
-              ),
-              uniqueProp: (item) => item.personMention.id,
-            ),
-            InfiniteScroll<PrivateMessageView>(
-              noItems: const Padding(
-                padding: EdgeInsets.only(top: 60),
-                child: Text('no messages'),
-              ),
-              controller: isc,
-              fetcher: (page, batchSize) => LemmyApiV3(selectedInstance).run(
-                GetPrivateMessages(
-                  auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
-                  limit: batchSize,
-                  page: page,
-                  unreadOnly: unreadOnly.value,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: TabBarView(
+              children: [
+                SortableInfiniteList<CommentView>(
+                  noItems: const Text('no replies'),
+                  controller: isc,
+                  defaultSort: SortType.new_,
+                  fetcher: (page, batchSize, sortType) =>
+                      LemmyApiV3(selectedInstance).run(GetReplies(
+                    auth:
+                        accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
+                    sort: sortType,
+                    limit: batchSize,
+                    page: page,
+                    unreadOnly: unreadOnly.value,
+                  )),
+                  itemBuilder: (cv) => CommentWidget.fromCommentView(
+                    cv,
+                    canBeMarkedAsRead: true,
+                    hideOnRead: unreadOnly.value,
+                  ),
+                  uniqueProp: (item) => item.comment.apId,
                 ),
-              ),
-              itemBuilder: (mv) => PrivateMessageTile(
-                privateMessageView: mv,
-                hideOnRead: unreadOnly.value,
-              ),
-              uniqueProp: (item) => item.privateMessage.apId,
+                SortableInfiniteList<PersonMentionView>(
+                  noItems: const Text('no mentions'),
+                  controller: isc,
+                  defaultSort: SortType.new_,
+                  fetcher: (page, batchSize, sortType) =>
+                      LemmyApiV3(selectedInstance).run(GetPersonMentions(
+                    auth:
+                        accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
+                    sort: sortType,
+                    limit: batchSize,
+                    page: page,
+                    unreadOnly: unreadOnly.value,
+                  )),
+                  itemBuilder: (umv) => CommentWidget.fromPersonMentionView(
+                    umv,
+                    hideOnRead: unreadOnly.value,
+                  ),
+                  uniqueProp: (item) => item.personMention.id,
+                ),
+                InfiniteScroll<PrivateMessageView>(
+                  noItems: const Padding(
+                    padding: EdgeInsets.only(top: 60),
+                    child: Text('no messages'),
+                  ),
+                  controller: isc,
+                  fetcher: (page, batchSize) =>
+                      LemmyApiV3(selectedInstance).run(
+                    GetPrivateMessages(
+                      auth: accStore
+                          .defaultUserDataFor(selectedInstance)!
+                          .jwt
+                          .raw,
+                      limit: batchSize,
+                      page: page,
+                      unreadOnly: unreadOnly.value,
+                    ),
+                  ),
+                  itemBuilder: (mv) => PrivateMessageTile(
+                    privateMessageView: mv,
+                    hideOnRead: unreadOnly.value,
+                  ),
+                  uniqueProp: (item) => item.privateMessage.apId,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -8,6 +8,7 @@ import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
+import '../nsfw_hider.dart';
 import 'post_actions.dart';
 import 'post_body.dart';
 import 'post_info_section.dart';
@@ -58,6 +59,19 @@ class _Post extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isFullPost = context.read<IsFullPost>();
+
+    final postStore = context.read<PostStore>();
+    const sensitiveContent = Column(
+      children: [
+        PostMedia(),
+        PostLinkPreview(),
+        PostBody(),
+      ],
+    );
+    final possiblyBlurred = postStore.postView.post.nsfw
+        ? const NSFWHider(child: sensitiveContent)
+        : sensitiveContent;
+
     return GestureDetector(
       onTap: isFullPost
           ? null
@@ -83,20 +97,34 @@ class _Post extends StatelessWidget {
               children: [
                 if (isFullPost) ...[
                   const PostInfoSection(),
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: Column(children: [
+                        const PostTitle(),
+                        possiblyBlurred,
+                        const PostActions(),
+                      ]),
+                    ),
+                  ),
+                ] else if (store.compactPostView) ...[
+                  const PostInfoSection(),
                   const PostTitle(),
-                  const PostMedia(),
-                  const PostLinkPreview(),
-                  const PostBody(),
                   const PostActions(),
                 ] else ...[
                   const PostInfoSection(),
-                  const PostTitle(),
-                  if (!store.compactPostView) ...[
-                    const PostMedia(),
-                    const PostLinkPreview(),
-                    const PostBody(),
-                  ],
-                  const PostActions(),
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: Column(
+                        children: [
+                          const PostTitle(),
+                          if (!store.compactPostView) possiblyBlurred,
+                          const PostActions(),
+                        ],
+                      ),
+                    ),
+                  ),
                 ]
               ],
             ),

@@ -16,6 +16,8 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..postCardShadow = json['postCardShadow'] as bool? ?? true
   ..showAvatars = json['showAvatars'] as bool? ?? true
   ..showScores = json['showScores'] as bool? ?? true
+  ..blurNsfw = json['blurNsfw'] as bool? ?? true
+  ..showEverythingFeed = json['showEverythingFeed'] as bool? ?? false
   ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
   ..defaultListingType =
       _postListingTypeFromJson(json['defaultListingType'] as String?);
@@ -30,6 +32,8 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'postCardShadow': instance.postCardShadow,
       'showAvatars': instance.showAvatars,
       'showScores': instance.showScores,
+      'blurNsfw': instance.blurNsfw,
+      'showEverythingFeed': instance.showEverythingFeed,
       'defaultSortType': instance.defaultSortType,
       'defaultListingType': instance.defaultListingType,
     };
@@ -173,6 +177,38 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  late final _$blurNsfwAtom =
+      Atom(name: '_ConfigStore.blurNsfw', context: context);
+
+  @override
+  bool get blurNsfw {
+    _$blurNsfwAtom.reportRead();
+    return super.blurNsfw;
+  }
+
+  @override
+  set blurNsfw(bool value) {
+    _$blurNsfwAtom.reportWrite(value, super.blurNsfw, () {
+      super.blurNsfw = value;
+    });
+  }
+
+  late final _$showEverythingFeedAtom =
+      Atom(name: '_ConfigStore.showEverythingFeed', context: context);
+
+  @override
+  bool get showEverythingFeed {
+    _$showEverythingFeedAtom.reportRead();
+    return super.showEverythingFeed;
+  }
+
+  @override
+  set showEverythingFeed(bool value) {
+    _$showEverythingFeedAtom.reportWrite(value, super.showEverythingFeed, () {
+      super.showEverythingFeed = value;
+    });
+  }
+
   late final _$defaultSortTypeAtom =
       Atom(name: '_ConfigStore.defaultSortType', context: context);
 
@@ -239,6 +275,8 @@ postRoundedCorners: ${postRoundedCorners},
 postCardShadow: ${postCardShadow},
 showAvatars: ${showAvatars},
 showScores: ${showScores},
+blurNsfw: ${blurNsfw},
+showEverythingFeed: ${showEverythingFeed},
 defaultSortType: ${defaultSortType},
 defaultListingType: ${defaultListingType}
     ''';

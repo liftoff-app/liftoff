@@ -619,7 +619,7 @@ packages:
       path: "."
       ref: master
       resolved-ref: a041bc24ce0459f1bd0cbce27dba3128e08c45c3
-      url: "https://github.com/zachatrocity/lemmy_api_client.git"
+      url: "https://github.com/liftoff-app/lemmy_api_client.git"
     source: git
     version: "0.21.0"
   logging:

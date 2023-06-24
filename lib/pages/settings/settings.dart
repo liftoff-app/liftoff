@@ -134,6 +134,14 @@ class AppearanceConfigPage extends StatelessWidget {
                 store.showScores = checked;
               },
             ),
+            SwitchListTile.adaptive(
+              title: const Text('Blur NSFW'),
+              subtitle: const Text('Images in NSFW posts will be hidden.'),
+              value: store.blurNsfw,
+              onChanged: (checked) {
+                store.blurNsfw = checked;
+              },
+            ),
           ],
         ),
       ),
@@ -194,6 +202,17 @@ class GeneralConfigPage extends StatelessWidget {
                   },
                 ),
               ),
+            ),
+            SwitchListTile.adaptive(
+              title: const Text('Show EVERYTHING feed'),
+              subtitle:
+                  const Text('This will combine content from all instances, '
+                      "even those you're not signed into, so you may "
+                      "see posts you can't vote on or reply to."),
+              value: store.showEverythingFeed,
+              onChanged: (checked) {
+                store.showEverythingFeed = checked;
+              },
             ),
           ],
         ),
@@ -269,7 +288,7 @@ class _AccountOptions extends HookWidget {
                       child: CircularProgressIndicator.adaptive(),
                     )
                   : const Icon(Icons.cloud_download),
-              title: const Text('Import settings to liftoff'),
+              title: const Text('Import settings to Liftoff'),
               onTap: () async {
                 await context.read<ConfigStore>().importLemmyUserSettings(
                       accountsStore.userDataFor(instanceHost, username)!.jwt,

@@ -104,17 +104,25 @@ class UserProfile extends HookWidget {
                 ))
                 .then((val) => val.posts),
           ),
-          InfiniteCommentList(
-            fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
-                .run(GetPersonDetails(
-                  personId: userView.person.id,
-                  savedOnly: false,
-                  sort: SortType.active,
-                  page: page,
-                  limit: batchSize,
-                  auth: accountsStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-                ))
-                .then((val) => val.comments),
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: InfiniteCommentList(
+                fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
+                    .run(GetPersonDetails(
+                      personId: userView.person.id,
+                      savedOnly: false,
+                      sort: SortType.active,
+                      page: page,
+                      limit: batchSize,
+                      auth: accountsStore
+                          .defaultUserDataFor(instanceHost)
+                          ?.jwt
+                          .raw,
+                    ))
+                    .then((val) => val.comments),
+              ),
+            ),
           ),
           _AboutTab(fullPersonView),
         ]),
@@ -125,7 +133,7 @@ class UserProfile extends HookWidget {
 
 /// Content in the sliver flexible space
 /// Renders general info about the given user.
-/// Such as his nickname, no. of posts, no. of posts,
+/// Such as their nickname, no. of posts, no. of posts,
 /// banner, avatar etc.
 class _UserOverview extends HookWidget {
   final PersonViewSafe userView;

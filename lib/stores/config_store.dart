@@ -74,6 +74,16 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: true)
   bool showScores = true;
 
+  @observable
+  @JsonKey(defaultValue: true)
+  bool blurNsfw = true;
+
+  /// Allows the user to see the combined EVERYTHING feed, which can be
+  /// confusing, so default it off.
+  @observable
+  @JsonKey(defaultValue: false)
+  bool showEverythingFeed = false;
+
   // default is set in fromJson
   @observable
   @JsonKey(fromJson: _sortTypeFromJson)

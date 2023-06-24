@@ -44,12 +44,25 @@ class AddAccountPage extends HookWidget {
       try {
         final isFirstAccount = accountsStore.hasNoAccount;
 
+        // MYKL HACK - let the addAccount() run and then check to see if it
+        // succeeded. This means that a users' very first account creation will
+        // run properly.
+        if (isFirstAccount) {
+          await accountsStore.setDefaultAccount(
+              selectedInstance.value, usernameController.text);
+        }
+
         loading.start();
         await accountsStore.addAccount(
           selectedInstance.value,
           usernameController.text,
           passwordController.text,
         );
+
+        // MYKL recover from HACK - it failed, so clear the account.
+        if (isFirstAccount && accountsStore.hasNoAccount) {
+          await accountsStore.clearDefaultAccount();
+        }
 
         // if first account try to import settings
         if (isFirstAccount) {

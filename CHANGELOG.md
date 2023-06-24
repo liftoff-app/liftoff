@@ -1,3 +1,18 @@
+## v0.9.11+13 - 2023-06-24
+- Merged in iOS support
+- Added clickthrough for NSFW content, and associated setting.
+- Added option to hide Everything feed as this was v confusing to new users.
+- Improved messaging when interacting with content delivered via non-signed instances.
+- Added 'via' information on posts to help with above.
+- Limit total size of rich text field in post bodies as v large images
+could fill pages.
+- Replaced DELETE account (from instance) button with a Remove account (from app) button to prevent
+risk of death threats :-)
+- Limited width of main body components for a more reasonable feel on iPad.
+- Minor UI tweaks
+
+
+
 ## v0.9.11 - 2023-06-24
 - Updated api client to better support 0.18.x
 - Fixes login stalling on 0.18.x instances

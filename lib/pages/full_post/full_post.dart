@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -31,6 +32,8 @@ class FullPostPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
+    final shareButtonKey = GlobalKey();
+    var scrollOffset = 0.0;
 
     final loggedInAction =
         useLoggedInAction(context.read<FullPostStore>().instanceHost);
@@ -75,7 +78,18 @@ class FullPostPage extends HookWidget {
 
           // VARIABLES
 
-          sharePost() => share(post.post.apId, context: context);
+          sharePost() {
+            final renderbox =
+                shareButtonKey.currentContext!.findRenderObject()! as RenderBox;
+            final position = renderbox.localToGlobal(Offset.zero);
+
+            return share(post.post.apId,
+                context: context,
+                sharePositionOrigin: Rect.fromPoints(
+                    position,
+                    position.translate(
+                        renderbox.size.width, renderbox.size.height)));
+          }
 
           comment() async {
             final newComment = await Navigator.of(context).push(
@@ -87,23 +101,51 @@ class FullPostPage extends HookWidget {
             }
           }
 
+          tapScrollAction() {
+            var targetOffset = 0.0;
+            if (scrollController.offset != 0) {
+              scrollOffset = scrollController.offset;
+            } else {
+              targetOffset = scrollOffset;
+            }
+            scrollController.animateTo(targetOffset,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.bounceInOut);
+          }
+
           return Scaffold(
             appBar: AppBar(
+              flexibleSpace: GestureDetector(
+                onTap: tapScrollAction,
+              ),
               centerTitle: false,
-              title: RevealAfterScroll(
-                scrollController: scrollController,
-                after: 65,
-                child: Text(
-                  post.community.originPreferredName,
-                  overflow: TextOverflow.fade,
+              title: GestureDetector(
+                onTap: tapScrollAction,
+                child: RevealAfterScroll(
+                  scrollController: scrollController,
+                  after: 65,
+                  child: Text(
+                    '${post.community.originPreferredName} > '
+                    '"${post.post.name}"',
+                    overflow: TextOverflow.fade,
+                  ),
                 ),
               ),
               actions: [
-                IconButton(icon: Icon(shareIcon), onPressed: sharePost),
+                IconButton(
+                  key: shareButtonKey,
+                  icon: Icon(shareIcon),
+                  onPressed: sharePost,
+                ),
                 MobxProvider.value(
                   value: postStore,
                   child: const SavePostButton(),
                 ),
+                if (!Platform.isAndroid && !post.post.locked)
+                  IconButton(
+                    onPressed: loggedInAction((_) => comment()),
+                    icon: const Icon(Icons.reply),
+                  ),
                 IconButton(
                   icon: Icon(moreIcon),
                   onPressed: () => PostMoreMenuButton.show(
@@ -114,7 +156,7 @@ class FullPostPage extends HookWidget {
                 ),
               ],
             ),
-            floatingActionButton: post.post.locked
+            floatingActionButton: !Platform.isAndroid || post.post.locked
                 ? null
                 : FloatingActionButton(
                     onPressed: loggedInAction((_) => comment()),

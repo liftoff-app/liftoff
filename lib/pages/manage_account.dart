@@ -35,7 +35,7 @@ class ManageAccountPage extends HookWidget {
       return site.myUser!.localUserView;
     });
 
-    void openMoreMenu() {
+    void privateOpenMoreMenu() {
       showBottomModal(
         context: context,
         builder: (context) => Column(
@@ -65,7 +65,7 @@ class ManageAccountPage extends HookWidget {
       appBar: AppBar(
         title: Text('$username@$instanceHost'),
         actions: [
-          IconButton(icon: Icon(moreIcon), onPressed: openMoreMenu),
+          IconButton(icon: Icon(moreIcon), onPressed: privateOpenMoreMenu),
         ],
       ),
       body: FutureBuilder<LocalUserSettingsView>(
@@ -95,6 +95,7 @@ class _ManageAccount extends HookWidget {
     final accountsStore = useAccountsStore();
     final theme = Theme.of(context);
     final saveDelayedLoading = useDelayedLoading();
+    final removeDelayedLoading = useDelayedLoading();
     final deleteDelayedLoading = useDelayedLoading();
 
     final displayNameController =
@@ -119,6 +120,7 @@ class _ManageAccount extends HookWidget {
     final informAcceptedAvatarRef = useRef<VoidCallback?>(null);
     final informAcceptedBannerRef = useRef<VoidCallback?>(null);
 
+    final removeAccountPasswordController = useTextEditingController();
     final deleteAccountPasswordController = useTextEditingController();
 
     final emailFocusNode = useFocusNode();
@@ -131,7 +133,7 @@ class _ManageAccount extends HookWidget {
         instanceHost: user.instanceHost, text: user.person.bio);
 
     final token =
-        accountsStore.userDataFor(user.instanceHost, user.person.name)!.jwt;
+        accountsStore.userDataFor(user.instanceHost, user.person.name)?.jwt;
 
     handleSubmit() async {
       saveDelayedLoading.start();
@@ -148,7 +150,7 @@ class _ManageAccount extends HookWidget {
           showBotAccounts: showBotAccounts.value,
           showReadPosts: showReadPosts.value,
           sendNotificationsToEmail: sendNotificationsToEmail.value,
-          auth: token.raw,
+          auth: token!.raw,
           avatar: avatar.value,
           banner: banner.value,
           matrixUserId: matrixUserController.text.isEmpty
@@ -178,6 +180,62 @@ class _ManageAccount extends HookWidget {
       }
     }
 
+    removeAccountDialog() async {
+      final confirmRemove = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(
+                  '${L10n.of(context).remove_account} @${user.instanceHost}@${user.person.name}'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(L10n.of(context).remove_account_confirm),
+                  const SizedBox(height: 10),
+                  // TextField(
+                  //   controller: removeAccountPasswordController,
+                  //   autofillHints: const [AutofillHints.password],
+                  //   keyboardType: TextInputType.visiblePassword,
+                  //   obscureText: true,
+                  //   decoration:
+                  //       InputDecoration(hintText: L10n.of(context).password),
+                  // )
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(L10n.of(context).no),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(L10n.of(context).yes),
+                ),
+              ],
+            ),
+          ) ??
+          false;
+
+      if (confirmRemove) {
+        removeDelayedLoading.start();
+
+        try {
+          await accountsStore.removeAccount(
+              user.instanceHost, user.person.name);
+          Navigator.of(context).pop();
+        } on Exception catch (err) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(err.toString()),
+          ));
+        }
+
+        removeDelayedLoading.cancel();
+      } else {
+        removeAccountPasswordController.clear();
+      }
+    }
+
+    // MYKL TODO: decide if we really want this functionality in a client.
+    // ignore: unused_element
     deleteAccountDialog() async {
       final confirmDelete = await showDialog<bool>(
             context: context,
@@ -217,10 +275,11 @@ class _ManageAccount extends HookWidget {
         deleteDelayedLoading.start();
 
         try {
-          await LemmyApiV3(user.instanceHost).run(DeleteAccount(
-            password: deleteAccountPasswordController.text,
-            auth: token.raw,
-          ));
+          // MYKL - let's not do this just yet, even though we've warned the user that we will....
+          // await LemmyApiV3(user.instanceHost).run(DeleteAccount(
+          //   password: deleteAccountPasswordController.text,
+          //   auth: token.raw,
+          // ));
 
           await accountsStore.removeAccount(
               user.instanceHost, user.person.name);
@@ -235,6 +294,17 @@ class _ManageAccount extends HookWidget {
       } else {
         deleteAccountPasswordController.clear();
       }
+    }
+
+    if (token == null) {
+      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      //     content: Text('Account does not exist'),
+      //   ));
+      // });
+      return const Column(
+        children: [Text('Account does not exist')],
+      );
     }
 
     return Stack(
@@ -289,7 +359,7 @@ class _ManageAccount extends HookWidget {
               onSubmitted: (_) => newPasswordFocusNode.requestFocus(),
             ),
             const SizedBox(height: 8),
-            // Text(L10n.of(context)!.new_password, style: theme.textTheme.titleLarge),
+            // Text(L10n.of(context)!.new_password, style: theme.textTheme.headline6),
             // TextField(
             //   focusNode: newPasswordFocusNode,
             //   controller: newPasswordController,
@@ -300,7 +370,7 @@ class _ManageAccount extends HookWidget {
             // ),
             // const SizedBox(height: 8),
             // Text(L10n.of(context)!.verify_password,
-            //     style: theme.textTheme.titleLarge),
+            //     style: theme.textTheme.headline6),
             // TextField(
             //   focusNode: verifyPasswordFocusNode,
             //   controller: newPasswordVerifyController,
@@ -310,7 +380,7 @@ class _ManageAccount extends HookWidget {
             //   onSubmitted: (_) => oldPasswordFocusNode.requestFocus(),
             // ),
             // const SizedBox(height: 8),
-            // Text(L10n.of(context)!.old_password, style: theme.textTheme.titleLarge),
+            // Text(L10n.of(context)!.old_password, style: theme.textTheme.headline6),
             // TextField(
             //   focusNode: oldPasswordFocusNode,
             //   controller: oldPasswordController,
@@ -376,12 +446,20 @@ class _ManageAccount extends HookWidget {
             ),
             const SizedBox(height: 8),
             ElevatedButton(
-              onPressed: deleteAccountDialog,
+              onPressed: removeAccountDialog,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
               ),
-              child: Text(L10n.of(context).delete_account.toUpperCase()),
+              child: Text(L10n.of(context).remove_account.toUpperCase()),
             ),
+            // MYKL - Hide the DELETE button for now...
+            // ElevatedButton(
+            //   onPressed: deleteAccountDialog,
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.red,
+            //   ),
+            //   child: Text(L10n.of(context).delete_account.toUpperCase()),
+            // ),
             const BottomSafe(),
           ],
         ),

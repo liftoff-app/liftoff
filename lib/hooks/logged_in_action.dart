@@ -23,7 +23,8 @@ VoidCallback Function(
     if (store.hasNoAccount) {
       return () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(message ?? 'you have to be logged in to do that'),
+          content: Text(
+              message ?? 'You have to add an account and log in to do that'),
           action: SnackBarAction(
               label: 'log in',
               onPressed: () => goTo(context, (_) => AccountsConfigPage())),
@@ -45,7 +46,8 @@ VoidCallback Function(
     if (store.isAnonymousFor(instanceHost)) {
       return () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(message ?? 'you have to be logged in to do that'),
+          content: Text(message ??
+              'This thread was retrieved via $instanceHost.\nYou are not logged in there.'),
           action: SnackBarAction(
               label: 'log in',
               onPressed: () => goTo(context, (_) => AccountsConfigPage())),

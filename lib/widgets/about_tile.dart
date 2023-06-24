@@ -10,7 +10,7 @@ import '../resources/links.dart';
 import '../url_launcher.dart';
 import 'bottom_safe.dart';
 
-/// Title that opens a dialog with information about Lemmur.
+/// Title that opens a dialog with information about Liftoff.
 /// Licenses, changelog, version etc.
 class AboutTile extends HookWidget {
   const AboutTile();
@@ -35,6 +35,9 @@ class AboutTile extends HookWidget {
     return AboutListTile(
       icon: const Icon(Icons.info),
       aboutBoxChildren: [
+        const Text(
+            'A client for Lemmy, written in Flutter.\n\nBased on the Lemmur project.'),
+        const SizedBox(height: 40),
         TextButton.icon(
             icon: const Icon(Icons.subject),
             label: const Text('changelog'),

@@ -45,6 +45,17 @@ Join us on the matrix for support in contributions! [#liftoff-dev:matrix.org](ht
 - Clone this repo: `git clone https://github.com/liftoff-app/liftoff`
 - Enter the repo: `cd liftoff`
 
+### iOS
+
+Visual Studio Code build configurations are provided for development testing.
+
+For final release, run:
+
+1. `flutter build ipa --flavor prod`
+
+The .api will be in `build/ios/ipa`
+
+
 ### Android
 
 1. Build: `flutter build apk --flavor prod --target lib/main_prod.dart --release`

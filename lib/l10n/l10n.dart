@@ -95,5 +95,5 @@ extension NumberFormatExtensions on num {
   /// returns `this` as a formatted compact number
   String compact(BuildContext context) => NumberFormat.compact(
         locale: Localizations.localeOf(context).toLanguageTag(),
-      ).format(this);
+      ).format(this < 1000 ? this : num.parse(toStringAsPrecision(2)));
 }

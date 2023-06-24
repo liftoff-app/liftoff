@@ -54,7 +54,7 @@ class WriteComment extends HookWidget {
       return Column(
         children: [
           SelectableText(
-            post.name,
+            '${post.instanceHost} > "${post.name}"',
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
@@ -92,8 +92,13 @@ class WriteComment extends HookWidget {
       delayed.cancel();
     }
 
+    final titleText = _isEdit
+        ? 'Editing comment'
+        : ('Replying to ${comment == null ? 'post' : 'comment'}');
+
     return Scaffold(
       appBar: AppBar(
+        title: Text(titleText),
         leading: const CloseButton(),
         actions: [
           IconButton(
@@ -102,45 +107,51 @@ class WriteComment extends HookWidget {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          ListView(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Stack(
             children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * .35),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(8),
-                  child: preview,
-                ),
-              ),
-              const Divider(),
-              Editor(
-                controller: editorController,
-                autofocus: true,
-                fancy: showFancy.value,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              ListView(
                 children: [
-                  TextButton(
-                    onPressed:
-                        delayed.pending ? () {} : loggedInAction(handleSubmit),
-                    child: delayed.loading
-                        ? const CircularProgressIndicator.adaptive()
-                        : Text(_isEdit
-                            ? L10n.of(context).edit
-                            : L10n.of(context).post),
-                  )
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * .35),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(8),
+                      child: preview,
+                    ),
+                  ),
+                  const Divider(),
+                  Editor(
+                    controller: editorController,
+                    autofocus: true,
+                    fancy: showFancy.value,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: delayed.pending
+                            ? () {}
+                            : loggedInAction(handleSubmit),
+                        child: delayed.loading
+                            ? const CircularProgressIndicator.adaptive()
+                            : Text(_isEdit
+                                ? L10n.of(context).edit
+                                : L10n.of(context).post),
+                      )
+                    ],
+                  ),
+                  EditorToolbar.safeArea,
                 ],
               ),
-              EditorToolbar.safeArea,
+              BottomSticky(
+                child: EditorToolbar(editorController),
+              ),
             ],
           ),
-          BottomSticky(
-            child: EditorToolbar(editorController),
-          ),
-        ],
+        ),
       ),
     );
   }

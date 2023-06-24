@@ -126,8 +126,8 @@ class _CommentWidget extends StatelessWidget {
     Colors.indigo,
   ];
 
-  static const indentWidth = 5.0;
-
+  static const indentWidth = 6.0;
+  static const barWidth = 2.0;
   const _CommentWidget();
 
   @override
@@ -194,7 +194,7 @@ class _CommentWidget extends StatelessWidget {
                     left: store.depth > 0
                         ? BorderSide(
                             color: colors[store.depth % colors.length],
-                            width: indentWidth,
+                            width: barWidth,
                           )
                         : BorderSide.none,
                     top: const BorderSide(width: 0.2),
@@ -217,12 +217,17 @@ class _CommentWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                      InkWell(
-                        onTap: () => goToUser.fromPersonSafe(context, creator),
-                        child: Text(
-                          creator.originPreferredName,
-                          style: TextStyle(
-                            color: theme.colorScheme.secondary,
+                      Expanded(
+                        child: InkWell(
+                          onTap: () =>
+                              goToUser.fromPersonSafe(context, creator),
+                          child: Text(
+                            creator.originPreferredName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: theme.colorScheme.secondary,
+                            ),
                           ),
                         ),
                       ),
