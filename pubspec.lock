@@ -618,7 +618,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: b00062a8d01b3881b7e9bc62c966d03b23dd2f68
+      resolved-ref: a041bc24ce0459f1bd0cbce27dba3128e08c45c3
       url: "https://github.com/zachatrocity/lemmy_api_client.git"
     source: git
     version: "0.21.0"

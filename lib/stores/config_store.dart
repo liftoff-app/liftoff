@@ -115,8 +115,9 @@ abstract class _ConfigStore with Store {
     }
 
     showScores = localUserSettings.showScores;
-    defaultSortType = localUserSettings.defaultSortType;
-    defaultListingType = localUserSettings.defaultListingType;
+    defaultSortType = localUserSettings.defaultSortType ?? SortType.active;
+    defaultListingType =
+        localUserSettings.defaultListingType ?? PostListingType.all;
   }
 
   /// Fetches [LocalUserSettings] and imports them with [.copyLemmyUserSettings]
