@@ -1,4 +1,4 @@
-## Unreleased
+## v0.9.8 - 2023-06-23
 - Updated app icon 
 
 ## v0.9.7 - 2023-06-23
