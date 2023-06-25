@@ -1,4 +1,4 @@
-## Unreleased
+## v0.9.12 - 2023-06-24
 - Merged in iOS support
 - Added clickthrough for NSFW content, and associated setting.
 - Added option to hide Everything feed as this was v confusing to new users.
