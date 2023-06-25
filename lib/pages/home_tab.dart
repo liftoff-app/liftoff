@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
@@ -21,6 +22,7 @@ import 'full_post/full_post.dart';
 import 'inbox.dart';
 import 'instance/instance.dart';
 import 'settings/add_account_page.dart';
+import 'settings/settings.dart';
 
 /// First thing users sees when opening the app
 /// Shows list of posts from all or just specific instances
@@ -229,56 +231,82 @@ class HomeTab extends HookWidget {
     }
 
     return Scaffold(
-      // TODO: make appbar autohide when scrolling down
-      appBar: AppBar(
-        actions: [
-          if (!Platform.isAndroid) // Replaces FAB
-            IconButton(
-              icon: const Icon(Icons.add_box_outlined),
-              onPressed: loggedInAction((_) async {
-                final postView = await Navigator.of(context).push(
-                  CreatePostPage.route(),
-                );
-
-                if (postView != null) {
-                  await Navigator.of(context)
-                      .push(FullPostPage.fromPostViewRoute(postView));
-                }
-              }),
-            ),
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () => goTo(context, (_) => const InboxPage()),
-          )
-        ],
-        title: TextButton(
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-          ),
-          onPressed: handleListChange,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  title,
-                  style: theme.appBarTheme.titleTextStyle,
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              systemOverlayStyle: theme.brightness == Brightness.dark
+                  ? SystemUiOverlayStyle.light
+                  : SystemUiOverlayStyle.dark,
+              backgroundColor: theme.canvasColor,
+              shadowColor: Colors.transparent,
+              centerTitle: true,
+              iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+              titleTextStyle: theme.textTheme.titleLarge
+                  ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+              leading: IconButton(
+                icon: const Icon(Icons.notifications),
+                onPressed: () => goTo(context, (_) => const InboxPage()),
+              ),
+              title: TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                ),
+                onPressed: handleListChange,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        title,
+                        style: theme.appBarTheme.titleTextStyle,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: theme.appBarTheme.titleTextStyle?.color,
+                    ),
+                  ],
                 ),
               ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: theme.appBarTheme.titleTextStyle?.color,
-              ),
-            ],
-          ),
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              expandedHeight: 50,
+              floating: true,
+              snap: true,
+              actions: [
+                if (!Platform.isAndroid) // Replaces FAB
+                  IconButton(
+                    icon: const Icon(Icons.add_box_outlined),
+                    onPressed: loggedInAction((_) async {
+                      final postView = await Navigator.of(context).push(
+                        CreatePostPage.route(),
+                      );
+
+                      if (postView != null) {
+                        await Navigator.of(context)
+                            .push(FullPostPage.fromPostViewRoute(postView));
+                      }
+                    }),
+                  ),
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {
+                    goTo(context, (_) => const SettingsPage());
+                  },
+                )
+              ],
+            )
+          ];
+        },
+        // list of images for scrolling
+        body: InfiniteHomeList(
+          controller: isc,
+          selectedList: selectedList.value,
         ),
-      ),
-      body: InfiniteHomeList(
-        controller: isc,
-        selectedList: selectedList.value,
       ),
     );
   }

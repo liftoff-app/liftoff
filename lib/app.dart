@@ -1,3 +1,4 @@
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
@@ -15,15 +16,21 @@ class MyApp extends StatelessWidget {
     return KeyboardDismisser(
       child: ObserverBuilder<ConfigStore>(
         builder: (context, store) => MaterialApp(
-          title: 'Liftoff',
-          supportedLocales: L10n.supportedLocales,
-          localizationsDelegates: L10n.localizationsDelegates,
-          themeMode: store.theme,
-          darkTheme: store.amoledDarkMode ? amoledTheme : darkTheme,
-          locale: store.locale,
-          theme: lightTheme,
-          home: const HomePage(),
-        ),
+            title: 'liftoff',
+            supportedLocales: L10n.supportedLocales,
+            localizationsDelegates: L10n.localizationsDelegates,
+            themeMode: store.theme,
+            darkTheme: store.amoledDarkMode ? amoledTheme : darkTheme,
+            locale: store.locale,
+            theme: lightTheme,
+            home: const Scaffold(
+              body: DoubleBackToCloseApp(
+                snackBar: SnackBar(
+                  content: Text('Tap back again to exit'),
+                ),
+                child: HomePage(),
+              ),
+            )),
       ),
     );
   }
