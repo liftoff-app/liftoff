@@ -50,6 +50,18 @@ class InboxPage extends HookWidget {
       isc.clear();
     }
 
+    markAllAsRead() async {
+      try {
+        await LemmyApiV3(selectedInstance).run(MarkAllAsRead(
+            auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw));
+
+        isc.clear();
+      } catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -85,6 +97,11 @@ class InboxPage extends HookWidget {
             values: accStore.loggedInInstances.toList(),
           ),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.checklist),
+              onPressed: markAllAsRead,
+              tooltip: 'Mark all as read',
+            ),
             IconButton(
               icon: Icon(unreadOnly.value ? Icons.mail : Icons.mail_outline),
               onPressed: toggleUnreadOnly,
