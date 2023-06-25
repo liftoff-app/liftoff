@@ -193,6 +193,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  double_back_to_close_app:
+    dependency: "direct main"
+    description:
+      name: double_back_to_close_app
+      sha256: d19ce4e2f8d2cb9f35bdbc90eecd5c731cc0e6216f5e8f14e7d1e076dafb344a
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   extended_image:
     dependency: "direct main"
     description:

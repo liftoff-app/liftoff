@@ -1,4 +1,4 @@
-## v0.9.11+13 - 2023-06-24
+## v0.9.12 - 2023-06-24
 - Merged in iOS support
 - Added clickthrough for NSFW content, and associated setting.
 - Added option to hide Everything feed as this was v confusing to new users.
@@ -10,6 +10,9 @@ could fill pages.
 risk of death threats :-)
 - Limited width of main body components for a more reasonable feel on iPad.
 - Minor UI tweaks
+- Hide Top Nav bar while scrolling on home/posts tab (#43)
+- Added settings icon to home tab nav bar (#25)
+- Added double tap to exit (#24)
 
 
 
