@@ -27,6 +27,8 @@ class AddAccountPage extends HookWidget {
     final usernameController = useListenable(useTextEditingController());
     final passwordController = useListenable(useTextEditingController());
     final passwordFocusNode = useFocusNode();
+    final totpController = useListenable(useTextEditingController());
+    final totpFocusNode = useFocusNode();
     final accountsStore = useAccountsStore();
 
     final loading = useDelayedLoading();
@@ -57,6 +59,7 @@ class AddAccountPage extends HookWidget {
           selectedInstance.value,
           usernameController.text,
           passwordController.text,
+          totpController.text,
         );
 
         // MYKL recover from HACK - it failed, so clear the account.
@@ -166,10 +169,20 @@ class AddAccountPage extends HookWidget {
               controller: passwordController,
               obscureText: true,
               focusNode: passwordFocusNode,
-              onSubmitted: (_) => handleSubmit?.call(),
+              onSubmitted: (_) => totpFocusNode.requestFocus(),
               autofillHints: const [AutofillHints.password],
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(labelText: L10n.of(context).password),
+            ),
+            const SizedBox(height: 5),
+            TextField(
+              autofocus: true,
+              controller: totpController,
+              focusNode: totpFocusNode,
+              autofillHints: const [AutofillHints.oneTimeCode],
+              onSubmitted: (_) => handleSubmit?.call(),
+              decoration: InputDecoration(
+                  labelText: L10n.of(context).totp_2fa_token),
             ),
             ElevatedButton(
               onPressed: handleSubmit,
