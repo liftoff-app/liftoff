@@ -12,6 +12,7 @@ risk of death threats :-)
 - Minor UI tweaks
 - Hide Top Nav bar while scrolling on home/posts tab (#43)
 - Added settings icon to home tab nav bar (#25)
+- Added double tap to exit (#24)
 
 
 
