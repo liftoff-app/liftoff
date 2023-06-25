@@ -35,6 +35,7 @@ class InboxPage extends HookWidget {
     final theme = Theme.of(context);
     final isc = useInfiniteScrollController();
     final unreadOnly = useState(true);
+    final currentTab = useState(0);
 
     if (accStore.hasNoAccount) {
       return Scaffold(
@@ -97,11 +98,12 @@ class InboxPage extends HookWidget {
             values: accStore.loggedInInstances.toList(),
           ),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.checklist),
-              onPressed: markAllAsRead,
-              tooltip: 'Mark all as read',
-            ),
+            if (currentTab.value == 0)
+              IconButton(
+                icon: const Icon(Icons.checklist),
+                onPressed: markAllAsRead,
+                tooltip: 'Mark all as read',
+              ),
             IconButton(
               icon: Icon(unreadOnly.value ? Icons.mail : Icons.mail_outline),
               onPressed: toggleUnreadOnly,
@@ -109,6 +111,7 @@ class InboxPage extends HookWidget {
             )
           ],
           bottom: TabBar(
+            onTap: (value) => currentTab.value = value,
             tabs: [
               Tab(text: L10n.of(context).replies),
               Tab(text: L10n.of(context).mentions),
