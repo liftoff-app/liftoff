@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../pages/community/community.dart';
 import '../pages/full_post/full_post.dart';
@@ -15,6 +16,15 @@ Future<dynamic> goTo(
   Widget Function(BuildContext context) builder,
 ) =>
     Navigator.of(context).push(MaterialPageRoute(
+      builder: builder,
+    ));
+
+// Pushes onto the navigator stack the given widget with a swipeable back navigation
+Future<dynamic> goToSwipeable(
+  BuildContext context,
+  Widget Function(BuildContext context) builder,
+) =>
+    Navigator.of(context).push(SwipeablePageRoute(
       builder: builder,
     ));
 
@@ -44,7 +54,7 @@ abstract class goToCommunity {
 // ignore: camel_case_types
 abstract class goToUser {
   static void byId(BuildContext context, String instanceHost, int userId) =>
-      goTo(context,
+      goToSwipeable(context,
           (context) => UserPage(instanceHost: instanceHost, userId: userId));
 
   static void byName(
