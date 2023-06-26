@@ -10,6 +10,7 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..theme =
       $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ?? ThemeMode.system
   ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
+  ..disableAnimations = json['disableAnimations'] as bool? ?? false
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
   ..compactPostView = json['compactPostView'] as bool? ?? false
   ..postRoundedCorners = json['postRoundedCorners'] as bool? ?? true
@@ -26,6 +27,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
     <String, dynamic>{
       'theme': _$ThemeModeEnumMap[instance.theme]!,
       'amoledDarkMode': instance.amoledDarkMode,
+      'disableAnimations': instance.disableAnimations,
       'locale': const LocaleConverter().toJson(instance.locale),
       'compactPostView': instance.compactPostView,
       'postRoundedCorners': instance.postRoundedCorners,
@@ -79,6 +81,22 @@ mixin _$ConfigStore on _ConfigStore, Store {
   set amoledDarkMode(bool value) {
     _$amoledDarkModeAtom.reportWrite(value, super.amoledDarkMode, () {
       super.amoledDarkMode = value;
+    });
+  }
+
+  late final _$disableAnimationsAtom =
+      Atom(name: '_ConfigStore.disableAnimations', context: context);
+
+  @override
+  bool get disableAnimations {
+    _$disableAnimationsAtom.reportRead();
+    return super.disableAnimations;
+  }
+
+  @override
+  set disableAnimations(bool value) {
+    _$disableAnimationsAtom.reportWrite(value, super.disableAnimations, () {
+      super.disableAnimations = value;
     });
   }
 
@@ -269,6 +287,7 @@ mixin _$ConfigStore on _ConfigStore, Store {
     return '''
 theme: ${theme},
 amoledDarkMode: ${amoledDarkMode},
+disableAnimations: ${disableAnimations},
 locale: ${locale},
 compactPostView: ${compactPostView},
 postRoundedCorners: ${postRoundedCorners},

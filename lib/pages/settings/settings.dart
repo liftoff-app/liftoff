@@ -95,6 +95,13 @@ class AppearanceConfigPage extends StatelessWidget {
                 store.amoledDarkMode = checked;
               },
             ),
+            SwitchListTile.adaptive(
+              title: const Text('Disable Animations'),
+              value: store.disableAnimations,
+              onChanged: (checked) {
+                store.disableAnimations = checked;
+              },
+            ),
             const SizedBox(height: 12),
             const _SectionHeading('Post Style'),
             SwitchListTile.adaptive(
