@@ -336,9 +336,6 @@ class InfiniteHomeList extends HookWidget {
       SortType sort,
       PostListingType listingType,
     ) async {
-      // MYKL No longer true?
-      // assert(listingType != PostListingType.local, 'only subscribed or all');
-
       final instances = () {
         if (listingType == PostListingType.subscribed) {
           return accStore.loggedInInstances;
@@ -355,7 +352,7 @@ class InfiniteHomeList extends HookWidget {
             page: page,
             limit: limit,
             savedOnly: false,
-            // auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+            auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
           ))
       ];
       final instancePosts = await Future.wait(futures);
