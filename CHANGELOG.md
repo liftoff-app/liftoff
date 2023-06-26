@@ -1,5 +1,6 @@
 ## Unreleased
 - Add TOTP Login Support
+- Corrected URL for comments
 
 ## v0.9.13 - 2023-06-25
 - Fixed broken API for mark as read functionality
