@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../stores/accounts_store.dart';
@@ -184,7 +185,7 @@ class FullPostPage extends HookWidget {
     return context.read<AccountsStore>().defaultUserDataFor(instanceHost)?.jwt;
   }
 
-  static Route route(int id, String instanceHost) => MaterialPageRoute(
+  static Route route(int id, String instanceHost) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
           create: (context) =>
               FullPostStore(instanceHost: instanceHost, postId: id)
@@ -193,14 +194,14 @@ class FullPostPage extends HookWidget {
         ),
       );
 
-  static Route fromPostViewRoute(PostView postView) => MaterialPageRoute(
+  static Route fromPostViewRoute(PostView postView) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
           create: (context) => FullPostStore.fromPostView(postView)
             ..refresh(_tryGetJwt(context, postView.instanceHost)),
           child: const FullPostPage._(),
         ),
       );
-  static Route fromPostStoreRoute(PostStore postStore) => MaterialPageRoute(
+  static Route fromPostStoreRoute(PostStore postStore) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
           create: (context) => FullPostStore.fromPostStore(postStore)
             ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
