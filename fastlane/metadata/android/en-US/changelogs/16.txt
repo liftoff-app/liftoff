@@ -1,0 +1,3 @@
+- Corrected URL for comments
+- Removed QUERY_ALL_PACKAGES
+
