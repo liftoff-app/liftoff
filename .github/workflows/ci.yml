@@ -56,7 +56,7 @@ jobs:
           echo "${{ secrets.SIGNING_KEY }}" | base64 -d | tee key.jks >/dev/null
 
       - name: Android build (Pull Request)
-        if: github.event_name != 'pull_request'
+        if: github.event_name == 'pull_request'
         run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod 
       
       - name: Android build (Master Branch)
