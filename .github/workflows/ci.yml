@@ -51,7 +51,7 @@ jobs:
 
       - name: Generate debug keystore (Pull Request)
         if: github.event_name == 'pull_request'
-        run: keytool -genkey -v -keystore key.jks -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+        run: keytool -genkey -v -keystore /home/runner/work/liftoff/liftoff/android/app/key.jks -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
       
       - name: Android build (Pull Request)
         if: github.event_name == 'pull_request'
