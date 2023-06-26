@@ -51,10 +51,15 @@ jobs:
 
       - name: Inject keystore
         working-directory: android/app
+        if: github.event_name != 'pull_request'
         run: |
           echo "${{ secrets.SIGNING_KEY }}" | base64 -d | tee key.jks >/dev/null
 
-      - name: Android build
+      - name: Android build (Pull Request)
+        run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod --key-store-path /dev/null --key-store-alias NULL --key-store-password NULL --key-store-alias-password NULL
+      
+      - name: Android build (Master Branch)
+        if: github.ref == 'refs/heads/master'
         env:
           ANDROID_KEY_ALIAS: ${{ secrets.ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
