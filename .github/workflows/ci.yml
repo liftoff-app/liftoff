@@ -4,9 +4,9 @@ on:
   push:
     branches: 
       - master
-      - gesture-nav
   pull_request:
-    branches: [master]
+    branches: 
+      - master
 
 jobs:
   lint:
