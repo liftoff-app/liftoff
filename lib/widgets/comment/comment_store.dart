@@ -34,7 +34,7 @@ abstract class _CommentStore with Store {
   final deletingState = AsyncStore<FullCommentView>();
   final savingState = AsyncStore<FullCommentView>();
   final markPersonMentionAsReadState = AsyncStore<PersonMentionView>();
-  final markAsReadState = AsyncStore<FullCommentView>();
+  final markAsReadState = AsyncStore<FullCommentReplyView>();
   final blockingState = AsyncStore<BlockedPerson>();
   final reportingState = AsyncStore<CommentReportView>();
 
@@ -151,16 +151,20 @@ abstract class _CommentStore with Store {
         comment = comment.copyWith(comment: result.comment);
       }
     } else {
-      final result = await markAsReadState.runLemmy(
-        comment.instanceHost,
-        MarkCommentAsRead(
-          commentId: comment.comment.id,
-          read: !comment.comment.distinguished,
-          auth: token.raw,
-        ),
-      );
+      if (comment.commentReply?.id != null) {
+        final result = await markAsReadState.runLemmy(
+          comment.instanceHost,
+          MarkCommentAsRead(
+            commentReplyId: comment.commentReply!.id,
+            read: !comment.comment.distinguished,
+            auth: token.raw,
+          ),
+        );
 
-      if (result != null) comment = result.commentView;
+        if (result != null) {
+          comment = CommentView.fromJson(result.commentReplyView.toJson());
+        }
+      }
     }
   }
 

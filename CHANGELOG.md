@@ -1,3 +1,7 @@
+## Unreleased
+- Fixed broken API for mark as read functionality
+- Added mark all as read 
+
 ## v0.9.12 - 2023-06-24
 - Merged in iOS support
 - Added clickthrough for NSFW content, and associated setting.
