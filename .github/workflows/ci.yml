@@ -51,18 +51,31 @@ jobs:
         with:
           channel: "stable"
 
+      - name: Generate debug keystore (Pull Request)
+        if: github.event_name == 'pull_request'
+        run: keytool -genkey -v -keystore key.jks -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+      
+      - name: Android build (Pull Request)
+        if: github.event_name == 'pull_request'
+        env:
+          ANDROID_KEY_ALIAS: androiddebugkey
+          ANDROID_KEY_PASSWORD: android
+          ANDROID_STORE_PATH: key.jks
+          ANDROID_STORE_PASSWORD: android
+        run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
+
       - name: Inject keystore
         working-directory: android/app
         if: github.event_name != 'pull_request'
         run: |
           echo "${{ secrets.SIGNING_KEY }}" | base64 -d | tee key.jks >/dev/null
-
+          
       - name: Android build (Pull Request)
         if: github.event_name == 'pull_request'
         run: flutter build apk --split-per-abi --release --target lib/main_prod.dart 
       
       - name: Android build (Master Branch)
-        if: github.ref == 'refs/heads/master'
+        if: github.event_name != 'pull_request'
         env:
           ANDROID_KEY_ALIAS: ${{ secrets.ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
