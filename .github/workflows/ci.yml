@@ -59,7 +59,7 @@ jobs:
 
       - name: Android build (Pull Request)
         if: github.event_name == 'pull_request'
-        run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod 
+        run: flutter build apk --split-per-abi --release --target lib/main_prod.dart 
       
       - name: Android build (Master Branch)
         if: github.ref == 'refs/heads/master'
