@@ -6,6 +6,8 @@
   "@password": {},
   "email_or_username": "Email or Username",
   "@email_or_username": {},
+  "totp_2fa_token": "TOTP 2FA Token (if enabled)",
+  "@totp_2fa_token": {},
   "posts": "Posts",
   "@posts": {},
   "comments": "Comments",
