@@ -189,7 +189,7 @@ class AccountsStore extends ChangeNotifier {
     String instanceHost,
     String usernameOrEmail,
     String password,
-    String totp_2faToken,
+    String totp2faToken,
   ) async {
     if (!instances.contains(instanceHost)) {
       throw Exception('No such instance was added');
@@ -199,7 +199,7 @@ class AccountsStore extends ChangeNotifier {
     final response = await lemmy.run(Login(
       usernameOrEmail: usernameOrEmail,
       password: password,
-      totp_2faToken: totp_2faToken,
+      totp2faToken: totp2faToken,
     ));
     final jwt = response.jwt;
     if (jwt == null) {
