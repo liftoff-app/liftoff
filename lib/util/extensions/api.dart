@@ -50,7 +50,7 @@ extension UserPreferredNames on PersonSafe {
 }
 
 extension CommentLink on Comment {
-  String get link => 'https://$instanceHost/post/$postId/comment/$id';
+  String get link => 'https://$instanceHost/comment/$id';
 }
 
 // inspired by https://github.com/LemmyNet/lemmy-ui/blob/66c846ededef8c0afd5aaadca4aaedcbaeab3ee6/src/shared/utils.ts#L533
