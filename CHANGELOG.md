@@ -1,3 +1,6 @@
+## Unreleased
+- Change post's vote count loading animation to be circular
+
 ## v0.9.14 - 2023-06-26
 - Add TOTP Login Support
 - Corrected URL for comments
