@@ -1,0 +1,3 @@
+- Added mark all as read 
+- Slide to dismiss post #59
+
