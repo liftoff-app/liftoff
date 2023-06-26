@@ -3,12 +3,14 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
+import 'hooks/stores.dart';
 import 'l10n/l10n.dart';
 import 'pages/community/community.dart';
 import 'pages/instance/instance.dart';
 import 'pages/media_view.dart';
 import 'pages/user.dart';
 import 'stores/accounts_store.dart';
+import 'stores/config_store.dart';
 import 'util/goto.dart';
 
 /// Decides where does a link link to. Either somewhere in-app:
@@ -113,12 +115,12 @@ Future<bool> launchLink({
   required BuildContext context,
 }) async {
   final uri = Uri.tryParse(link);
-  if (uri != null) {
-    // Only http and https links should be opened in-app
-    final mode = uri.scheme == 'http' || uri.scheme == 'https'
-        ? ul.LaunchMode.platformDefault
-        : ul.LaunchMode.externalApplication;
-    await ul.launchUrl(uri, mode: mode);
+  if (uri != null && await ul.canLaunchUrl(uri)) {
+    await ul.launchUrl(uri, mode: 
+        context.read<ConfigStore>().openLinksInExternalApp ?
+        ul.LaunchMode.externalApplication : 
+        ul.LaunchMode.inAppWebView
+    );
     return true;
   } else {
     _logger.warning('Failed to launch a link: $link');

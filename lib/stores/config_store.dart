@@ -55,6 +55,7 @@ abstract class _ConfigStore with Store {
   bool disableAnimations = false;
 
   @observable
+  @JsonKey(defaultValue: true)
   bool openLinksInExternalApp = true;
 
   // default value is set in the `LocaleConverter.fromJson`
