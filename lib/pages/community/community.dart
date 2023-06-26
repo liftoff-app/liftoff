@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
@@ -157,7 +158,7 @@ class CommunityPage extends HookWidget {
   }
 
   static Route _route(String instanceHost, CommunityStore store) {
-    return MaterialPageRoute(
+    return SwipeablePageRoute(
       builder: (context) {
         return MobxProvider.value(
           value: store

@@ -2,9 +2,11 @@ name: ci
 
 on:
   push:
-    branches: [master]
+    branches: 
+      - master
   pull_request:
-    branches: [master]
+    branches: 
+      - master
 
 jobs:
   lint:
@@ -67,7 +69,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           echo "${{ secrets.SIGNING_KEY }}" | base64 -d | tee key.jks >/dev/null
-
+      
       - name: Android build (Master Branch)
         if: github.event_name != 'pull_request'
         env:
