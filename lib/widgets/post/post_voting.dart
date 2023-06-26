@@ -36,10 +36,10 @@ class PostVoting extends HookWidget {
               width: showScores ? 30 : 20,
               height: 15,
               child: const Center(
-                child: SizedBox(
-                  width: 15,
-                  height: 15,
-                  child: CircularProgressIndicator.adaptive())),
+                  child: SizedBox(
+                      width: 15,
+                      height: 15,
+                      child: CircularProgressIndicator.adaptive())),
             )
           else if (showScores)
             SizedBox(
