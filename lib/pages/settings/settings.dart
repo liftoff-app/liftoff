@@ -323,7 +323,13 @@ class GeneralConfigPage extends StatelessWidget {
                       "see posts you can't vote on or reply to."),
               value: store.showEverythingFeed,
               onChanged: (checked) {
-                store.showEverythingFeed = checked;
+              store.showEverythingFeed = checked;
+            ),
+            SwitchListTile.adaptive(
+              title: const Text('Open links in external application'),
+              value: store.openLinksInExternalApp,
+              onChanged: (checked) {
+                store.openLinksInExternalApp= checked;
               },
             ),
           ],
