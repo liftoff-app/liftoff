@@ -113,8 +113,12 @@ Future<bool> launchLink({
   required BuildContext context,
 }) async {
   final uri = Uri.tryParse(link);
-  if (uri != null && await ul.canLaunchUrl(uri)) {
-    await ul.launchUrl(uri);
+  if (uri != null) {
+    // Only http and https links should be opened in-app
+    final mode = uri.scheme == 'http' || uri.scheme == 'https'
+        ? ul.LaunchMode.platformDefault
+        : ul.LaunchMode.externalApplication;
+    await ul.launchUrl(uri, mode: mode);
     return true;
   } else {
     _logger.warning('Failed to launch a link: $link');
