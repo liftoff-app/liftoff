@@ -1,6 +1,7 @@
-## Unreleased
+## v0.9.13 - 2023-06-25
 - Fixed broken API for mark as read functionality
 - Added mark all as read 
+- Slide to dismiss post #59
 
 ## v0.9.12 - 2023-06-24
 - Merged in iOS support
