@@ -14,11 +14,11 @@ import '../widgets/bottom_modal.dart';
 /// View to interact with a media object. Zoom in/out, download, share, etc.
 class MediaViewPage extends HookWidget {
   final String url;
-  final String heroTag;
+  final String? heroTag;
   static const yThreshold = 150;
   static const speedThreshold = 45;
 
-  const MediaViewPage(this.url, { this.heroTag = '' });
+  const MediaViewPage(this.url, {this.heroTag});
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +147,8 @@ class MediaViewPage extends HookWidget {
             minScale: PhotoViewComputedScale.contained,
             initialScale: PhotoViewComputedScale.contained,
             imageProvider: ExtendedNetworkImageProvider(url, cache: true),
-            heroAttributes: heroTag != '' ? PhotoViewHeroAttributes(tag: heroTag) : null,
+            heroAttributes:
+                heroTag != null ? PhotoViewHeroAttributes(tag: heroTag!) : null,
             loadingBuilder: (context, event) =>
                 const Center(child: CircularProgressIndicator.adaptive()),
           ),
