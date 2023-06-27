@@ -9,7 +9,7 @@
 
 <img width=200px height=200px src="https://raw.githubusercontent.com/liftoff-app/liftoff/master/assets/app_icon.svg"/>
 
-# Liftoff
+# Liftoff!
 
 <!--
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LiftoffOrg.liftoff)
@@ -26,7 +26,7 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
 | ------------- | ------------- |  ------------- |
 | ![109962ec-2859-4744-9941-4aad016b1a4a](https://github.com/liftoff-app/liftoff/assets/6200670/58298508-155b-431e-9538-ead6790a7a20)  |  ![b34bd59e-8097-416f-8fc0-5dcd980a1e1d](https://github.com/liftoff-app/liftoff/assets/6200670/132d9e10-15b2-4f4e-abd4-bcf8e6de8fab)  | ![7788ed7b-2054-4b93-afbf-dda3fe80c2e8](https://github.com/liftoff-app/liftoff/assets/6200670/e69ebc63-958e-4c1f-b496-df650c09c8c4)  |
 
-- [Liftoff](#liftoff)
+- [Liftoff!](#liftoff)
   - [Screenshots](#screenshots)
 - [Contributing](#contributing)
   - [Build from source](#build-from-source)
