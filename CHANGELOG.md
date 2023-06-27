@@ -1,5 +1,8 @@
 ## Unreleased
 - Change post's vote count loading animation to be circular
+- Added post style settings pane
+- Added Font size option
+- Added more compact post functionality
 
 ## v0.9.14 - 2023-06-26
 - Add TOTP Login Support
