@@ -188,7 +188,7 @@ class _CommentWidget extends StatelessWidget {
         final creator = store.comment.creator;
 
         return InkWell(
-          onLongPress: store.selectable ? null : store.toggleCollapsed,
+          onTap: store.selectable ? null : store.toggleCollapsed,
           child: Column(
             children: [
               Container(
