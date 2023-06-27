@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../pages/media_view.dart';
 import '../util/goto.dart';
@@ -7,8 +8,9 @@ import '../util/goto.dart';
 class FullscreenableImage extends StatelessWidget {
   final String url;
   final Widget child;
+  final String heroTag = const Uuid().v4();
 
-  const FullscreenableImage({
+  FullscreenableImage({
     super.key,
     required this.url,
     required this.child,
@@ -16,13 +18,10 @@ class FullscreenableImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: () => goToMedia(context, url),
-        child: child,
-        // FIXME: MYKL had to disable Heroing as duplicate tags exist
-        // which causes error on iOS
-        //  Hero(
-        //   tag: url,
-        //   child: child,
-        // ),
+        onTap: () => goToMedia(context, url, heroTag),
+        child: Hero(
+          tag: heroTag,
+          child: child,
+        ),
       );
 }
