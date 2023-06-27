@@ -241,7 +241,7 @@ class PostStyleConfigPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const _SectionHeading('Examples'),
+            const _SectionHeading('Preview'),
             const SizedBox(height: 20),
             IgnorePointer(
                 child: PostTile.fromPostView(
