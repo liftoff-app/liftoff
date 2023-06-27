@@ -19,7 +19,7 @@ jobs:
 
       - name: Set variables
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo tag=${GITHUB_REF#refs/*/} >> $GITHUB_OUTPUT
 
   android-build:
     name: Android build
