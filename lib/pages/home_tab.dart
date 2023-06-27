@@ -231,6 +231,7 @@ class HomeTab extends HookWidget {
     }
 
     return SafeArea(
+      bottom: false,
       child: Scaffold(
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {

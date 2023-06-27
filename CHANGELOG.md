@@ -1,3 +1,10 @@
+## Unreleased 
+- Change post's vote count loading animation to be circular
+- Added post style settings pane
+- Added Font size option
+- Added more compact post functionality
+- Added SafeArea
+
 ## v0.9.15 - 2023-06-27
 - Change post's vote count loading animation to be circular
 - Added post style settings pane
