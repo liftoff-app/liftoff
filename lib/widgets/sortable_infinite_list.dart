@@ -10,7 +10,6 @@ import '../util/observer_consumers.dart';
 import 'comment/comment.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
-import 'post/post_status.dart';
 import 'post_list_options.dart';
 
 typedef FetcherWithSorting<T> = Future<List<T>> Function(
@@ -56,7 +55,6 @@ class SortableInfiniteList<T> extends HookWidget {
       leading: PostListOptions(
         sortValue: sort.value,
         onSortChanged: changeSorting,
-        styleButton: true,
       ),
       itemBuilder: itemBuilder,
       padding: EdgeInsets.zero,
