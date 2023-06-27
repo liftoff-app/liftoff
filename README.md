@@ -9,7 +9,7 @@
 
 <img width=200px height=200px src="https://raw.githubusercontent.com/liftoff-app/liftoff/master/assets/app_icon.svg"/>
 
-# Liftoff!
+# Liftoff
 
 <!--
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LiftoffOrg.liftoff)
@@ -17,7 +17,7 @@
 [<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.liftoffapp.liftoff&pli=1)
 [<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/liftoff-app/liftoff/releases/latest)
 
-A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative 
+A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative
 </div>
 
 ## Screenshots
@@ -26,9 +26,12 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
 | ------------- | ------------- |  ------------- |
 | ![109962ec-2859-4744-9941-4aad016b1a4a](https://github.com/liftoff-app/liftoff/assets/6200670/58298508-155b-431e-9538-ead6790a7a20)  |  ![b34bd59e-8097-416f-8fc0-5dcd980a1e1d](https://github.com/liftoff-app/liftoff/assets/6200670/132d9e10-15b2-4f4e-abd4-bcf8e6de8fab)  | ![7788ed7b-2054-4b93-afbf-dda3fe80c2e8](https://github.com/liftoff-app/liftoff/assets/6200670/e69ebc63-958e-4c1f-b496-df650c09c8c4)  |
 
-- [liftoff](#liftoff)
+- [Liftoff](#liftoff)
+  - [Screenshots](#screenshots)
+- [Contributing](#contributing)
   - [Build from source](#build-from-source)
     - [Prerequisites](#prerequisites)
+    - [iOS](#ios)
     - [Android](#android)
     - [Linux](#linux)
     - [Windows](#windows)
@@ -36,9 +39,9 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
     - [Version x.x.x was released, why is it not yet on F-droid?](#version-xxx-was-released-why-is-it-not-yet-on-f-droid)
     - ["App not installed" - what to do?](#app-not-installed---what-to-do)
 
-
 # Contributing
-Please consider contributing! Even if you don't know flutter well use this as a chance to learn! [Contributing Guide](https://github.com/liftoff-app/liftoff/CONTRIBUTING.md)
+
+Please consider contributing! Even if you don't know flutter well use this as a chance to learn! [Contributing Guide](CONTRIBUTING.md)
 
 Join us on the matrix for support in contributions! [#liftoff-dev:matrix.org](https://matrix.to/#/#liftoff-dev:matrix.org)
 
@@ -59,7 +62,6 @@ For final release, run:
 1. `flutter build ipa --flavor prod`
 
 The .api will be in `build/ios/ipa`
-
 
 ### Android
 
