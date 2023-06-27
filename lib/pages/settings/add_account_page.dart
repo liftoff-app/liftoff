@@ -181,8 +181,8 @@ class AddAccountPage extends HookWidget {
               focusNode: totpFocusNode,
               autofillHints: const [AutofillHints.oneTimeCode],
               onSubmitted: (_) => handleSubmit?.call(),
-              decoration: InputDecoration(
-                  labelText: L10n.of(context).totp_2fa_token),
+              decoration:
+                  InputDecoration(labelText: L10n.of(context).totp_2fa_token),
             ),
             ElevatedButton(
               onPressed: handleSubmit,
