@@ -89,7 +89,7 @@ class _Post extends StatelessWidget {
             color: theme.cardColor,
             borderRadius: store.postRoundedCorners
                 ? const BorderRadius.all(Radius.circular(10))
-                : null,
+                : const BorderRadius.all(Radius.circular(5)),
           ),
           child: Material(
             type: MaterialType.transparency,
@@ -119,7 +119,7 @@ class _Post extends StatelessWidget {
                       child: Column(
                         children: [
                           const PostTitle(),
-                          if (!store.compactPostView) possiblyBlurred,
+                          possiblyBlurred,
                           const PostActions(),
                         ],
                       ),

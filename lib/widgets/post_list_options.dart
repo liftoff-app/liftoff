@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
+import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../stores/config_store.dart';
+import '../util/observer_consumers.dart';
 import 'radio_picker.dart';
 
 /// Dropdown filters where you can change sorting or viewing type
@@ -17,25 +21,31 @@ class PostListOptions extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: Row(
-          children: [
-            RadioPicker<SortType>(
-              title: 'sort by',
-              values: SortType.values,
-              groupValue: sortValue,
-              onChanged: onSortChanged,
-              mapValueToString: (value) => value.tr(context),
-            ),
-            const Spacer(),
-            if (styleButton)
-              const IconButton(
-                icon: Icon(Icons.view_stream),
-                // TODO: create compact post and dropdown for selecting
-                onPressed: null,
+  Widget build(BuildContext context) {
+    return ObserverBuilder<ConfigStore>(
+        builder: (context, store) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Row(
+                children: [
+                  RadioPicker<SortType>(
+                    title: 'sort by',
+                    values: SortType.values,
+                    groupValue: sortValue,
+                    onChanged: onSortChanged,
+                    mapValueToString: (value) => value.tr(context),
+                  ),
+                  const Spacer(),
+                  if (styleButton)
+                    IconButton(
+                      icon: store.compactPostView
+                          ? const Icon(Icons.view_stream)
+                          : const Icon(Icons.square_rounded),
+                      onPressed: () {
+                        store.compactPostView = !store.compactPostView;
+                      },
+                    ),
+                ],
               ),
-          ],
-        ),
-      );
+            ));
+  }
 }

@@ -14,7 +14,7 @@ class PostTitle extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final blurNsfw = useStore((ConfigStore store) => store.blurNsfw);
+    final configStore = useStore((ConfigStore store) => store);
 
     return ObserverBuilder<PostStore>(
       builder: (context, store) {
@@ -31,12 +31,13 @@ class PostTitle extends HookWidget {
                   post.name,
                   textAlign: TextAlign.left,
                   softWrap: true,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      fontSize: configStore.titleFontSize,
+                      fontWeight: FontWeight.w500),
                 ),
               ),
-              if (!store.hasMedia &&
-                  !(post.nsfw && blurNsfw) &&
+              if ((!store.hasMedia && configStore.showThumbnail) &&
+                  !(post.nsfw && configStore.blurNsfw) &&
                   thumbnailUrl != null &&
                   url != null) ...[
                 InkWell(
@@ -70,8 +71,8 @@ class PostTitle extends HookWidget {
                   ),
                 ),
               ],
-              if (store.hasMedia &&
-                  !(post.nsfw && blurNsfw) &&
+              if ((store.hasMedia && configStore.showThumbnail) &&
+                  !(post.nsfw && configStore.blurNsfw) &&
                   url != null) ...[
                 FullscreenableImage(
                   url: url,
