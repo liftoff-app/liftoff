@@ -230,82 +230,84 @@ class HomeTab extends HookWidget {
       );
     }
 
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              systemOverlayStyle: theme.brightness == Brightness.dark
-                  ? SystemUiOverlayStyle.light
-                  : SystemUiOverlayStyle.dark,
-              backgroundColor: theme.canvasColor,
-              shadowColor: Colors.transparent,
-              centerTitle: true,
-              iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-              titleTextStyle: theme.textTheme.titleLarge
-                  ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-              leading: IconButton(
-                icon: const Icon(Icons.notifications),
-                onPressed: () => goTo(context, (_) => const InboxPage()),
-              ),
-              title: TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+    return SafeArea(
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return [
+              SliverAppBar(
+                systemOverlayStyle: theme.brightness == Brightness.dark
+                    ? SystemUiOverlayStyle.light
+                    : SystemUiOverlayStyle.dark,
+                backgroundColor: theme.canvasColor,
+                shadowColor: Colors.transparent,
+                centerTitle: true,
+                iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+                titleTextStyle: theme.textTheme.titleLarge
+                    ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+                leading: IconButton(
+                  icon: const Icon(Icons.notifications),
+                  onPressed: () => goTo(context, (_) => const InboxPage()),
                 ),
-                onPressed: handleListChange,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        title,
-                        style: theme.appBarTheme.titleTextStyle,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      color: theme.appBarTheme.titleTextStyle?.color,
-                    ),
-                  ],
-                ),
-              ),
-              elevation: 0,
-              automaticallyImplyLeading: false,
-              expandedHeight: 50,
-              floating: true,
-              snap: true,
-              actions: [
-                if (!Platform.isAndroid) // Replaces FAB
-                  IconButton(
-                    icon: const Icon(Icons.add_box_outlined),
-                    onPressed: loggedInAction((_) async {
-                      final postView = await Navigator.of(context).push(
-                        CreatePostPage.route(),
-                      );
-
-                      if (postView != null) {
-                        await Navigator.of(context)
-                            .push(FullPostPage.fromPostViewRoute(postView));
-                      }
-                    }),
+                title: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                   ),
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    goTo(context, (_) => const SettingsPage());
-                  },
-                )
-              ],
-            )
-          ];
-        },
-        // list of images for scrolling
-        body: InfiniteHomeList(
-          controller: isc,
-          selectedList: selectedList.value,
+                  onPressed: handleListChange,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          title,
+                          style: theme.appBarTheme.titleTextStyle,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_drop_down,
+                        color: theme.appBarTheme.titleTextStyle?.color,
+                      ),
+                    ],
+                  ),
+                ),
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                expandedHeight: 50,
+                floating: true,
+                snap: true,
+                actions: [
+                  if (!Platform.isAndroid) // Replaces FAB
+                    IconButton(
+                      icon: const Icon(Icons.add_box_outlined),
+                      onPressed: loggedInAction((_) async {
+                        final postView = await Navigator.of(context).push(
+                          CreatePostPage.route(),
+                        );
+
+                        if (postView != null) {
+                          await Navigator.of(context)
+                              .push(FullPostPage.fromPostViewRoute(postView));
+                        }
+                      }),
+                    ),
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {
+                      goTo(context, (_) => const SettingsPage());
+                    },
+                  )
+                ],
+              )
+            ];
+          },
+          // list of images for scrolling
+          body: InfiniteHomeList(
+            controller: isc,
+            selectedList: selectedList.value,
+          ),
         ),
       ),
     );
