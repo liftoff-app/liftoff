@@ -82,6 +82,19 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: true)
   bool blurNsfw = true;
 
+  @observable
+  @JsonKey(defaultValue: true)
+  bool showThumbnail = true;
+
+  // font size
+  @observable
+  @JsonKey(defaultValue: 16)
+  double titleFontSize = 16;
+
+  @observable
+  @JsonKey(defaultValue: 15)
+  double postHeaderFontSize = 15;
+
   /// Allows the user to see the combined EVERYTHING feed, which can be
   /// confusing, so default it off.
   @observable

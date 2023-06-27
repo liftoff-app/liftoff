@@ -127,7 +127,7 @@ class _CommentWidget extends StatelessWidget {
   ];
 
   static const indentWidth = 6.0;
-  static const barWidth = 2.0;
+  static const barWidth = 3.0;
   const _CommentWidget();
 
   @override

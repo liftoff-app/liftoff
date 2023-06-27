@@ -18,6 +18,9 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..showAvatars = json['showAvatars'] as bool? ?? true
   ..showScores = json['showScores'] as bool? ?? true
   ..blurNsfw = json['blurNsfw'] as bool? ?? true
+  ..showThumbnail = json['showThumbnail'] as bool? ?? true
+  ..titleFontSize = (json['titleFontSize'] as num?)?.toDouble() ?? 16
+  ..postHeaderFontSize = (json['postHeaderFontSize'] as num?)?.toDouble() ?? 15
   ..showEverythingFeed = json['showEverythingFeed'] as bool? ?? false
   ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
   ..defaultListingType =
@@ -35,6 +38,9 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'showAvatars': instance.showAvatars,
       'showScores': instance.showScores,
       'blurNsfw': instance.blurNsfw,
+      'showThumbnail': instance.showThumbnail,
+      'titleFontSize': instance.titleFontSize,
+      'postHeaderFontSize': instance.postHeaderFontSize,
       'showEverythingFeed': instance.showEverythingFeed,
       'defaultSortType': instance.defaultSortType,
       'defaultListingType': instance.defaultListingType,
@@ -211,6 +217,54 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  late final _$showThumbnailAtom =
+      Atom(name: '_ConfigStore.showThumbnail', context: context);
+
+  @override
+  bool get showThumbnail {
+    _$showThumbnailAtom.reportRead();
+    return super.showThumbnail;
+  }
+
+  @override
+  set showThumbnail(bool value) {
+    _$showThumbnailAtom.reportWrite(value, super.showThumbnail, () {
+      super.showThumbnail = value;
+    });
+  }
+
+  late final _$titleFontSizeAtom =
+      Atom(name: '_ConfigStore.titleFontSize', context: context);
+
+  @override
+  double get titleFontSize {
+    _$titleFontSizeAtom.reportRead();
+    return super.titleFontSize;
+  }
+
+  @override
+  set titleFontSize(double value) {
+    _$titleFontSizeAtom.reportWrite(value, super.titleFontSize, () {
+      super.titleFontSize = value;
+    });
+  }
+
+  late final _$postHeaderFontSizeAtom =
+      Atom(name: '_ConfigStore.postHeaderFontSize', context: context);
+
+  @override
+  double get postHeaderFontSize {
+    _$postHeaderFontSizeAtom.reportRead();
+    return super.postHeaderFontSize;
+  }
+
+  @override
+  set postHeaderFontSize(double value) {
+    _$postHeaderFontSizeAtom.reportWrite(value, super.postHeaderFontSize, () {
+      super.postHeaderFontSize = value;
+    });
+  }
+
   late final _$showEverythingFeedAtom =
       Atom(name: '_ConfigStore.showEverythingFeed', context: context);
 
@@ -295,6 +349,9 @@ postCardShadow: ${postCardShadow},
 showAvatars: ${showAvatars},
 showScores: ${showScores},
 blurNsfw: ${blurNsfw},
+showThumbnail: ${showThumbnail},
+titleFontSize: ${titleFontSize},
+postHeaderFontSize: ${postHeaderFontSize},
 showEverythingFeed: ${showEverythingFeed},
 defaultSortType: ${defaultSortType},
 defaultListingType: ${defaultListingType}

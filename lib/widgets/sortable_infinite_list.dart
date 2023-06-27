@@ -6,6 +6,7 @@ import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
 import '../stores/config_store.dart';
+import '../util/observer_consumers.dart';
 import 'comment/comment.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
@@ -26,7 +27,6 @@ class SortableInfiniteList<T> extends HookWidget {
   /// from the configStore will be used
   final SortType? defaultSort;
   final Object Function(T item)? uniqueProp;
-
   const SortableInfiniteList({
     required this.fetcher,
     required this.itemBuilder,
@@ -55,7 +55,6 @@ class SortableInfiniteList<T> extends HookWidget {
       leading: PostListOptions(
         sortValue: sort.value,
         onSortChanged: changeSorting,
-        styleButton: onStyleChange != null,
       ),
       itemBuilder: itemBuilder,
       padding: EdgeInsets.zero,
@@ -73,12 +72,13 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
     required super.fetcher,
     super.controller,
   }) : super(
-          itemBuilder: (post) => Column(
-            children: [
-              PostTile.fromPostView(post),
-              const SizedBox(height: 20),
-            ],
-          ),
+          itemBuilder: (post) => ObserverBuilder<ConfigStore>(
+              builder: (context, store) => Column(
+                    children: [
+                      PostTile.fromPostView(post),
+                      SizedBox(height: store.compactPostView ? 2 : 10),
+                    ],
+                  )),
           noItems: const Text('there are no posts'),
           uniqueProp: (item) => item.post.apId,
         );

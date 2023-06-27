@@ -1,9 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../pages/community/community.dart';
 import '../../pages/instance/instance.dart';
+import '../../stores/config_store.dart';
 import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
@@ -12,11 +15,13 @@ import 'post_more_menu.dart';
 import 'post_status.dart';
 import 'post_store.dart';
 
-class PostInfoSection extends StatelessWidget {
+class PostInfoSection extends HookWidget {
   const PostInfoSection();
 
   @override
   Widget build(BuildContext context) {
+    final configStore = useStore((ConfigStore store) => store);
+
     return ObserverBuilder<PostStore>(builder: (context, store) {
       final fullPost = context.read<IsFullPost>();
       final post = store.postView;
@@ -44,7 +49,7 @@ class PostInfoSection extends StatelessWidget {
                     softWrap: false,
                     text: TextSpan(
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: configStore.postHeaderFontSize,
                         color: theme.textTheme.bodyLarge?.color,
                       ),
                       children: [
@@ -77,7 +82,8 @@ class PostInfoSection extends StatelessWidget {
                         if (post.post.originInstanceHost !=
                             post.post.instanceHost)
                           TextSpan(
-                            style: const TextStyle(fontSize: 13),
+                            style: TextStyle(
+                                fontSize: configStore.postHeaderFontSize - 2),
                             text: ' · via ${post.post.instanceHost}',
                           ),
                       ],
@@ -88,7 +94,7 @@ class PostInfoSection extends StatelessWidget {
                     softWrap: false,
                     text: TextSpan(
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: configStore.postHeaderFontSize - 2,
                         color: theme.textTheme.bodyLarge?.color,
                       ),
                       children: [

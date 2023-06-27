@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -11,11 +13,13 @@ import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/about_tile.dart';
 import '../../widgets/bottom_modal.dart';
+import '../../widgets/post/post.dart';
 import '../../widgets/radio_picker.dart';
 import '../manage_account.dart';
 import 'add_account_page.dart';
 import 'add_instance_page.dart';
 import 'blocks/blocks.dart';
+import 'mock_post.dart';
 
 /// Page with a list of different settings sections
 class SettingsPage extends HookWidget {
@@ -58,6 +62,13 @@ class SettingsPage extends HookWidget {
             title: const Text('Appearance'),
             onTap: () {
               goTo(context, (_) => const AppearanceConfigPage());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.view_agenda),
+            title: const Text('Post Style'),
+            onTap: () {
+              goTo(context, (_) => const PostStyleConfigPage());
             },
           ),
           const AboutTile()
@@ -103,7 +114,36 @@ class AppearanceConfigPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 12),
-            const _SectionHeading('Post Style'),
+            const _SectionHeading('Other'),
+            SwitchListTile.adaptive(
+              title: const Text('Blur NSFW'),
+              subtitle: const Text('Images in NSFW posts will be hidden.'),
+              value: store.blurNsfw,
+              onChanged: (checked) {
+                store.blurNsfw = checked;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Settings for theme color, AMOLED switch
+class PostStyleConfigPage extends StatelessWidget {
+  const PostStyleConfigPage();
+
+  @override
+  Widget build(BuildContext context) {
+    const decoder = JsonDecoder();
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Post Style')),
+      body: ObserverBuilder<ConfigStore>(
+        builder: (context, store) => ListView(
+          children: [
+            const _SectionHeading('Post View'),
             SwitchListTile.adaptive(
               title: Text(L10n.of(context).post_style_compact),
               value: store.compactPostView,
@@ -125,8 +165,6 @@ class AppearanceConfigPage extends StatelessWidget {
                 store.postCardShadow = checked;
               },
             ),
-            const SizedBox(height: 12),
-            const _SectionHeading('Other'),
             SwitchListTile.adaptive(
               title: Text(L10n.of(context).show_avatars),
               value: store.showAvatars,
@@ -135,20 +173,87 @@ class AppearanceConfigPage extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text('Show scores'),
+              title: Text(L10n.of(context).show_thumbnails),
+              value: store.showThumbnail,
+              onChanged: (checked) {
+                store.showThumbnail = checked;
+              },
+            ),
+            SwitchListTile.adaptive(
+              title: const Text('Show Scores'),
               value: store.showScores,
               onChanged: (checked) {
                 store.showScores = checked;
               },
             ),
-            SwitchListTile.adaptive(
-              title: const Text('Blur NSFW'),
-              subtitle: const Text('Images in NSFW posts will be hidden.'),
-              value: store.blurNsfw,
-              onChanged: (checked) {
-                store.blurNsfw = checked;
-              },
+            const SizedBox(height: 12),
+            const _SectionHeading('Font'),
+            ListTile(
+              title: Text(L10n.of(context).post_title_size),
+              trailing: SizedBox(
+                width: 120,
+                child: RadioPicker<double>(
+                  values: const [
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    16,
+                    17,
+                    18,
+                    19,
+                    20,
+                    21,
+                    22,
+                    23
+                  ],
+                  groupValue: store.titleFontSize,
+                  onChanged: (value) => store.titleFontSize = value,
+                  mapValueToString: (value) => value.round().toString(),
+                ),
+              ),
             ),
+            ListTile(
+              title: Text(L10n.of(context).post_header_size),
+              trailing: SizedBox(
+                width: 120,
+                child: RadioPicker<double>(
+                  values: const [
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    16,
+                    17,
+                    18,
+                    19,
+                    20,
+                    21,
+                    22,
+                    23
+                  ],
+                  groupValue: store.postHeaderFontSize,
+                  onChanged: (value) => store.postHeaderFontSize = value,
+                  mapValueToString: (value) => value.round().toString(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const _SectionHeading('Preview'),
+            const SizedBox(height: 20),
+            IgnorePointer(
+                child: PostTile.fromPostView(
+                    PostView.fromJson(decoder.convert(mockTextPostJson)))),
+            SizedBox(height: store.compactPostView ? 2 : 10),
+            IgnorePointer(
+                child: PostTile.fromPostView(
+                    PostView.fromJson(decoder.convert(mockMediaPost)))),
+            SizedBox(height: store.compactPostView ? 2 : 10),
+            IgnorePointer(
+                child: PostTile.fromPostView(
+                    PostView.fromJson(decoder.convert(mockLinkPost)))),
           ],
         ),
       ),
