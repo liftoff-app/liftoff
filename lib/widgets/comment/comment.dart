@@ -152,7 +152,7 @@ class _CommentWidget extends StatelessWidget {
           return Opacity(
             opacity: 0.3,
             child: Text(
-              comment.content,
+              "[Thread collapsed. Tap to expand]",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
