@@ -13,8 +13,8 @@
 
 <!--
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LiftoffOrg.liftoff)
-[<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.LiftoffOrg.liftoff)
 -->
+[<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.liftoffapp.liftoff&pli=1)
 [<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/liftoff-app/liftoff/releases/latest)
 
 A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative 
