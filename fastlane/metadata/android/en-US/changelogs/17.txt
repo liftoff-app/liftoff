@@ -1,0 +1,4 @@
+- Added post style settings pane
+- Added Font size option
+- Added more compact post functionality
+
