@@ -180,7 +180,7 @@ jobs:
         working-directory: fastlane
         run: |
           echo $GOOGLE_SERVICE_ACCOUNT_KEY > ../$GOOGLE_SERVICE_ACCOUNT_KEY_PATH
-          bundle exec fastlane android prod
+          bundle exec fastlane android beta
         env:
           GOOGLE_SERVICE_ACCOUNT_KEY_PATH: google-service-account-key.json
           GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
