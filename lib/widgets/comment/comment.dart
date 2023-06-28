@@ -149,12 +149,15 @@ class _CommentWidget extends StatelessWidget {
             style: TextStyle(fontStyle: FontStyle.italic),
           );
         } else if (store.collapsed) {
-          return Opacity(
-            opacity: 0.3,
-            child: Text(
-              comment.content,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          return const Center(
+            child: Opacity(
+              opacity: 0.3,
+              child: Text(
+                '[Thread collapsed. Tap to expand]',
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           );
         }
@@ -188,7 +191,7 @@ class _CommentWidget extends StatelessWidget {
         final creator = store.comment.creator;
 
         return InkWell(
-          onLongPress: store.selectable ? null : store.toggleCollapsed,
+          onTap: store.selectable ? null : store.toggleCollapsed,
           child: Column(
             children: [
               Container(
