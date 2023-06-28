@@ -3,7 +3,6 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
-import 'hooks/stores.dart';
 import 'l10n/l10n.dart';
 import 'pages/community/community.dart';
 import 'pages/instance/instance.dart';
