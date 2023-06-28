@@ -323,7 +323,8 @@ class GeneralConfigPage extends StatelessWidget {
                       "see posts you can't vote on or reply to."),
               value: store.showEverythingFeed,
               onChanged: (checked) {
-              store.showEverythingFeed = checked;
+                store.showEverythingFeed = checked;
+              },
             ),
             SwitchListTile.adaptive(
               title: const Text('Use in-app browser'),
