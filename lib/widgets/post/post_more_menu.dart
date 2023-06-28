@@ -92,18 +92,19 @@ class PostMoreMenu extends HookWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(post.post.deleted ? Icons.restore : Icons.delete),
+                  leading:
+                      Icon(post.post.deleted ? Icons.restore : Icons.delete),
                   title: Text(post.post.deleted ? 'Restore' : 'Delete'),
                   onTap: store.deletingState.isLoading
                       ? null
                       : () {
-                    Navigator.of(context).pop();
-                    loggedInAction((token) async {
-                      await store.delete(token);
-                    })();
-                  },
+                          Navigator.of(context).pop();
+                          loggedInAction((token) async {
+                            await store.delete(token);
+                          })();
+                        },
                 ),
-             ] else
+              ] else
                 ListTile(
                   leading: store.userBlockingState.isLoading
                       ? const CircularProgressIndicator.adaptive()
