@@ -8,12 +8,14 @@ import 'pull_to_refresh.dart';
 
 class InfiniteScrollController {
   late VoidCallback clear;
+  late VoidCallback scrollToTop;
 
   InfiniteScrollController() {
     usedBeforeCreation() => throw Exception(
         'Tried to use $runtimeType before it being initialized');
 
     clear = usedBeforeCreation;
+    scrollToTop = usedBeforeCreation;
   }
 }
 
@@ -81,6 +83,9 @@ class InfiniteScroll<T> extends HookWidget {
           hasMore.value = true;
           page.value = 1;
           dataSet.value.clear();
+        };
+        controller?.scrollToTop = () {
+          // to be implemented
         };
       }
 

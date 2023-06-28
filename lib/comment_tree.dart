@@ -3,11 +3,14 @@ import 'package:lemmy_api_client/v3.dart';
 import 'util/hot_rank.dart';
 
 enum CommentSortType {
-  hot,
-  top,
-  new_,
-  old,
-  chat;
+  hot('Hot'),
+  top('Top'),
+  new_('New'),
+  old('Old'),
+  chat('Chat');
+
+  final String value;
+  const CommentSortType(this.value);
 
   /// returns a compare function for sorting a CommentTree according
   /// to the comment sort type
@@ -33,6 +36,12 @@ enum CommentSortType {
         return (b, a) =>
             a.comment.counts.score.compareTo(b.comment.counts.score);
     }
+  }
+
+  factory CommentSortType.fromJson(dynamic value) {
+    return value is int
+        ? values[value]
+        : values.firstWhere((e) => e.value == value);
   }
 }
 

@@ -33,13 +33,13 @@ class PostInfoSection extends HookWidget {
         child: Row(
           children: [
             Avatar(
-              url: post.community.icon,
-              padding: const EdgeInsets.only(right: 10),
-              onTap: () => Navigator.of(context).push(
-                  CommunityPage.fromIdRoute(instanceHost, post.community.id)),
-              noBlank: true,
-              radius: 20,
-            ),
+                url: post.community.icon,
+                padding: const EdgeInsets.only(right: 10),
+                onTap: () => Navigator.of(context).push(
+                    CommunityPage.fromIdRoute(instanceHost, post.community.id)),
+                noBlank: true,
+                radius: 20,
+                isNsfw: post.community.nsfw),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -6,6 +6,7 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../comment_tree.dart';
 import '../l10n/l10n.dart';
 import '../util/async_store.dart';
 import '../util/mobx_provider.dart';
@@ -106,6 +107,10 @@ abstract class _ConfigStore with Store {
   @JsonKey(fromJson: _sortTypeFromJson)
   SortType defaultSortType = SortType.hot;
 
+  @observable
+  @JsonKey(fromJson: _commentSortTypeFromJson)
+  CommentSortType defaultCommentSort = CommentSortType.hot;
+
   // default is set in fromJson
   @observable
   @JsonKey(fromJson: _postListingTypeFromJson)
@@ -163,5 +168,7 @@ abstract class _ConfigStore with Store {
 
 SortType _sortTypeFromJson(String? json) =>
     json != null ? SortType.fromJson(json) : SortType.hot;
+CommentSortType _commentSortTypeFromJson(String? json) =>
+    json != null ? CommentSortType.fromJson(json) : CommentSortType.hot;
 PostListingType _postListingTypeFromJson(String? json) =>
     json != null ? PostListingType.fromJson(json) : PostListingType.all;
