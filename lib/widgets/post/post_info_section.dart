@@ -70,12 +70,12 @@ class PostInfoSection extends HookWidget {
                           style: TextStyle(fontWeight: FontWeight.w300),
                         ),
                         TextSpan(
-                          text: post.post.originInstanceHost,
+                          text: post.post.instanceHost,
                           style: const TextStyle(fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => Navigator.of(context).push(
                                   InstancePage.route(
-                                    post.post.originInstanceHost,
+                                    post.post.instanceHost,
                                   ),
                                 ),
                         ),
@@ -84,7 +84,7 @@ class PostInfoSection extends HookWidget {
                           TextSpan(
                             style: TextStyle(
                                 fontSize: configStore.postHeaderFontSize - 2),
-                            text: ' · via ${post.post.instanceHost}',
+                            text: ' · via ${post.post.originInstanceHost}',
                           ),
                       ],
                     ),
