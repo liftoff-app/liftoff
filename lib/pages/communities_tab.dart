@@ -135,12 +135,14 @@ class CommunitiesTab extends HookWidget {
 
     filterCommunities(List<CommunityFollowerView> comm) {
       final matches = Fuzzy(
-        comm.map((e) => '${e.community.name}@${e.community.originInstanceHost}').toList(),
+        comm
+            .map((e) => '${e.community.name}@${e.community.originInstanceHost}')
+            .toList(),
         options: FuzzyOptions(threshold: 0.5),
       ).search(filterController.text).map((e) => e.item);
 
-      return matches
-          .map((match) => comm.firstWhere((e) => '${e.community.name}@${e.community.originInstanceHost}' == match));
+      return matches.map((match) => comm.firstWhere((e) =>
+          '${e.community.name}@${e.community.originInstanceHost}' == match));
     }
 
     toggleCollapse(int i) => isCollapsed.value =
