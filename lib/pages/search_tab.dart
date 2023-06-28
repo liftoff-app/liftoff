@@ -52,11 +52,12 @@ class SearchTab extends HookWidget {
             onSubmitted: (_) => handleSearch(),
             decoration: InputDecoration(
                 hintText: L10n.of(context).search,
-                suffixIcon: searchInputController.text.isNotEmpty ? IconButton(
-                  onPressed: searchInputController.clear,
-                  icon: const Icon(Icons.highlight_remove_rounded),
-                ) : null
-            ),
+                suffixIcon: searchInputController.text.isNotEmpty
+                    ? IconButton(
+                        onPressed: searchInputController.clear,
+                        icon: const Icon(Icons.highlight_remove_rounded),
+                      )
+                    : null),
           ),
           const SizedBox(height: 5),
           Row(
