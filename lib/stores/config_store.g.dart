@@ -31,11 +31,8 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
     <String, dynamic>{
       'theme': _$ThemeModeEnumMap[instance.theme]!,
       'amoledDarkMode': instance.amoledDarkMode,
-<<<<<<< HEAD
       'disableAnimations': instance.disableAnimations,
-=======
-      'openLinksInExternalApp': instance.openLinksInExternalApp,
->>>>>>> c7eeb49 (Add setting for opening links in an external application)
+      'useInAppBrowser': instance.useInAppBrowser,
       'locale': const LocaleConverter().toJson(instance.locale),
       'compactPostView': instance.compactPostView,
       'postRoundedCorners': instance.postRoundedCorners,
@@ -95,7 +92,6 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-<<<<<<< HEAD
   late final _$disableAnimationsAtom =
       Atom(name: '_ConfigStore.disableAnimations', context: context);
 
@@ -109,22 +105,23 @@ mixin _$ConfigStore on _ConfigStore, Store {
   set disableAnimations(bool value) {
     _$disableAnimationsAtom.reportWrite(value, super.disableAnimations, () {
       super.disableAnimations = value;
-=======
-  late final _$openLinksInExternalAppAtom =
-      Atom(name: '_ConfigStore.openLinksInExternalApp', context: context);
+    });
+  }
+
+  late final _$useInAppBrowserAtom =
+      Atom(name: '_ConfigStore.useInAppBrowser', context: context);
 
   @override
-  bool get openLinksInExternalApp {
-    _$openLinksInExternalAppAtom.reportRead();
-    return super.openLinksInExternalApp;
+  bool get useInAppBrowser {
+    _$useInAppBrowserAtom.reportRead();
+    return super.useInAppBrowser;
   }
 
   @override
-  set openLinksInExternalApp(bool value) {
-    _$openLinksInExternalAppAtom
-        .reportWrite(value, super.openLinksInExternalApp, () {
-      super.openLinksInExternalApp = value;
->>>>>>> c7eeb49 (Add setting for opening links in an external application)
+  set useInAppBrowser(bool value) {
+    _$useInAppBrowserAtom
+        .reportWrite(value, super.useInAppBrowser, () {
+      super.useInAppBrowser = value;
     });
   }
 
@@ -363,11 +360,8 @@ mixin _$ConfigStore on _ConfigStore, Store {
     return '''
 theme: ${theme},
 amoledDarkMode: ${amoledDarkMode},
-<<<<<<< HEAD
 disableAnimations: ${disableAnimations},
-=======
-openLinksInExternalApp: ${openLinksInExternalApp},
->>>>>>> c7eeb49 (Add setting for opening links in an external application)
+useInAppBrowser: ${useInAppBrowser},
 locale: ${locale},
 compactPostView: ${compactPostView},
 postRoundedCorners: ${postRoundedCorners},
