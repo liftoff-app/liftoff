@@ -295,6 +295,12 @@ class HomeTab extends HookWidget {
                       }),
                     ),
                   IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () {
+                      isc.clear();
+                    },
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.settings),
                     onPressed: () {
                       goTo(context, (_) => const SettingsPage());
