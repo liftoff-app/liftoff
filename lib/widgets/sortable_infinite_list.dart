@@ -8,6 +8,7 @@ import '../hooks/stores.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
 import 'comment/comment.dart';
+import 'comment_list_options.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
 import 'post_list_options.dart';
