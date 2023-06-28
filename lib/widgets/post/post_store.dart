@@ -15,6 +15,7 @@ abstract class _PostStore with Store {
   final savingState = AsyncStore<PostView>();
   final userBlockingState = AsyncStore<BlockedPerson>();
   final reportingState = AsyncStore<PostReportView>();
+  final deletingState = AsyncStore<PostView>();
 
   @observable
   PostView postView;
@@ -68,6 +69,20 @@ abstract class _PostStore with Store {
         auth: token.raw,
       ),
     );
+  }
+
+  @action
+  Future<void> delete(Jwt token) async {
+    final result = await deletingState.runLemmy(
+      postView.instanceHost,
+      DeletePost(
+        postId: postView.post.id,
+        deleted: !postView.post.deleted,
+        auth: token.raw,
+      ),
+    );
+
+    if (result != null) postView = result;
   }
 
   @action
