@@ -294,18 +294,74 @@ class HomeTab extends HookWidget {
                         }
                       }),
                     ),
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () {
+                  // IconButton(
+                  //   icon: const Icon(Icons.more_vert),
+                  //   onPressed: () {
+                  //     showBottomModal(
+                  //       context: context,
+                  //       builder: (context) => Column(
+                  //         children: [
+                  //           ListTile(
+                  //             leading: const Icon(Icons.settings),
+                  //             title: const Text('Settings'),
+                  //             onTap: () {
+                  //               Navigator.of(context).pop();
+                  //               goTo(context, (_) => const SettingsPage());
+                  //             },
+                  //           ),
+                  //           ListTile(
+                  //             leading: const Icon(Icons.refresh),
+                  //             title: const Text('Refresh'),
+                  //             onTap: () {
+                  //               Navigator.of(context).pop();
+                  //               isc.clear();
+                  //             },
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     );
+                  //   },
+                  // )
+                  PopupMenuButton(itemBuilder: (context) {
+                    return [
+                      const PopupMenuItem<int>(
+                        value: 0,
+                        child: ListTile(
+                          leading: Icon(Icons.keyboard_double_arrow_up),
+                          title: Text('Back to top'),
+                        ),
+                      ),
+                      const PopupMenuItem<int>(
+                        value: 1,
+                        child: ListTile(
+                          leading: Icon(Icons.refresh),
+                          title: Text('Refresh'),
+                        ),
+                      ),
+                      const PopupMenuItem<int>(
+                        value: 2,
+                        child: ListTile(
+                          leading: Icon(Icons.settings),
+                          title: Text('Settings'),
+                        ),
+                      ),
+                      // PopupMenuItem<int>(
+                      //   value: 2,
+                      //   child: Text("Logout"),
+                      // ),
+                    ];
+                  }, onSelected: (value) {
+                    if (value == 0) {
+                      // unable to tie a controller to the infinite scroll
+                      // table, for now just reload
+                      // isc.scrollToTop();
                       isc.clear();
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () {
+                    } else if (value == 1) {
+                      isc.clear();
+                    } else if (value == 2) {
                       goTo(context, (_) => const SettingsPage());
-                    },
-                  )
+                    }
+                  }),
                 ],
               )
             ];
