@@ -72,13 +72,22 @@ abstract class _CommunityStore with Store {
       instanceHost,
       FollowCommunity(
         communityId: communityView.community.id,
-        follow: !(communityView.subscribed == SubscribedType.subscribed),
+        follow: () {
+          if (communityView.subscribed == SubscribedType.subscribed) {
+            return false;
+          } else if (communityView.subscribed == SubscribedType.pending) {
+            return false;
+          } else {
+            return true;
+          }
+        }(),
         auth: token.raw,
       ),
     );
 
     if (res != null) {
       communityState.setData(state.data.copyWith(communityView: res));
+      subscribingState.setData(res);
     }
   }
 }

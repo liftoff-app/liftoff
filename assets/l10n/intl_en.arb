@@ -278,6 +278,8 @@
   "@unsubscribe": {},
   "subscribe": "subscribe",
   "@subscribe": {},
+  "pending": "pending",
+  "@pending": {},
   "messages": "Messages",
   "@messages": {},
   "banned_users": "Banned users",

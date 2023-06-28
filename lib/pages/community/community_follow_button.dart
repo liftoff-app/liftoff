@@ -47,14 +47,21 @@ class CommunityFollowButton extends HookWidget {
                           if (communityView.subscribed ==
                               SubscribedType.subscribed)
                             const Icon(Icons.remove, size: 18)
+                          else if (communityView.subscribed ==
+                              SubscribedType.pending)
+                            const Icon(Icons.timer, size: 18)
                           else
                             const Icon(Icons.add, size: 18),
                           const SizedBox(width: 5),
                           Flexible(
-                              child: Text(communityView.subscribed ==
-                                      SubscribedType.subscribed
-                                  ? L10n.of(context).unsubscribe
-                                  : L10n.of(context).subscribe))
+                            child: Text(communityView.subscribed ==
+                                    SubscribedType.subscribed
+                                ? L10n.of(context).unsubscribe
+                                : communityView.subscribed ==
+                                        SubscribedType.pending
+                                    ? L10n.of(context).pending
+                                    : L10n.of(context).subscribe),
+                          )
                         ],
                       ),
               )),
