@@ -1,36 +1,26 @@
 import 'package:flutter/material.dart';
-
-import '../../comment_tree.dart';
-import '../../l10n/l10n.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import '../../hooks/stores.dart';
 import '../../stores/accounts_store.dart';
+import '../../stores/config_store.dart';
 import '../../util/observer_consumers.dart';
-import '../../widgets/bottom_modal.dart';
 import '../../widgets/bottom_safe.dart';
 import '../../widgets/comment/comment.dart';
+import '../../widgets/comment_list_options.dart';
 import '../../widgets/failed_to_load.dart';
 import 'full_post_store.dart';
 
-class _SortSelection {
-  final IconData icon;
-  final String term;
-
-  const _SortSelection(this.icon, this.term);
-}
-
 /// Manages comments section, sorts them
-class CommentSection extends StatelessWidget {
-  static const sortPairs = {
-    CommentSortType.hot: _SortSelection(Icons.whatshot, L10nStrings.hot),
-    CommentSortType.new_: _SortSelection(Icons.new_releases, L10nStrings.new_),
-    CommentSortType.old: _SortSelection(Icons.calendar_today, L10nStrings.old),
-    CommentSortType.top: _SortSelection(Icons.trending_up, L10nStrings.top),
-    // CommentSortType.chat: _SortSelection(Icons.chat, L10nStrings.chat),
-  };
-
+class CommentSection extends HookWidget {
   const CommentSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final defaultCommentSort =
+        useStore((ConfigStore store) => store.defaultCommentSort);
+
+    final sort = useState(defaultCommentSort);
+
     return ObserverBuilder<FullPostStore>(
       builder: (context, store) {
         final fullPostView = store.fullPostView;
@@ -62,45 +52,12 @@ class CommentSection extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 600),
             child: Column(
               children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  child: Row(
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          showBottomModal(
-                            title: 'sort by',
-                            context: context,
-                            builder: (context) => Column(
-                              children: [
-                                for (final e in sortPairs.entries)
-                                  ListTile(
-                                    leading: Icon(e.value.icon),
-                                    title: Text(e.value.term.tr(context)),
-                                    trailing: store.sorting == e.key
-                                        ? const Icon(Icons.check)
-                                        : null,
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                      store.updateSorting(e.key);
-                                    },
-                                  )
-                              ],
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Text(sortPairs[store.sorting]!.term.tr(context)),
-                            const Icon(Icons.arrow_drop_down),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                    ],
-                  ),
-                ),
+                CommentListOptions(
+                    onSortChanged: (newSort) {
+                      sort.value = newSort;
+                      store.updateSorting(newSort);
+                    },
+                    sortValue: sort.value),
                 // sorting menu goes here
                 if (postComments != null && postComments.isEmpty)
                   const Padding(

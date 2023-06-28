@@ -116,7 +116,7 @@ class AppearanceConfigPage extends StatelessWidget {
             const SizedBox(height: 12),
             const _SectionHeading('Other'),
             SwitchListTile.adaptive(
-              title: const Text('Blur NSFW'),
+              title: const Text('Hide NSFW'),
               subtitle: const Text('Images in NSFW posts will be hidden.'),
               value: store.blurNsfw,
               onChanged: (checked) {

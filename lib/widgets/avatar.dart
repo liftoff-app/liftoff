@@ -9,20 +9,21 @@ import 'cached_network_image.dart';
 /// If passed url is null, a blank box is displayed to prevent weird indents
 /// Can be disabled with `noBlank`
 class Avatar extends HookWidget {
-  const Avatar({
-    super.key,
-    required this.url,
-    this.radius = 25,
-    this.noBlank = false,
-    this.alwaysShow = false,
-    this.padding = EdgeInsets.zero,
-    this.onTap,
-  });
+  const Avatar(
+      {super.key,
+      required this.url,
+      this.radius = 25,
+      this.noBlank = false,
+      this.alwaysShow = false,
+      this.padding = EdgeInsets.zero,
+      this.onTap,
+      this.isNsfw = false});
 
   final String? url;
   final double radius;
   final bool noBlank;
   final VoidCallback? onTap;
+  final bool? isNsfw;
 
   /// padding is applied unless blank widget is returned
   final EdgeInsetsGeometry padding;
@@ -34,6 +35,9 @@ class Avatar extends HookWidget {
   Widget build(BuildContext context) {
     final showAvatars =
         useStore((ConfigStore store) => store.showAvatars) || alwaysShow;
+
+    final blurNsfw =
+        useStore((ConfigStore store) => store.blurNsfw) || alwaysShow;
 
     final blankWidget = () {
       if (noBlank) return const SizedBox.shrink();
@@ -47,6 +51,10 @@ class Avatar extends HookWidget {
     final imageUrl = url;
 
     if (imageUrl == null || !showAvatars) {
+      return blankWidget;
+    }
+
+    if (blurNsfw && isNsfw != null && isNsfw!) {
       return blankWidget;
     }
 
