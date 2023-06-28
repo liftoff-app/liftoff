@@ -33,6 +33,9 @@ class MarkdownText extends StatelessWidget {
             left: BorderSide(width: 2, color: theme.colorScheme.secondary),
           ),
         ),
+        a: TextStyle(
+          color: theme.colorScheme.secondary,
+        ),
         code: theme.textTheme.bodyLarge
             // TODO: use a font from google fonts maybe? the defaults aren't very pretty
             ?.copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),

@@ -86,6 +86,7 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        foregroundColor: theme.colorScheme.secondary,
       ),
     ),
     dialogTheme: DialogTheme(
