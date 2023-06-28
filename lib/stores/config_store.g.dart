@@ -11,6 +11,7 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
       $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ?? ThemeMode.system
   ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
   ..disableAnimations = json['disableAnimations'] as bool? ?? false
+  ..useInAppBrowser = json['useInAppBrowser'] as bool? ?? true
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
   ..compactPostView = json['compactPostView'] as bool? ?? false
   ..postRoundedCorners = json['postRoundedCorners'] as bool? ?? true
@@ -31,6 +32,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'theme': _$ThemeModeEnumMap[instance.theme]!,
       'amoledDarkMode': instance.amoledDarkMode,
       'disableAnimations': instance.disableAnimations,
+      'useInAppBrowser': instance.useInAppBrowser,
       'locale': const LocaleConverter().toJson(instance.locale),
       'compactPostView': instance.compactPostView,
       'postRoundedCorners': instance.postRoundedCorners,
@@ -103,6 +105,22 @@ mixin _$ConfigStore on _ConfigStore, Store {
   set disableAnimations(bool value) {
     _$disableAnimationsAtom.reportWrite(value, super.disableAnimations, () {
       super.disableAnimations = value;
+    });
+  }
+
+  late final _$useInAppBrowserAtom =
+      Atom(name: '_ConfigStore.useInAppBrowser', context: context);
+
+  @override
+  bool get useInAppBrowser {
+    _$useInAppBrowserAtom.reportRead();
+    return super.useInAppBrowser;
+  }
+
+  @override
+  set useInAppBrowser(bool value) {
+    _$useInAppBrowserAtom.reportWrite(value, super.useInAppBrowser, () {
+      super.useInAppBrowser = value;
     });
   }
 
@@ -342,6 +360,7 @@ mixin _$ConfigStore on _ConfigStore, Store {
 theme: ${theme},
 amoledDarkMode: ${amoledDarkMode},
 disableAnimations: ${disableAnimations},
+useInAppBrowser: ${useInAppBrowser},
 locale: ${locale},
 compactPostView: ${compactPostView},
 postRoundedCorners: ${postRoundedCorners},

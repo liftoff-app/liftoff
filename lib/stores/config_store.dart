@@ -54,6 +54,10 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: false)
   bool disableAnimations = false;
 
+  @observable
+  @JsonKey(defaultValue: true)
+  bool useInAppBrowser = true;
+
   // default value is set in the `LocaleConverter.fromJson`
   @observable
   Locale locale = const Locale('en');
