@@ -117,9 +117,9 @@ Future<bool> launchLink({
   final uri = Uri.tryParse(link);
   if (uri != null && await ul.canLaunchUrl(uri)) {
     await ul.launchUrl(uri, mode: 
-        context.read<ConfigStore>().openLinksInExternalApp ?
-        ul.LaunchMode.externalApplication : 
-        ul.LaunchMode.inAppWebView
+        context.read<ConfigStore>().useInAppBrowser ?
+        ul.LaunchMode.platformDefault : 
+        ul.LaunchMode.externalApplication
     );
     return true;
   } else {

@@ -56,7 +56,7 @@ abstract class _ConfigStore with Store {
 
   @observable
   @JsonKey(defaultValue: true)
-  bool openLinksInExternalApp = true;
+  bool useInAppBrowser = true;
 
   // default value is set in the `LocaleConverter.fromJson`
   @observable

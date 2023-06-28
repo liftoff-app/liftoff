@@ -326,10 +326,10 @@ class GeneralConfigPage extends StatelessWidget {
               store.showEverythingFeed = checked;
             ),
             SwitchListTile.adaptive(
-              title: const Text('Open links in external application'),
-              value: store.openLinksInExternalApp,
+              title: const Text('Use in-app browser'),
+              value: store.useInAppBrowser,
               onChanged: (checked) {
-                store.openLinksInExternalApp= checked;
+                store.useInAppBrowser = checked;
               },
             ),
           ],

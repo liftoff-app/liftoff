@@ -11,7 +11,7 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
       $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ?? ThemeMode.system
   ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
   ..disableAnimations = json['disableAnimations'] as bool? ?? false
-  ..openLinksInExternalApp = json['openLinksInExternalApp'] as bool? ?? true
+  ..useInAppBrowser = json['useInAppBrowser'] as bool? ?? true
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
   ..compactPostView = json['compactPostView'] as bool? ?? false
   ..postRoundedCorners = json['postRoundedCorners'] as bool? ?? true
