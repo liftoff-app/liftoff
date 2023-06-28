@@ -119,8 +119,7 @@ mixin _$ConfigStore on _ConfigStore, Store {
 
   @override
   set useInAppBrowser(bool value) {
-    _$useInAppBrowserAtom
-        .reportWrite(value, super.useInAppBrowser, () {
+    _$useInAppBrowserAtom.reportWrite(value, super.useInAppBrowser, () {
       super.useInAppBrowser = value;
     });
   }
