@@ -40,6 +40,7 @@ class HomeTab extends HookWidget {
         useStore((ConfigStore store) => store.showEverythingFeed);
 
     final selectedList = useState(_SelectedList(
+        instanceHost: accStore.defaultInstanceHost,
         listingType: accStore.hasNoAccount &&
                 defaultListingType == PostListingType.subscribed
             ? PostListingType.all
