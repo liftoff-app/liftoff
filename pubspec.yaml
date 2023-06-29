@@ -70,6 +70,10 @@ dependencies:
   file_picker: ^5.3.2
   double_back_to_close_app: ^2.1.0
 
+# https://github.com/flutter/flutter/issues/127425
+dependency_overrides:
+  markdown: 7.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
