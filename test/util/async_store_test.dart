@@ -4,7 +4,7 @@ import 'package:liftoff/util/async_store.dart';
 
 void main() {
   group('AsyncStore', () {
-    const instanceHost = 'bigfoot.ninja';
+    const instanceHost = 'lemmy.world';
     const badInstanceHost = 'does.not.exist';
 
     test('runLemmy works properly all the way through', () async {
@@ -14,7 +14,7 @@ void main() {
       expect(store.isLoading, false);
       expect(store.errorTerm, null);
 
-      final fut = store.runLemmy(instanceHost, const GetPost(id: 3711));
+      final fut = store.runLemmy(instanceHost, const GetPost(id: 744421));
 
       expect(store.asyncState, isA<AsyncStateLoading>());
       expect(store.isLoading, true);
@@ -45,7 +45,7 @@ void main() {
 
       expect(store.asyncState, isA<AsyncStateError>());
       expect(store.isLoading, false);
-      expect(store.errorTerm, 'Record not found');
+      expect(store.errorTerm, 'couldnt_find_post');
     });
 
     test('fails properly 2', () async {
@@ -71,7 +71,7 @@ void main() {
     test('succeeds then fails on refresh, and then succeeds', () async {
       final store = AsyncStore<FullPostView>();
 
-      final res = await store.runLemmy(instanceHost, const GetPost(id: 3711));
+      final res = await store.runLemmy(instanceHost, const GetPost(id: 744421));
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, null);
@@ -90,7 +90,7 @@ void main() {
 
       final res2 = await store.runLemmy(
         instanceHost,
-        const GetPost(id: 3711),
+        const GetPost(id: 744421),
         refresh: true,
       );
 

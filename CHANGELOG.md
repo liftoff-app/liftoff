@@ -1,5 +1,22 @@
 ## Unreleased
-- Add delete option to post 3-dot menu
+- Add delete option to comment 3-dot menu
+- Added 3-dot menu on home tab
+- Added refresh post button on home tab 3-dot menu
+- Added Back to top button on home tab
+- Added open in external browser functionality (FriederHannenheim)
+- Fixed comment performance in long threads leading to app crash (schocklateboy92)
+- Fixed subscribe button not showing pending state
+- Fixed double tap to exit to first navigate to home tab
+- Fixed post avatar alignment when community is missing avatar
+- Added max length on password input to match lemmy-ui
+- Remove 2 of 3 default instances, default is now lemmy.world
+- Fix issue where wrong community was reported for account posts (jcgurango)
+- Increased comment indent
+- Fixed issue where your comments would show twice after posting (jcgurango)
+- Fixed colors on buttons and links to match theme (jcgurango)
+- Fixed issue where communities would show under the wrong instances (jcgurango)
+- Added clear search button on search box (iliasChymas)
+
 
 ## v0.9.18 - 2023-06-27
 - Change post's vote count loading animation to be circular
