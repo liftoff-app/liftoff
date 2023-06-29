@@ -77,7 +77,7 @@ class PostMoreMenu extends HookWidget {
                   Navigator.of(context).pop();
                 },
               ),
-              if (isMine)
+              if (isMine) ...[
                 ListTile(
                   leading: const Icon(Icons.edit),
                   title: const Text('Edit'),
@@ -90,8 +90,21 @@ class PostMoreMenu extends HookWidget {
                       store.updatePostView(postView);
                     }
                   },
-                )
-              else
+                ),
+                ListTile(
+                  leading:
+                      Icon(post.post.deleted ? Icons.restore : Icons.delete),
+                  title: Text(post.post.deleted ? 'Restore' : 'Delete'),
+                  onTap: store.deletingState.isLoading
+                      ? null
+                      : () {
+                          Navigator.of(context).pop();
+                          loggedInAction((token) async {
+                            await store.delete(token);
+                          })();
+                        },
+                ),
+              ] else
                 ListTile(
                   leading: store.userBlockingState.isLoading
                       ? const CircularProgressIndicator.adaptive()

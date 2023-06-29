@@ -92,6 +92,7 @@ abstract class _FullPostStore with Store {
     }
 
     if (commentsResult != null) {
+      newComments = ObservableList<CommentView>();
       postComments = commentsResult;
       pinnedComments = commentsResult
           .where((element) => element.comment.path == '0')

@@ -197,7 +197,7 @@ class _CommentWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 margin: EdgeInsets.only(
-                  left: max((store.depth - 1) * indentWidth, 0),
+                  left: max(store.depth * indentWidth, 0),
                 ),
                 decoration: BoxDecoration(
                   border: Border(

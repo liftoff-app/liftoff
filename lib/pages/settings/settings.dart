@@ -326,6 +326,13 @@ class GeneralConfigPage extends StatelessWidget {
                 store.showEverythingFeed = checked;
               },
             ),
+            SwitchListTile.adaptive(
+              title: const Text('Use in-app browser'),
+              value: store.useInAppBrowser,
+              onChanged: (checked) {
+                store.useInAppBrowser = checked;
+              },
+            ),
           ],
         ),
       ),
