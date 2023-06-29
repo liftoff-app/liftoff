@@ -63,7 +63,7 @@ class MediaViewPage extends HookWidget {
                 if (Platform.isAndroid || Platform.isIOS) {
                   await Share.shareXFiles([XFile(file.path)]);
                 } else if (Platform.isLinux || Platform.isWindows) {
-                  showSnackBar(context, 'sharing does not work on Desktop');
+                  _showSnackBar(context, 'sharing does not work on Desktop');
                 }
               },
             ),
@@ -98,7 +98,7 @@ class MediaViewPage extends HookWidget {
 
                     if (Platform.isAndroid || Platform.isIOS) {
                       if (!await requestMediaPermission()) {
-                        showSnackBar(context,
+                        _showSnackBar(context,
                             'Media permission revoked. Please go to the settings to fix');
                         return;
                       }
@@ -111,7 +111,7 @@ class MediaViewPage extends HookWidget {
                           ? 'Image saved'
                           : 'Error downloading the image';
 
-                      showSnackBar(context, message);
+                      _showSnackBar(context, message);
                     } else if (Platform.isLinux || Platform.isWindows) {
                       final filePath =
                           '${(await getDownloadsDirectory())!.path}/Liftoff/${basename(file.path)}';
@@ -120,7 +120,7 @@ class MediaViewPage extends HookWidget {
                         ..createSync(recursive: true)
                         ..writeAsBytesSync(file.readAsBytesSync());
 
-                      showSnackBar(context, 'Image saved to $filePath');
+                      _showSnackBar(context, 'Image saved to $filePath');
                     }
                   },
                 ),
@@ -208,7 +208,7 @@ class MediaViewPage extends HookWidget {
     return hasPermission;
   }
 
-  showSnackBar(BuildContext context, String text) {
+  _showSnackBar(BuildContext context, String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 }
