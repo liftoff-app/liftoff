@@ -167,6 +167,7 @@ class AddAccountPage extends HookWidget {
             const SizedBox(height: 5),
             TextField(
               controller: passwordController,
+              maxLength: 60,
               obscureText: true,
               focusNode: passwordFocusNode,
               onSubmitted: (_) => totpFocusNode.requestFocus(),
