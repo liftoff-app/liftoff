@@ -55,6 +55,14 @@ mixin _$PostStore on _PostStore, Store {
     return _$reportAsyncAction.run(() => super.report(token, reason));
   }
 
+  late final _$deleteAsyncAction =
+      AsyncAction('_PostStore.delete', context: context);
+
+  @override
+  Future<void> delete(Jwt token) {
+    return _$deleteAsyncAction.run(() => super.delete(token));
+  }
+
   late final _$blockUserAsyncAction =
       AsyncAction('_PostStore.blockUser', context: context);
 

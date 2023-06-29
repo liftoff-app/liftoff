@@ -19,7 +19,7 @@ class AccountsStore extends ChangeNotifier {
   /// for that account.
   /// `accounts['instanceHost']['username']`
   @protected
-  @JsonKey(defaultValue: {'lemmy.world': {}, 'lemmy.ml': {}, 'beehaw.org': {}})
+  @JsonKey(defaultValue: {'lemmy.world': {}})
   late Map<String, Map<String, UserData>> accounts;
 
   /// default account for a given instance
