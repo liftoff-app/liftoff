@@ -1,4 +1,4 @@
-## Unreleased
+## v0.9.19 - 2023-06-29
 - Add delete option to comment 3-dot menu
 - Added 3-dot menu on home tab
 - Added refresh post button on home tab 3-dot menu
