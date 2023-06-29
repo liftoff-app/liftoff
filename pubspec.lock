@@ -634,7 +634,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "31c53354860d5f2f1729a6d8a3581bfbf870a894"
+      resolved-ref: d5b67a85aaebcfe8f0abcb73b40bf8bf1ea13cea
       url: "https://github.com/liftoff-app/lemmy_api_client.git"
     source: git
     version: "0.21.0"
