@@ -1,11 +1,18 @@
+import 'dart:io';
 import 'dart:math' show max, min;
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../util/icons.dart';
 import '../util/share.dart';
@@ -31,11 +38,6 @@ class MediaViewPage extends HookWidget {
     final offset = useState(Offset.zero);
     final prevOffset = usePrevious(offset.value) ?? Offset.zero;
 
-    notImplemented() {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("this feature hasn't been implemented yet 😰")));
-    }
-
     // TODO: hide navbar and topbar on android without a content jump
 
     sharePhoto() {
@@ -54,10 +56,15 @@ class MediaViewPage extends HookWidget {
             ListTile(
               leading: const Icon(Icons.image),
               title: const Text('Share file'),
-              onTap: () {
+              onTap: () async {
                 Navigator.of(context).pop();
-                notImplemented();
-                // TODO: share file
+                final File file = await DefaultCacheManager().getSingleFile(url);
+                    if (Platform.isAndroid || Platform.isIOS) {
+                      await Share.shareXFiles([XFile(file.path)]);
+                    } else if (Platform.isLinux || Platform.isWindows) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('sharing does not work on Desktop')));
+                    }
               },
             ),
           ],
@@ -85,7 +92,30 @@ class MediaViewPage extends HookWidget {
                 IconButton(
                   icon: const Icon(Icons.file_download),
                   tooltip: 'download',
-                  onPressed: notImplemented,
+                  onPressed: () async {
+                    final File file =
+                        await DefaultCacheManager().getSingleFile(url);
+
+                    if ((Platform.isAndroid || Platform.isIOS) && await requestMediaPermission()) {
+                      var result = await GallerySaver.saveImage(file.path, albumName: 'Liftoff');
+
+                      result ??= false;
+
+                      final message = result ? 'Image saved' : 'Error downloading the image';
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+                    } else if (Platform.isLinux || Platform.isWindows) {
+                      final filePath =
+                          '${(await getDownloadsDirectory())!.path}/Liftoff/${basename(file.path)}';
+
+
+                      File(filePath)
+                        ..createSync(recursive: true)
+                        ..writeAsBytesSync(file.readAsBytesSync());
+                      
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Image saved')));
+                    }
+                  },
                 ),
               ],
             )
@@ -155,5 +185,20 @@ class MediaViewPage extends HookWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> requestMediaPermission() async {
+    await [
+      Permission.photos,
+      Permission.photosAddOnly,
+      Permission.storage,
+    ].request();
+
+    final hasPermission =
+        await Permission.photos.isGranted || 
+        await Permission.photos.isLimited ||
+        await Permission.storage.isGranted;
+
+    return hasPermission;
   }
 }

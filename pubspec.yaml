@@ -39,6 +39,9 @@ dependencies:
   package_info_plus: ^4.0.2
   image_picker: ^0.8.4
   extended_image: ^8.0.2
+  gallery_saver: ^2.3.2
+  flutter_cache_manager: ^3.3.0
+  permission_handler: ^10.4.0
 
   # state management
   flutter_hooks: ^0.18.0
@@ -69,6 +72,8 @@ dependencies:
   wc_form_validators: ^1.0.0
   file_picker: ^5.3.2
   double_back_to_close_app: ^2.1.0
+  path_provider: ^2.0.15
+  path: ^1.8.3
 
 # https://github.com/flutter/flutter/issues/127425
 dependency_overrides:
