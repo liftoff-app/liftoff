@@ -58,13 +58,14 @@ class MediaViewPage extends HookWidget {
               title: const Text('Share file'),
               onTap: () async {
                 Navigator.of(context).pop();
-                final File file = await DefaultCacheManager().getSingleFile(url);
-                    if (Platform.isAndroid || Platform.isIOS) {
-                      await Share.shareXFiles([XFile(file.path)]);
-                    } else if (Platform.isLinux || Platform.isWindows) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('sharing does not work on Desktop')));
-                    }
+                final File file =
+                    await DefaultCacheManager().getSingleFile(url);
+                if (Platform.isAndroid || Platform.isIOS) {
+                  await Share.shareXFiles([XFile(file.path)]);
+                } else if (Platform.isLinux || Platform.isWindows) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('sharing does not work on Desktop')));
+                }
               },
             ),
           ],
@@ -96,24 +97,29 @@ class MediaViewPage extends HookWidget {
                     final File file =
                         await DefaultCacheManager().getSingleFile(url);
 
-                    if ((Platform.isAndroid || Platform.isIOS) && await requestMediaPermission()) {
-                      var result = await GallerySaver.saveImage(file.path, albumName: 'Liftoff');
+                    if ((Platform.isAndroid || Platform.isIOS) &&
+                        await requestMediaPermission()) {
+                      var result = await GallerySaver.saveImage(file.path,
+                          albumName: 'Liftoff');
 
                       result ??= false;
 
-                      final message = result ? 'Image saved' : 'Error downloading the image';
+                      final message = result
+                          ? 'Image saved'
+                          : 'Error downloading the image';
 
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(message)));
                     } else if (Platform.isLinux || Platform.isWindows) {
                       final filePath =
                           '${(await getDownloadsDirectory())!.path}/Liftoff/${basename(file.path)}';
 
-
                       File(filePath)
                         ..createSync(recursive: true)
                         ..writeAsBytesSync(file.readAsBytesSync());
-                      
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Image saved')));
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Image saved')));
                     }
                   },
                 ),
@@ -194,8 +200,7 @@ class MediaViewPage extends HookWidget {
       Permission.storage,
     ].request();
 
-    final hasPermission =
-        await Permission.photos.isGranted || 
+    final hasPermission = await Permission.photos.isGranted ||
         await Permission.photos.isLimited ||
         await Permission.storage.isGranted;
 
