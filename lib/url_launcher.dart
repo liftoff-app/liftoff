@@ -114,7 +114,6 @@ Future<bool> launchLink({
   required BuildContext context,
 }) async {
   final uri = Uri.tryParse(link);
-  //if (uri != null && await ul.canLaunchUrl(uri)) {
   if (uri != null) {
     await ul.launchUrl(uri,
         mode: context.read<ConfigStore>().useInAppBrowser
