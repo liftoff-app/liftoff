@@ -171,7 +171,7 @@ class FullPostPage extends HookWidget {
                 children: [
                   const SizedBox(height: 15),
                   PostTile.fromPostStore(postStore),
-                  const CommentSection(),
+                  ...CommentSection.buildComments(context, store),
                 ],
               ),
             ),
