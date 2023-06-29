@@ -25,6 +25,7 @@ class HomePage extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final currentTab = useState(0);
+    final snackBarShowing = useState(false);
 
     useEffect(() {
       Future.microtask(
@@ -54,10 +55,32 @@ class HomePage extends HookWidget {
       body: Column(
         children: [
           Expanded(
-            child: IndexedStack(
-              index: currentTab.value,
-              children: pages,
-            ),
+            child: WillPopScope(
+                onWillPop: () {
+                  if (currentTab.value == 0 && !snackBarShowing.value) {
+                    // show snackbar warning
+                    snackBarShowing.value = true;
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(const SnackBar(
+                          content: Text('Tap back again to leave'),
+                        ))
+                        .closed
+                        .then((SnackBarClosedReason reason) =>
+                            snackBarShowing.value = false);
+
+                    return Future(() => false);
+                  }
+                  if (currentTab.value != 0) {
+                    currentTab.value = 0;
+                    return Future(() => false);
+                  }
+
+                  return Future(() => true);
+                },
+                child: IndexedStack(
+                  index: currentTab.value,
+                  children: pages,
+                )),
           ),
           const SizedBox(height: kMinInteractiveDimension / 2),
         ],
