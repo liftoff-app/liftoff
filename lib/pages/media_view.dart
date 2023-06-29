@@ -63,8 +63,7 @@ class MediaViewPage extends HookWidget {
                 if (Platform.isAndroid || Platform.isIOS) {
                   await Share.shareXFiles([XFile(file.path)]);
                 } else if (Platform.isLinux || Platform.isWindows) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('sharing does not work on Desktop')));
+                  showSnackBar(context, 'sharing does not work on Desktop');
                 }
               },
             ),
@@ -97,8 +96,12 @@ class MediaViewPage extends HookWidget {
                     final File file =
                         await DefaultCacheManager().getSingleFile(url);
 
-                    if ((Platform.isAndroid || Platform.isIOS) &&
-                        await requestMediaPermission()) {
+                    if (Platform.isAndroid || Platform.isIOS) {
+                      if (!await requestMediaPermission()) {
+                        showSnackBar(context,
+                            'Media permission revoked. Please go to the settings to fix');
+                        return;
+                      }
                       var result = await GallerySaver.saveImage(file.path,
                           albumName: 'Liftoff');
 
@@ -108,8 +111,7 @@ class MediaViewPage extends HookWidget {
                           ? 'Image saved'
                           : 'Error downloading the image';
 
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text(message)));
+                      showSnackBar(context, message);
                     } else if (Platform.isLinux || Platform.isWindows) {
                       final filePath =
                           '${(await getDownloadsDirectory())!.path}/Liftoff/${basename(file.path)}';
@@ -118,8 +120,7 @@ class MediaViewPage extends HookWidget {
                         ..createSync(recursive: true)
                         ..writeAsBytesSync(file.readAsBytesSync());
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Image saved')));
+                      showSnackBar(context, 'Image saved to $filePath');
                     }
                   },
                 ),
@@ -205,5 +206,9 @@ class MediaViewPage extends HookWidget {
         await Permission.storage.isGranted;
 
     return hasPermission;
+  }
+
+  showSnackBar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 }
