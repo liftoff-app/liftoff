@@ -111,9 +111,9 @@ abstract class _ConfigStore with Store {
   @JsonKey(fromJson: _sortTypeFromJson)
   SortType defaultSortType = SortType.hot;
 
-  @observable
-  @JsonKey(fromJson: _commentSortTypeFromJson)
-  CommentSortType defaultCommentSort = CommentSortType.hot;
+  // @observable
+  // @JsonKey(fromJson: _commentSortTypeFromJson)
+  // CommentSortType defaultCommentSort = CommentSortType.hot;
 
   // default is set in fromJson
   @observable
@@ -172,7 +172,7 @@ abstract class _ConfigStore with Store {
 
 SortType _sortTypeFromJson(String? json) =>
     json != null ? SortType.fromJson(json) : SortType.hot;
-CommentSortType _commentSortTypeFromJson(String? json) =>
-    json != null ? CommentSortType.fromJson(json) : CommentSortType.hot;
+// CommentSortType _commentSortTypeFromJson(String? json) =>
+//     json != null ? CommentSortType.fromJson(json) : CommentSortType.hot;
 PostListingType _postListingTypeFromJson(String? json) =>
     json != null ? PostListingType.fromJson(json) : PostListingType.all;
