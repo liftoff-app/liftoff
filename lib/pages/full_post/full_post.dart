@@ -37,7 +37,7 @@ class FullPostPage extends HookWidget {
     var scrollOffset = 0.0;
 
     final loggedInAction =
-        useLoggedInAction(context.read<FullPostStore>().instanceHost);
+        useLoggedInAction(context.read<FullPostStore>().instanceHost, allowAnonymous: true);
 
     return Nested(
       children: [

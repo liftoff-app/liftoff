@@ -22,6 +22,12 @@ class CommentActions extends HookWidget {
         (store) => store.comment.instanceHost,
       ),
     );
+    final anonymousLoggedInAction = useLoggedInAction(
+      context.select<CommentStore, String>(
+        (store) => store.comment.instanceHost,
+      ),
+      allowAnonymous: true,
+    );
 
     return ObserverBuilder<CommentStore>(
       builder: (context, store) {
@@ -88,7 +94,7 @@ class CommentActions extends HookWidget {
             if (!comment.deleted && !comment.removed && !post.locked)
               TileAction(
                 icon: Icons.reply,
-                onPressed: loggedInAction((_) => reply()),
+                onPressed: anonymousLoggedInAction((_) => reply()),
                 tooltip: L10n.of(context).reply,
               ),
             TileAction(

@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
+import '../stores/accounts_store.dart';
 import 'editor/editor.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
@@ -33,7 +34,7 @@ class WriteComment extends HookWidget {
   Widget build(BuildContext context) {
     final showFancy = useState(false);
     final delayed = useDelayedLoading();
-    final loggedInAction = useLoggedInAction(post.instanceHost);
+    final loggedInAction = useLoggedInAction(post.instanceHost, allowAnonymous: true);
 
     final editorController = useEditorController(
       instanceHost: post.instanceHost,
@@ -68,7 +69,7 @@ class WriteComment extends HookWidget {
 
       delayed.start();
       try {
-        final res = await () {
+        final res = await () async {
           if (_isEdit) {
             return api.run(EditComment(
               commentId: comment!.id,
@@ -76,6 +77,31 @@ class WriteComment extends HookWidget {
               auth: token.raw,
             ));
           } else {
+            if (token is AnonymousAccountJwt) {
+              final originApi = LemmyApiV3(token.originalInstance);
+
+              if (comment != null) {
+                // Resolve just the parent comment.
+                final response = await originApi.run(ResolveObject(q: comment!.apId, auth: token.raw ));
+
+                return originApi.run(CreateComment(
+                  content: editorController.textEditingController.text,
+                  postId: response.comment!.post.id,
+                  parentId: response.comment!.comment.id,
+                  auth: token.raw,
+                ));
+              } else {
+                // Resolve the main post.
+                final response = await originApi.run(ResolveObject(q: post.apId, auth: token.raw ));
+
+                return originApi.run(CreateComment(
+                  content: editorController.textEditingController.text,
+                  postId: response.post!.post.id,
+                  auth: token.raw,
+                ));
+              }
+            }
+
             return api.run(CreateComment(
               content: editorController.textEditingController.text,
               postId: post.id,

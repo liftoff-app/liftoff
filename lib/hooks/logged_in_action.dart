@@ -38,12 +38,17 @@ VoidCallback Function(
 VoidCallback Function(
   void Function(Jwt token) action, [
   String? message,
-]) useLoggedInAction(String instanceHost) {
+]) useLoggedInAction(String instanceHost, { bool allowAnonymous = false }) {
   final context = useContext();
   final store = useAccountsStore();
 
   return (action, [message]) {
     if (store.isAnonymousFor(instanceHost)) {
+      if (allowAnonymous && store.hasAnonymousUserFor(instanceHost)) {
+        final token = store.anonymousUserDataFor(instanceHost)!.jwt;
+        return () => action(token);
+      }
+
       return () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(message ??
@@ -54,6 +59,7 @@ VoidCallback Function(
         ));
       };
     }
+
     final token = store.defaultUserDataFor(instanceHost)!.jwt;
     return () => action(token);
   };

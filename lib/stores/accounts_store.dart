@@ -205,6 +205,19 @@ class AccountsStore extends ChangeNotifier {
     return anonymousAccount != null;
   }
 
+  UserData? anonymousUserDataFor(String instanceHost) {
+    final data = accounts[anonymousAccountInstance]?[anonymousAccount];
+
+    if (data != null) {
+      return UserData(
+        userId: data.userId,
+        jwt: AnonymousAccountJwt(token: data.jwt, originalInstance: anonymousAccountInstance!),
+      );
+    }
+
+    return data;
+  }
+
   /// `true` if no added instance has an account assigned to it
   bool get hasNoAccount => loggedInInstances.isEmpty;
 
@@ -340,4 +353,13 @@ class VerifyEmailException implements Exception {
 class RegistrationApplicationSentException implements Exception {
   final message = 'registration_application_sent';
   const RegistrationApplicationSentException();
+}
+
+class AnonymousAccountJwt extends Jwt {
+  final String originalInstance;
+
+  AnonymousAccountJwt({
+    required Jwt token,
+    required this.originalInstance,
+  }) : super(payload: token.payload, raw: token.raw);
 }
