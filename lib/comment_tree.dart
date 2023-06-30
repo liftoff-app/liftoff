@@ -43,6 +43,10 @@ enum CommentSortType {
         ? values[value]
         : values.firstWhere((e) => e.value == value);
   }
+
+    String toJson() => value;
+
+    String toString() => value;
 }
 
 extension SortCommentTreeList on List<CommentTree> {

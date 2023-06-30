@@ -2,6 +2,8 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../comment_tree.dart';
+import '../../hooks/stores.dart';
+import '../../stores/config_store.dart';
 import '../../util/async_store.dart';
 import '../../widgets/post/post_store.dart';
 
@@ -42,8 +44,8 @@ abstract class _FullPostStore with Store {
   ObservableList<CommentView> newComments = ObservableList<CommentView>();
 
   @observable
-  CommentSortType sorting = CommentSortType.hot;
-
+  CommentSortType sorting = useStore((ConfigStore store) => store.defaultCommentSort);
+  
   @observable
   PostStore? postStore;
 
