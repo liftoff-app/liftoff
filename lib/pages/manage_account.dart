@@ -142,8 +142,10 @@ class _ManageAccount extends HookWidget {
         await LemmyApiV3(user.instanceHost).run(SaveUserSettings(
           showNsfw: showNsfw.value,
           theme: user.localUser.theme,
+          /* Temp: disable saving these prefs until servers are all on >v0.18.x
           defaultSortType: user.localUser.defaultSortType,
           defaultListingType: user.localUser.defaultListingType,
+          */
           interfaceLanguage: user.localUser.interfaceLanguage,
           showAvatars: user.localUser.showAvatars,
           botAccount: botAccount.value,
