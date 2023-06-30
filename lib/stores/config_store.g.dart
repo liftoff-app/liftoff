@@ -20,6 +20,7 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..showScores = json['showScores'] as bool? ?? true
   ..blurNsfw = json['blurNsfw'] as bool? ?? true
   ..showThumbnail = json['showThumbnail'] as bool? ?? true
+  ..showThumbnailinCardView = json['showThumbnailinCardView'] as bool? ?? true
   ..titleFontSize = (json['titleFontSize'] as num?)?.toDouble() ?? 16
   ..postHeaderFontSize = (json['postHeaderFontSize'] as num?)?.toDouble() ?? 15
   ..showEverythingFeed = json['showEverythingFeed'] as bool? ?? false
@@ -41,6 +42,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'showScores': instance.showScores,
       'blurNsfw': instance.blurNsfw,
       'showThumbnail': instance.showThumbnail,
+      'showThumbnailinCardView': instance.showThumbnailinCardView,
       'titleFontSize': instance.titleFontSize,
       'postHeaderFontSize': instance.postHeaderFontSize,
       'showEverythingFeed': instance.showEverythingFeed,
@@ -251,6 +253,23 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  late final _$showThumbnailinCardViewAtom =
+      Atom(name: '_ConfigStore.showThumbnailinCardView', context: context);
+
+  @override
+  bool get showThumbnailinCardView {
+    _$showThumbnailinCardViewAtom.reportRead();
+    return super.showThumbnailinCardView;
+  }
+
+  @override
+  set showThumbnailinCardView(bool value) {
+    _$showThumbnailinCardViewAtom
+        .reportWrite(value, super.showThumbnailinCardView, () {
+      super.showThumbnailinCardView = value;
+    });
+  }
+
   late final _$titleFontSizeAtom =
       Atom(name: '_ConfigStore.titleFontSize', context: context);
 
@@ -369,6 +388,7 @@ showAvatars: ${showAvatars},
 showScores: ${showScores},
 blurNsfw: ${blurNsfw},
 showThumbnail: ${showThumbnail},
+showThumbnailinCardView: ${showThumbnailinCardView},
 titleFontSize: ${titleFontSize},
 postHeaderFontSize: ${postHeaderFontSize},
 showEverythingFeed: ${showEverythingFeed},
