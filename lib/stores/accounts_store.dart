@@ -28,6 +28,10 @@ class AccountsStore extends ChangeNotifier {
   @JsonKey(defaultValue: {})
   late Map<String, String> defaultAccounts;
 
+  /// Account used for anonymous instances, refers to an actorId
+  @JsonKey(defaultValue: null)
+  late String? anonymousAccount;
+
   /// default account for the app
   /// It is in a form of `username@instanceHost`
   @protected

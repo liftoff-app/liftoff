@@ -112,6 +112,8 @@ class _ManageAccount extends HookWidget {
     final showReadPosts = useState(user.localUser.showReadPosts);
     final sendNotificationsToEmail =
         useState(user.localUser.sendNotificationsToEmail);
+    final useAccountForAnonInstances =
+        useState(accountsStore.anonymousAccount == user.person.actorId);
     // TODO: bring back changing password
     // final newPasswordController = useTextEditingController();
     // final newPasswordVerifyController = useTextEditingController();
@@ -167,6 +169,13 @@ class _ManageAccount extends HookWidget {
           email: emailController.text.isEmpty ? null : emailController.text,
         ));
 
+        if (useAccountForAnonInstances.value) {
+          accountsStore.anonymousAccount = user.person.actorId;
+        } else if (accountsStore.anonymousAccount == user.person.actorId) {
+          accountsStore.anonymousAccount = null;
+        }
+
+        await accountsStore.save();
         informAcceptedAvatarRef.value?.call();
         informAcceptedBannerRef.value?.call();
 
@@ -433,6 +442,60 @@ class _ManageAccount extends HookWidget {
                 sendNotificationsToEmail.value = checked;
               },
               title: Text(L10n.of(context).send_notifications_to_email),
+              dense: true,
+            ),
+            const SizedBox(height: 8),
+            SwitchListTile.adaptive(
+              value: useAccountForAnonInstances.value,
+              onChanged: (checked) async {
+                if (checked &&
+                    accountsStore.anonymousAccount != null &&
+                    accountsStore.anonymousAccount != user.person.actorId) {
+                  final accepted = await showDialog<bool>(
+                    context: context,
+                    barrierDismissible: false, // user must tap button!
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(
+                            L10n.of(context).use_account_for_anon_instances),
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: <Widget>[
+                              Text(L10n.of(context)
+                                  .use_account_for_anon_instances_warning),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text(L10n.of(context).ok),
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                          TextButton(
+                            child: Text(L10n.of(context).cancel),
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (accepted == true) {
+                    useAccountForAnonInstances.value = checked;
+                  }
+                } else {
+                  useAccountForAnonInstances.value = checked;
+                }
+              },
+              title: Row(
+                children: [
+                  Text(L10n.of(context).use_account_for_anon_instances),
+                ],
+              ),
               dense: true,
             ),
             const SizedBox(height: 8),

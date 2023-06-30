@@ -3,8 +3,11 @@ import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../stores/accounts_store.dart';
+import '../stores/config_store.dart';
 
 AccountsStore useAccountsStore() => useContext().watch<AccountsStore>();
+ConfigStore useConfigStore() => useContext().watch<ConfigStore>();
+
 T useAccountsStoreSelect<T>(T selector(AccountsStore store)) =>
     useContext().select<AccountsStore, T>(selector);
 

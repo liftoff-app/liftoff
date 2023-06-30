@@ -84,6 +84,12 @@
   "@show_nsfw": {},
   "send_notifications_to_email": "Send notifications to Email",
   "@send_notifications_to_email": {},
+  "use_account_for_anon_instances": "Use this account for anonymous instances",
+  "@use_account_for_anon_instances": {},
+  "use_account_for_anon_instances_info": "For instances where you don't have an account, you can assign this account for posting or voting. Note that federation is not guaranteed. If the other instance has defederated or is under heavy load, it's possible your post or vote will be missed.",
+  "@use_account_for_anon_instances_info": {},
+  "use_account_for_anon_instances_warning": "You may only select one account for interacting with anonymous instances. If you assign this account, the other account you've selected will be deselected for this option.",
+  "@use_account_for_anon_instances_warning": {},
   "remove_account": "Remove account",
   "@remove_account": {},
   "delete_account": "Delete account",
@@ -451,6 +457,10 @@
   "add_link": "Add link",
   "@add_link": {
     "description": "title on top of a link insertion popup in a markdown editor"
+  },
+  "ok": "Ok",
+  "@ok": {
+    "description": "Ok button on popup"
   },
   "cancel": "Cancel",
   "@cancel": {
