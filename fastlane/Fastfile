@@ -7,4 +7,12 @@ platform :android do
       aab: ENV["ABB_PATH"]
     )
   end
+  lane :beta do
+    upload_to_play_store(
+      package_name: "com.liftoffapp.liftoff",
+      json_key: ENV["GOOGLE_SERVICE_ACCOUNT_KEY_PATH"],
+      aab: ENV["ABB_PATH"],
+      track: 'beta'
+    )
+  end
 end
