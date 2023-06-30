@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:lemmy_api_client/v3.dart';
 
+import '../../comment_tree.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/config_store.dart';
@@ -280,6 +281,18 @@ class GeneralConfigPage extends StatelessWidget {
                   values: SortType.values,
                   groupValue: store.defaultSortType,
                   onChanged: (value) => store.defaultSortType = value,
+                  mapValueToString: (value) => value.value,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text(L10n.of(context).comment_sort_type),
+              trailing: SizedBox(
+                width: 120,
+                child: RadioPicker<CommentSortType>(
+                  values: CommentSortType.values,
+                  groupValue: store.defaultCommentSort,
+                  onChanged: (value) => store.defaultCommentSort = value,
                   mapValueToString: (value) => value.value,
                 ),
               ),

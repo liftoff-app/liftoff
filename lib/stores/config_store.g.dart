@@ -24,6 +24,8 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..postHeaderFontSize = (json['postHeaderFontSize'] as num?)?.toDouble() ?? 15
   ..showEverythingFeed = json['showEverythingFeed'] as bool? ?? false
   ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
+  ..defaultCommentSort =
+      _commentSortTypeFromJson(json['defaultCommentSort'] as String?)
   ..defaultListingType =
       _postListingTypeFromJson(json['defaultListingType'] as String?);
 
@@ -45,6 +47,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'postHeaderFontSize': instance.postHeaderFontSize,
       'showEverythingFeed': instance.showEverythingFeed,
       'defaultSortType': instance.defaultSortType,
+      'defaultCommentSort': instance.defaultCommentSort,
       'defaultListingType': instance.defaultListingType,
     };
 
@@ -315,6 +318,22 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  late final _$defaultCommentSortAtom =
+      Atom(name: '_ConfigStore.defaultCommentSort', context: context);
+
+  @override
+  CommentSortType get defaultCommentSort {
+    _$defaultCommentSortAtom.reportRead();
+    return super.defaultCommentSort;
+  }
+
+  @override
+  set defaultCommentSort(CommentSortType value) {
+    _$defaultCommentSortAtom.reportWrite(value, super.defaultCommentSort, () {
+      super.defaultCommentSort = value;
+    });
+  }
+
   late final _$defaultListingTypeAtom =
       Atom(name: '_ConfigStore.defaultListingType', context: context);
 
@@ -373,6 +392,7 @@ titleFontSize: ${titleFontSize},
 postHeaderFontSize: ${postHeaderFontSize},
 showEverythingFeed: ${showEverythingFeed},
 defaultSortType: ${defaultSortType},
+defaultCommentSort: ${defaultCommentSort},
 defaultListingType: ${defaultListingType}
     ''';
   }
