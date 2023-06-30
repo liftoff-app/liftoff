@@ -36,8 +36,9 @@ class FullPostPage extends HookWidget {
     final shareButtonKey = GlobalKey();
     var scrollOffset = 0.0;
 
-    final loggedInAction =
-        useLoggedInAction(context.read<FullPostStore>().instanceHost, allowAnonymous: true);
+    final loggedInAction = useLoggedInAction(
+        context.read<FullPostStore>().instanceHost,
+        allowAnonymous: true);
 
     return Nested(
       children: [

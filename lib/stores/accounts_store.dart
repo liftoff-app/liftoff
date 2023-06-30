@@ -180,13 +180,14 @@ class AccountsStore extends ChangeNotifier {
 
   /// Checks whether the given user is the anonymous user.
   bool isAnonymousUser(String instanceHost, String username) {
-    return anonymousAccountInstance == instanceHost && anonymousAccount == username;
+    return anonymousAccountInstance == instanceHost &&
+        anonymousAccount == username;
   }
 
   Future<void> setAnonymousAccount(String instanceHost, String username) {
     // These have to exist.
     accounts[instanceHost]![username]!;
-    
+
     anonymousAccountInstance = instanceHost;
     anonymousAccount = username;
     return save();
@@ -211,7 +212,8 @@ class AccountsStore extends ChangeNotifier {
     if (data != null) {
       return UserData(
         userId: data.userId,
-        jwt: AnonymousAccountJwt(token: data.jwt, originalInstance: anonymousAccountInstance!),
+        jwt: AnonymousAccountJwt(
+            token: data.jwt, originalInstance: anonymousAccountInstance!),
       );
     }
 

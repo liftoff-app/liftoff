@@ -34,7 +34,8 @@ class WriteComment extends HookWidget {
   Widget build(BuildContext context) {
     final showFancy = useState(false);
     final delayed = useDelayedLoading();
-    final loggedInAction = useLoggedInAction(post.instanceHost, allowAnonymous: true);
+    final loggedInAction =
+        useLoggedInAction(post.instanceHost, allowAnonymous: true);
 
     final editorController = useEditorController(
       instanceHost: post.instanceHost,
@@ -82,7 +83,8 @@ class WriteComment extends HookWidget {
 
               if (comment != null) {
                 // Resolve just the parent comment.
-                final response = await originApi.run(ResolveObject(q: comment!.apId, auth: token.raw ));
+                final response = await originApi
+                    .run(ResolveObject(q: comment!.apId, auth: token.raw));
 
                 return originApi.run(CreateComment(
                   content: editorController.textEditingController.text,
@@ -92,7 +94,8 @@ class WriteComment extends HookWidget {
                 ));
               } else {
                 // Resolve the main post.
-                final response = await originApi.run(ResolveObject(q: post.apId, auth: token.raw ));
+                final response = await originApi
+                    .run(ResolveObject(q: post.apId, auth: token.raw));
 
                 return originApi.run(CreateComment(
                   content: editorController.textEditingController.text,

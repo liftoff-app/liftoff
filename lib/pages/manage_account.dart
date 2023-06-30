@@ -112,8 +112,8 @@ class _ManageAccount extends HookWidget {
     final showReadPosts = useState(user.localUser.showReadPosts);
     final sendNotificationsToEmail =
         useState(user.localUser.sendNotificationsToEmail);
-    final useAccountForAnonInstances =
-        useState(accountsStore.isAnonymousUser(user.person.instanceHost, user.person.name));
+    final useAccountForAnonInstances = useState(accountsStore.isAnonymousUser(
+        user.person.instanceHost, user.person.name));
     // TODO: bring back changing password
     // final newPasswordController = useTextEditingController();
     // final newPasswordVerifyController = useTextEditingController();
@@ -170,8 +170,10 @@ class _ManageAccount extends HookWidget {
         ));
 
         if (useAccountForAnonInstances.value) {
-          await accountsStore.setAnonymousAccount(user.person.instanceHost, user.person.name);
-        } else if (accountsStore.isAnonymousUser(user.person.instanceHost, user.person.name)) {
+          await accountsStore.setAnonymousAccount(
+              user.person.instanceHost, user.person.name);
+        } else if (accountsStore.isAnonymousUser(
+            user.person.instanceHost, user.person.name)) {
           await accountsStore.removeAnonymousAccount();
         }
 
@@ -448,7 +450,9 @@ class _ManageAccount extends HookWidget {
             SwitchListTile.adaptive(
               value: useAccountForAnonInstances.value,
               onChanged: (checked) async {
-                if (checked && !accountsStore.isAnonymousUser(user.person.instanceHost, user.person.name)) {
+                if (checked &&
+                    !accountsStore.isAnonymousUser(
+                        user.person.instanceHost, user.person.name)) {
                   final accepted = await showDialog<bool>(
                     context: context,
                     barrierDismissible: false, // user must tap button!

@@ -38,7 +38,7 @@ VoidCallback Function(
 VoidCallback Function(
   void Function(Jwt token) action, [
   String? message,
-]) useLoggedInAction(String instanceHost, { bool allowAnonymous = false }) {
+]) useLoggedInAction(String instanceHost, {bool allowAnonymous = false}) {
   final context = useContext();
   final store = useAccountsStore();
 
