@@ -30,8 +30,7 @@ class AppTheme extends ChangeNotifier {
   }
 
   switchamoled() {
-    _amoled = true;
-    switchtheme(ThemeMode.dark);
+    _amoled = !_amoled;
     _saveprefs();
     notifyListeners();
   }

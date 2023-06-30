@@ -7,10 +7,6 @@ part of 'config_store.dart';
 // **************************************************************************
 
 ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
-  ..theme =
-      $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ?? ThemeMode.system
-  ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
-  ..accentColor = json['accentColor'] as int? ?? 4282661449
   ..disableAnimations = json['disableAnimations'] as bool? ?? false
   ..useInAppBrowser = json['useInAppBrowser'] as bool? ?? true
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
@@ -30,9 +26,6 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
 
 Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
     <String, dynamic>{
-      'theme': _$ThemeModeEnumMap[instance.theme]!,
-      'amoledDarkMode': instance.amoledDarkMode,
-      'accentColor': instance.accentColor,
       'disableAnimations': instance.disableAnimations,
       'useInAppBrowser': instance.useInAppBrowser,
       'locale': const LocaleConverter().toJson(instance.locale),
@@ -50,12 +43,6 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'defaultListingType': instance.defaultListingType,
     };
 
-const _$ThemeModeEnumMap = {
-  ThemeMode.system: 'system',
-  ThemeMode.light: 'light',
-  ThemeMode.dark: 'dark',
-};
-
 // **************************************************************************
 // StoreGenerator
 // **************************************************************************
@@ -63,53 +50,6 @@ const _$ThemeModeEnumMap = {
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ConfigStore on _ConfigStore, Store {
-  late final _$themeAtom = Atom(name: '_ConfigStore.theme', context: context);
-
-  @override
-  ThemeMode get theme {
-    _$themeAtom.reportRead();
-    return super.theme;
-  }
-
-  @override
-  set theme(ThemeMode value) {
-    _$themeAtom.reportWrite(value, super.theme, () {
-      super.theme = value;
-    });
-  }
-
-  late final _$amoledDarkModeAtom =
-      Atom(name: '_ConfigStore.amoledDarkMode', context: context);
-
-  @override
-  bool get amoledDarkMode {
-    _$amoledDarkModeAtom.reportRead();
-    return super.amoledDarkMode;
-  }
-
-  @override
-  set amoledDarkMode(bool value) {
-    _$amoledDarkModeAtom.reportWrite(value, super.amoledDarkMode, () {
-      super.amoledDarkMode = value;
-    });
-  }
-
-  late final _$accentColorAtom =
-      Atom(name: '_ConfigStore.accentColor', context: context);
-
-  @override
-  int get accentColor {
-    _$accentColorAtom.reportRead();
-    return super.accentColor;
-  }
-
-  @override
-  set accentColor(int value) {
-    _$accentColorAtom.reportWrite(value, super.accentColor, () {
-      super.accentColor = value;
-    });
-  }
-
   late final _$disableAnimationsAtom =
       Atom(name: '_ConfigStore.disableAnimations', context: context);
 
@@ -375,9 +315,6 @@ mixin _$ConfigStore on _ConfigStore, Store {
   @override
   String toString() {
     return '''
-theme: ${theme},
-amoledDarkMode: ${amoledDarkMode},
-accentColor: ${accentColor},
 disableAnimations: ${disableAnimations},
 useInAppBrowser: ${useInAppBrowser},
 locale: ${locale},

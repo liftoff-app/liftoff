@@ -42,18 +42,6 @@ class ConfigStore extends _ConfigStore with _$ConfigStore, DisposableStore {
 
 abstract class _ConfigStore with Store {
   @observable
-  @JsonKey(defaultValue: ThemeMode.system)
-  ThemeMode theme = ThemeMode.system;
-
-  @observable
-  @JsonKey(defaultValue: false)
-  bool amoledDarkMode = false;
-
-  @observable
-  @JsonKey(defaultValue: 0xff443a49)
-  int accentColor = 0xff443a49;
-
-  @observable
   @JsonKey(defaultValue: false)
   bool disableAnimations = false;
 
@@ -128,25 +116,7 @@ abstract class _ConfigStore with Store {
   /// Copies over settings from lemmy to [ConfigStore]
   @action
   void copyLemmyUserSettings(LocalUserSettings localUserSettings) {
-    // themes from lemmy-ui that are dark mode
-    const darkModeLemmyUiThemes = {
-      'solar',
-      'cyborg',
-      'darkly',
-      'vaporwave-dark',
-      'i386',
-    };
-
     showAvatars = localUserSettings.showAvatars;
-    theme = () {
-      if (localUserSettings.theme == 'browser') return ThemeMode.system;
-
-      if (darkModeLemmyUiThemes.contains(localUserSettings.theme)) {
-        return ThemeMode.dark;
-      }
-
-      return ThemeMode.light;
-    }();
 
     if (L10n.supportedLocales
         .contains(Locale(localUserSettings.interfaceLanguage))) {

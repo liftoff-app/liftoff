@@ -114,11 +114,7 @@ class AppearanceConfigPage extends StatelessWidget {
               SwitchListTile.adaptive(
                 title: const Text('AMOLED dark mode'),
                 value: state.amoled,
-                onChanged: (checked) {
-                  checked
-                      ? state.switchamoled()
-                      : state.switchtheme(ThemeMode.system);
-                },
+                onChanged: (checked) => state.switchamoled(),
               ),
               ListTile(
                 title: Wrap(
@@ -149,11 +145,12 @@ class AppearanceConfigPage extends StatelessWidget {
                         context: context,
                         builder: (context) => Column(
                           children: [
-                            ColorPicker(
-                                pickerColor: state.primaryColor,
-                                onColorChanged: (Color color) {
-                                  state.setPrimaryColor(color);
-                                }),
+                            MaterialPicker(
+                              pickerColor: state.primaryColor,
+                              onColorChanged: (Color color) {
+                                state.setPrimaryColor(color);
+                              },
+                            ),
                           ],
                         ),
                       );
