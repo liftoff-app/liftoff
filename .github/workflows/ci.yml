@@ -79,6 +79,11 @@ jobs:
           ANDROID_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: android-debug-apk
+          path: build/app/outputs/apk/prod/release/app-prod-*-release.apk
+
   ios:
     name: iOS
     runs-on: macos-latest
