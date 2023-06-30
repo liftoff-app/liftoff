@@ -69,6 +69,7 @@ dependencies:
   wc_form_validators: ^1.0.0
   file_picker: ^5.3.2
   double_back_to_close_app: ^2.1.0
+  flutter_colorpicker: ^1.0.3
 
 # https://github.com/flutter/flutter/issues/127425
 dependency_overrides:

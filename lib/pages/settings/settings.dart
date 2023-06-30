@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
+import '../../resources/app_theme.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/goto.dart';
@@ -86,45 +88,85 @@ class AppearanceConfigPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Appearance')),
-      body: ObserverBuilder<ConfigStore>(
-        builder: (context, store) => ListView(
-          children: [
-            const _SectionHeading('Theme'),
-            for (final theme in ThemeMode.values)
-              RadioListTile<ThemeMode>(
-                value: theme,
-                title: Text(theme.name),
-                groupValue: store.theme,
-                onChanged: (selected) {
-                  if (selected != null) store.theme = selected;
+      body: Consumer<AppTheme>(
+        builder: (context, state, child) {
+          return ListView(
+            children: [
+              const _SectionHeading('Theme'),
+              for (final theme in ThemeMode.values)
+                RadioListTile<ThemeMode>(
+                  value: theme,
+                  title: Text(theme.name),
+                  groupValue: state.theme,
+                  onChanged: (selected) {
+                    if (selected != null) {
+                      state.switchtheme(selected);
+                      if (selected == ThemeMode.dark) {
+                        state.setPrimaryColor(
+                            ThemeData.dark().colorScheme.secondary);
+                      } else {
+                        state.setPrimaryColor(
+                            ThemeData.light().colorScheme.primary);
+                      }
+                    }
+                  },
+                ),
+              SwitchListTile.adaptive(
+                title: const Text('AMOLED dark mode'),
+                value: state.amoled,
+                onChanged: (checked) {
+                  checked
+                      ? state.switchamoled()
+                      : state.switchtheme(ThemeMode.system);
                 },
               ),
-            SwitchListTile.adaptive(
-              title: const Text('AMOLED dark mode'),
-              value: store.amoledDarkMode,
-              onChanged: (checked) {
-                store.amoledDarkMode = checked;
-              },
-            ),
-            SwitchListTile.adaptive(
-              title: const Text('Disable Animations'),
-              value: store.disableAnimations,
-              onChanged: (checked) {
-                store.disableAnimations = checked;
-              },
-            ),
-            const SizedBox(height: 12),
-            const _SectionHeading('Other'),
-            SwitchListTile.adaptive(
-              title: const Text('Hide NSFW'),
-              subtitle: const Text('Images in NSFW posts will be hidden.'),
-              value: store.blurNsfw,
-              onChanged: (checked) {
-                store.blurNsfw = checked;
-              },
-            ),
-          ],
-        ),
+              ListTile(
+                title: Wrap(
+                  spacing: 10,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    const Text('Primary Color'),
+                    IconButton(
+                      onPressed: () {
+                        if (state.theme == ThemeMode.dark) {
+                          state.setPrimaryColor(
+                              ThemeData.dark().colorScheme.secondary);
+                        } else {
+                          state.setPrimaryColor(
+                              ThemeData.light().colorScheme.primary);
+                        }
+                      },
+                      icon: const Icon(Icons.restart_alt_outlined),
+                      tooltip: 'Reset to Default',
+                    ),
+                  ],
+                ),
+                trailing: SizedBox(
+                  width: 60,
+                  child: RawMaterialButton(
+                    onPressed: () {
+                      showBottomModal(
+                        context: context,
+                        builder: (context) => Column(
+                          children: [
+                            ColorPicker(
+                                pickerColor: state.primaryColor,
+                                onColorChanged: (Color color) {
+                                  state.setPrimaryColor(color);
+                                }),
+                          ],
+                        ),
+                      );
+                    },
+                    elevation: 2.0,
+                    fillColor: state.primaryColor,
+                    shape: const CircleBorder(),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -331,6 +373,23 @@ class GeneralConfigPage extends StatelessWidget {
               value: store.useInAppBrowser,
               onChanged: (checked) {
                 store.useInAppBrowser = checked;
+              },
+            ),
+            const SizedBox(height: 12),
+            const _SectionHeading('Other'),
+            SwitchListTile.adaptive(
+              title: const Text('Disable Animations'),
+              value: store.disableAnimations,
+              onChanged: (checked) {
+                store.disableAnimations = checked;
+              },
+            ),
+            SwitchListTile.adaptive(
+              title: const Text('Hide NSFW'),
+              subtitle: const Text('Images in NSFW posts will be hidden.'),
+              value: store.blurNsfw,
+              onChanged: (checked) {
+                store.blurNsfw = checked;
               },
             ),
           ],

@@ -76,6 +76,23 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
               builder: (context, store) => Column(
                     children: [
                       PostTile.fromPostView(post),
+                      if (store.amoledDarkMode)
+                        SizedBox(
+                          width: 250,
+                          height: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Theme.of(context).primaryColorDark,
+                                Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).primaryColorDark,
+                              ],
+                            )),
+                          ),
+                        ),
                       SizedBox(height: store.compactPostView ? 2 : 10),
                     ],
                   )),

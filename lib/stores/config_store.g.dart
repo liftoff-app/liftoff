@@ -10,6 +10,7 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..theme =
       $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']) ?? ThemeMode.system
   ..amoledDarkMode = json['amoledDarkMode'] as bool? ?? false
+  ..accentColor = json['accentColor'] as int? ?? 4282661449
   ..disableAnimations = json['disableAnimations'] as bool? ?? false
   ..useInAppBrowser = json['useInAppBrowser'] as bool? ?? true
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
@@ -31,6 +32,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
     <String, dynamic>{
       'theme': _$ThemeModeEnumMap[instance.theme]!,
       'amoledDarkMode': instance.amoledDarkMode,
+      'accentColor': instance.accentColor,
       'disableAnimations': instance.disableAnimations,
       'useInAppBrowser': instance.useInAppBrowser,
       'locale': const LocaleConverter().toJson(instance.locale),
@@ -89,6 +91,22 @@ mixin _$ConfigStore on _ConfigStore, Store {
   set amoledDarkMode(bool value) {
     _$amoledDarkModeAtom.reportWrite(value, super.amoledDarkMode, () {
       super.amoledDarkMode = value;
+    });
+  }
+
+  late final _$accentColorAtom =
+      Atom(name: '_ConfigStore.accentColor', context: context);
+
+  @override
+  int get accentColor {
+    _$accentColorAtom.reportRead();
+    return super.accentColor;
+  }
+
+  @override
+  set accentColor(int value) {
+    _$accentColorAtom.reportWrite(value, super.accentColor, () {
+      super.accentColor = value;
     });
   }
 
@@ -359,6 +377,7 @@ mixin _$ConfigStore on _ConfigStore, Store {
     return '''
 theme: ${theme},
 amoledDarkMode: ${amoledDarkMode},
+accentColor: ${accentColor},
 disableAnimations: ${disableAnimations},
 useInAppBrowser: ${useInAppBrowser},
 locale: ${locale},

@@ -50,6 +50,10 @@ abstract class _ConfigStore with Store {
   bool amoledDarkMode = false;
 
   @observable
+  @JsonKey(defaultValue: 0xff443a49)
+  int accentColor = 0xff443a49;
+
+  @observable
   @JsonKey(defaultValue: false)
   bool disableAnimations = false;
 
