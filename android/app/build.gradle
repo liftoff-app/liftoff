@@ -79,7 +79,19 @@ android {
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
             manifestPlaceholders = [
-                appName: "liftoff DEV"
+                appName: "liftoff DEV",
+                applicationNameLabel: "Liftoff Dev"
+            ]
+            signingConfig signingConfigs.debug
+        }
+
+        preview {
+            dimension "app"
+            applicationIdSuffix ".preview"
+            versionNameSuffix "-preview"
+            manifestPlaceholders = [
+                appName: "liftoff Preview",
+                applicationNameLabel: "Liftoff Preview"
             ]
             signingConfig signingConfigs.debug
         }
@@ -87,7 +99,8 @@ android {
         prod {
             dimension "app"
             manifestPlaceholders = [
-                appName: "liftoff"
+                appName: "liftoff",
+                appName: "Liftoff Preview",
             ]
             signingConfig signingConfigs.prod
         }

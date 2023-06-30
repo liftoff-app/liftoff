@@ -7,7 +7,7 @@
 
   <application
     android:name="${applicationName}"
-        android:label="Liftoff"
+        android:label="${applicationNameLabel}"
     android:icon="@mipmap/ic_launcher">
 
     <activity
