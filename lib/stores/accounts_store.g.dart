@@ -22,6 +22,7 @@ AccountsStore _$AccountsStoreFromJson(Map<String, dynamic> json) =>
                 (k, e) => MapEntry(k, e as String),
               ) ??
               {}
+      ..anonymousAccountInstance = json['anonymousAccountInstance'] as String?
       ..anonymousAccount = json['anonymousAccount'] as String?
       ..defaultAccount = json['defaultAccount'] as String?;
 
@@ -29,6 +30,7 @@ Map<String, dynamic> _$AccountsStoreToJson(AccountsStore instance) =>
     <String, dynamic>{
       'accounts': instance.accounts,
       'defaultAccounts': instance.defaultAccounts,
+      'anonymousAccountInstance': instance.anonymousAccountInstance,
       'anonymousAccount': instance.anonymousAccount,
       'defaultAccount': instance.defaultAccount,
     };

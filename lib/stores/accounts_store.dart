@@ -28,7 +28,13 @@ class AccountsStore extends ChangeNotifier {
   @JsonKey(defaultValue: {})
   late Map<String, String> defaultAccounts;
 
-  /// Account used for anonymous instances, refers to an actorId
+  /// Instance used for anonymous instances, refers to an instanceHost
+  @protected
+  @JsonKey(defaultValue: null)
+  late String? anonymousAccountInstance;
+
+  /// Account used for anonymous instances, refers to a username
+  @protected
   @JsonKey(defaultValue: null)
   late String? anonymousAccount;
 
@@ -170,6 +176,33 @@ class AccountsStore extends ChangeNotifier {
     }
 
     return accounts[instanceHost]!.isEmpty;
+  }
+
+  /// Checks whether the given user is the anonymous user.
+  bool isAnonymousUser(String instanceHost, String username) {
+    return anonymousAccountInstance == instanceHost && anonymousAccount == username;
+  }
+
+  Future<void> setAnonymousAccount(String instanceHost, String username) {
+    // These have to exist.
+    accounts[instanceHost]![username]!;
+    
+    anonymousAccountInstance = instanceHost;
+    anonymousAccount = username;
+    return save();
+  }
+
+  Future<void> removeAnonymousAccount() {
+    anonymousAccountInstance = null;
+    anonymousAccount = null;
+    return save();
+  }
+
+  /// Checks if there as an anonymous user for the given instance. In the
+  /// future, I might add the ability to assign anonymous users to different
+  /// instances to get around federation. Or not, we'll see.
+  bool hasAnonymousUserFor(String instanceHost) {
+    return anonymousAccount != null;
   }
 
   /// `true` if no added instance has an account assigned to it
