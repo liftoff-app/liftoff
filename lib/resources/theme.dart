@@ -25,8 +25,6 @@ ThemeData themeFactory(
       },
     ),
     scaffoldBackgroundColor: maybeAmoledColor,
-    // ignore: deprecated_member_use
-    backgroundColor: maybeAmoledColor,
     canvasColor: maybeAmoledColor,
     cardColor: maybeAmoledColor,
     splashColor: maybeAmoledColor,
@@ -43,6 +41,8 @@ ThemeData themeFactory(
       titleTextStyle: theme.textTheme.titleLarge
           ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
     ),
+    bottomAppBarTheme:
+        BottomAppBarTheme(color: maybeAmoledColor, shadowColor: Colors.white),
     tabBarTheme: TabBarTheme(
       unselectedLabelColor: Colors.grey,
       labelColor: theme.colorScheme.onSurface,
@@ -81,7 +81,6 @@ ThemeData themeFactory(
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         backgroundColor: theme.colorScheme.background,
-        foregroundColor: theme.colorScheme.onSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -93,7 +92,6 @@ ThemeData themeFactory(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        foregroundColor: theme.colorScheme.secondary,
       ),
     ),
     dialogTheme: DialogTheme(
