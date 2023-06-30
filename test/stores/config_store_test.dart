@@ -42,8 +42,6 @@ void main() {
       final store = ConfigStore();
       final loaded = ConfigStore.load(prefs);
 
-      expect(store.theme, loaded.theme);
-      expect(store.amoledDarkMode, loaded.amoledDarkMode);
       expect(store.locale, loaded.locale);
       expect(store.showAvatars, loaded.showAvatars);
       expect(store.showScores, loaded.showScores);
@@ -52,32 +50,31 @@ void main() {
     });
 
     test('Changes are saved', () {
-      store.amoledDarkMode = false;
+      store.blurNsfw = false;
       var loaded = ConfigStore.load(prefs);
-      expect(loaded.amoledDarkMode, false);
+      expect(loaded.blurNsfw, false);
 
-      store.amoledDarkMode = true;
+      store.blurNsfw = true;
       loaded = ConfigStore.load(prefs);
-      expect(loaded.amoledDarkMode, true);
+      expect(loaded.blurNsfw, true);
     });
 
     test('Changes are not saved after disposing', () {
-      store.amoledDarkMode = false;
+      store.blurNsfw = false;
       var loaded = ConfigStore.load(prefs);
-      expect(loaded.amoledDarkMode, false);
+      expect(loaded.blurNsfw, false);
 
       store
         ..dispose()
-        ..amoledDarkMode = true;
+        ..blurNsfw = true;
       loaded = ConfigStore.load(prefs);
-      expect(loaded.amoledDarkMode, false);
+      expect(loaded.blurNsfw, false);
     });
 
     group('Copying LemmyUserSettings', () {
       test('works', () {
         store
-          ..theme = ThemeMode.dark
-          ..amoledDarkMode = false
+          ..blurNsfw = true
           ..locale = const Locale('pl')
           ..showAvatars = false
           ..showScores = false
@@ -85,21 +82,12 @@ void main() {
           ..defaultListingType = PostListingType.all
           ..copyLemmyUserSettings(_lemmyUserSettings);
 
-        expect(store.theme, ThemeMode.system);
-        expect(store.amoledDarkMode, false);
+        expect(store.blurNsfw, true);
         expect(store.locale, const Locale('en'));
         expect(store.showAvatars, true);
         expect(store.showScores, true);
         expect(store.defaultSortType, SortType.active);
         expect(store.defaultListingType, PostListingType.local);
-      });
-
-      test('detects dark theme', () {
-        store
-          ..theme = ThemeMode.light
-          ..copyLemmyUserSettings(_lemmyUserSettings.copyWith(theme: 'darkly'));
-
-        expect(store.theme, ThemeMode.dark);
       });
 
       test('lang ignores unrecognized', () {
@@ -109,15 +97,6 @@ void main() {
               _lemmyUserSettings.copyWith(interfaceLanguage: 'qweqweqwe'));
 
         expect(store.locale, const Locale('en'));
-      });
-
-      test('detects browser theme', () {
-        store
-          ..theme = ThemeMode.light
-          ..copyLemmyUserSettings(
-              _lemmyUserSettings.copyWith(theme: 'browser'));
-
-        expect(store.theme, ThemeMode.system);
       });
     });
   });

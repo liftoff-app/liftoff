@@ -20,7 +20,7 @@ class AppTheme extends ChangeNotifier {
     _loadprefs();
   }
 
-  switchtheme(ThemeMode theme) {
+  void switchtheme(ThemeMode theme) {
     _theme = theme;
     if (theme != ThemeMode.dark) {
       _amoled = false;
@@ -29,13 +29,13 @@ class AppTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  switchamoled() {
+  void switchamoled() {
     _amoled = !_amoled;
     _saveprefs();
     notifyListeners();
   }
 
-  setPrimaryColor(Color color) {
+  void setPrimaryColor(Color color) {
     _primaryColor = color;
     _saveprefs();
     notifyListeners();

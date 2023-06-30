@@ -155,7 +155,6 @@ class AppearanceConfigPage extends StatelessWidget {
                         ),
                       );
                     },
-                    elevation: 2.0,
                     fillColor: state.primaryColor,
                     shape: const CircleBorder(),
                   ),

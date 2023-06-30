@@ -123,6 +123,8 @@ abstract class _ConfigStore with Store {
       locale = Locale(localUserSettings.interfaceLanguage);
     }
 
+    blurNsfw = localUserSettings.showNsfw;
+
     showScores = localUserSettings.showScores;
     defaultSortType = localUserSettings.defaultSortType ?? SortType.active;
     defaultListingType =
