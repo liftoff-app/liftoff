@@ -47,7 +47,7 @@ android {
    
     defaultConfig {
         applicationId "com.liftoffapp.liftoff"
-        minSdkVersion Math.max(flutter.minSdkVersion, 19)
+        minSdkVersion Math.max(flutter.minSdkVersion, 21)
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
