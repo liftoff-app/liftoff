@@ -100,7 +100,7 @@ android {
             dimension "app"
             manifestPlaceholders = [
                 appName: "liftoff",
-                appName: "Liftoff Preview",
+                applicationNameLabel: "Liftoff",
             ]
             signingConfig signingConfigs.prod
         }
