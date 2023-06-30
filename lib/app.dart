@@ -14,25 +14,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return KeyboardDismisser(
-      child:
-          // observer builder
-          ChangeNotifierProvider(
+      child: ChangeNotifierProvider(
         create: (context) => AppTheme(),
-        child: Consumer<AppTheme>(builder: (context, state, child) {
-          return MaterialApp(
-            title: 'Liftoff',
-            supportedLocales: L10n.supportedLocales,
-            localizationsDelegates: L10n.localizationsDelegates,
-            themeMode: state.theme,
-            darkTheme: state.amoled
-                ? themeFactory(
-                    primaryColor: state.primaryColor, dark: true, amoled: true)
-                : themeFactory(primaryColor: state.primaryColor, dark: true),
-            locale: context.read<ConfigStore>().locale,
-            theme: themeFactory(primaryColor: state.primaryColor),
-            home: const HomePage(),
-          );
-        }),
+        child: Consumer<AppTheme>(
+          builder: (context, state, child) {
+            return MaterialApp(
+              title: 'Liftoff',
+              supportedLocales: L10n.supportedLocales,
+              localizationsDelegates: L10n.localizationsDelegates,
+              themeMode: state.theme,
+              darkTheme: state.amoled
+                  ? themeFactory(
+                      primaryColor: state.primaryColor,
+                      dark: true,
+                      amoled: true)
+                  : themeFactory(primaryColor: state.primaryColor, dark: true),
+              locale: context.read<ConfigStore>().locale,
+              theme: themeFactory(primaryColor: state.primaryColor),
+              home: const HomePage(),
+            );
+          },
+        ),
       ),
     );
   }

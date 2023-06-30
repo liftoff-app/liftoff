@@ -16,7 +16,6 @@ ThemeData themeFactory(
   );
 
   return theme.copyWith(
-    //useMaterial3: true,
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
