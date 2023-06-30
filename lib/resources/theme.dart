@@ -74,7 +74,6 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         backgroundColor: theme.colorScheme.background,
-        foregroundColor: theme.colorScheme.onSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -86,13 +85,15 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        foregroundColor: theme.colorScheme.secondary,
       ),
     ),
     dialogTheme: DialogTheme(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
+    ),
+    colorScheme: theme.colorScheme.copyWith(
+      primary: theme.colorScheme.secondary,
     ),
   );
 }
