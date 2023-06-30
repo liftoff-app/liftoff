@@ -173,6 +173,6 @@ abstract class _ConfigStore with Store {
 SortType _sortTypeFromJson(String? json) =>
     json != null ? SortType.fromJson(json) : SortType.hot;
 CommentSortType _commentSortTypeFromJson(String? json) =>
-     json != null ? CommentSortType.fromJson(json) : CommentSortType.hot;
+    json != null ? CommentSortType.fromJson(json) : CommentSortType.hot;
 PostListingType _postListingTypeFromJson(String? json) =>
     json != null ? PostListingType.fromJson(json) : PostListingType.all;

@@ -44,8 +44,9 @@ abstract class _FullPostStore with Store {
   ObservableList<CommentView> newComments = ObservableList<CommentView>();
 
   @observable
-  CommentSortType sorting = useStore((ConfigStore store) => store.defaultCommentSort);
-  
+  CommentSortType sorting =
+      useStore((ConfigStore store) => store.defaultCommentSort);
+
   @observable
   PostStore? postStore;
 
