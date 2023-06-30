@@ -4,8 +4,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../pages/create_post/create_post.dart';
 import '../../pages/full_post/full_post_store.dart';
+import '../../pages/settings/settings.dart';
 import '../../stores/accounts_store.dart';
 import '../../url_launcher.dart';
+import '../../util/goto.dart';
 import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../bottom_modal.dart';
@@ -159,6 +161,13 @@ class PostMoreMenu extends HookWidget {
                         '${(100 * (post.counts.upvotes / (post.counts.upvotes + post.counts.downvotes))).toInt()}%',
                     ...post.toJson(),
                   });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: () {
+                  goTo(context, (_) => const SettingsPage());
                 },
               ),
             ],
