@@ -29,6 +29,14 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="liftoff" />
+        <!-- Dunnot if lemmy:// URLs are standardized/exist yet, but this can't hurt. -->
+        <data android:scheme="lemmy" />
+      </intent-filter>
     </activity>
 
     <meta-data
