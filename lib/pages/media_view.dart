@@ -14,6 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../util/convert_webp.dart';
 import '../util/icons.dart';
 import '../util/share.dart';
 import '../widgets/bottom_modal.dart';
@@ -93,8 +94,26 @@ class MediaViewPage extends HookWidget {
                   icon: const Icon(Icons.file_download),
                   tooltip: 'download',
                   onPressed: () async {
-                    final File file =
-                        await DefaultCacheManager().getSingleFile(url);
+                    File file = await DefaultCacheManager().getSingleFile(url);
+                    final filePath = file.path;
+
+                    // Check if image is a webp and convert it
+                    if (filePath.endsWith('.webp')) {
+                      final result = await convertWebpToPng(file);
+
+                      // A returned File means the conversion was successful.
+                      if (result is File) {
+                        file = result;
+                        debugPrint('File was successfully converted.');
+                      }
+
+                      // String means error. Cancel the download.
+                      if (result is String) {
+                        debugPrint(result);
+                        _showSnackBar(context, result);
+                        return;
+                      }
+                    }
 
                     if (Platform.isAndroid || Platform.isIOS) {
                       if (!await requestMediaPermission()) {
