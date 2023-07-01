@@ -45,7 +45,7 @@ void main() {
 
       expect(store.asyncState, isA<AsyncStateError>());
       expect(store.isLoading, false);
-      expect(store.errorTerm, 'couldnt_find_post');
+      expect(store.errorTerm, 'Record not found');
     });
 
     test('fails properly 2', () async {
