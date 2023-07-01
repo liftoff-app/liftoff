@@ -7,13 +7,8 @@ ThemeData themeFactory(
     {bool dark = false, bool amoled = false, required Color primaryColor}) {
   assert(dark || !amoled, "Can't have amoled without dark mode");
 
-  var theme = dark ? ThemeData.dark() : ThemeData.light();
+  final theme = dark ? ThemeData.dark() : ThemeData.light();
   final maybeAmoledColor = amoled ? Colors.black : null;
-
-  theme = theme.copyWith(
-    colorScheme: theme.colorScheme
-        .copyWith(primary: primaryColor, secondary: primaryColor),
-  );
 
   return theme.copyWith(
     pageTransitionsTheme: const PageTransitionsTheme(
@@ -45,17 +40,17 @@ ThemeData themeFactory(
     tabBarTheme: TabBarTheme(
       unselectedLabelColor: Colors.grey,
       labelColor: theme.colorScheme.onSurface,
-      indicatorColor: theme.colorScheme.primary,
+      indicatorColor: primaryColor,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: theme.colorScheme.secondary,
+      backgroundColor: primaryColor,
       disabledColor: Colors.amber,
       selectedColor: Colors.amber,
       secondarySelectedColor: Colors.amber,
       padding: EdgeInsets.zero,
       shape: const StadiumBorder(),
       labelStyle: TextStyle(
-        color: textColorBasedOnBackground(theme.colorScheme.secondary),
+        color: textColorBasedOnBackground(primaryColor),
       ),
       secondaryLabelStyle: const TextStyle(color: Colors.amber),
       brightness: theme.brightness,
@@ -100,8 +95,12 @@ ThemeData themeFactory(
       ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: theme.colorScheme.secondary,
+      backgroundColor: primaryColor,
       foregroundColor: theme.colorScheme.onSurface,
+    ),
+    colorScheme: theme.colorScheme.copyWith(
+      primary: primaryColor,
+      secondary: primaryColor,
     ),
   );
 }
