@@ -1,3 +1,9 @@
+## Unreleased
+- Added custom theming
+- Fixed NSFW posts sometimes not loading
+- Implemented share and download media
+- Set default comment sorting
+- Added support for logging in to 0.18.1 instances
 ## v0.9.19 - 2023-06-29
 - Add delete option to comment 3-dot menu
 - Added 3-dot menu on home tab
