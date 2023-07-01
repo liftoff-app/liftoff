@@ -36,7 +36,7 @@ class PostTitle extends HookWidget {
                       fontWeight: FontWeight.w500),
                 ),
               ),
-              if ((!store.hasMedia && configStore.showThumbnail) &&
+              if ((!store.hasMedia && configStore.showThumbnail && configStore.compactPostView) &&
                   !(post.nsfw && configStore.blurNsfw) &&
                   thumbnailUrl != null &&
                   url != null) ...[
@@ -71,7 +71,7 @@ class PostTitle extends HookWidget {
                   ),
                 ),
               ],
-              if ((store.hasMedia && configStore.showThumbnail) &&
+              if ((store.hasMedia && configStore.showThumbnail && configStore.compactPostView) &&
                   !(post.nsfw && configStore.blurNsfw) &&
                   url != null) ...[
                 FullscreenableImage(
