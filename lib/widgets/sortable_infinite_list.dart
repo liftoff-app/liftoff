@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
+import '../resources/app_theme.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
 import 'comment/comment.dart';
@@ -72,11 +73,31 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
     required super.fetcher,
     super.controller,
   }) : super(
-          itemBuilder: (post) => ObserverBuilder<ConfigStore>(
-              builder: (context, store) => Column(
+          itemBuilder: (post) => Consumer<AppTheme>(
+              builder: (context, state, child) => Column(
                     children: [
                       PostTile.fromPostView(post),
-                      SizedBox(height: store.compactPostView ? 2 : 10),
+                      if (state.amoled)
+                        SizedBox(
+                          width: 250,
+                          height: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Theme.of(context).primaryColorDark,
+                                Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).primaryColorDark,
+                              ],
+                            )),
+                          ),
+                        ),
+                      SizedBox(
+                          height: context.read<ConfigStore>().compactPostView
+                              ? 2
+                              : 10),
                     ],
                   )),
           noItems: const Text('there are no posts'),

@@ -44,11 +44,13 @@ class CommentSection {
       CommentListOptions(onSortChanged: store.updateSorting, sortValue: sort),
       // sorting menu goes here
       if (postComments != null && postComments.isEmpty)
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 50),
-          child: Text(
-            'no comments yet',
-            style: TextStyle(fontStyle: FontStyle.italic),
+        _centeredWithConstraints(
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 50),
+            child: Text(
+              'no comments yet',
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
           ),
         )
       else ...[

@@ -20,10 +20,7 @@ class UserProfileTab extends HookWidget {
 
     final actions = [
       IconButton(
-        icon: Icon(
-          Icons.settings,
-          color: theme.colorScheme.secondary,
-        ),
+        icon: const Icon(Icons.settings),
         onPressed: () {
           goTo(context, (_) => const SettingsPage());
         },
@@ -56,7 +53,7 @@ class UserProfileTab extends HookWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => goTo(context, (context) => SavedPage()),
-          icon: Icon(Icons.bookmark, color: theme.colorScheme.secondary),
+          icon: const Icon(Icons.bookmark),
         ),
         title: RadioPicker<String>(
           title: 'account',
