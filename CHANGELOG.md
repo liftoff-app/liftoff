@@ -1,3 +1,7 @@
+## Unreleased
+- Fixed issue with theme initializion (jcgurango)
+- Fixed issue with post style settings not updating (swmarks)
+- Support back to iOS 12
 ## v0.10.2 - 2023-07-01
 - Fixed NSFW posts sometimes not loading
 - Implemented share and download media

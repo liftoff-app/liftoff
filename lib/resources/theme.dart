@@ -94,6 +94,8 @@ ThemeData themeFactory(
         borderRadius: BorderRadius.circular(10),
       ),
     ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+        foregroundColor: textColorBasedOnBackground(primaryColor)),
     colorScheme: theme.colorScheme.copyWith(
       primary: primaryColor,
       secondary: primaryColor,
