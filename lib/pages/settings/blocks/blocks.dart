@@ -27,6 +27,7 @@ class BlocksPage extends HookWidget {
           title: const Text('Blocks'),
           bottom: TabBar(
             isScrollable: true,
+            indicatorColor: Theme.of(context).colorScheme.primary,
             tabs: [
               for (final instance in accStore.loggedInInstances)
                 Tab(

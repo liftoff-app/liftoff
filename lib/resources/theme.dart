@@ -45,6 +45,7 @@ ThemeData themeFactory(
     tabBarTheme: TabBarTheme(
       unselectedLabelColor: Colors.grey,
       labelColor: theme.colorScheme.onSurface,
+      indicatorColor: theme.colorScheme.primary,
     ),
     chipTheme: ChipThemeData(
       backgroundColor: theme.colorScheme.secondary,
@@ -100,7 +101,7 @@ ThemeData themeFactory(
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: theme.colorScheme.secondary,
-      foregroundColor: theme.colorScheme.onSecondary,
+      foregroundColor: theme.colorScheme.onSurface,
     ),
   );
 }
