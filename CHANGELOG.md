@@ -1,4 +1,4 @@
-## Unreleased
+## v0.10.0 - 2023-07-01
 - Added custom theming
 - Fixed NSFW posts sometimes not loading
 - Implemented share and download media
