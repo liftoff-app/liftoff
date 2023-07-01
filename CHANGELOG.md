@@ -1,3 +1,8 @@
+## Unreleased
+- Fixed NSFW posts sometimes not loading
+- Implemented share and download media
+- Set default comment sorting
+- Added support for logging in to 0.18.1 instances
 ## v0.10.1 - 2023-07-01
 - Fixed NSFW posts sometimes not loading
 - Implemented share and download media
