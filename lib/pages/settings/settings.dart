@@ -68,7 +68,7 @@ class SettingsPage extends HookWidget {
             leading: const Icon(Icons.view_agenda),
             title: const Text('Post Style'),
             onTap: () {
-              goTo(context, (_) => PostStyleConfigPage());
+              goTo(context, (_) => const PostStyleConfigPage());
             },
           ),
           const AboutTile()
@@ -131,17 +131,13 @@ class AppearanceConfigPage extends StatelessWidget {
 }
 
 /// Settings for theme color, AMOLED switch
-class PostStyleConfigPage extends StatefulWidget {
-  @override
-  _PostStyleConfigPageState createState() => _PostStyleConfigPageState();
-}
-
-class _PostStyleConfigPageState extends State<PostStyleConfigPage> {
-  _PostStyleConfigPageState();
+class PostStyleConfigPage extends StatelessWidget {
+  const PostStyleConfigPage();
 
   @override
   Widget build(BuildContext context) {
     const decoder = JsonDecoder();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Post Style')),
       body: ObserverBuilder<ConfigStore>(
@@ -183,19 +179,6 @@ class _PostStyleConfigPageState extends State<PostStyleConfigPage> {
                 store.showThumbnail = checked;
               },
             ),
-            SwitchListTile.adaptive(
-                contentPadding:
-                    const EdgeInsetsDirectional.only(start: 35, end: 16),
-                //title: Text(L10n.of(context).show_thumbnails),
-                title: const Text('Show Thumbnails in Card View'),
-                value: store.showThumbnailinCardView,
-                onChanged: !store.showThumbnail
-                    ? null
-                    : (checked) {
-                        setState(() {
-                          store.showThumbnailinCardView = checked;
-                        });
-                      }),
             SwitchListTile.adaptive(
               title: const Text('Show Scores'),
               value: store.showScores,

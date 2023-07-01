@@ -90,10 +90,6 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: true)
   bool showThumbnail = true;
 
-  @observable
-  @JsonKey(defaultValue: true)
-  bool showThumbnailinCardView = true;
-
   // font size
   @observable
   @JsonKey(defaultValue: 16)
