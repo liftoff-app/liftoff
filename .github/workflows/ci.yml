@@ -82,7 +82,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: android-debug-apk
-          path: build/app/outputs/apk/prod/release/app-prod-*-release.apk
+          path: build/app/outputs/flutter-apk/
 
   ios:
     name: iOS
