@@ -16,7 +16,7 @@ class AppTheme extends ChangeNotifier {
   Color get primaryColor => _primaryColor;
 
   AppTheme() {
-    _theme = ThemeMode.system;
+    _theme = ThemeMode.dark;
     _loadprefs();
   }
 
