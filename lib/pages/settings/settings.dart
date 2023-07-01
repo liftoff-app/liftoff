@@ -192,133 +192,132 @@ class PostStyleConfigPage extends StatelessWidget {
         )),
       ),
     );
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Post Style')),
-      body: ObserverBuilder<ConfigStore>(
-        builder: (context, store) => Consumer<AppTheme>(
-          builder: (context, state, child) {
-            return ListView(
-              children: [
-                const _SectionHeading('Post View'),
-                SwitchListTile.adaptive(
-                  title: Text(L10n.of(context).post_style_compact),
-                  value: store.compactPostView,
-                  onChanged: (checked) {
-                    store.compactPostView = checked;
-                  },
-                ),
-                SwitchListTile.adaptive(
-                  title: Text(L10n.of(context).post_style_rounded_corners),
-                  value: store.postRoundedCorners,
-                  onChanged: (checked) {
-                    store.postRoundedCorners = checked;
-                  },
-                ),
-                SwitchListTile.adaptive(
-                  title: Text(L10n.of(context).post_style_shadow),
-                  value: store.postCardShadow,
-                  onChanged: (checked) {
-                    store.postCardShadow = checked;
-                  },
-                ),
-                SwitchListTile.adaptive(
-                  title: Text(L10n.of(context).show_avatars),
-                  value: store.showAvatars,
-                  onChanged: (checked) {
-                    store.showAvatars = checked;
-                  },
-                ),
-                SwitchListTile.adaptive(
-                  title: Text(L10n.of(context).show_thumbnails),
-                  value: store.showThumbnail,
-                  onChanged: (checked) {
-                    store.showThumbnail = checked;
-                  },
-                ),
-                SwitchListTile.adaptive(
-                  title: const Text('Show Scores'),
-                  value: store.showScores,
-                  onChanged: (checked) {
-                    store.showScores = checked;
-                  },
-                ),
-                const SizedBox(height: 12),
-                const _SectionHeading('Font'),
-                ListTile(
-                  title: Text(L10n.of(context).post_title_size),
-                  trailing: SizedBox(
-                    width: 120,
-                    child: RadioPicker<double>(
-                      values: const [
-                        11,
-                        12,
-                        13,
-                        14,
-                        15,
-                        16,
-                        17,
-                        18,
-                        19,
-                        20,
-                        21,
-                        22,
-                        23
-                      ],
-                      groupValue: store.titleFontSize,
-                      onChanged: (value) => store.titleFontSize = value,
-                      mapValueToString: (value) => value.round().toString(),
-                    ),
-                  ),
-                ),
-                ListTile(
-                  title: Text(L10n.of(context).post_header_size),
-                  trailing: SizedBox(
-                    width: 120,
-                    child: RadioPicker<double>(
-                      values: const [
-                        11,
-                        12,
-                        13,
-                        14,
-                        15,
-                        16,
-                        17,
-                        18,
-                        19,
-                        20,
-                        21,
-                        22,
-                        23
-                      ],
-                      groupValue: store.postHeaderFontSize,
-                      onChanged: (value) => store.postHeaderFontSize = value,
-                      mapValueToString: (value) => value.round().toString(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const _SectionHeading('Preview'),
-                const SizedBox(height: 20),
-                IgnorePointer(
-                    child: PostTile.fromPostView(
-                        PostView.fromJson(decoder.convert(mockTextPostJson)))),
-                if (state.amoled) gradient,
-                SizedBox(height: store.compactPostView ? 2 : 10),
-                IgnorePointer(
-                    child: PostTile.fromPostView(
-                        PostView.fromJson(decoder.convert(mockMediaPost)))),
-                if (state.amoled) gradient,
-                SizedBox(height: store.compactPostView ? 2 : 10),
-                IgnorePointer(
-                    child: PostTile.fromPostView(
-                        PostView.fromJson(decoder.convert(mockLinkPost)))),
-              ],
-            );
-          },
-        ),
-      ),
-    );
+    return Consumer<AppTheme>(builder: (context, state, child) {
+      return Scaffold(
+          appBar: AppBar(title: const Text('Post Style')),
+          body: ObserverBuilder<ConfigStore>(
+              builder: (context, store) => ListView(
+                    children: [
+                      const _SectionHeading('Post View'),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).post_style_compact),
+                        value: store.compactPostView,
+                        onChanged: (checked) {
+                          store.compactPostView = checked;
+                        },
+                      ),
+                      SwitchListTile.adaptive(
+                        title:
+                            Text(L10n.of(context).post_style_rounded_corners),
+                        value: store.postRoundedCorners,
+                        onChanged: (checked) {
+                          store.postRoundedCorners = checked;
+                        },
+                      ),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).post_style_shadow),
+                        value: store.postCardShadow,
+                        onChanged: (checked) {
+                          store.postCardShadow = checked;
+                        },
+                      ),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).show_avatars),
+                        value: store.showAvatars,
+                        onChanged: (checked) {
+                          store.showAvatars = checked;
+                        },
+                      ),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).show_thumbnails),
+                        value: store.showThumbnail,
+                        onChanged: (checked) {
+                          store.showThumbnail = checked;
+                        },
+                      ),
+                      SwitchListTile.adaptive(
+                        title: const Text('Show Scores'),
+                        value: store.showScores,
+                        onChanged: (checked) {
+                          store.showScores = checked;
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      const _SectionHeading('Font'),
+                      ListTile(
+                        title: Text(L10n.of(context).post_title_size),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                              16,
+                              17,
+                              18,
+                              19,
+                              20,
+                              21,
+                              22,
+                              23
+                            ],
+                            groupValue: store.titleFontSize,
+                            onChanged: (value) => store.titleFontSize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(L10n.of(context).post_header_size),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                              16,
+                              17,
+                              18,
+                              19,
+                              20,
+                              21,
+                              22,
+                              23
+                            ],
+                            groupValue: store.postHeaderFontSize,
+                            onChanged: (value) =>
+                                store.postHeaderFontSize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const _SectionHeading('Preview'),
+                      const SizedBox(height: 20),
+                      IgnorePointer(
+                          child: PostTile.fromPostView(PostView.fromJson(
+                              decoder.convert(mockTextPostJson)))),
+                      if (state.amoled) gradient,
+                      SizedBox(height: store.compactPostView ? 2 : 10),
+                      IgnorePointer(
+                          child: PostTile.fromPostView(PostView.fromJson(
+                              decoder.convert(mockMediaPost)))),
+                      if (state.amoled) gradient,
+                      SizedBox(height: store.compactPostView ? 2 : 10),
+                      IgnorePointer(
+                          child: PostTile.fromPostView(PostView.fromJson(
+                              decoder.convert(mockLinkPost)))),
+                    ],
+                  )));
+    });
   }
 }
 
