@@ -1,0 +1,3 @@
+- Implemented share and download media
+- Set default comment sorting
+- Added support for logging in to 0.18.1 instances
