@@ -47,7 +47,7 @@ class AppTheme extends ChangeNotifier {
 
   _loadprefs() async {
     await _initiateprefs();
-    _theme = ThemeMode.values[_prefs?.getInt(themeKey) ?? 0];
+    _theme = ThemeMode.values[_prefs?.getInt(themeKey) ?? 2];
     _amoled = _prefs?.getBool(amoledKey) ?? false;
 
     final defaultPrimary = _theme == ThemeMode.light
