@@ -131,6 +131,10 @@ class CommunityPage extends HookWidget {
                       page: page,
                       limit: batchSize,
                       savedOnly: false,
+                      auth: accountsStore
+                          .defaultUserDataFor(community.instanceHost)
+                          ?.jwt
+                          .raw,
                     )),
                   ),
                   InfiniteCommentList(
