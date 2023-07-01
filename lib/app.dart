@@ -23,12 +23,10 @@ class MyApp extends StatelessWidget {
               supportedLocales: L10n.supportedLocales,
               localizationsDelegates: L10n.localizationsDelegates,
               themeMode: state.theme,
-              darkTheme: state.amoled
-                  ? themeFactory(
-                      primaryColor: state.primaryColor,
-                      dark: true,
-                      amoled: true)
-                  : themeFactory(primaryColor: state.primaryColor, dark: true),
+              darkTheme: themeFactory(
+                  primaryColor: state.primaryColor,
+                  amoled: state.amoled,
+                  dark: true),
               locale: context.read<ConfigStore>().locale,
               theme: themeFactory(primaryColor: state.primaryColor),
               home: const HomePage(),
