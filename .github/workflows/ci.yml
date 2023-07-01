@@ -62,7 +62,7 @@ jobs:
           ANDROID_KEY_PASSWORD: android
           ANDROID_STORE_PATH: key.jks
           ANDROID_STORE_PASSWORD: android
-        run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
+        run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor preview
 
       - name: Inject keystore
         working-directory: android/app
@@ -77,7 +77,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           ANDROID_STORE_PATH: key.jks
           ANDROID_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-        run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
+        run: flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor preview
 
   ios:
     name: iOS
