@@ -28,6 +28,7 @@ class SavedPage extends HookWidget {
         appBar: AppBar(
           title: Text(L10n.of(context).saved),
           bottom: TabBar(
+            indicatorColor: Theme.of(context).colorScheme.primary,
             tabs: [
               Tab(text: L10n.of(context).posts),
               Tab(text: L10n.of(context).comments),

@@ -111,6 +111,7 @@ class InboxPage extends HookWidget {
             )
           ],
           bottom: TabBar(
+            indicatorColor: theme.colorScheme.primary,
             onTap: (value) => currentTab.value = value,
             tabs: [
               Tab(text: L10n.of(context).replies),

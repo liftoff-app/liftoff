@@ -140,6 +140,7 @@ class InstancePage extends HookWidget {
                         child: Material(
                           color: theme.cardColor,
                           child: TabBar(
+                            indicatorColor: theme.colorScheme.primary,
                             tabs: [
                               Tab(text: L10n.of(context).posts),
                               Tab(text: L10n.of(context).comments),

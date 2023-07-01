@@ -28,6 +28,7 @@ class SearchResultsPage extends HookWidget {
             title: Text('Looking for "$query"'),
             bottom: TabBar(
               isScrollable: true,
+              indicatorColor: Theme.of(context).colorScheme.primary,
               tabs: [
                 Tab(text: L10n.of(context).posts),
                 Tab(text: L10n.of(context).comments),
