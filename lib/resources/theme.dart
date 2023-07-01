@@ -94,10 +94,6 @@ ThemeData themeFactory(
         borderRadius: BorderRadius.circular(10),
       ),
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: primaryColor,
-      foregroundColor: theme.colorScheme.onSurface,
-    ),
     colorScheme: theme.colorScheme.copyWith(
       primary: primaryColor,
       secondary: primaryColor,
