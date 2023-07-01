@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo "Running pre-push hooks..."
+
+# Run Flutter analyze and check for errors
+if ! output=$(flutter analyze); then
+    echo "COMMIT REJECTED: Flutter analyze found the following errors:"
+    echo "$output"
+    exit 1
+fi
+
+# Gen l10n prior to formatting code
+flutter gen-l10n
+# l10n is in the git ignore, format so it wont get flagged in following step
+dart format lib/l10n/gen/
+
+# Run Dart format
+if ! output=$(dart format --set-exit-if-changed .); then
+    echo "COMMIT REJECTED: Dart format made the following changes:"
+    echo "$output"
+    exit 1
+fi
+
+echo "Running tests..."
+# Run flutter tests
+if ! output=$(flutter test); then
+    echo "COMMIT REJECTED: Test failures:"
+    echo "$output"
+    exit 1
+fi
+
+# If we made it this far, the commit is allowed
+exit 0
