@@ -7,9 +7,9 @@ class AppTheme extends ChangeNotifier {
   final String primaryKey = 'primary';
 
   SharedPreferences? _prefs;
-  late bool _amoled;
-  late ThemeMode _theme;
-  late Color _primaryColor;
+  bool _amoled = false;
+  ThemeMode _theme = ThemeMode.dark;
+  Color _primaryColor = ThemeData().primaryColorDark;
 
   bool get amoled => _amoled;
   ThemeMode get theme => _theme;
