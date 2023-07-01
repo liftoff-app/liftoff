@@ -1,4 +1,4 @@
-## Unreleased
+## v0.10.3 - 2023-07-01
 - Fixed issue with theme initializion (jcgurango)
 - Fixed issue with post style settings not updating (swmarks)
 - Support back to iOS 12

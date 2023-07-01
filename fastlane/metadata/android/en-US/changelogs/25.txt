@@ -1,0 +1,2 @@
+- Fixed issue with post style settings not updating (swmarks)
+- Support back to iOS 12
