@@ -71,7 +71,7 @@ class PostTitle extends HookWidget {
                   ),
                 ),
               ],
-              if ((store.hasMedia && configStore.showThumbnail && configStore.compactPostView) &&
+              if ((store.hasMedia && configStore.showThumbnail) &&
                   !(post.nsfw && configStore.blurNsfw) &&
                   url != null) ...[
                 FullscreenableImage(
