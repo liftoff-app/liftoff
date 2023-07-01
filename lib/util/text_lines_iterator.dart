@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 /// utililty class for traversing through multiline text
-class TextLinesIterator extends Iterator {
+class TextLinesIterator implements Iterator {
   String text;
   int beg;
   int end;
