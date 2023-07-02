@@ -69,6 +69,10 @@ class PostMoreMenu extends HookWidget {
         builder: (context, store) {
           final post = store.postView;
 
+          final targetLanguage = Localizations.localeOf(context).languageCode;
+          final sourceText = Uri.encodeComponent(
+              '${post.post.name}\n---\n${post.post.body ?? ""}');
+
           return Column(
             children: [
               ListTile(
@@ -135,6 +139,18 @@ class PostMoreMenu extends HookWidget {
                     );
                   },
                 ),
+              ListTile(
+                leading: const Icon(Icons.translate),
+                title: const Text('Translate'),
+                onTap: () async {
+                  await launchLink(
+                      link:
+                          'https://translate.google.com/?tl=$targetLanguage&text=$sourceText',
+                      context: context);
+
+                  Navigator.of(context).pop();
+                },
+              ),
               ListTile(
                 leading: store.reportingState.isLoading
                     ? const CircularProgressIndicator.adaptive()
