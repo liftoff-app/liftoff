@@ -6,7 +6,6 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../comment_tree.dart';
 import '../l10n/l10n.dart';
 import '../util/async_store.dart';
 import '../util/mobx_provider.dart';

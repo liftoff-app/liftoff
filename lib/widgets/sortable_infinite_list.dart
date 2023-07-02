@@ -9,12 +9,13 @@ import '../resources/app_theme.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
 import 'comment/comment.dart';
+import 'comment_list_options.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
 import 'post_list_options.dart';
 
 typedef FetcherWithSorting<T> = Future<List<T>> Function(
-    int page, int batchSize, SortType sortType);
+    int page, int batchSize, dynamic sortType);
 
 /// Infinite list of posts
 class SortableInfiniteList<T> extends HookWidget {
@@ -26,7 +27,7 @@ class SortableInfiniteList<T> extends HookWidget {
 
   /// if no defaultSort is provided, the defaultSortType
   /// from the configStore will be used
-  final SortType? defaultSort;
+  final dynamic defaultSort;
   final Object Function(T item)? uniqueProp;
   const SortableInfiniteList({
     required this.fetcher,
@@ -40,26 +41,41 @@ class SortableInfiniteList<T> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultSortType =
+    final defaultPostSort =
         useStore((ConfigStore store) => store.defaultSortType);
+
+    final defaultCommentSort =
+        useStore((ConfigStore store) => store.defaultCommentSort);
     final defaultController = useInfiniteScrollController();
     final isc = controller ?? defaultController;
 
-    final sort = useState(defaultSort ?? defaultSortType);
+    final postSort = useState(defaultSort ?? defaultPostSort);
+    final commentSort = useState(defaultSort ?? defaultCommentSort);
 
-    void changeSorting(SortType newSort) {
-      sort.value = newSort;
+    void changePostSort(SortType newSort) {
+      postSort.value = newSort;
+      isc.clear();
+    }
+
+    void changeCommentSort(dynamic newSort) {
+      commentSort.value = newSort;
       isc.clear();
     }
 
     return InfiniteScroll<T>(
-      leading: PostListOptions(
-        sortValue: sort.value,
-        onSortChanged: changeSorting,
-      ),
+      leading: T == PostView
+          ? PostListOptions(
+              sortValue: postSort.value,
+              onSortChanged: changePostSort,
+            )
+          : CommentListOptions(
+              sortValue: commentSort.value,
+              onSortChanged: changeCommentSort,
+            ),
       itemBuilder: itemBuilder,
       padding: EdgeInsets.zero,
-      fetcher: (page, batchSize) => fetcher(page, batchSize, sort.value),
+      fetcher: (page, batchSize) => fetcher(
+          page, batchSize, T == PostView ? postSort.value : commentSort.value),
       controller: isc,
       batchSize: 20,
       noItems: noItems,

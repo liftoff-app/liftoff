@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../comment_tree.dart';
+import 'package:lemmy_api_client/v3.dart';
 import '../l10n/l10n.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
