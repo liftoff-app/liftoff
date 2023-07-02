@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/stores.dart';
 import '../util/goto.dart';
+import '../util/text_color.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/user_profile.dart';
 import 'saved_page.dart';
@@ -79,13 +80,16 @@ class UserProfileTab extends HookWidget {
                 Flexible(
                   child: Text(
                     displayValue,
-                    style: theme.appBarTheme.titleTextStyle,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: textColorBasedOnBackground(theme.primaryColor)),
                     overflow: TextOverflow.fade,
                     softWrap: false,
                   ),
                 ),
                 Icon(Icons.expand_more,
-                    color: theme.appBarTheme.titleTextStyle?.color),
+                    color: textColorBasedOnBackground(theme.primaryColor)),
               ],
             ),
           ),

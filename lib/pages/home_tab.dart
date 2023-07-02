@@ -13,6 +13,7 @@ import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../stores/config_store.dart';
 import '../util/goto.dart';
+import '../util/text_color.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
@@ -263,14 +264,18 @@ class HomeTab extends HookWidget {
                       Flexible(
                         child: Text(
                           title,
-                          style: theme.appBarTheme.titleTextStyle,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: textColorBasedOnBackground(
+                                  theme.primaryColor)),
                           overflow: TextOverflow.fade,
                           softWrap: false,
                         ),
                       ),
                       Icon(
                         Icons.arrow_drop_down,
-                        color: theme.appBarTheme.titleTextStyle?.color,
+                        color: textColorBasedOnBackground(theme.primaryColor),
                       ),
                     ],
                   ),
