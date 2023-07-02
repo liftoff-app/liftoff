@@ -8,6 +8,34 @@ import '../url_launcher.dart';
 import 'cached_network_image.dart';
 import 'fullscreenable_image.dart';
 
+/// Accepted formats:
+/// !community@server.com
+/// /c/community@server.com
+/// /m/community@server.com
+/// /u/username@server.com
+/// @username@server.com
+
+class LemmyLinkSyntax extends md.InlineSyntax {
+  // https://github.com/LemmyNet/lemmy-ui/blob/61255bf01a8d2acdbb77229838002bf8067ada70/src/shared/config.ts#L38
+  static const String _pattern =
+      r'(\/[cmu]\/|@|!)([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})';
+
+  LemmyLinkSyntax() : super(_pattern);
+
+  @override
+  bool onMatch(md.InlineParser parser, Match match) {
+    final modifier = match[1]!;
+    final name = match[2]!;
+    final url = match[3]!;
+    final anchor = md.Element.text('a', '$modifier$name@$url');
+
+    anchor.attributes['href'] = '$modifier$name@$url';
+    parser.addNode(anchor);
+
+    return true;
+  }
+}
+
 /// A Markdown renderer with link/image handling
 class MarkdownText extends StatelessWidget {
   final String instanceHost;
@@ -40,6 +68,7 @@ class MarkdownText extends StatelessWidget {
             // TODO: use a font from google fonts maybe? the defaults aren't very pretty
             ?.copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),
       ),
+      inlineSyntaxes: [LemmyLinkSyntax()],
       onTapLink: (text, href, title) {
         if (href == null) return;
         linkLauncher(context: context, url: href, instanceHost: instanceHost)

@@ -25,6 +25,24 @@ Future<void> linkLauncher({
 
   final instances = context.read<AccountsStore>().instances;
 
+  // CHECK IF EMAIL STYLE LINK TO COMMUNITY
+  // Format: !liftoff@lemmy.world
+  if (url.startsWith('!')) {
+    final splitCommunityName = url.replaceAll(RegExp('!'), '').split('@');
+    await Navigator.of(context).push(CommunityPage.fromNameRoute(
+        splitCommunityName[1], splitCommunityName[0]));
+    return;
+  }
+
+  // CHECK IF EMAIL STYLE LINK TO USER
+  // Format: @user@lemmy.world
+  if (url.startsWith('@')) {
+    final usernameSplit = url.replaceFirst(RegExp('@'), '').split('@');
+    push(() => UserPage.fromName(
+        instanceHost: usernameSplit[1], username: usernameSplit[0]));
+    return;
+  }
+
   final chonks = url.split('/');
   if (chonks.length == 1) {
     await launchLink(link: url, context: context);
