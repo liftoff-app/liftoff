@@ -382,7 +382,8 @@ class GeneralConfigPage extends StatelessWidget {
               trailing: SizedBox(
                 width: 120,
                 child: RadioPicker<CommentSortType>(
-                  values: CommentSortType.values,
+                  values: CommentSortType.values
+                      .sublist(0, CommentSortType.values.length - 1),
                   groupValue: store.defaultCommentSort,
                   onChanged: (value) => store.defaultCommentSort = value,
                   mapValueToString: (value) => value.value,
