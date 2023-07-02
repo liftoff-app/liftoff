@@ -32,10 +32,8 @@ ThemeData themeFactory(
       shadowColor: Colors.transparent,
       centerTitle: true,
       iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-      titleTextStyle: theme.textTheme.titleLarge?.copyWith(
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-          color: textColorBasedOnBackground(primaryColor)),
+      titleTextStyle: theme.textTheme.titleLarge
+          ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
     ),
     bottomAppBarTheme:
         BottomAppBarTheme(color: maybeAmoledColor, shadowColor: Colors.white),
