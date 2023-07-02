@@ -5,7 +5,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../url_launcher.dart';
-import '../util/cleanup_url.dart';
 import 'cached_network_image.dart';
 import 'fullscreenable_image.dart';
 
