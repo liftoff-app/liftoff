@@ -50,6 +50,9 @@ class SearchTab extends HookWidget {
             keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
             onSubmitted: (_) => handleSearch(),
+            onTapOutside: (event) {
+              FocusScope.of(context).unfocus();
+            },
             decoration: InputDecoration(
                 hintText: L10n.of(context).search,
                 suffixIcon: searchInputController.text.isNotEmpty
