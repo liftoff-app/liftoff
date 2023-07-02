@@ -268,7 +268,8 @@ class PostStyleConfigPage extends StatelessWidget {
                             onChanged: (value) => store.titleFontSize = value,
                             mapValueToString: (value) =>
                                 value.round().toString(),
-                            buttonBuilder: (context, displayValue, onPressed) => TextButton(
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                TextButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -306,7 +307,8 @@ class PostStyleConfigPage extends StatelessWidget {
                                 store.postHeaderFontSize = value,
                             mapValueToString: (value) =>
                                 value.round().toString(),
-                            buttonBuilder: (context, displayValue, onPressed) => TextButton(
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                TextButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -361,7 +363,8 @@ class GeneralConfigPage extends StatelessWidget {
                   groupValue: store.defaultSortType,
                   onChanged: (value) => store.defaultSortType = value,
                   mapValueToString: (value) => value.value,
-                  buttonBuilder: (context, displayValue, onPressed) => TextButton(
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -383,7 +386,8 @@ class GeneralConfigPage extends StatelessWidget {
                   groupValue: store.defaultCommentSort,
                   onChanged: (value) => store.defaultCommentSort = value,
                   mapValueToString: (value) => value.value,
-                  buttonBuilder: (context, displayValue, onPressed) => TextButton(
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -409,7 +413,8 @@ class GeneralConfigPage extends StatelessWidget {
                   groupValue: store.defaultListingType,
                   onChanged: (value) => store.defaultListingType = value,
                   mapValueToString: (value) => value.value,
-                  buttonBuilder: (context, displayValue, onPressed) => TextButton(
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -434,7 +439,8 @@ class GeneralConfigPage extends StatelessWidget {
                   onChanged: (selected) {
                     store.locale = selected;
                   },
-                  buttonBuilder: (context, displayValue, onPressed) => TextButton(
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

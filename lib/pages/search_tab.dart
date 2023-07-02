@@ -72,7 +72,8 @@ class SearchTab extends HookWidget {
                   values: accStore.instances.toList(),
                   groupValue: instanceHost.value!,
                   onChanged: (value) => instanceHost.value = value,
-                  buttonBuilder: (context, displayValue, onPressed) => TextButton(
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
