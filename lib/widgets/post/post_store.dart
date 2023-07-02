@@ -15,6 +15,7 @@ abstract class _PostStore with Store {
   final votingState = AsyncStore<PostView>();
   final savingState = AsyncStore<PostView>();
   final userBlockingState = AsyncStore<BlockedPerson>();
+  final communityBlockingState = AsyncStore<BlockedCommunity>();
   final reportingState = AsyncStore<PostReportView>();
   final deletingState = AsyncStore<PostView>();
 
@@ -101,6 +102,16 @@ abstract class _PostStore with Store {
     if (result != null) {
       postView = postView.copyWith(creatorBlocked: result.blocked);
     }
+  }
+
+  @action
+  Future<void> blockCommunity(UserData userData) async {
+    await communityBlockingState.runLemmy(
+        postView.post.instanceHost,
+        BlockCommunity(
+            communityId: postView.community.id,
+            block: true,
+            auth: userData.jwt.raw));
   }
 
   @action
