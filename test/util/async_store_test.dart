@@ -4,7 +4,7 @@ import 'package:liftoff/util/async_store.dart';
 
 void main() {
   group('AsyncStore', () {
-    const instanceHost = 'lemmy.world';
+    const instanceHost = 'stable.liftoff-app.org';
     const badInstanceHost = 'does.not.exist';
 
     test('runLemmy works properly all the way through', () async {
