@@ -14,7 +14,7 @@ void main() {
       expect(store.isLoading, false);
       expect(store.errorTerm, null);
 
-      final fut = store.runLemmy(instanceHost, const GetPost(id: 744421));
+      final fut = store.runLemmy(instanceHost, const GetPost(id: 1));
 
       expect(store.asyncState, isA<AsyncStateLoading>());
       expect(store.isLoading, true);
@@ -71,7 +71,7 @@ void main() {
     test('succeeds then fails on refresh, and then succeeds', () async {
       final store = AsyncStore<FullPostView>();
 
-      final res = await store.runLemmy(instanceHost, const GetPost(id: 744421));
+      final res = await store.runLemmy(instanceHost, const GetPost(id: 1));
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, null);
@@ -90,7 +90,7 @@ void main() {
 
       final res2 = await store.runLemmy(
         instanceHost,
-        const GetPost(id: 744421),
+        const GetPost(id: 1),
         refresh: true,
       );
 
