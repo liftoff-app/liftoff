@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/stores.dart';
 import '../util/goto.dart';
-import '../util/text_color.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/user_profile.dart';
 import 'saved_page.dart';
@@ -16,7 +15,7 @@ class UserProfileTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    //final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
     final actions = [
@@ -74,22 +73,18 @@ class UserProfileTab extends HookWidget {
           buttonBuilder: (context, displayValue, onPressed) => TextButton(
             onPressed: onPressed,
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
                   child: Text(
                     displayValue,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: textColorBasedOnBackground(theme.primaryColor)),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500),
                     overflow: TextOverflow.fade,
                     softWrap: false,
                   ),
                 ),
-                Icon(Icons.expand_more,
-                    color: textColorBasedOnBackground(theme.primaryColor)),
+                const Icon(Icons.arrow_drop_down),
               ],
             ),
           ),
