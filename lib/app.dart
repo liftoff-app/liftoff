@@ -18,18 +18,20 @@ class MyApp extends StatelessWidget {
         create: (context) => AppTheme(),
         child: Consumer<AppTheme>(
           builder: (context, state, child) {
-            return MaterialApp(
-              title: 'Liftoff',
-              supportedLocales: L10n.supportedLocales,
-              localizationsDelegates: L10n.localizationsDelegates,
-              themeMode: state.theme,
-              darkTheme: themeFactory(
-                  primaryColor: state.primaryColor,
-                  amoled: state.amoled,
-                  dark: true),
-              locale: context.read<ConfigStore>().locale,
-              theme: themeFactory(primaryColor: state.primaryColor),
-              home: const HomePage(),
+            return ObserverBuilder<ConfigStore>(
+              builder: (context, store) => MaterialApp(
+                title: 'Liftoff',
+                supportedLocales: L10n.supportedLocales,
+                localizationsDelegates: L10n.localizationsDelegates,
+                themeMode: state.theme,
+                darkTheme: themeFactory(
+                    primaryColor: state.primaryColor,
+                    amoled: state.amoled,
+                    dark: true),
+                locale: store.locale,
+                theme: themeFactory(primaryColor: state.primaryColor),
+                home: const HomePage(),
+              ),
             );
           },
         ),
