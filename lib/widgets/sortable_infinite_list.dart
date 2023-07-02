@@ -9,6 +9,7 @@ import '../resources/app_theme.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
 import 'comment/comment.dart';
+import 'comment_list_options.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
 import 'post_list_options.dart';
@@ -68,6 +69,60 @@ class SortableInfiniteList<T> extends HookWidget {
   }
 }
 
+typedef CommentFetcherWithSorting<T> = Future<List<T>> Function(
+    int page, int batchSize, CommentSortType sortType);
+
+/// Infinite list of comments
+class SortableInfiniteCommentList<T> extends HookWidget {
+  final CommentFetcherWithSorting<T> fetcher;
+  final Widget Function(T) itemBuilder;
+  final InfiniteScrollController? controller;
+  final Function? onStyleChange;
+  final Widget noItems;
+
+  /// if no defaultSort is provided, the defaultSortType
+  /// from the configStore will be used
+  final dynamic defaultSort;
+  final Object Function(T item)? uniqueProp;
+  const SortableInfiniteCommentList({
+    required this.fetcher,
+    required this.itemBuilder,
+    this.controller,
+    this.onStyleChange,
+    this.noItems = const SizedBox.shrink(),
+    this.defaultSort,
+    this.uniqueProp,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final defaultCommentSort =
+        useStore((ConfigStore store) => store.defaultCommentSort);
+    final defaultController = useInfiniteScrollController();
+    final isc = controller ?? defaultController;
+    final commentSort = useState(defaultSort ?? defaultCommentSort);
+
+    void changeCommentSort(dynamic newSort) {
+      commentSort.value = newSort;
+      isc.clear();
+    }
+
+    return InfiniteScroll<T>(
+      leading: CommentListOptions(
+        sortValue: commentSort.value,
+        onSortChanged: changeCommentSort,
+      ),
+      itemBuilder: itemBuilder,
+      padding: EdgeInsets.zero,
+      fetcher: (page, batchSize) => fetcher(page, batchSize, commentSort.value),
+      controller: isc,
+      batchSize: 20,
+      noItems: noItems,
+      uniqueProp: uniqueProp,
+    );
+  }
+}
+
 class InfinitePostList extends SortableInfiniteList<PostView> {
   InfinitePostList({
     required super.fetcher,
@@ -105,7 +160,7 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
         );
 }
 
-class InfiniteCommentList extends SortableInfiniteList<CommentView> {
+class InfiniteCommentList extends SortableInfiniteCommentList<CommentView> {
   InfiniteCommentList({
     required super.fetcher,
     super.controller,

@@ -116,7 +116,9 @@ class PostInfoSection extends HookWidget {
                               ' · ${post.post.published.timeagoShort(context)}',
                         ),
                         if (post.post.locked) const TextSpan(text: ' · 🔒'),
-                        // if (post.post.stickied) const TextSpan(text: ' · 📌'),
+                        if (post.post.featuredCommunity ||
+                            post.post.featuredLocal)
+                          const TextSpan(text: ' · 📌'),
                         if (post.post.nsfw) const TextSpan(text: ' · '),
                         if (post.post.nsfw)
                           TextSpan(

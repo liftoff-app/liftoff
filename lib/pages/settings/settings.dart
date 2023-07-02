@@ -6,7 +6,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../../comment_tree.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../resources/app_theme.dart';
