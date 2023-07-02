@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -15,7 +16,7 @@ import 'post/post.dart';
 import 'post_list_options.dart';
 
 typedef FetcherWithSorting<T> = Future<List<T>> Function(
-    int page, int batchSize, dynamic sortType);
+    int page, int batchSize, SortType sortType);
 
 /// Infinite list of posts
 class SortableInfiniteList<T> extends HookWidget {
@@ -27,7 +28,7 @@ class SortableInfiniteList<T> extends HookWidget {
 
   /// if no defaultSort is provided, the defaultSortType
   /// from the configStore will be used
-  final dynamic defaultSort;
+  final SortType? defaultSort;
   final Object Function(T item)? uniqueProp;
   const SortableInfiniteList({
     required this.fetcher,
@@ -41,21 +42,66 @@ class SortableInfiniteList<T> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultPostSort =
+    final defaultSortType =
         useStore((ConfigStore store) => store.defaultSortType);
+    final defaultController = useInfiniteScrollController();
+    final isc = controller ?? defaultController;
 
+    final sort = useState(defaultSort ?? defaultSortType);
+
+    void changeSorting(SortType newSort) {
+      sort.value = newSort;
+      isc.clear();
+    }
+
+    return InfiniteScroll<T>(
+      leading: PostListOptions(
+        sortValue: sort.value,
+        onSortChanged: changeSorting,
+      ),
+      itemBuilder: itemBuilder,
+      padding: EdgeInsets.zero,
+      fetcher: (page, batchSize) => fetcher(page, batchSize, sort.value),
+      controller: isc,
+      batchSize: 20,
+      noItems: noItems,
+      uniqueProp: uniqueProp,
+    );
+  }
+}
+
+typedef CommentFetcherWithSorting<T> = Future<List<T>> Function(
+    int page, int batchSize, CommentSortType sortType);
+
+/// Infinite list of comments
+class SortableInfiniteCommentList<T> extends HookWidget {
+  final CommentFetcherWithSorting<T> fetcher;
+  final Widget Function(T) itemBuilder;
+  final InfiniteScrollController? controller;
+  final Function? onStyleChange;
+  final Widget noItems;
+
+  /// if no defaultSort is provided, the defaultSortType
+  /// from the configStore will be used
+  final dynamic defaultSort;
+  final Object Function(T item)? uniqueProp;
+  const SortableInfiniteCommentList({
+    required this.fetcher,
+    required this.itemBuilder,
+    this.controller,
+    this.onStyleChange,
+    this.noItems = const SizedBox.shrink(),
+    this.defaultSort,
+    this.uniqueProp,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final defaultCommentSort =
         useStore((ConfigStore store) => store.defaultCommentSort);
     final defaultController = useInfiniteScrollController();
     final isc = controller ?? defaultController;
-
-    final postSort = useState(defaultSort ?? defaultPostSort);
     final commentSort = useState(defaultSort ?? defaultCommentSort);
-
-    void changePostSort(SortType newSort) {
-      postSort.value = newSort;
-      isc.clear();
-    }
 
     void changeCommentSort(dynamic newSort) {
       commentSort.value = newSort;
@@ -63,19 +109,13 @@ class SortableInfiniteList<T> extends HookWidget {
     }
 
     return InfiniteScroll<T>(
-      leading: T == PostView
-          ? PostListOptions(
-              sortValue: postSort.value,
-              onSortChanged: changePostSort,
-            )
-          : CommentListOptions(
-              sortValue: commentSort.value,
-              onSortChanged: changeCommentSort,
-            ),
+      leading: CommentListOptions(
+        sortValue: commentSort.value,
+        onSortChanged: changeCommentSort,
+      ),
       itemBuilder: itemBuilder,
       padding: EdgeInsets.zero,
-      fetcher: (page, batchSize) => fetcher(
-          page, batchSize, T == PostView ? postSort.value : commentSort.value),
+      fetcher: (page, batchSize) => fetcher(page, batchSize, commentSort.value),
       controller: isc,
       batchSize: 20,
       noItems: noItems,
@@ -121,7 +161,7 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
         );
 }
 
-class InfiniteCommentList extends SortableInfiniteList<CommentView> {
+class InfiniteCommentList extends SortableInfiniteCommentList<CommentView> {
   InfiniteCommentList({
     required super.fetcher,
     super.controller,
