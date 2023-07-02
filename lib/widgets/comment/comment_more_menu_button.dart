@@ -89,6 +89,9 @@ class _CommentMoreMenuPopup extends HookWidget {
         final targetRect = Rect.fromPoints(position,
             position.translate(renderbox.size.width, renderbox.size.height));
 
+        final targetLanguage = Localizations.localeOf(context).languageCode;
+        final sourceText = Uri.encodeComponent(comment.content);
+
         return Column(
           children: [
             ListTile(
@@ -121,6 +124,18 @@ class _CommentMoreMenuPopup extends HookWidget {
                   sharePositionOrigin: targetRect,
                   context: context,
                 );
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.translate),
+              title: const Text('Translate'),
+              onTap: () async {
+                await launchLink(
+                    link:
+                        'https://translate.google.com/?tl=$targetLanguage&text=$sourceText',
+                    context: context);
+
                 Navigator.of(context).pop();
               },
             ),
