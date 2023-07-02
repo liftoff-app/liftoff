@@ -10,6 +10,8 @@ extension SortTypeL10n on SortType {
         return L10n.of(context).hot;
       case SortType.new_:
         return L10n.of(context).new_;
+      case SortType.old:
+        return L10n.of(context).old;
       case SortType.topYear:
         return L10n.of(context).top_year;
       case SortType.topMonth:
@@ -18,6 +20,12 @@ extension SortTypeL10n on SortType {
         return L10n.of(context).top_week;
       case SortType.topDay:
         return L10n.of(context).top_day;
+      case SortType.topHour:
+        return L10n.of(context).top_hour;
+      case SortType.topSixHour:
+        return L10n.of(context).top_six_hour;
+      case SortType.topTwelveHour:
+        return L10n.of(context).top_twelve_hour;
       case SortType.topAll:
         return L10n.of(context).top_all;
       case SortType.newComments:
