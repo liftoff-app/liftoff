@@ -113,15 +113,9 @@ class WriteComment extends HookWidget {
           child: Stack(
             children: [
               ListView(
+                reverse: true,
                 children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height * .35),
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(8),
-                      child: preview,
-                    ),
-                  ),
+                  preview,
                   const Divider(),
                   Editor(
                     controller: editorController,
@@ -144,7 +138,7 @@ class WriteComment extends HookWidget {
                     ],
                   ),
                   EditorToolbar.safeArea,
-                ],
+                ].reversed.toList(),
               ),
               BottomSticky(
                 child: EditorToolbar(editorController),
