@@ -50,6 +50,10 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: true)
   bool useInAppBrowser = true;
 
+  @observable
+  @JsonKey(defaultValue: false)
+  bool convertWebpToPng = false;
+
   // default value is set in the `LocaleConverter.fromJson`
   @observable
   Locale locale = const Locale('en');

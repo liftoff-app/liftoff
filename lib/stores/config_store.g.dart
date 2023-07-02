@@ -9,6 +9,7 @@ part of 'config_store.dart';
 ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..disableAnimations = json['disableAnimations'] as bool? ?? false
   ..useInAppBrowser = json['useInAppBrowser'] as bool? ?? true
+  ..convertWebpToPng = json['convertWebpToPng'] as bool? ?? false
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
   ..compactPostView = json['compactPostView'] as bool? ?? false
   ..postRoundedCorners = json['postRoundedCorners'] as bool? ?? true
@@ -30,6 +31,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
     <String, dynamic>{
       'disableAnimations': instance.disableAnimations,
       'useInAppBrowser': instance.useInAppBrowser,
+      'convertWebpToPng': instance.convertWebpToPng,
       'locale': const LocaleConverter().toJson(instance.locale),
       'compactPostView': instance.compactPostView,
       'postRoundedCorners': instance.postRoundedCorners,
@@ -82,6 +84,22 @@ mixin _$ConfigStore on _ConfigStore, Store {
   set useInAppBrowser(bool value) {
     _$useInAppBrowserAtom.reportWrite(value, super.useInAppBrowser, () {
       super.useInAppBrowser = value;
+    });
+  }
+
+  late final _$convertWebpToPngAtom =
+      Atom(name: '_ConfigStore.convertWebpToPng', context: context);
+
+  @override
+  bool get convertWebpToPng {
+    _$convertWebpToPngAtom.reportRead();
+    return super.convertWebpToPng;
+  }
+
+  @override
+  set convertWebpToPng(bool value) {
+    _$convertWebpToPngAtom.reportWrite(value, super.convertWebpToPng, () {
+      super.convertWebpToPng = value;
     });
   }
 
@@ -336,6 +354,7 @@ mixin _$ConfigStore on _ConfigStore, Store {
     return '''
 disableAnimations: ${disableAnimations},
 useInAppBrowser: ${useInAppBrowser},
+convertWebpToPng: ${convertWebpToPng},
 locale: ${locale},
 compactPostView: ${compactPostView},
 postRoundedCorners: ${postRoundedCorners},
