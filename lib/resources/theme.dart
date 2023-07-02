@@ -32,8 +32,10 @@ ThemeData themeFactory(
       shadowColor: Colors.transparent,
       centerTitle: true,
       iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-      titleTextStyle: theme.textTheme.titleLarge
-          ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+      titleTextStyle: theme.textTheme.titleLarge?.copyWith(
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+          color: textColorBasedOnBackground(primaryColor)),
     ),
     bottomAppBarTheme:
         BottomAppBarTheme(color: maybeAmoledColor, shadowColor: Colors.white),
@@ -66,8 +68,7 @@ ThemeData themeFactory(
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
-        foregroundColor:
-            textColorBasedOnBackground(primaryColor),
+        foregroundColor: textColorBasedOnBackground(primaryColor),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -76,8 +77,7 @@ ThemeData themeFactory(
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         backgroundColor: primaryColor,
-        foregroundColor:
-            textColorBasedOnBackground(primaryColor),
+        foregroundColor: textColorBasedOnBackground(primaryColor),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
