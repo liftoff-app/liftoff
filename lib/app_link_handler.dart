@@ -5,6 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import './util/goto.dart';
 
+/// Wrapper widget that handles app links.
+/// It currently supports:
+/// - Communities
+/// - Users
+/// - Posts
+///
+/// The link format is the same as the web app, with liftoff:// as the scheme.
+/// For example:
+///  - liftoff://iusearchlinux.fyi/post/33195
+///  - liftoff://programming.dev/c/programmer_humor
+///  - liftoff://lemmy.world/u/zachatrocity
 class AppLinkHandler extends HookWidget {
   AppLinkHandler(this.child);
 
@@ -28,6 +39,9 @@ class AppLinkHandler extends HookWidget {
               break;
             case 'u':
               goToUser.byName(context, uri.host, target);
+              break;
+            case 'post':
+              goToPost(context, uri.host, int.parse(target));
               break;
           }
         });
