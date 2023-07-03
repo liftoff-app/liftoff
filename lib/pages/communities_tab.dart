@@ -10,6 +10,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
+import '../stores/accounts_store.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/iterators.dart';
 import '../util/goto.dart';
@@ -256,14 +257,14 @@ class _CommunitySubscribeToggle extends HookWidget {
     final delayed = useDelayedLoading();
     final loggedInAction = useLoggedInAction(instanceHost);
 
-    handleTap(Jwt token) async {
+    handleTap(UserData userData) async {
       delayed.start();
 
       try {
         await LemmyApiV3(instanceHost).run(FollowCommunity(
           communityId: communityId,
           follow: !subbed.value,
-          auth: token.raw,
+          auth: userData.jwt.raw,
         ));
         subbed.value = !subbed.value;
       } on Exception catch (err) {

@@ -61,8 +61,7 @@ class CommunityPage extends HookWidget {
                     ? FailedToLoad(
                         refresh: () => store.refresh(context
                             .read<AccountsStore>()
-                            .defaultUserDataFor(store.instanceHost)
-                            ?.jwt),
+                            .defaultUserDataFor(store.instanceHost)),
                         message: communityState.errorTerm!.tr(context),
                       )
                     : const CircularProgressIndicator.adaptive()),
@@ -166,10 +165,8 @@ class CommunityPage extends HookWidget {
       builder: (context) {
         return MobxProvider.value(
           value: store
-            ..refresh(context
-                .read<AccountsStore>()
-                .defaultUserDataFor(instanceHost)
-                ?.jwt),
+            ..refresh(
+                context.read<AccountsStore>().defaultUserDataFor(instanceHost)),
           child: const CommunityPage(),
         );
       },

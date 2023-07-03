@@ -37,9 +37,9 @@ mixin _$EditorToolbarStore on _EditorToolbarStore, Store {
       AsyncAction('_EditorToolbarStore.uploadImage', context: context);
 
   @override
-  Future<String?> uploadImage(String filePath, Jwt token) {
+  Future<String?> uploadImage(String filePath, UserData userData) {
     return _$uploadImageAsyncAction
-        .run(() => super.uploadImage(filePath, token));
+        .run(() => super.uploadImage(filePath, userData));
   }
 
   late final _$_EditorToolbarStoreActionController =

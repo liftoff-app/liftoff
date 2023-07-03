@@ -42,7 +42,7 @@ class InstancePage extends HookWidget {
             body: Center(
               child: FailedToLoad(
                 refresh: () => store.fetch(
-                  context.defaultJwt(store.instanceHost),
+                  context.defaultUserData(store.instanceHost),
                 ),
                 message: errorTerm.tr(context),
               ),
@@ -162,7 +162,10 @@ class InstancePage extends HookWidget {
                           limit: batchSize,
                           page: page,
                           savedOnly: false,
-                          auth: context.defaultJwt(store.instanceHost)?.raw,
+                          auth: context
+                              .defaultUserData(store.instanceHost)
+                              ?.jwt
+                              .raw,
                         )),
                       ),
                       InfiniteCommentList(
@@ -173,7 +176,10 @@ class InstancePage extends HookWidget {
                           limit: batchSize,
                           page: page,
                           savedOnly: false,
-                          auth: context.defaultJwt(store.instanceHost)?.raw,
+                          auth: context
+                              .defaultUserData(store.instanceHost)
+                              ?.jwt
+                              .raw,
                         )),
                       ),
                       InstanceAboutTab(
@@ -196,7 +202,7 @@ class InstancePage extends HookWidget {
       builder: (context) {
         return MobxProvider(
           create: (context) => InstanceStore(instanceHost)
-            ..fetch(context.defaultJwt(instanceHost)),
+            ..fetch(context.defaultUserData(instanceHost)),
           child: const InstancePage(),
         );
       },

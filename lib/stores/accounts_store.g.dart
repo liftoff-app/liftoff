@@ -34,9 +34,13 @@ Map<String, dynamic> _$AccountsStoreToJson(AccountsStore instance) =>
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
       jwt: Jwt.fromJson(json['jwt'] as String),
       userId: json['userId'] as int,
+      username: json['username'] as String,
+      instanceHost: json['instanceHost'] as String,
     );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
       'jwt': instance.jwt,
       'userId': instance.userId,
+      'username': instance.username,
+      'instanceHost': instance.instanceHost,
     };

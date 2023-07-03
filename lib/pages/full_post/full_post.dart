@@ -57,8 +57,7 @@ class FullPostPage extends HookWidget {
           Future<void> refresh() async {
             await store.refresh(context
                 .read<AccountsStore>()
-                .defaultUserDataFor(store.instanceHost)
-                ?.jwt);
+                .defaultUserDataFor(store.instanceHost));
           }
 
           final postStore = store.postStore;
@@ -181,15 +180,15 @@ class FullPostPage extends HookWidget {
     );
   }
 
-  static Jwt? _tryGetJwt(BuildContext context, String instanceHost) {
-    return context.read<AccountsStore>().defaultUserDataFor(instanceHost)?.jwt;
+  static UserData? _tryGetUserData(BuildContext context, String instanceHost) {
+    return context.read<AccountsStore>().defaultUserDataFor(instanceHost);
   }
 
   static Route route(int id, String instanceHost) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
           create: (context) =>
               FullPostStore(instanceHost: instanceHost, postId: id)
-                ..refresh(_tryGetJwt(context, instanceHost)),
+                ..refresh(_tryGetUserData(context, instanceHost)),
           child: const FullPostPage._(),
         ),
       );
@@ -197,14 +196,15 @@ class FullPostPage extends HookWidget {
   static Route fromPostViewRoute(PostView postView) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
           create: (context) => FullPostStore.fromPostView(postView)
-            ..refresh(_tryGetJwt(context, postView.instanceHost)),
+            ..refresh(_tryGetUserData(context, postView.instanceHost)),
           child: const FullPostPage._(),
         ),
       );
   static Route fromPostStoreRoute(PostStore postStore) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
           create: (context) => FullPostStore.fromPostStore(postStore)
-            ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
+            ..refresh(
+                _tryGetUserData(context, postStore.postView.instanceHost)),
           child: const FullPostPage._(),
         ),
       );

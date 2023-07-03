@@ -39,7 +39,7 @@ class InstanceAboutTab extends HookWidget {
               sort: sortType,
               limit: batchSize,
               page: page,
-              auth: context.defaultJwt(site.instanceHost)?.raw,
+              auth: context.defaultUserData(site.instanceHost)?.jwt.raw,
             ),
           ),
           title: l10n.communities_of_instance(siteView.site.name),
@@ -50,7 +50,7 @@ class InstanceAboutTab extends HookWidget {
     return PullToRefresh(
       onRefresh: () => context
           .read<InstanceStore>()
-          .fetch(context.defaultJwt(site.instanceHost), refresh: true),
+          .fetch(context.defaultUserData(site.instanceHost), refresh: true),
       child: SingleChildScrollView(
         child: SafeArea(
           top: false,
@@ -142,7 +142,7 @@ class InstanceAboutTab extends HookWidget {
                   ),
                   error: (errorTerm) => FailedToLoad(
                     refresh: () => store.fetchCommunites(
-                        context.defaultJwt(store.instanceHost)),
+                        context.defaultUserData(store.instanceHost)),
                     message: errorTerm.tr(context),
                   ),
                   data: (communities) => Column(

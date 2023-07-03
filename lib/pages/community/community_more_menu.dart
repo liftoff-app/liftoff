@@ -42,8 +42,8 @@ class CommunityMoreMenu extends HookWidget {
                 '${fullCommunityView.communityView.blocked ? L10n.of(context).unblock : L10n.of(context).block} ${communityView.community.preferredName}'),
             onTap: store.blockingState.isLoading
                 ? null
-                : loggedInAction((token) {
-                    store.block(token);
+                : loggedInAction((userData) {
+                    store.block(userData);
                     Navigator.of(context).pop();
                   }),
           );

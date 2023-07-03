@@ -60,7 +60,7 @@ class CreatePostCommunityPicker extends HookWidget {
             suggestionsCallback: (pattern) async {
               final communities = await store.searchCommunities(
                 pattern,
-                context.defaultJwt(store.instanceHost),
+                context.defaultUserData(store.instanceHost),
               );
 
               return communities ?? [];

@@ -79,7 +79,7 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> report(Jwt token, String reason) async {
+  Future<void> report(UserData userData, String reason) async {
     if (reason.trim().isEmpty) throw ArgumentError('reason must not be empty');
 
     await reportingState.runLemmy(
@@ -87,19 +87,19 @@ abstract class _CommentStore with Store {
       CreateCommentReport(
         commentId: comment.comment.id,
         reason: reason,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
   }
 
   @action
-  Future<void> delete(Jwt token) async {
+  Future<void> delete(UserData userData) async {
     final result = await deletingState.runLemmy(
       comment.instanceHost,
       DeleteComment(
         commentId: comment.comment.id,
         deleted: !comment.comment.deleted,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
 
@@ -107,13 +107,13 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> save(Jwt token) async {
+  Future<void> save(UserData userData) async {
     final result = await savingState.runLemmy(
       comment.instanceHost,
       SaveComment(
         commentId: comment.comment.id,
         save: !comment.saved,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
 
@@ -121,13 +121,13 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> block(Jwt token) async {
+  Future<void> block(UserData userData) async {
     final result = await blockingState.runLemmy(
       comment.instanceHost,
       BlockPerson(
         personId: comment.creator.id,
         block: !comment.creatorBlocked,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
     if (result != null) {
@@ -136,14 +136,14 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> markAsRead(Jwt token) async {
+  Future<void> markAsRead(UserData userData) async {
     if (userMentionId != null) {
       final result = await markPersonMentionAsReadState.runLemmy(
         comment.instanceHost,
         MarkPersonMentionAsRead(
           personMentionId: userMentionId!,
           read: !comment.comment.distinguished,
-          auth: token.raw,
+          auth: userData.jwt.raw,
         ),
       );
 
@@ -157,7 +157,7 @@ abstract class _CommentStore with Store {
           MarkCommentAsRead(
             commentReplyId: comment.commentReply!.id,
             read: !comment.comment.distinguished,
-            auth: token.raw,
+            auth: userData.jwt.raw,
           ),
         );
 
@@ -169,13 +169,13 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> _vote(VoteType voteType, Jwt token) async {
+  Future<void> _vote(VoteType voteType, UserData userData) async {
     final result = await votingState.runLemmy(
       comment.instanceHost,
       CreateCommentLike(
         commentId: comment.comment.id,
         score: voteType,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
 
@@ -183,18 +183,18 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> upVote(Jwt token) async {
+  Future<void> upVote(UserData userData) async {
     await _vote(
       myVote == VoteType.up ? VoteType.none : VoteType.up,
-      token,
+      userData,
     );
   }
 
   @action
-  Future<void> downVote(Jwt token) async {
+  Future<void> downVote(UserData userData) async {
     await _vote(
       myVote == VoteType.down ? VoteType.none : VoteType.down,
-      token,
+      userData,
     );
   }
 

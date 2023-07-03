@@ -1,6 +1,7 @@
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../stores/accounts_store.dart';
 import '../../util/async_store.dart';
 import '../../util/cleanup_url.dart';
 
@@ -48,17 +49,19 @@ abstract class _PostStore with Store {
   }
 
   @action
-  Future<void> save(Jwt token) async {
+  Future<void> save(UserData userData) async {
     final result = await savingState.runLemmy(
         postView.instanceHost,
         SavePost(
-            postId: postView.post.id, save: !postView.saved, auth: token.raw));
+            postId: postView.post.id,
+            save: !postView.saved,
+            auth: userData.jwt.raw));
 
     if (result != null) postView = result;
   }
 
   @action
-  Future<void> report(Jwt token, String reason) async {
+  Future<void> report(UserData userData, String reason) async {
     if (reason.trim().isEmpty) throw ArgumentError('reason must not be empty');
 
     await reportingState.runLemmy(
@@ -66,19 +69,19 @@ abstract class _PostStore with Store {
       CreatePostReport(
         postId: postView.post.id,
         reason: reason,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
   }
 
   @action
-  Future<void> delete(Jwt token) async {
+  Future<void> delete(UserData userData) async {
     final result = await deletingState.runLemmy(
       postView.instanceHost,
       DeletePost(
         postId: postView.post.id,
         deleted: !postView.post.deleted,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
 
@@ -86,13 +89,13 @@ abstract class _PostStore with Store {
   }
 
   @action
-  Future<void> blockUser(Jwt token) async {
+  Future<void> blockUser(UserData userData) async {
     final result = await userBlockingState.runLemmy(
         postView.post.instanceHost,
         BlockPerson(
           personId: postView.creator.id,
           block: !postView.creatorBlocked,
-          auth: token.raw,
+          auth: userData.jwt.raw,
         ));
 
     if (result != null) {
@@ -109,21 +112,21 @@ abstract class _PostStore with Store {
   // VOTING
 
   @action
-  Future<void> _vote(Jwt token, VoteType voteType) async {
+  Future<void> _vote(UserData userData, VoteType voteType) async {
     final result = await votingState.runLemmy(
       postView.instanceHost,
       CreatePostLike(
-          postId: postView.post.id, score: voteType, auth: token.raw),
+          postId: postView.post.id, score: voteType, auth: userData.jwt.raw),
     );
 
     if (result != null) postView = result;
   }
 
   @action
-  Future<void> upVote(Jwt token) => _vote(
-      token, postView.myVote == VoteType.up ? VoteType.none : VoteType.up);
+  Future<void> upVote(UserData userData) => _vote(
+      userData, postView.myVote == VoteType.up ? VoteType.none : VoteType.up);
 
   @action
-  Future<void> downVote(Jwt token) => _vote(
-      token, postView.myVote == VoteType.down ? VoteType.none : VoteType.down);
+  Future<void> downVote(UserData userData) => _vote(userData,
+      postView.myVote == VoteType.down ? VoteType.none : VoteType.down);
 }
