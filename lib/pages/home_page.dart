@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../app_link_handler.dart';
 import '../util/extensions/brightness.dart';
 import 'communities_tab.dart';
 import 'create_post/create_post_fab.dart';
@@ -52,7 +53,7 @@ class HomePage extends HookWidget {
 
     return Scaffold(
       extendBody: true,
-      body: Column(
+      body: AppLinkHandler(Column(
         children: [
           Expanded(
             child: WillPopScope(
@@ -84,7 +85,7 @@ class HomePage extends HookWidget {
           ),
           const SizedBox(height: kMinInteractiveDimension / 2),
         ],
-      ),
+      )),
       floatingActionButton: Platform.isAndroid ? const CreatePostFab() : null,
       floatingActionButtonLocation:
           Platform.isAndroid ? FloatingActionButtonLocation.centerDocked : null,
