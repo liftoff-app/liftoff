@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
+import 'app_link_handler.dart';
 import 'l10n/l10n.dart';
 import 'pages/home_page.dart';
 import 'resources/app_theme.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
                     dark: true),
                 locale: store.locale,
                 theme: themeFactory(primaryColor: state.primaryColor),
-                home: const HomePage(),
+                home: AppLinkHandler(const HomePage()),
               ),
             );
           },
