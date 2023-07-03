@@ -160,7 +160,12 @@ class AddAccountPage extends HookWidget {
                 AutofillHints.email,
                 AutofillHints.username
               ],
-              onSubmitted: (_) => passwordFocusNode.requestFocus(),
+              onTapOutside: (_) =>
+                  usernameController.text = usernameController.text.trim(),
+              onSubmitted: (_) {
+                usernameController.text = usernameController.text.trim();
+                passwordFocusNode.requestFocus();
+              },
               decoration: InputDecoration(
                   labelText: L10n.of(context).email_or_username),
             ),
