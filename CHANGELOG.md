@@ -1,3 +1,17 @@
+## v0.10.4 - 2023-07-02
+- Added support for deep links like liftoff://lemmy.world/c/liftoff (shocklateboy92)
+- Fixed an issue preventing adding certain instances (swmarks)
+- Added translate option to menu on posts and comments (mykdavies)
+- Fixed locale not updating (zachatrocity)
+- Fixed comment sorting and added Top 1, 6, & 12 Hr. post sort order options (zachatrocity)
+- Fixed markdown parsing of lemmy links (zachatrocity)
+- Fixed an issue where on-screen keyboard could cover up the comment text input field (zachatrocity)
+- Fixed an issue that caused the keyboard to open when exiting a post (zachatrocity)
+- Fixed an issue where selecting chat for comment sort would crash (zachatrocity)
+- Changed theme for buttons throughout app to follow Primary Color (swmarks)
+- Added ability to close fullscreen images with singe tap (jjcomer)
+- Fixed markdown parsing of lemmy links (zachatrocity)
+- Internal project & build updates (shocklateboy92 / jjcomer)
 ## v0.10.3 - 2023-07-01
 - Fixed issue with theme initializion (jcgurango)
 - Fixed issue with post style settings not updating (swmarks)
