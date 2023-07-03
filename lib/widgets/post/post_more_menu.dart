@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../hooks/logged_in_action.dart';
+import '../../l10n/gen/l10n_oc.dart';
+import '../../l10n/l10n.dart';
 import '../../pages/create_post/create_post.dart';
 import '../../pages/full_post/full_post_store.dart';
 import '../../pages/settings/settings.dart';
@@ -77,7 +79,7 @@ class PostMoreMenu extends HookWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.open_in_browser),
-                title: const Text('Open in browser'),
+                title: Text(L10n.of(context).open_in_browser),
                 onTap: () {
                   launchLink(link: post.post.apId, context: context);
                   Navigator.of(context).pop();
@@ -86,7 +88,7 @@ class PostMoreMenu extends HookWidget {
               if (isMine) ...[
                 ListTile(
                   leading: const Icon(Icons.edit),
-                  title: const Text('Edit'),
+                  title: Text(L10n.of(context).edit),
                   onTap: () async {
                     final postView = await Navigator.of(context).push(
                       CreatePostPage.editRoute(post.post),
@@ -100,7 +102,9 @@ class PostMoreMenu extends HookWidget {
                 ListTile(
                   leading:
                       Icon(post.post.deleted ? Icons.restore : Icons.delete),
-                  title: Text(post.post.deleted ? 'Restore' : 'Delete'),
+                  title: Text(post.post.deleted
+                      ? L10n.of(context).restore_post
+                      : L10n.of(context).delete_post),
                   onTap: store.deletingState.isLoading
                       ? null
                       : () {
@@ -115,8 +119,9 @@ class PostMoreMenu extends HookWidget {
                   leading: store.userBlockingState.isLoading
                       ? const CircularProgressIndicator.adaptive()
                       : const Icon(Icons.block),
-                  title:
-                      Text('${post.creatorBlocked ? 'Unblock' : 'Block'} user'),
+                  title: Text(post.creatorBlocked
+                      ? L10n.of(context).unblock_user
+                      : L10n.of(context).block_user),
                   onTap: () {
                     Navigator.of(context).pop();
                     loggedInAction(store.blockUser)();
@@ -130,8 +135,9 @@ class PostMoreMenu extends HookWidget {
                       leading: store.communityBlockingState.isLoading
                           ? const CircularProgressIndicator.adaptive()
                           : const Icon(Icons.block),
-                      title: Text(
-                          '${store.fullPostView!.communityView.blocked ? 'Unblock' : 'Block'} community'),
+                      title: Text(store.fullPostView!.communityView.blocked
+                          ? L10n.of(context).unblock_community
+                          : L10n.of(context).block_community),
                       onTap: () {
                         Navigator.of(context).pop();
                         loggedInAction(store.blockCommunity)();
@@ -141,7 +147,7 @@ class PostMoreMenu extends HookWidget {
                 ),
               ListTile(
                 leading: const Icon(Icons.translate),
-                title: const Text('Translate'),
+                title: Text(L10n.of(context).translate),
                 onTap: () async {
                   await launchLink(
                       link:
@@ -155,7 +161,7 @@ class PostMoreMenu extends HookWidget {
                 leading: store.reportingState.isLoading
                     ? const CircularProgressIndicator.adaptive()
                     : const Icon(Icons.flag),
-                title: const Text('Report'),
+                title: Text(L10n.of(context).report_post),
                 onTap: store.reportingState.isLoading
                     ? null
                     : () {
@@ -170,7 +176,7 @@ class PostMoreMenu extends HookWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.info_outline),
-                title: const Text('Nerd stuff'),
+                title: Text(L10n.of(context).nerd_stuff),
                 onTap: () {
                   showInfoTablePopup(context: context, table: {
                     '% of upvotes':
@@ -181,7 +187,7 @@ class PostMoreMenu extends HookWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.settings),
-                title: const Text('Settings'),
+                title: Text(L10n.of(context).settings),
                 onTap: () {
                   goTo(context, (_) => const SettingsPage());
                 },
