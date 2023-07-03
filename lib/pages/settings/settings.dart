@@ -465,10 +465,10 @@ class GeneralConfigPage extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text('Use in-app browser'),
-              value: store.useInAppBrowser,
+              title: const Text('Use external browser'),
+              value: !store.useInAppBrowser,
               onChanged: (checked) {
-                store.useInAppBrowser = checked;
+                store.useInAppBrowser = !checked;
               },
             ),
             const SizedBox(height: 12),
