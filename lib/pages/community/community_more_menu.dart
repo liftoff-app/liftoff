@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/logged_in_action.dart';
+import '../../l10n/l10n.dart';
 import '../../url_launcher.dart';
 import '../../util/extensions/api.dart';
 import '../../util/mobx_provider.dart';
@@ -26,7 +27,7 @@ class CommunityMoreMenu extends HookWidget {
       children: [
         ListTile(
           leading: const Icon(Icons.open_in_browser),
-          title: const Text('Open in browser'),
+          title: Text(L10n.of(context).open_in_browser),
           onTap: () => launchLink(
             link: communityView.community.actorId,
             context: context,
@@ -38,7 +39,7 @@ class CommunityMoreMenu extends HookWidget {
                 ? const CircularProgressIndicator.adaptive()
                 : const Icon(Icons.block),
             title: Text(
-                '${fullCommunityView.communityView.blocked ? 'Unblock' : 'Block'} ${communityView.community.preferredName}'),
+                '${fullCommunityView.communityView.blocked ? L10n.of(context).unblock : L10n.of(context).block} ${communityView.community.preferredName}'),
             onTap: store.blockingState.isLoading
                 ? null
                 : loggedInAction((token) {
@@ -49,7 +50,7 @@ class CommunityMoreMenu extends HookWidget {
         }),
         ListTile(
           leading: const Icon(Icons.info_outline),
-          title: const Text('Nerd stuff'),
+          title: Text(L10n.of(context).nerd_stuff),
           onTap: () {
             showInfoTablePopup(context: context, table: communityView.toJson());
           },
