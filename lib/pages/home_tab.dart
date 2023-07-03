@@ -13,13 +13,15 @@ import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../stores/config_store.dart';
 import '../util/goto.dart';
+import '../util/mobx_provider.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'create_post/create_post.dart';
 import 'full_post/full_post.dart';
-import 'inbox.dart';
+import 'inbox/inbox.dart';
+import 'inbox/inbox_store.dart';
 import 'instance/instance.dart';
 import 'settings/add_account_page.dart';
 import 'settings/settings.dart';
@@ -38,6 +40,8 @@ class HomeTab extends HookWidget {
         useStore((ConfigStore store) => store.defaultListingType);
     final showEverythingFeed =
         useStore((ConfigStore store) => store.showEverythingFeed);
+
+    // final badgeCount = useStore((InboxStore store) => store.unreadCounts);
 
     final selectedList = useState(_SelectedList(
         instanceHost: accStore.defaultInstanceHost,
@@ -247,9 +251,15 @@ class HomeTab extends HookWidget {
                 iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
                 titleTextStyle: theme.textTheme.titleLarge
                     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-                leading: IconButton(
-                  icon: const Icon(Icons.notifications),
-                  onPressed: () => goTo(context, (_) => const InboxPage()),
+                leading: MobxProvider(
+                  create: (context) => InboxStore(accStore.defaultInstanceHost!)
+                    ..fetchNotifications(accStore
+                        .defaultUserDataFor(accStore.defaultInstanceHost!)!
+                        .jwt),
+                  child: IconButton(
+                    icon: const Icon(Icons.notifications),
+                    onPressed: () => goTo(context, (_) => const InboxPage()),
+                  ),
                 ),
                 title: TextButton(
                   style: TextButton.styleFrom(
