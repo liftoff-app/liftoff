@@ -656,11 +656,9 @@ packages:
   lemmy_api_client:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: "93bd37e0ed354f3d09b9ff7acd57dbb5e94d4479"
-      url: "https://github.com/liftoff-app/lemmy_api_client.git"
-    source: git
+      path: "../lemmy_api_client"
+      relative: true
+    source: path
     version: "0.21.0"
   list_diff:
     dependency: transitive
