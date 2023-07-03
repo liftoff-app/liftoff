@@ -46,6 +46,7 @@ VoidCallback Function(
     if (store.isAnonymousFor(instanceHost)) {
       return () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 7),
           content: Text(message ??
               'This thread was retrieved via $instanceHost.\nYou are not logged in there.'),
           action: SnackBarAction(
