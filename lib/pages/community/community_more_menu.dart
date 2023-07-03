@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../stores/accounts_store.dart';
 import '../../url_launcher.dart';
 import '../../util/extensions/api.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/info_table_popup.dart';
+import '../view_on_menu.dart';
 import 'community_store.dart';
+import 'foreign_community.dart';
 
 class CommunityMoreMenu extends HookWidget {
   final FullCommunityView fullCommunityView;
@@ -32,6 +36,11 @@ class CommunityMoreMenu extends HookWidget {
             link: communityView.community.actorId,
             context: context,
           ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.travel_explore),
+          title: Text(L10n.of(context).view_on),
+          onTap: () => ViewOnMenu.openForCommunity(context, communityView),
         ),
         ObserverBuilder<CommunityStore>(builder: (context, store) {
           return ListTile(

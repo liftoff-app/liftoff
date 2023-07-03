@@ -39,12 +39,16 @@ VoidCallback Function(
 VoidCallback Function(
   void Function(UserData userData) action, [
   String? message,
-]) useLoggedInAction(String instanceHost) {
+]) useLoggedInAction(String instanceHost, {void Function()? fallback}) {
   final context = useContext();
   final store = useAccountsStore();
 
   return (action, [message]) {
     if (store.isAnonymousFor(instanceHost)) {
+      if (fallback != null && !store.hasNoAccount) {
+        return fallback;
+      }
+
       return () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: const Duration(seconds: 7),
