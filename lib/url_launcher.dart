@@ -44,8 +44,10 @@ Future<void> _launchCustomTab(BuildContext context, String link) async {
       ),
     );
   } catch (e) {
-    // An exception is thrown if browser app is not installed on Android device.
-    debugPrint(e.toString());
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(e.toString())));
+    await ul.launchUrl(Uri.parse(link),
+        mode: ul.LaunchMode.externalApplication);
   }
 }
 
