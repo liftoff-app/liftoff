@@ -96,7 +96,7 @@ class _CommentMoreMenuPopup extends HookWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.open_in_browser),
-              title: const Text('Open in browser'),
+              title: Text(L10n.of(context).open_in_browser),
               onTap: () async {
                 await launchLink(link: comment.link, context: context);
 
@@ -105,7 +105,7 @@ class _CommentMoreMenuPopup extends HookWidget {
             ),
             ListTile(
               leading: Icon(shareIcon),
-              title: const Text('Share url'),
+              title: Text(L10n.of(context).share_url),
               onTap: () {
                 share(
                   comment.link,
@@ -117,7 +117,7 @@ class _CommentMoreMenuPopup extends HookWidget {
             ),
             ListTile(
               leading: Icon(shareIcon),
-              title: const Text('Share text'),
+              title: Text(L10n.of(context).share_text),
               onTap: () {
                 share(
                   comment.content,
@@ -129,7 +129,7 @@ class _CommentMoreMenuPopup extends HookWidget {
             ),
             ListTile(
               leading: const Icon(Icons.translate),
-              title: const Text('Translate'),
+              title: Text(L10n.of(context).translate),
               onTap: () async {
                 await launchLink(
                     link:
@@ -144,7 +144,9 @@ class _CommentMoreMenuPopup extends HookWidget {
                 store.selectable ? Icons.assignment : Icons.content_cut,
               ),
               title: Text(
-                'Make text ${store.selectable ? 'un' : ''}selectable',
+                store.selectable
+                    ? L10n.of(context).make_text_unselectable
+                    : L10n.of(context).make_text_selectable,
               ),
               onTap: () {
                 store.toggleSelectable();
@@ -153,7 +155,9 @@ class _CommentMoreMenuPopup extends HookWidget {
             ),
             ListTile(
               leading: markdownModeIcon(fancy: !store.showRaw),
-              title: Text('Show ${store.showRaw ? 'fancy' : 'raw'} text'),
+              title: Text(store.showRaw
+                  ? L10n.of(context).show_fancy_text
+                  : L10n.of(context).show_raw_text),
               onTap: () {
                 store.toggleShowRaw();
                 Navigator.of(context).pop();
@@ -162,12 +166,14 @@ class _CommentMoreMenuPopup extends HookWidget {
             if (store.isMine) ...[
               ListTile(
                 leading: const Icon(Icons.edit),
-                title: const Text('Edit'),
+                title: Text(L10n.of(context).edit),
                 onTap: handleEdit,
               ),
               ListTile(
                 leading: Icon(comment.deleted ? Icons.restore : Icons.delete),
-                title: Text(comment.deleted ? 'Restore' : 'Delete'),
+                title: Text(comment.deleted
+                    ? L10n.of(context).restore_comment
+                    : L10n.of(context).delete_comment),
                 onTap: loggedInAction(handleDelete),
               ),
             ] else
@@ -180,7 +186,7 @@ class _CommentMoreMenuPopup extends HookWidget {
                       )
                     : const Icon(Icons.block),
                 title: Text(
-                    '${store.comment.creatorBlocked ? 'Unblock' : 'Block'} ${store.comment.creator.preferredName}'),
+                    '${store.comment.creatorBlocked ? L10n.of(context).unblock : L10n.of(context).block} ${store.comment.creator.preferredName}'),
                 onTap: loggedInAction((token) {
                   Navigator.of(context).pop();
                   store.block(token);
@@ -190,7 +196,7 @@ class _CommentMoreMenuPopup extends HookWidget {
               leading: store.reportingState.isLoading
                   ? const CircularProgressIndicator.adaptive()
                   : const Icon(Icons.flag),
-              title: const Text('Report'),
+              title: Text(L10n.of(context).report_comment),
               onTap: store.reportingState.isLoading
                   ? null
                   : () {
@@ -205,7 +211,7 @@ class _CommentMoreMenuPopup extends HookWidget {
             ),
             ListTile(
               leading: const Icon(Icons.info_outline),
-              title: const Text('Nerd stuff'),
+              title: Text(L10n.of(context).nerd_stuff),
               onTap: () {
                 Navigator.of(context).pop();
                 CommentWidget.showCommentInfo(
