@@ -2,6 +2,16 @@
   "@@locale": "en",
   "settings": "Settings",
   "@settings": {},
+  "general": "General",
+  "@general": {},
+  "accounts": "Accounts",
+  "@accounts": {},
+  "blocks": "Blocks",
+  "@blocks": {},
+  "appearance": "Appearance",
+  "@appearance": {},
+  "post_style": "Post Style",
+  "@post_style": {},
   "password": "Password",
   "@password": {},
   "email_or_username": "Email or Username",
@@ -80,6 +90,20 @@
   "@comment_sort_type": {},
   "type": "Type",
   "@type": {},
+  "show_everything_feed": "Show EVERYTHING feed",
+  "@show_everything_feed": {},
+  "show_everything_feed_explanation": "This will combine content from all instances, even those you're not signed into, so you may see posts you can't vote on or reply to.",
+  "@show_everything_feed_explanation": {},
+  "use_in_app_browser": "Use in-app browser",
+  "@use_in_app_browser": {},
+  "other_settings": "Other",
+  "@other_settings": {},
+  "disable_animations": "Disable animations",
+  "@disable_animations": {},
+  "hide_nsfw": "Hide NSFW content",
+  "@hide_nsfw": {},
+  "hide_nsfw_explanation": "Content in NSFW posts will be hidden until clicked.",
+  "@hide_nsfw_explanation": {},
   "show_nsfw": "Show NSFW content",
   "@show_nsfw": {},
   "send_notifications_to_email": "Send notifications to Email",
@@ -96,6 +120,22 @@
   "@users": {},
   "theme": "Theme",
   "@theme": {},
+  "amoled_dark_mode": "AMOLED dark mode",
+  "@amoled_dark_mode": {},
+  "primary_color": "Primary Color",
+  "@primary_color": {},
+  "reset_to_default": "reset to default",
+  "@reset_to_default": {},
+  "post_view": "Post View",
+  "@post_view": {},
+  "show_scores": "Show Scores",
+  "@show_scores": {},
+  "font": "Font",
+  "@font": {},
+  "preview": "Preview",
+  "@preview": {},
+  "choose_language": "Choose Language",
+  "@choose_language": {},
   "language": "Language",
   "@language": {},
   "hot": "Hot",
@@ -114,6 +154,15 @@
   "@pinned": {},
   "by": "by",
   "@by": {},
+
+  "error": "Error: {error_text}",
+  "@error" :{
+    "placeholders": {
+      "error_text": {
+        "type": "String"
+      }
+    }
+  },
   "not_a_mod_or_admin": "Not a moderator or admin.",
   "@not_a_mod_or_admin": {},
   "not_an_admin": "Not an admin.",
@@ -188,6 +237,8 @@
   "@system_err_login": {},
   "community_user_already_banned": "Community user already banned.",
   "@community_user_already_banned": {},
+  "couldnt_find_that_account": "Couldn't find that account.",
+  "@couldnt_find_that_account": {},
   "couldnt_find_that_username_or_email": "Couldn't find that username or email.",
   "@couldnt_find_that_username_or_email": {},
   "password_incorrect": "Password incorrect.",
@@ -284,6 +335,62 @@
   "@messages": {},
   "banned_users": "Banned users",
   "@banned_users": {},
+
+  "add_user_or_instance": "Add a user account or an instance",
+  "@add_user_or_instance": {},
+  "add_user": "Add user account",
+  "@add_user": {},
+  "remove_user": "Remove user account",
+  "@remove_user": {},
+  "remove_user_confirm": "Remove user account?",
+  "@remove_user_confirm": {},
+  "remove_user_confirm_explanation": "Are you sure you want to remove {user_at_instance}?",
+  "@remove_user_confirm_explanation": {
+    "placeholders": {
+      "user_at_instance": {
+        "type": "String"
+      }
+    }
+  },
+  "set_as_default": "Set as default",
+  "@set_as_default" : {},
+  "import_settings" :"Import settings to Liftoff",
+  "@import_settings": {},
+  "import_successful" : "Import successful",
+  "@import_successful": {},
+
+  "add_instance": "Add instance",
+  "@add_instance": {},
+  "instance_added": "Instance successfully added",
+  "@instance_added": {},
+  "remove_instance": "Remove instance",
+  "@remove_instance": {},
+  "remove_instance_confirm": "Remove instance?",
+  "@remove_instance_confirm": {},
+  "remove_instance_confirm_explanation": "Are you sure you want to remove {instance}?",
+  "@remove_instance_confirm_explanation": {
+    "placeholders": {
+      "instance": {
+        "type": "String"
+      }
+    }
+  },
+
+  "block": "Block",
+  "@block":{},
+  "block_user": "Block user",
+  "@block_user":{},
+  "block_community": "Block community",
+  "@block_community":{},
+  "unblock": "Unblock",
+  "@unblock":{},
+  "unblock_user": "Unblock user",
+  "@unblock_user":{},
+  "unblock_community": "Unblock community",
+  "@unblock_community":{},
+
+
+
   "remove_account_confirm": "This will delete your account and data from this app. Your account and data will remain on the instance.",
   "@remove_account_confirm": {},
   "delete_account_confirm": "Warning: this will permanently delete your account and all of your data from the app AND instance. Your data may not be deleted on other, existing instances. Enter your password to confirm.",
@@ -346,6 +453,33 @@
   "@nerd_stuff": {},
   "open_in_browser": "Open in browser",
   "@open_in_browser": {},
+  "share_text": "Share text",
+  "@share_text":{},
+  "share_url": "Share URL",
+  "@share_url":{},
+  "translate": "Translate",
+  "@translate":{},
+  "make_text_selectable": "Make text selectable",
+  "@make_text_selectable":{},
+  "make_text_unselectable": "Make text unselectable",
+  "@make_text_unselectable":{},
+  "show_fancy_text": "Show fancy text",
+  "@make_fancy_text":{},
+  "show_raw_text": "Show raw text",
+  "@make_raw_text":{},
+  "delete_comment": "Delete comment",
+  "@delete_comment":{},
+  "restore_comment": "Restore comment",
+  "@restore_comment":{},
+  "report_comment": "Report comment",
+  "@report_comment":{},
+  "delete_post": "Delete post",
+  "@delete_post":{},
+  "restore_post": "Restore post",
+  "@restore_post":{},
+  "report_post": "Report post",
+  "@report_post":{},
+  
   "cannot_open_in_browser": "Can't open in browser",
   "@cannot_open_in_browser": {},
   "about": "About",
@@ -372,10 +506,6 @@
   "@month": {},
   "six_months": "6 months",
   "@six_months": {},
-  "add_instance": "Add instance",
-  "@add_instance": {},
-  "instance_added": "Instance successfully added",
-  "@instance_added": {},
   "required_field": "required field",
   "@required_field": {},
   "no_communities_found": "No communities found",
@@ -468,6 +598,6 @@
   },
   "failed_to_upload_image": "Failed to upload image",
   "@failed_to_upload_image": {
-    "description": "shows up on a snackbar when the image upload failed (duh)"
+    "description": "shows up on a snackbar when the image upload failed"
   }
 }

@@ -42,7 +42,7 @@ class ManageAccountPage extends HookWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.open_in_browser),
-              title: const Text('Open in browser'),
+              title: Text(L10n.of(context).open_in_browser),
               onTap: () async {
                 final userProfileUrl =
                     await userFuture.then((e) => e.person.actorId);
@@ -72,7 +72,8 @@ class ManageAccountPage extends HookWidget {
         future: userFuture,
         builder: (_, userSnap) {
           if (userSnap.hasError) {
-            return Center(child: Text('Error: ${userSnap.error}'));
+            return Center(
+                child: Text(L10n.of(context).error('${userSnap.error}')));
           }
           if (!userSnap.hasData) {
             return const Center(child: CircularProgressIndicator.adaptive());
@@ -304,8 +305,8 @@ class _ManageAccount extends HookWidget {
       //     content: Text('Account does not exist'),
       //   ));
       // });
-      return const Column(
-        children: [Text('Account does not exist')],
+      return Column(
+        children: [Text(L10n.of(context).couldnt_find_that_account)],
       );
     }
 
@@ -527,7 +528,7 @@ class _ImagePicker extends HookWidget {
         }
       } on Exception catch (_) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to upload image')));
+            SnackBar(content: Text(L10n.of(context).failed_to_upload_image)));
       }
 
       delayedLoading.cancel();
