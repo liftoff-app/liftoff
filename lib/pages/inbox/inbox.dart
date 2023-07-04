@@ -24,7 +24,10 @@ import '../../widgets/radio_picker.dart';
 import '../../widgets/sortable_infinite_list.dart';
 import '../../widgets/tile_action.dart';
 import '../write_message.dart';
+<<<<<<< HEAD:lib/pages/inbox/inbox.dart
 import 'inbox_store.dart';
+=======
+>>>>>>> 6d6d564ec1edabdb178d92528a1a35d50b9268b5:lib/pages/inbox.dart
 
 class InboxPage extends HookWidget {
   const InboxPage();
