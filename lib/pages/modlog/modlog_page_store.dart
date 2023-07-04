@@ -31,7 +31,7 @@ abstract class _ModlogPageStore with Store, DisposableStore {
         data: (data, error) =>
             data.removedPosts.length +
                 data.lockedPosts.length +
-                data.stickiedPosts.length +
+                data.featuredPosts.length +
                 data.removedComments.length +
                 data.removedCommunities.length +
                 data.bannedFromCommunity.length +
