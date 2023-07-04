@@ -6,10 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../app_link_handler.dart';
 import '../hooks/stores.dart';
-import '../stores/accounts_store.dart';
 import '../util/extensions/brightness.dart';
-import '../util/mobx_provider.dart';
-import '../util/observer_consumers.dart';
 import 'communities_tab.dart';
 import 'create_post/create_post_fab.dart';
 import 'home_tab.dart';
