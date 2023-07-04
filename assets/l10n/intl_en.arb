@@ -647,5 +647,14 @@
   "failed_to_upload_image": "Failed to upload image",
   "@failed_to_upload_image": {
     "description": "shows up on a snackbar when the image upload failed"
+  },
+  "instance_error": "Hmm... it seems like your instance is having trouble responding.",
+  "@instance_error": {
+  },
+  "instance_record_notfound": "Hmm... it seems like your instance couldn't find what you were looking for.",
+  "@instance_record_notfound": {
+  },
+  "try_again": "Try Again",
+  "@try_again": {
   }
 }
