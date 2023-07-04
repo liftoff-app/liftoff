@@ -22,7 +22,7 @@ Future<void> _launchCustomTab(BuildContext context, String link) async {
     await launch(
       link,
       customTabsOption: CustomTabsOption(
-        toolbarColor: Theme.of(context).colorScheme.primary,
+        toolbarColor: Theme.of(context).canvasColor,
         enableDefaultShare: true,
         enableUrlBarHiding: true,
         showPageTitle: true,
@@ -35,9 +35,9 @@ Future<void> _launchCustomTab(BuildContext context, String link) async {
         ],
       ),
       safariVCOption: SafariViewControllerOption(
-        preferredBarTintColor: Theme.of(context).colorScheme.primary,
+        preferredBarTintColor: Theme.of(context).canvasColor,
         preferredControlTintColor:
-            textColorBasedOnBackground(Theme.of(context).colorScheme.primary),
+            textColorBasedOnBackground(Theme.of(context).canvasColor),
         barCollapsingEnabled: true,
         entersReaderIfAvailable: false,
         dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
