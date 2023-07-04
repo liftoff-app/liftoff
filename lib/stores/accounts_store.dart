@@ -151,6 +151,18 @@ class AccountsStore extends ChangeNotifier {
     return accounts[instanceHost]?[username];
   }
 
+  List<UserData> allUserDataFor(String instanceHost) {
+    if (!accounts.containsKey(instanceHost)) {
+      return [];
+    }
+
+    return [
+      for (final account in accounts[instanceHost]!.keys) ...[
+        userDataFor(instanceHost, account)!
+      ]
+    ];
+  }
+
   /// sets globally default account
   Future<void> setDefaultAccount(String instanceHost, String username) {
     defaultAccount = '$username@$instanceHost';
