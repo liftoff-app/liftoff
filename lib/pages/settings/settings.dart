@@ -6,7 +6,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../../comment_tree.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../resources/app_theme.dart';
@@ -40,14 +39,14 @@ class SettingsPage extends HookWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text('General'),
+            title: Text(L10n.of(context).general),
             onTap: () {
               goTo(context, (_) => const GeneralConfigPage());
             },
           ),
           ListTile(
             leading: const Icon(Icons.person),
-            title: const Text('Accounts'),
+            title: Text(L10n.of(context).accounts),
             onTap: () {
               goTo(context, (_) => AccountsConfigPage());
             },
@@ -55,21 +54,21 @@ class SettingsPage extends HookWidget {
           if (hasAnyUsers)
             ListTile(
               leading: const Icon(Icons.block),
-              title: const Text('Blocks'),
+              title: Text(L10n.of(context).blocks),
               onTap: () {
                 Navigator.of(context).push(BlocksPage.route());
               },
             ),
           ListTile(
             leading: const Icon(Icons.color_lens),
-            title: const Text('Appearance'),
+            title: Text(L10n.of(context).appearance),
             onTap: () {
               goTo(context, (_) => const AppearanceConfigPage());
             },
           ),
           ListTile(
             leading: const Icon(Icons.view_agenda),
-            title: const Text('Post Style'),
+            title: Text(L10n.of(context).post_style),
             onTap: () {
               goTo(context, (_) => const PostStyleConfigPage());
             },
@@ -88,12 +87,12 @@ class AppearanceConfigPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Appearance')),
+      appBar: AppBar(title: Text(L10n.of(context).appearance)),
       body: Consumer<AppTheme>(
         builder: (context, state, child) {
           return ListView(
             children: [
-              const _SectionHeading('Theme'),
+              _SectionHeading(L10n.of(context).theme),
               for (final theme in ThemeMode.values)
                 RadioListTile<ThemeMode>(
                   value: theme,
@@ -113,7 +112,7 @@ class AppearanceConfigPage extends StatelessWidget {
                   },
                 ),
               SwitchListTile.adaptive(
-                title: const Text('AMOLED dark mode'),
+                title: Text(L10n.of(context).amoled_dark_mode),
                 value: state.amoled,
                 onChanged: (checked) => state.switchamoled(),
               ),
@@ -122,7 +121,7 @@ class AppearanceConfigPage extends StatelessWidget {
                   spacing: 10,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const Text('Primary Color'),
+                    Text(L10n.of(context).primary_color),
                     IconButton(
                       onPressed: () {
                         if (state.theme == ThemeMode.dark) {
@@ -134,7 +133,7 @@ class AppearanceConfigPage extends StatelessWidget {
                         }
                       },
                       icon: const Icon(Icons.restart_alt_outlined),
-                      tooltip: 'Reset to Default',
+                      tooltip: L10n.of(context).reset_to_default,
                     ),
                   ],
                 ),
@@ -194,11 +193,11 @@ class PostStyleConfigPage extends StatelessWidget {
     );
     return Consumer<AppTheme>(builder: (context, state, child) {
       return Scaffold(
-          appBar: AppBar(title: const Text('Post Style')),
+          appBar: AppBar(title: Text(L10n.of(context).post_style)),
           body: ObserverBuilder<ConfigStore>(
               builder: (context, store) => ListView(
                     children: [
-                      const _SectionHeading('Post View'),
+                      _SectionHeading(L10n.of(context).post_view),
                       SwitchListTile.adaptive(
                         title: Text(L10n.of(context).post_style_compact),
                         value: store.compactPostView,
@@ -236,14 +235,14 @@ class PostStyleConfigPage extends StatelessWidget {
                         },
                       ),
                       SwitchListTile.adaptive(
-                        title: const Text('Show Scores'),
+                        title: Text(L10n.of(context).show_scores),
                         value: store.showScores,
                         onChanged: (checked) {
                           store.showScores = checked;
                         },
                       ),
                       const SizedBox(height: 12),
-                      const _SectionHeading('Font'),
+                      _SectionHeading(L10n.of(context).font),
                       ListTile(
                         title: Text(L10n.of(context).post_title_size),
                         trailing: SizedBox(
@@ -268,6 +267,17 @@ class PostStyleConfigPage extends StatelessWidget {
                             onChanged: (value) => store.titleFontSize = value,
                             mapValueToString: (value) =>
                                 value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                TextButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -296,11 +306,22 @@ class PostStyleConfigPage extends StatelessWidget {
                                 store.postHeaderFontSize = value,
                             mapValueToString: (value) =>
                                 value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                TextButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const _SectionHeading('Preview'),
+                      _SectionHeading(L10n.of(context).preview),
                       const SizedBox(height: 20),
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
@@ -328,7 +349,7 @@ class GeneralConfigPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('General')),
+      appBar: AppBar(title: Text(L10n.of(context).general)),
       body: ObserverBuilder<ConfigStore>(
         builder: (context, store) => ListView(
           children: [
@@ -341,6 +362,17 @@ class GeneralConfigPage extends StatelessWidget {
                   groupValue: store.defaultSortType,
                   onChanged: (value) => store.defaultSortType = value,
                   mapValueToString: (value) => value.value,
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
+                    onPressed: onPressed,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(displayValue),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -349,10 +381,22 @@ class GeneralConfigPage extends StatelessWidget {
               trailing: SizedBox(
                 width: 120,
                 child: RadioPicker<CommentSortType>(
-                  values: CommentSortType.values,
+                  values: CommentSortType.values
+                      .sublist(0, CommentSortType.values.length - 1),
                   groupValue: store.defaultCommentSort,
                   onChanged: (value) => store.defaultCommentSort = value,
                   mapValueToString: (value) => value.value,
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
+                    onPressed: onPressed,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(displayValue),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -369,6 +413,17 @@ class GeneralConfigPage extends StatelessWidget {
                   groupValue: store.defaultListingType,
                   onChanged: (value) => store.defaultListingType = value,
                   mapValueToString: (value) => value.value,
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
+                    onPressed: onPressed,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(displayValue),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -377,29 +432,37 @@ class GeneralConfigPage extends StatelessWidget {
               trailing: SizedBox(
                 width: 120,
                 child: RadioPicker<Locale>(
-                  title: 'Choose language',
+                  title: L10n.of(context).choose_language,
                   groupValue: store.locale,
                   values: L10n.supportedLocales,
                   mapValueToString: (locale) => locale.languageName,
                   onChanged: (selected) {
                     store.locale = selected;
                   },
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
+                    onPressed: onPressed,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(displayValue),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
             SwitchListTile.adaptive(
-              title: const Text('Show EVERYTHING feed'),
-              subtitle:
-                  const Text('This will combine content from all instances, '
-                      "even those you're not signed into, so you may "
-                      "see posts you can't vote on or reply to."),
+              title: Text(L10n.of(context).show_everything_feed),
+              subtitle: Text(L10n.of(context).show_everything_feed_explanation),
               value: store.showEverythingFeed,
               onChanged: (checked) {
                 store.showEverythingFeed = checked;
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text('Use in-app browser'),
+              title: Text(L10n.of(context).use_in_app_browser),
               value: store.useInAppBrowser,
               onChanged: (checked) {
                 store.useInAppBrowser = checked;
@@ -413,17 +476,17 @@ class GeneralConfigPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 12),
-            const _SectionHeading('Other'),
+            _SectionHeading(L10n.of(context).other_settings),
             SwitchListTile.adaptive(
-              title: const Text('Disable Animations'),
+              title: Text(L10n.of(context).disable_animations),
               value: store.disableAnimations,
               onChanged: (checked) {
                 store.disableAnimations = checked;
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text('Hide NSFW'),
-              subtitle: const Text('Images in NSFW posts will be hidden.'),
+              title: Text(L10n.of(context).hide_nsfw),
+              subtitle: Text(L10n.of(context).hide_nsfw_explanation),
               value: store.blurNsfw,
               onChanged: (checked) {
                 store.blurNsfw = checked;
@@ -454,9 +517,9 @@ class _AccountOptions extends HookWidget {
       if (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Remove user?'),
-              content: Text(
-                  'Are you sure you want to remove $username@$instanceHost?'),
+              title: Text(L10n.of(context).remove_user_confirm),
+              content: Text(L10n.of(context)
+                  .remove_user_confirm_explanation('$username@$instanceHost')),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
@@ -480,7 +543,7 @@ class _AccountOptions extends HookWidget {
         if (accountsStore.defaultUsernameFor(instanceHost) != username)
           ListTile(
             leading: const Icon(Icons.check_circle_outline),
-            title: const Text('Set as default'),
+            title: Text(L10n.of(context).set_as_default),
             onTap: () {
               accountsStore.setDefaultAccountFor(instanceHost, username);
               Navigator.of(context).pop();
@@ -488,12 +551,13 @@ class _AccountOptions extends HookWidget {
           ),
         ListTile(
           leading: const Icon(Icons.delete),
-          title: const Text('Remove account'),
+          title: Text(L10n.of(context).remove_account),
           onTap: () => removeUserDialog(instanceHost, username),
         ),
         AsyncStoreListener(
           asyncStore: context.read<ConfigStore>().lemmyImportState,
-          successMessageBuilder: (context, data) => 'Import successful',
+          successMessageBuilder: (context, data) =>
+              L10n.of(context).import_successful,
           child: ObserverBuilder<ConfigStore>(
             builder: (context, store) => ListTile(
               leading: store.lemmyImportState.isLoading
@@ -503,7 +567,7 @@ class _AccountOptions extends HookWidget {
                       child: CircularProgressIndicator.adaptive(),
                     )
                   : const Icon(Icons.cloud_download),
-              title: const Text('Import settings to Liftoff'),
+              title: Text(L10n.of(context).import_settings),
               onTap: () async {
                 await context.read<ConfigStore>().importLemmyUserSettings(
                       accountsStore.userDataFor(instanceHost, username)!.jwt,
@@ -531,8 +595,9 @@ class AccountsConfigPage extends HookWidget {
       if (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Remove instance?'),
-              content: Text('Are you sure you want to remove $instanceHost?'),
+              title: Text(L10n.of(context).remove_instance_confirm),
+              content: Text(L10n.of(context)
+                  .remove_instance_confirm_explanation(instanceHost)),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
@@ -568,7 +633,7 @@ class AccountsConfigPage extends HookWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.delete),
-              title: const Text('Remove instance'),
+              title: Text(L10n.of(context).remove_instance),
               onTap: () => removeInstanceDialog(instanceHost),
             ),
           ],
@@ -579,22 +644,22 @@ class AccountsConfigPage extends HookWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Accounts'),
+        title: Text(L10n.of(context).accounts),
       ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x
         curve: Curves.bounceIn,
-        tooltip: 'Add account or instance',
+        tooltip: L10n.of(context).add_user_or_instance,
         children: [
           SpeedDialChild(
             child: const Icon(Icons.person_add),
-            label: 'Add account',
+            label: L10n.of(context).add_user,
             onTap: () => Navigator.of(context)
                 .push(AddAccountPage.route(accountsStore.instances.last)),
           ),
           SpeedDialChild(
             child: const Icon(Icons.dns),
-            label: 'Add instance',
+            label: L10n.of(context).add_instance,
             onTap: () => Navigator.of(context).push(AddInstancePage.route()),
           ),
         ],
@@ -612,7 +677,7 @@ class AccountsConfigPage extends HookWidget {
                     onPressed: () =>
                         Navigator.of(context).push(AddInstancePage.route()),
                     icon: const Icon(Icons.add),
-                    label: const Text('Add instance'),
+                    label: Text(L10n.of(context).add_instance),
                   ),
                 ),
               ],
@@ -648,7 +713,7 @@ class AccountsConfigPage extends HookWidget {
             if (accountsStore.usernamesFor(instance).isEmpty)
               ListTile(
                 leading: const Icon(Icons.add),
-                title: const Text('Add account'),
+                title: Text(L10n.of(context).add_user),
                 onTap: () {
                   Navigator.of(context).push(AddAccountPage.route(instance));
                 },

@@ -205,7 +205,7 @@ class MediaViewPage extends HookWidget {
               offset.value = Offset.zero;
             },
             onTapUp: isZoomedOut.value
-                ? null
+                ? (_, __, ___) => Navigator.of(context).pop()
                 : (_, __, ___) => showButtons.value = !showButtons.value,
             minScale: PhotoViewComputedScale.contained,
             initialScale: PhotoViewComputedScale.contained,

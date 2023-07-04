@@ -150,7 +150,7 @@ class _ToolbarBody extends HookWidget {
         ObserverBuilder<EditorToolbarStore>(
           builder: (context, store) {
             return IconButton(
-              onPressed: loggedInAction((token) async {
+              onPressed: loggedInAction((userData) async {
                 if (store.imageUploadState.isLoading) {
                   return;
                 }
@@ -159,7 +159,7 @@ class _ToolbarBody extends HookWidget {
                   // pic is null when the picker was cancelled
 
                   if (pic != null) {
-                    final picUrl = await store.uploadImage(pic.path, token);
+                    final picUrl = await store.uploadImage(pic.path, userData);
 
                     if (picUrl != null) {
                       controller.reformatSimple('![]($picUrl)');

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
@@ -11,6 +14,39 @@ import 'pages/user.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 import 'util/goto.dart';
+import 'util/text_color.dart';
+
+///Launches a Chrome Custom Tab on Android or Safari View Controller on iOS
+Future<void> _launchCustomTab(BuildContext context, String link) async {
+  try {
+    await launch(
+      link,
+      customTabsOption: CustomTabsOption(
+        toolbarColor: Theme.of(context).canvasColor,
+        enableDefaultShare: true,
+        enableUrlBarHiding: true,
+        showPageTitle: true,
+        animation: CustomTabsSystemAnimation.slideIn(),
+        extraCustomTabs: const <String>[
+          // ref. https://play.google.com/store/apps/details?id=org.mozilla.firefox
+          'org.mozilla.firefox',
+          // ref. https://play.google.com/store/apps/details?id=com.microsoft.emmx
+          'com.microsoft.emmx',
+        ],
+      ),
+      safariVCOption: SafariViewControllerOption(
+        preferredBarTintColor: Theme.of(context).canvasColor,
+        preferredControlTintColor:
+            textColorBasedOnBackground(Theme.of(context).canvasColor),
+      ),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(e.toString())));
+    await ul.launchUrl(Uri.parse(link),
+        mode: ul.LaunchMode.externalApplication);
+  }
+}
 
 /// Decides where does a link link to. Either somewhere in-app:
 /// opens the correct page, or outside of the app: opens in a browser
@@ -24,6 +60,24 @@ Future<void> linkLauncher({
   }
 
   final instances = context.read<AccountsStore>().instances;
+
+  // CHECK IF EMAIL STYLE LINK TO COMMUNITY
+  // Format: !liftoff@lemmy.world
+  if (url.startsWith('!')) {
+    final splitCommunityName = url.replaceAll(RegExp('!'), '').split('@');
+    await Navigator.of(context).push(CommunityPage.fromNameRoute(
+        splitCommunityName[1], splitCommunityName[0]));
+    return;
+  }
+
+  // CHECK IF EMAIL STYLE LINK TO USER
+  // Format: @user@lemmy.world
+  if (url.startsWith('@')) {
+    final usernameSplit = url.replaceFirst(RegExp('@'), '').split('@');
+    push(() => UserPage.fromName(
+        instanceHost: usernameSplit[1], username: usernameSplit[0]));
+    return;
+  }
 
   final chonks = url.split('/');
   if (chonks.length == 1) {
@@ -115,10 +169,18 @@ Future<bool> launchLink({
 }) async {
   final uri = Uri.tryParse(link);
   if (uri != null) {
-    await ul.launchUrl(uri,
-        mode: context.read<ConfigStore>().useInAppBrowser
-            ? ul.LaunchMode.platformDefault
-            : ul.LaunchMode.externalApplication);
+    if (Platform.isAndroid || Platform.isIOS) {
+      if (context.read<ConfigStore>().useInAppBrowser) {
+        await _launchCustomTab(context, link);
+      } else {
+        await ul.launchUrl(uri, mode: ul.LaunchMode.externalApplication);
+      }
+    } else {
+      await ul.launchUrl(uri,
+          mode: context.read<ConfigStore>().useInAppBrowser
+              ? ul.LaunchMode.platformDefault
+              : ul.LaunchMode.externalApplication);
+    }
     return true;
   } else {
     _logger.warning('Failed to launch a link: $link');

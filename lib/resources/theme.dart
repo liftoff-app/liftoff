@@ -65,9 +65,8 @@ ThemeData themeFactory(
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: theme.colorScheme.background,
-        foregroundColor:
-            textColorBasedOnBackground(theme.colorScheme.background),
+        backgroundColor: primaryColor,
+        foregroundColor: textColorBasedOnBackground(primaryColor),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -75,7 +74,8 @@ ThemeData themeFactory(
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        backgroundColor: theme.colorScheme.background,
+        backgroundColor: primaryColor,
+        foregroundColor: textColorBasedOnBackground(primaryColor),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

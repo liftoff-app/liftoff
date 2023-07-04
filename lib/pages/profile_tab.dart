@@ -15,7 +15,7 @@ class UserProfileTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    //final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
 
     final actions = [
@@ -73,19 +73,18 @@ class UserProfileTab extends HookWidget {
           buttonBuilder: (context, displayValue, onPressed) => TextButton(
             onPressed: onPressed,
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
                   child: Text(
                     displayValue,
-                    style: theme.appBarTheme.titleTextStyle,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500),
                     overflow: TextOverflow.fade,
                     softWrap: false,
                   ),
                 ),
-                Icon(Icons.expand_more,
-                    color: theme.appBarTheme.titleTextStyle?.color),
+                const Icon(Icons.arrow_drop_down),
               ],
             ),
           ),

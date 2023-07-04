@@ -263,15 +263,13 @@ class HomeTab extends HookWidget {
                       Flexible(
                         child: Text(
                           title,
-                          style: theme.appBarTheme.titleTextStyle,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w500),
                           overflow: TextOverflow.fade,
                           softWrap: false,
                         ),
                       ),
-                      Icon(
-                        Icons.arrow_drop_down,
-                        color: theme.appBarTheme.titleTextStyle?.color,
-                      ),
+                      const Icon(Icons.arrow_drop_down),
                     ],
                   ),
                 ),

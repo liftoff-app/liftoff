@@ -30,6 +30,17 @@ class PostListOptions extends StatelessWidget {
                     groupValue: sortValue,
                     onChanged: onSortChanged,
                     mapValueToString: (value) => value.tr(context),
+                    buttonBuilder: (context, displayValue, onPressed) =>
+                        TextButton(
+                      onPressed: onPressed,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(displayValue),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
+                    ),
                   ),
                   const Spacer(),
                   if (styleButton)

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -54,23 +53,16 @@ class FullPostPage extends HookWidget {
       ],
       child: ObserverBuilder<FullPostStore>(
         builder: (context, store) {
-          Future<void> refresh() async {
-            await store.refresh(context
-                .read<AccountsStore>()
-                .defaultUserDataFor(store.instanceHost)
-                ?.jwt);
-          }
-
           final postStore = store.postStore;
 
           if (postStore == null) {
             return Scaffold(
               appBar: AppBar(),
               body: Center(
-                child: (store.fullPostState.isLoading)
+                child: (store.fullPostState.errorTerm == null)
                     ? const CircularProgressIndicator.adaptive()
                     : FailedToLoad(
-                        message: 'Post failed to load', refresh: refresh),
+                        message: 'Post failed to load', refresh: store.refresh),
               ),
             );
           }
@@ -164,7 +156,7 @@ class FullPostPage extends HookWidget {
                     child: const Icon(Icons.comment),
                   ),
             body: PullToRefresh(
-              onRefresh: refresh,
+              onRefresh: store.refresh,
               child: ListView(
                 controller: scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -181,30 +173,34 @@ class FullPostPage extends HookWidget {
     );
   }
 
-  static Jwt? _tryGetJwt(BuildContext context, String instanceHost) {
-    return context.read<AccountsStore>().defaultUserDataFor(instanceHost)?.jwt;
+  static UserData? _tryGetUserData(BuildContext context, String instanceHost) {
+    return context.read<AccountsStore>().defaultUserDataFor(instanceHost);
   }
 
-  static Route route(int id, String instanceHost) => SwipeablePageRoute(
+  static Route route(int id, String instanceHost, {int? commentId}) =>
+      SwipeablePageRoute(
         builder: (context) => MobxProvider(
-          create: (context) =>
-              FullPostStore(instanceHost: instanceHost, postId: id)
-                ..refresh(_tryGetJwt(context, instanceHost)),
+          create: (context) => FullPostStore(
+              instanceHost: instanceHost, postId: id, commentId: commentId)
+            ..refresh(_tryGetUserData(context, instanceHost)),
           child: const FullPostPage._(),
         ),
       );
 
-  static Route fromPostViewRoute(PostView postView) => SwipeablePageRoute(
+  static Route fromPostViewRoute(PostView postView, {int? commentId}) =>
+      SwipeablePageRoute(
         builder: (context) => MobxProvider(
-          create: (context) => FullPostStore.fromPostView(postView)
-            ..refresh(_tryGetJwt(context, postView.instanceHost)),
+          create: (context) =>
+              FullPostStore.fromPostView(postView, commentId: commentId)
+                ..refresh(_tryGetUserData(context, postView.instanceHost)),
           child: const FullPostPage._(),
         ),
       );
   static Route fromPostStoreRoute(PostStore postStore) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
           create: (context) => FullPostStore.fromPostStore(postStore)
-            ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
+            ..refresh(
+                _tryGetUserData(context, postStore.postView.instanceHost)),
           child: const FullPostPage._(),
         ),
       );

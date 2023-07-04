@@ -35,9 +35,9 @@ class CreatePostPage extends HookWidget {
         text: context.read<CreatePostStore>().body);
     final titleFocusNode = useFocusNode();
 
-    handleSubmit(Jwt token) async {
+    handleSubmit(UserData userData) async {
       if (formKey.currentState!.validate()) {
-        await context.read<CreatePostStore>().submit(token);
+        await context.read<CreatePostStore>().submit(userData);
       }
     }
 

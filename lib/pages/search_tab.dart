@@ -50,6 +50,9 @@ class SearchTab extends HookWidget {
             keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
             onSubmitted: (_) => handleSearch(),
+            onTapOutside: (event) {
+              FocusScope.of(context).unfocus();
+            },
             decoration: InputDecoration(
                 hintText: L10n.of(context).search,
                 suffixIcon: searchInputController.text.isNotEmpty
@@ -72,6 +75,17 @@ class SearchTab extends HookWidget {
                   values: accStore.instances.toList(),
                   groupValue: instanceHost.value!,
                   onChanged: (value) => instanceHost.value = value,
+                  buttonBuilder: (context, displayValue, onPressed) =>
+                      TextButton(
+                    onPressed: onPressed,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(displayValue),
+                        const Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

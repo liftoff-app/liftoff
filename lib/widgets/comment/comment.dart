@@ -79,15 +79,17 @@ class CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MobxProvider(
-      create: (context) => CommentStore(
-        context.read(),
-        commentTree: commentTree,
-        userMentionId: userMentionId,
-        depth: depth,
-        canBeMarkedAsRead: canBeMarkedAsRead,
-        detached: detached,
-        hideOnRead: hideOnRead,
-      ),
+      create: (context) {
+        return CommentStore(
+          context.read(),
+          commentTree: commentTree,
+          userMentionId: userMentionId,
+          depth: depth,
+          canBeMarkedAsRead: canBeMarkedAsRead,
+          detached: detached,
+          hideOnRead: hideOnRead,
+        );
+      },
       builder: (context, child) => Nested(
         children: [
           AsyncStoreListener<BlockedPerson>(
@@ -308,7 +310,9 @@ class _CommentWidget extends StatelessWidget {
               ),
               if (!store.collapsed)
                 for (final c in store.children)
-                  CommentWidget(c, depth: store.depth + 1),
+                  CommentWidget(c,
+                      depth: store.depth + 1,
+                      key: Key(c.comment.comment.id.toString())),
             ],
           ),
         );

@@ -96,64 +96,64 @@ mixin _$CommentStore on _CommentStore, Store {
       AsyncAction('_CommentStore.report', context: context);
 
   @override
-  Future<void> report(Jwt token, String reason) {
-    return _$reportAsyncAction.run(() => super.report(token, reason));
+  Future<void> report(UserData userData, String reason) {
+    return _$reportAsyncAction.run(() => super.report(userData, reason));
   }
 
   late final _$deleteAsyncAction =
       AsyncAction('_CommentStore.delete', context: context);
 
   @override
-  Future<void> delete(Jwt token) {
-    return _$deleteAsyncAction.run(() => super.delete(token));
+  Future<void> delete(UserData userData) {
+    return _$deleteAsyncAction.run(() => super.delete(userData));
   }
 
   late final _$saveAsyncAction =
       AsyncAction('_CommentStore.save', context: context);
 
   @override
-  Future<void> save(Jwt token) {
-    return _$saveAsyncAction.run(() => super.save(token));
+  Future<void> save(UserData userData) {
+    return _$saveAsyncAction.run(() => super.save(userData));
   }
 
   late final _$blockAsyncAction =
       AsyncAction('_CommentStore.block', context: context);
 
   @override
-  Future<void> block(Jwt token) {
-    return _$blockAsyncAction.run(() => super.block(token));
+  Future<void> block(UserData userData) {
+    return _$blockAsyncAction.run(() => super.block(userData));
   }
 
   late final _$markAsReadAsyncAction =
       AsyncAction('_CommentStore.markAsRead', context: context);
 
   @override
-  Future<void> markAsRead(Jwt token) {
-    return _$markAsReadAsyncAction.run(() => super.markAsRead(token));
+  Future<void> markAsRead(UserData userData) {
+    return _$markAsReadAsyncAction.run(() => super.markAsRead(userData));
   }
 
   late final _$_voteAsyncAction =
       AsyncAction('_CommentStore._vote', context: context);
 
   @override
-  Future<void> _vote(VoteType voteType, Jwt token) {
-    return _$_voteAsyncAction.run(() => super._vote(voteType, token));
+  Future<void> _vote(VoteType voteType, UserData userData) {
+    return _$_voteAsyncAction.run(() => super._vote(voteType, userData));
   }
 
   late final _$upVoteAsyncAction =
       AsyncAction('_CommentStore.upVote', context: context);
 
   @override
-  Future<void> upVote(Jwt token) {
-    return _$upVoteAsyncAction.run(() => super.upVote(token));
+  Future<void> upVote(UserData userData) {
+    return _$upVoteAsyncAction.run(() => super.upVote(userData));
   }
 
   late final _$downVoteAsyncAction =
       AsyncAction('_CommentStore.downVote', context: context);
 
   @override
-  Future<void> downVote(Jwt token) {
-    return _$downVoteAsyncAction.run(() => super.downVote(token));
+  Future<void> downVote(UserData userData) {
+    return _$downVoteAsyncAction.run(() => super.downVote(userData));
   }
 
   late final _$_CommentStoreActionController =

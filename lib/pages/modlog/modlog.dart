@@ -5,6 +5,7 @@ import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_safe.dart';
 import '../../widgets/failed_to_load.dart';
+import '../../widgets/pull_to_refresh.dart';
 import 'modlog_page_store.dart';
 import 'modlog_table.dart';
 
@@ -28,7 +29,8 @@ class ModlogPage extends StatelessWidget {
                 ObserverBuilder<ModlogPageStore>(
                   builder: (context, store) {
                     if (!store.hasNextPage) {
-                      return const Center(child: Text('no more logs to show'));
+                      return Center(
+                          child: Text(L10n.of(context).modlog_nologs));
                     }
 
                     return store.modlogState.map(
@@ -41,7 +43,13 @@ class ModlogPage extends StatelessWidget {
                           refresh: store.fetchPage,
                         ),
                       ),
-                      data: (modlog) => ModlogTable(modlog: modlog),
+                      data: (modlog) => PullToRefresh(
+                        onRefresh: store.fetchPage,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 600),
+                          child: ModlogTable(modlog: modlog),
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -71,7 +79,7 @@ class ModlogPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const BottomSafe(),
+                    const BottomSafe()
                   ],
                 ),
               ],

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../pages/settings/settings.dart';
+import '../stores/accounts_store.dart';
 import '../util/goto.dart';
 import 'stores.dart';
 
@@ -36,16 +37,21 @@ VoidCallback Function(
 }
 
 VoidCallback Function(
-  void Function(Jwt token) action, [
+  void Function(UserData userData) action, [
   String? message,
-]) useLoggedInAction(String instanceHost) {
+]) useLoggedInAction(String instanceHost, {void Function()? fallback}) {
   final context = useContext();
   final store = useAccountsStore();
 
   return (action, [message]) {
     if (store.isAnonymousFor(instanceHost)) {
+      if (fallback != null && !store.hasNoAccount) {
+        return fallback;
+      }
+
       return () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 7),
           content: Text(message ??
               'This thread was retrieved via $instanceHost.\nYou are not logged in there.'),
           action: SnackBarAction(
@@ -54,7 +60,7 @@ VoidCallback Function(
         ));
       };
     }
-    final token = store.defaultUserDataFor(instanceHost)!.jwt;
-    return () => action(token);
+    final userData = store.defaultUserDataFor(instanceHost)!;
+    return () => action(userData);
   };
 }

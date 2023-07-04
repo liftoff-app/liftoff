@@ -68,17 +68,17 @@ mixin _$BlocksStore on _BlocksStore, Store {
       AsyncAction('_BlocksStore.blockUser', context: context);
 
   @override
-  Future<void> blockUser(Jwt token, int id) {
-    return _$blockUserAsyncAction.run(() => super.blockUser(token, id));
+  Future<void> blockUser(UserData userData, int id) {
+    return _$blockUserAsyncAction.run(() => super.blockUser(userData, id));
   }
 
   late final _$blockCommunityAsyncAction =
       AsyncAction('_BlocksStore.blockCommunity', context: context);
 
   @override
-  Future<void> blockCommunity(Jwt token, int id) {
+  Future<void> blockCommunity(UserData userData, int id) {
     return _$blockCommunityAsyncAction
-        .run(() => super.blockCommunity(token, id));
+        .run(() => super.blockCommunity(userData, id));
   }
 
   late final _$refreshAsyncAction =

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../stores/accounts_store.dart';
 import '../../url_launcher.dart';
 import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
@@ -64,8 +64,8 @@ class _CommentMoreMenuPopup extends HookWidget {
         final comment = store.comment.comment;
         final post = store.comment.post;
 
-        handleDelete(Jwt token) {
-          store.delete(token);
+        handleDelete(UserData userData) {
+          store.delete(userData);
           Navigator.of(context).pop();
         }
 
@@ -89,11 +89,14 @@ class _CommentMoreMenuPopup extends HookWidget {
         final targetRect = Rect.fromPoints(position,
             position.translate(renderbox.size.width, renderbox.size.height));
 
+        final targetLanguage = Localizations.localeOf(context).languageCode;
+        final sourceText = Uri.encodeComponent(comment.content);
+
         return Column(
           children: [
             ListTile(
               leading: const Icon(Icons.open_in_browser),
-              title: const Text('Open in browser'),
+              title: Text(L10n.of(context).open_in_browser),
               onTap: () async {
                 await launchLink(link: comment.link, context: context);
 
@@ -102,7 +105,7 @@ class _CommentMoreMenuPopup extends HookWidget {
             ),
             ListTile(
               leading: Icon(shareIcon),
-              title: const Text('Share url'),
+              title: Text(L10n.of(context).share_url),
               onTap: () {
                 share(
                   comment.link,
@@ -114,7 +117,7 @@ class _CommentMoreMenuPopup extends HookWidget {
             ),
             ListTile(
               leading: Icon(shareIcon),
-              title: const Text('Share text'),
+              title: Text(L10n.of(context).share_text),
               onTap: () {
                 share(
                   comment.content,
@@ -125,11 +128,25 @@ class _CommentMoreMenuPopup extends HookWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.translate),
+              title: Text(L10n.of(context).translate),
+              onTap: () async {
+                await launchLink(
+                    link:
+                        'https://translate.google.com/?tl=$targetLanguage&text=$sourceText',
+                    context: context);
+
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
               leading: Icon(
                 store.selectable ? Icons.assignment : Icons.content_cut,
               ),
               title: Text(
-                'Make text ${store.selectable ? 'un' : ''}selectable',
+                store.selectable
+                    ? L10n.of(context).make_text_unselectable
+                    : L10n.of(context).make_text_selectable,
               ),
               onTap: () {
                 store.toggleSelectable();
@@ -138,7 +155,9 @@ class _CommentMoreMenuPopup extends HookWidget {
             ),
             ListTile(
               leading: markdownModeIcon(fancy: !store.showRaw),
-              title: Text('Show ${store.showRaw ? 'fancy' : 'raw'} text'),
+              title: Text(store.showRaw
+                  ? L10n.of(context).show_fancy_text
+                  : L10n.of(context).show_raw_text),
               onTap: () {
                 store.toggleShowRaw();
                 Navigator.of(context).pop();
@@ -147,12 +166,14 @@ class _CommentMoreMenuPopup extends HookWidget {
             if (store.isMine) ...[
               ListTile(
                 leading: const Icon(Icons.edit),
-                title: const Text('Edit'),
+                title: Text(L10n.of(context).edit),
                 onTap: handleEdit,
               ),
               ListTile(
                 leading: Icon(comment.deleted ? Icons.restore : Icons.delete),
-                title: Text(comment.deleted ? 'Restore' : 'Delete'),
+                title: Text(comment.deleted
+                    ? L10n.of(context).restore_comment
+                    : L10n.of(context).delete_comment),
                 onTap: loggedInAction(handleDelete),
               ),
             ] else
@@ -165,32 +186,32 @@ class _CommentMoreMenuPopup extends HookWidget {
                       )
                     : const Icon(Icons.block),
                 title: Text(
-                    '${store.comment.creatorBlocked ? 'Unblock' : 'Block'} ${store.comment.creator.preferredName}'),
-                onTap: loggedInAction((token) {
+                    '${store.comment.creatorBlocked ? L10n.of(context).unblock : L10n.of(context).block} ${store.comment.creator.preferredName}'),
+                onTap: loggedInAction((userData) {
                   Navigator.of(context).pop();
-                  store.block(token);
+                  store.block(userData);
                 }),
               ),
             ListTile(
               leading: store.reportingState.isLoading
                   ? const CircularProgressIndicator.adaptive()
                   : const Icon(Icons.flag),
-              title: const Text('Report'),
+              title: Text(L10n.of(context).report_comment),
               onTap: store.reportingState.isLoading
                   ? null
                   : () {
                       Navigator.of(context).pop();
-                      loggedInAction((token) async {
+                      loggedInAction((userData) async {
                         final reason = await ReportDialog.show(context);
                         if (reason != null) {
-                          await store.report(token, reason);
+                          await store.report(userData, reason);
                         }
                       })();
                     },
             ),
             ListTile(
               leading: const Icon(Icons.info_outline),
-              title: const Text('Nerd stuff'),
+              title: Text(L10n.of(context).nerd_stuff),
               onTap: () {
                 Navigator.of(context).pop();
                 CommentWidget.showCommentInfo(

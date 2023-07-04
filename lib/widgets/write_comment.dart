@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
+import '../stores/accounts_store.dart';
 import 'editor/editor.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
@@ -63,7 +64,7 @@ class WriteComment extends HookWidget {
       );
     }();
 
-    handleSubmit(Jwt token) async {
+    handleSubmit(UserData userData) async {
       final api = LemmyApiV3(post.instanceHost);
 
       delayed.start();
@@ -73,14 +74,14 @@ class WriteComment extends HookWidget {
             return api.run(EditComment(
               commentId: comment!.id,
               content: editorController.textEditingController.text,
-              auth: token.raw,
+              auth: userData.jwt.raw,
             ));
           } else {
             return api.run(CreateComment(
               content: editorController.textEditingController.text,
               postId: post.id,
               parentId: comment?.id,
-              auth: token.raw,
+              auth: userData.jwt.raw,
             ));
           }
         }();
@@ -113,15 +114,9 @@ class WriteComment extends HookWidget {
           child: Stack(
             children: [
               ListView(
+                reverse: true,
                 children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height * .35),
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(8),
-                      child: preview,
-                    ),
-                  ),
+                  preview,
                   const Divider(),
                   Editor(
                     controller: editorController,
@@ -144,7 +139,7 @@ class WriteComment extends HookWidget {
                     ],
                   ),
                   EditorToolbar.safeArea,
-                ],
+                ].reversed.toList(),
               ),
               BottomSticky(
                 child: EditorToolbar(editorController),

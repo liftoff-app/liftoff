@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../comment_tree.dart';
+import 'package:lemmy_api_client/v3.dart';
 import '../l10n/l10n.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
@@ -39,7 +39,7 @@ class CommentListOptions extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Row(
                 children: [
-                  OutlinedButton(
+                  TextButton(
                     onPressed: () {
                       showBottomModal(
                         title: 'sort by',

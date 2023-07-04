@@ -36,9 +36,26 @@ class AccountsStore extends ChangeNotifier {
   static Future<AccountsStore> load() async {
     final prefs = await _prefs;
 
-    return _$AccountsStoreFromJson(
-      jsonDecode(prefs.getString(prefsKey) ?? '{}') as Map<String, dynamic>,
-    );
+    // Migrate old accounts store which didn't store instanceHost or username.
+    final accountsStoreJson =
+        jsonDecode(prefs.getString(prefsKey) ?? '{}') as Map<String, dynamic>;
+
+    if (accountsStoreJson.containsKey('accounts')) {
+      final accountsJson =
+          accountsStoreJson['accounts'] as Map<String, dynamic>;
+
+      for (final instanceEntry in accountsJson.entries) {
+        for (final accountEntry in instanceEntry.value.entries) {
+          if (!accountEntry.value.containsKey('instanceHost') ||
+              !accountEntry.value.containsKey('username')) {
+            accountEntry.value['instanceHost'] = instanceEntry.key;
+            accountEntry.value['username'] = accountEntry.key;
+          }
+        }
+      }
+    }
+
+    return _$AccountsStoreFromJson(accountsStoreJson);
   }
 
   Future<void> save() async {
@@ -134,6 +151,18 @@ class AccountsStore extends ChangeNotifier {
     return accounts[instanceHost]?[username];
   }
 
+  List<UserData> allUserDataFor(String instanceHost) {
+    if (!accounts.containsKey(instanceHost)) {
+      return [];
+    }
+
+    return [
+      for (final account in accounts[instanceHost]!.keys) ...[
+        userDataFor(instanceHost, account)!
+      ]
+    ];
+  }
+
   /// sets globally default account
   Future<void> setDefaultAccount(String instanceHost, String username) {
     defaultAccount = '$username@$instanceHost';
@@ -217,6 +246,8 @@ class AccountsStore extends ChangeNotifier {
     accounts[instanceHost]![userData.name] = UserData(
       jwt: jwt,
       userId: userData.id,
+      instanceHost: instanceHost,
+      username: userData.name,
     );
 
     await _assignDefaultAccounts();
@@ -277,10 +308,14 @@ class AccountsStore extends ChangeNotifier {
 class UserData {
   final Jwt jwt;
   final int userId;
+  final String username;
+  final String instanceHost;
 
   const UserData({
     required this.jwt,
     required this.userId,
+    required this.username,
+    required this.instanceHost,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

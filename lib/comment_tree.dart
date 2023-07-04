@@ -2,16 +2,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import 'util/hot_rank.dart';
 
-enum CommentSortType {
-  hot('Hot'),
-  top('Top'),
-  new_('New'),
-  old('Old'),
-  chat('Chat');
-
-  final String value;
-  const CommentSortType(this.value);
-
+extension CommentSortTypeExtension on CommentSortType {
   /// returns a compare function for sorting a CommentTree according
   /// to the comment sort type
   int Function(CommentTree a, CommentTree b) get sortFunction {
@@ -37,17 +28,6 @@ enum CommentSortType {
             a.comment.counts.score.compareTo(b.comment.counts.score);
     }
   }
-
-  factory CommentSortType.fromJson(dynamic value) {
-    return value is int
-        ? values[value]
-        : values.firstWhere((e) => e.value == value);
-  }
-
-  String toJson() => value;
-
-  @override
-  String toString() => value;
 }
 
 extension SortCommentTreeList on List<CommentTree> {
@@ -66,7 +46,8 @@ class CommentTree {
   CommentTree(this.comment);
 
   /// takes raw linear comments and turns them into a CommentTree
-  static List<CommentTree> fromList(List<CommentView> comments) {
+  static List<CommentTree> fromList(List<CommentView> comments,
+      {int? topLevelCommentId}) {
     CommentTree gatherChildren(CommentTree parent) {
       for (final el in comments) {
         // comments store a parth variable that can be used to traverse the comment tree
@@ -82,9 +63,10 @@ class CommentTree {
     }
 
     // pinned comment denoted by a path of 0
-    final topLevelParents = comments
-        .where((e) =>
-            e.comment.path.split('.').length == 2 || e.comment.path == '0')
+    final topLevelParents = (topLevelCommentId == null
+            ? comments.where((e) =>
+                e.comment.path.split('.').length == 2 || e.comment.path == '0')
+            : comments.where((e) => e.comment.id == topLevelCommentId))
         .map(CommentTree.new);
 
     final result = topLevelParents.map(gatherChildren).toList();
