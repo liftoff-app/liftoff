@@ -6,11 +6,11 @@ import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import 'community.dart';
 
-class ForeignCommunityPage extends HookWidget {
+class FederatedCommunityPage extends HookWidget {
   final UserData userData;
   final String community;
 
-  const ForeignCommunityPage(this.userData, this.community);
+  const FederatedCommunityPage(this.userData, this.community);
 
   @override
   Widget build(BuildContext context) {

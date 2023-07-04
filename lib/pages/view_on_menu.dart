@@ -12,7 +12,7 @@ import '../util/mobx_provider.dart';
 import '../util/observer_consumers.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
-import 'community/foreign_community.dart';
+import 'community/federated_community.dart';
 
 class ViewOnMenu extends HookWidget {
   final void Function(UserData userData) onSelect;
@@ -98,8 +98,8 @@ class ViewOnMenu extends HookWidget {
       BuildContext context, CommunityView communityView) {
     ViewOnMenu.open(context, (UserData userData) {
       Navigator.of(context).push(SwipeablePageRoute(
-          builder: (context) =>
-              ForeignCommunityPage(userData, communityView.community.actorId)));
+          builder: (context) => FederatedCommunityPage(
+              userData, communityView.community.actorId)));
     });
   }
 }
