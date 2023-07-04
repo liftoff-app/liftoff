@@ -64,6 +64,7 @@ dependencies:
   freezed_annotation: ^2.0.1
   logging: ^1.0.1
   nested: ^1.0.0
+  l10n_esperanto: ^2.0.5
 
   flutter:
     sdk: flutter

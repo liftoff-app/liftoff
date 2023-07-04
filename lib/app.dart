@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
+import 'package:l10n_esperanto/l10n_esperanto.dart';
 
 import 'app_link_handler.dart';
 import 'l10n/l10n.dart';
@@ -8,6 +9,12 @@ import 'resources/app_theme.dart';
 import 'resources/theme.dart';
 import 'stores/config_store.dart';
 import 'util/observer_consumers.dart';
+
+final l10nDelegates = [
+  ...L10n.localizationsDelegates,
+  MaterialLocalizationsEo.delegate,
+  CupertinoLocalizationsEo.delegate,
+];
 
 class MyApp extends StatelessWidget {
   const MyApp();
@@ -23,7 +30,7 @@ class MyApp extends StatelessWidget {
               builder: (context, store) => MaterialApp(
                 title: 'Liftoff',
                 supportedLocales: L10n.supportedLocales,
-                localizationsDelegates: L10n.localizationsDelegates,
+                localizationsDelegates: l10nDelegates,
                 themeMode: state.theme,
                 darkTheme: themeFactory(
                     primaryColor: state.primaryColor,
