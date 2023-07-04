@@ -3,15 +3,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:swipeable_page_route/swipeable_page_route.dart';
 
-import '../l10n/l10n.dart';
-import './community/community_store.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
+import '../l10n/l10n.dart';
 import '../stores/accounts_store.dart';
 import '../util/mobx_provider.dart';
 import '../util/observer_consumers.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
+import 'community/community_store.dart';
 import 'community/federated_community.dart';
 
 class ViewOnMenu extends HookWidget {
