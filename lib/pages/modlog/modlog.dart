@@ -29,7 +29,8 @@ class ModlogPage extends StatelessWidget {
                 ObserverBuilder<ModlogPageStore>(
                   builder: (context, store) {
                     if (!store.hasNextPage) {
-                      return const Center(child: Text('no more logs to show'));
+                      return Center(
+                          child: Text(L10n.of(context).modlog_nologs));
                     }
 
                     return store.modlogState.map(

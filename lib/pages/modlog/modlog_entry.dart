@@ -228,7 +228,7 @@ class ModlogEntry {
                   if (reason != null)
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 300),
-                      child: Text('Reason: $reason',
+                      child: Text(L10n.of(context).modlog_reason + ' $reason',
                           style: const TextStyle(fontSize: 13),
                           overflow: TextOverflow.fade),
                     ),
