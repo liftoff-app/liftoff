@@ -108,7 +108,7 @@ class CommunityOverview extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  community.community.title,
+                  '${community.community.title}${community.community.instanceHost != community.community.originInstanceHost ? ' (via ${community.community.instanceHost})' : ''}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w300,

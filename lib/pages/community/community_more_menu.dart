@@ -10,6 +10,7 @@ import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/info_table_popup.dart';
+import '../view_on_menu.dart';
 import 'community_store.dart';
 
 class CommunityMoreMenu extends HookWidget {
@@ -32,6 +33,11 @@ class CommunityMoreMenu extends HookWidget {
             link: communityView.community.actorId,
             context: context,
           ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.travel_explore),
+          title: Text(L10n.of(context).view_on),
+          onTap: () => ViewOnMenu.openForCommunity(context, communityView),
         ),
         ObserverBuilder<CommunityStore>(builder: (context, store) {
           return ListTile(
