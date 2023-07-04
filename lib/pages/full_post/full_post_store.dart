@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../comment_tree.dart';
 import '../../hooks/stores.dart';
+import '../../stores/accounts_store.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store.dart';
 import '../../widgets/post/post_store.dart';
@@ -79,9 +80,9 @@ abstract class _FullPostStore with Store {
   Iterable<CommentView>? get comments => postComments?.followedBy(newComments);
 
   @action
-  Future<void> refresh([Jwt? token]) async {
+  Future<void> refresh([UserData? userData]) async {
     final result = await fullPostState.runLemmy(
-        instanceHost, GetPost(id: postId, auth: token?.raw));
+        instanceHost, GetPost(id: postId, auth: userData?.jwt.raw));
 
     final commentsResult = await commentsState.runLemmy(
         instanceHost,
@@ -104,13 +105,13 @@ abstract class _FullPostStore with Store {
   }
 
   @action
-  Future<void> blockCommunity(Jwt token) async {
+  Future<void> blockCommunity(UserData userData) async {
     final result = await communityBlockingState.runLemmy(
         instanceHost,
         BlockCommunity(
             communityId: fullPostView!.communityView.community.id,
             block: !fullPostView!.communityView.blocked,
-            auth: token.raw));
+            auth: userData.jwt.raw));
     if (result != null) {
       fullPostView =
           fullPostView!.copyWith(communityView: result.communityView);

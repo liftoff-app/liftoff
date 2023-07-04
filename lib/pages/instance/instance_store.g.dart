@@ -13,17 +13,18 @@ mixin _$InstanceStore on _InstanceStore, Store {
       AsyncAction('_InstanceStore.fetch', context: context);
 
   @override
-  Future<void> fetch(Jwt? token, {bool refresh = false}) {
-    return _$fetchAsyncAction.run(() => super.fetch(token, refresh: refresh));
+  Future<void> fetch(UserData? userData, {bool refresh = false}) {
+    return _$fetchAsyncAction
+        .run(() => super.fetch(userData, refresh: refresh));
   }
 
   late final _$fetchCommunitesAsyncAction =
       AsyncAction('_InstanceStore.fetchCommunites', context: context);
 
   @override
-  Future<void> fetchCommunites(Jwt? token, {bool refresh = false}) {
+  Future<void> fetchCommunites(UserData? userData, {bool refresh = false}) {
     return _$fetchCommunitesAsyncAction
-        .run(() => super.fetchCommunites(token, refresh: refresh));
+        .run(() => super.fetchCommunites(userData, refresh: refresh));
   }
 
   @override

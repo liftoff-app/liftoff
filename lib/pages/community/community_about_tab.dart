@@ -27,8 +27,7 @@ class CommmunityAboutTab extends StatelessWidget {
       onRefresh: () async {
         await context.read<CommunityStore>().refresh(context
             .read<AccountsStore>()
-            .defaultUserDataFor(fullCommunityView.instanceHost)
-            ?.jwt);
+            .defaultUserDataFor(fullCommunityView.instanceHost));
       },
       child: ListView(
         padding: const EdgeInsets.only(top: 20),

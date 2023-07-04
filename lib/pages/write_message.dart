@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
+import '../stores/accounts_store.dart';
 import '../util/extensions/api.dart';
 import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
@@ -40,12 +41,12 @@ class WriteMessagePage extends HookWidget {
     final submit = _isEdit ? L10n.of(context).save : 'send';
     final title = _isEdit ? 'Edit message' : L10n.of(context).send_message;
 
-    handleSubmit(Jwt token) async {
+    handleSubmit(UserData userData) async {
       if (_isEdit) {
         loading.value = true;
         try {
           final msg = await LemmyApiV3(instanceHost).run(EditPrivateMessage(
-            auth: token.raw,
+            auth: userData.jwt.raw,
             privateMessageId: privateMessage!.id,
             content: bodyController.text,
           ));
@@ -60,7 +61,7 @@ class WriteMessagePage extends HookWidget {
         loading.value = true;
         try {
           await LemmyApiV3(instanceHost).run(CreatePrivateMessage(
-            auth: token.raw,
+            auth: userData.jwt.raw,
             content: bodyController.text,
             recipientId: recipient.id,
           ));
