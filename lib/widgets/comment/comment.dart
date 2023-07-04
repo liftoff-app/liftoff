@@ -81,14 +81,14 @@ class CommentWidget extends StatelessWidget {
     return MobxProvider(
       create: (context) {
         return CommentStore(
-        context.read(),
-        commentTree: commentTree,
-        userMentionId: userMentionId,
-        depth: depth,
-        canBeMarkedAsRead: canBeMarkedAsRead,
-        detached: detached,
-        hideOnRead: hideOnRead,
-      );
+          context.read(),
+          commentTree: commentTree,
+          userMentionId: userMentionId,
+          depth: depth,
+          canBeMarkedAsRead: canBeMarkedAsRead,
+          detached: detached,
+          hideOnRead: hideOnRead,
+        );
       },
       builder: (context, child) => Nested(
         children: [
@@ -310,7 +310,9 @@ class _CommentWidget extends StatelessWidget {
               ),
               if (!store.collapsed)
                 for (final c in store.children)
-                  CommentWidget(c, depth: store.depth + 1, key: Key(c.comment.comment.id.toString())),
+                  CommentWidget(c,
+                      depth: store.depth + 1,
+                      key: Key(c.comment.comment.id.toString())),
             ],
           ),
         );
