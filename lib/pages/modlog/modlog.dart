@@ -45,7 +45,7 @@ class ModlogPage extends StatelessWidget {
                       data: (modlog) => PullToRefresh(
                         onRefresh: store.fetchPage,
                         child: ConstrainedBox(
-                          constraints: const BoxConstraints(minHeight: 200),
+                          constraints: const BoxConstraints(maxHeight: 600),
                           child: ModlogTable(modlog: modlog),
                         ),
                       ),

@@ -281,6 +281,7 @@ class ModlogTable extends StatelessWidget {
     ]..sort((a, b) => b.when.compareTo(a.when));
 
     return ListView(
+      shrinkWrap: true,
       children: modlogEntries.map((e) => e.build(context)).toList(),
     );
   }
