@@ -85,7 +85,7 @@ class CommmunityAboutTab extends StatelessWidget {
             ),
             for (final mod in moderators)
               PersonTile(
-                mod.moderator,
+                mod.moderator!,
                 expanded: true,
               ),
           ],

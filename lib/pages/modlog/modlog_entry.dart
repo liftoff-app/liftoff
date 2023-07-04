@@ -8,7 +8,7 @@ import '../../widgets/avatar.dart';
 
 class ModlogEntry {
   final DateTime when;
-  final PersonSafe mod;
+  final PersonSafe? mod;
   final Widget action;
   final String? reason;
 
@@ -39,11 +39,11 @@ class ModlogEntry {
         );
 
   ModlogEntry.fromModStickyPostView(
-    ModStickyPostView stickiedPost,
+    ModFeaturePostView featuredPost,
     Widget action,
   ) : this._(
-          when: stickiedPost.modStickyPost.when,
-          mod: stickiedPost.moderator,
+          when: featuredPost.modFeaturePost.when,
+          mod: featuredPost.moderator,
           action: action,
         );
 
@@ -92,7 +92,7 @@ class ModlogEntry {
     Widget action,
   ) : this._(
           when: addedToCommunity.modAddCommunity.when,
-          mod: addedToCommunity.moderator,
+          mod: addedToCommunity.moddedPerson,
           action: action,
         );
 
@@ -114,57 +114,128 @@ class ModlogEntry {
           action: action,
         );
 
-  TableRow build(BuildContext context) {
-    return TableRow(
-      children: [
-        GestureDetector(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Center(
-                    heightFactor: 1,
-                    child: Text(when.toString()),
-                  ),
-                ),
-              ),
-            );
-          },
-          child: Center(child: Text(when.timeagoShort(context))),
-        ),
-        GestureDetector(
-          onTap: () => goToUser.byId(
-            context,
-            mod.instanceHost,
-            mod.id,
-          ),
-          child: Row(
+  // required List<ModHideCommunityView> hiddenCommunities,
+  ModlogEntry.fromModHideView(
+    ModHideCommunityView hidden,
+    Widget action,
+  ) : this._(
+          when: hidden.modHideCommunity.when,
+          mod: hidden.admin,
+          action: action,
+        );
+
+  // required List<AdminPurgeCommentView> adminPurgedComments,
+  ModlogEntry.fromModAdminPurgeCommentView(
+    AdminPurgeCommentView purgedComment,
+    Widget action,
+  ) : this._(
+          when: purgedComment.adminPurgeComment.when,
+          mod: purgedComment.admin,
+          action: action,
+        );
+
+  // required List<AdminPurgePersonView> adminPurgedPersons,
+  ModlogEntry.fromModAdminPurgePersonView(
+    AdminPurgePersonView purgedPerson,
+    Widget action,
+  ) : this._(
+          when: purgedPerson.adminPurgePerson.when,
+          mod: purgedPerson.admin,
+          action: action,
+        );
+
+  // required List<AdminPurgeCommunityView> adminPurgedCommunities,
+  ModlogEntry.fromModAdminPurgeCommunityView(
+    AdminPurgeCommunityView purgedCommunity,
+    Widget action,
+  ) : this._(
+          when: purgedCommunity.adminPurgeCommunity.when,
+          mod: purgedCommunity.admin,
+          action: action,
+        );
+  // required List<AdminPurgePostView> adminPurgedPosts,
+  ModlogEntry.fromModAdminPurgePostView(
+    AdminPurgePostView purgedPost,
+    Widget action,
+  ) : this._(
+          when: purgedPost.adminPurgePost.when,
+          mod: purgedPost.admin,
+          action: action,
+        );
+
+  ListTile build(BuildContext context) {
+    return ListTile(
+      leading: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 50),
+          child: Column(
             children: [
-              Avatar(
-                url: mod.avatar,
-                noBlank: true,
-                radius: 10,
-              ),
-              Text(
-                ' ${mod.preferredName}',
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Center(
+                          heightFactor: 1,
+                          child: Text(when.toString()),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Center(
+                    child: Chip(
+                        labelStyle: const TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 14),
+                        label: Text(
+                          when.timeagoShort(context),
+                        ))),
               ),
             ],
-          ),
-        ),
-        action,
-        if (reason == null) const Center(child: Text('-')) else Text(reason!),
-      ]
-          .map(
-            (widget) => Padding(
-              padding: const EdgeInsets.all(8),
-              child: widget,
-            ),
-          )
-          .toList(),
+          )),
+      title: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 75, maxWidth: 600),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              action,
+              Row(
+                children: [
+                  if (mod != null)
+                    GestureDetector(
+                      onTap: () => goToUser.byId(
+                        context,
+                        mod!.instanceHost,
+                        mod!.id,
+                      ),
+                      child: Row(
+                        children: [
+                          Avatar(
+                            url: mod!.avatar,
+                            noBlank: true,
+                            radius: 10,
+                          ),
+                          Text(
+                            ' ${mod!.preferredName}',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (reason != null)
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 300),
+                      child: Text('Reason: $reason',
+                          style: const TextStyle(fontSize: 13),
+                          overflow: TextOverflow.fade),
+                    ),
+                ],
+              ),
+            ]),
+      ),
     );
   }
 }

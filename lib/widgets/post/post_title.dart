@@ -21,7 +21,6 @@ class PostTitle extends HookWidget {
         final post = store.postView.post;
         final thumbnailUrl = post.thumbnailUrl;
         final url = post.url;
-
         return Padding(
           padding: const EdgeInsets.all(10).copyWith(top: 0),
           child: Row(
