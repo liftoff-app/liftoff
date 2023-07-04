@@ -27,8 +27,7 @@ class CommmunityAboutTab extends StatelessWidget {
       onRefresh: () async {
         await context.read<CommunityStore>().refresh(context
             .read<AccountsStore>()
-            .defaultUserDataFor(fullCommunityView.instanceHost)
-            ?.jwt);
+            .defaultUserDataFor(fullCommunityView.instanceHost));
       },
       child: ListView(
         padding: const EdgeInsets.only(top: 20),
@@ -86,7 +85,7 @@ class CommmunityAboutTab extends StatelessWidget {
             ),
             for (final mod in moderators)
               PersonTile(
-                mod.moderator,
+                mod.moderator!,
                 expanded: true,
               ),
           ],

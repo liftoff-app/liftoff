@@ -142,12 +142,13 @@ class _UserBlocks extends HookWidget {
                     onTap: store.userBlockingState.isLoading
                         ? null
                         : loggedInAction(
-                            (token) async {
+                            (userData) async {
                               final person =
                                   await BlockPersonDialog.show(context);
 
                               if (person != null) {
-                                await store.blockUser(token, person.person.id);
+                                await store.blockUser(
+                                    userData, person.person.id);
                               }
                             },
                           ),
@@ -176,13 +177,13 @@ class _UserBlocks extends HookWidget {
                     onTap: store.communityBlockingState.isLoading
                         ? null
                         : loggedInAction(
-                            (token) async {
+                            (userData) async {
                               final community =
                                   await BlockCommunityDialog.show(context);
 
                               if (community != null) {
                                 await store.blockCommunity(
-                                  token,
+                                  userData,
                                   community.community.id,
                                 );
                               }

@@ -43,40 +43,40 @@ mixin _$PostStore on _PostStore, Store {
       AsyncAction('_PostStore.save', context: context);
 
   @override
-  Future<void> save(Jwt token) {
-    return _$saveAsyncAction.run(() => super.save(token));
+  Future<void> save(UserData userData) {
+    return _$saveAsyncAction.run(() => super.save(userData));
   }
 
   late final _$reportAsyncAction =
       AsyncAction('_PostStore.report', context: context);
 
   @override
-  Future<void> report(Jwt token, String reason) {
-    return _$reportAsyncAction.run(() => super.report(token, reason));
+  Future<void> report(UserData userData, String reason) {
+    return _$reportAsyncAction.run(() => super.report(userData, reason));
   }
 
   late final _$deleteAsyncAction =
       AsyncAction('_PostStore.delete', context: context);
 
   @override
-  Future<void> delete(Jwt token) {
-    return _$deleteAsyncAction.run(() => super.delete(token));
+  Future<void> delete(UserData userData) {
+    return _$deleteAsyncAction.run(() => super.delete(userData));
   }
 
   late final _$blockUserAsyncAction =
       AsyncAction('_PostStore.blockUser', context: context);
 
   @override
-  Future<void> blockUser(Jwt token) {
-    return _$blockUserAsyncAction.run(() => super.blockUser(token));
+  Future<void> blockUser(UserData userData) {
+    return _$blockUserAsyncAction.run(() => super.blockUser(userData));
   }
 
   late final _$_voteAsyncAction =
       AsyncAction('_PostStore._vote', context: context);
 
   @override
-  Future<void> _vote(Jwt token, VoteType voteType) {
-    return _$_voteAsyncAction.run(() => super._vote(token, voteType));
+  Future<void> _vote(UserData userData, VoteType voteType) {
+    return _$_voteAsyncAction.run(() => super._vote(userData, voteType));
   }
 
   late final _$_PostStoreActionController =
@@ -94,22 +94,22 @@ mixin _$PostStore on _PostStore, Store {
   }
 
   @override
-  Future<void> upVote(Jwt token) {
+  Future<void> upVote(UserData userData) {
     final _$actionInfo =
         _$_PostStoreActionController.startAction(name: '_PostStore.upVote');
     try {
-      return super.upVote(token);
+      return super.upVote(userData);
     } finally {
       _$_PostStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  Future<void> downVote(Jwt token) {
+  Future<void> downVote(UserData userData) {
     final _$actionInfo =
         _$_PostStoreActionController.startAction(name: '_PostStore.downVote');
     try {
-      return super.downVote(token);
+      return super.downVote(userData);
     } finally {
       _$_PostStoreActionController.endAction(_$actionInfo);
     }

@@ -1,6 +1,7 @@
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../stores/accounts_store.dart';
 import '../../../util/async_store.dart';
 import 'community_block_store.dart';
 import 'user_block_store.dart';
@@ -38,7 +39,7 @@ abstract class _BlocksStore with Store {
   bool get isUsable => blockedUsers != null && blockedCommunities != null;
 
   @action
-  Future<void> blockUser(Jwt token, int id) async {
+  Future<void> blockUser(UserData userData, int id) async {
     if (_blockedUsers == null) {
       throw StateError("_blockedUsers can't be null at this moment");
     }
@@ -47,7 +48,7 @@ abstract class _BlocksStore with Store {
       BlockPerson(
         personId: id,
         block: true,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
 
@@ -57,14 +58,14 @@ abstract class _BlocksStore with Store {
         UserBlockStore(
           instanceHost: instanceHost,
           person: res.personView.person,
-          token: token,
+          token: userData.jwt,
         ),
       );
     }
   }
 
   @action
-  Future<void> blockCommunity(Jwt token, int id) async {
+  Future<void> blockCommunity(UserData userData, int id) async {
     if (_blockedCommunities == null) {
       throw StateError("_blockedCommunities can't be null at this moment");
     }
@@ -73,7 +74,7 @@ abstract class _BlocksStore with Store {
       BlockCommunity(
         communityId: id,
         block: true,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
 
@@ -83,7 +84,7 @@ abstract class _BlocksStore with Store {
         CommunityBlockStore(
           instanceHost: instanceHost,
           community: res.communityView.community,
-          token: token,
+          token: userData.jwt,
         ),
       );
     }

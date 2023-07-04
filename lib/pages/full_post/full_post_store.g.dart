@@ -138,16 +138,17 @@ mixin _$FullPostStore on _FullPostStore, Store {
       AsyncAction('_FullPostStore.refresh', context: context);
 
   @override
-  Future<void> refresh([Jwt? token]) {
-    return _$refreshAsyncAction.run(() => super.refresh(token));
+  Future<void> refresh([UserData? userData]) {
+    return _$refreshAsyncAction.run(() => super.refresh(userData));
   }
 
   late final _$blockCommunityAsyncAction =
       AsyncAction('_FullPostStore.blockCommunity', context: context);
 
   @override
-  Future<void> blockCommunity(Jwt token) {
-    return _$blockCommunityAsyncAction.run(() => super.blockCommunity(token));
+  Future<void> blockCommunity(UserData userData) {
+    return _$blockCommunityAsyncAction
+        .run(() => super.blockCommunity(userData));
   }
 
   late final _$_FullPostStoreActionController =

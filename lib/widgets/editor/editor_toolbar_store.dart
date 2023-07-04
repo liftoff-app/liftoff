@@ -1,7 +1,7 @@
 import 'package:lemmy_api_client/pictrs.dart';
-import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../stores/accounts_store.dart';
 import '../../util/async_store.dart';
 import '../../util/pictrs.dart';
 
@@ -27,14 +27,14 @@ abstract class _EditorToolbarStore with Store {
       );
 
   @action
-  Future<String?> uploadImage(String filePath, Jwt token) async {
+  Future<String?> uploadImage(String filePath, UserData userData) async {
     final instanceHost = this.instanceHost;
 
     final upload = await imageUploadState.run(
       () => PictrsApi(instanceHost)
           .upload(
             filePath: filePath,
-            auth: token.raw,
+            auth: userData.jwt.raw,
           )
           .then((value) => value.files.single),
     );

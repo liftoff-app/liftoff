@@ -27,8 +27,7 @@ class CommentSection {
                     '${store.fullPostState.errorTerm}',
                 refresh: () => store.refresh(context
                     .read<AccountsStore>()
-                    .defaultUserDataFor(store.instanceHost)
-                    ?.jwt)),
+                    .defaultUserDataFor(store.instanceHost))),
           )
         ];
       } else {

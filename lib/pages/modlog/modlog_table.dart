@@ -117,25 +117,26 @@ class ModlogTable extends StatelessWidget {
             ),
           ),
         ),
-      for (final stickiedPost in modlog.stickiedPosts)
+      for (final featuredPost in modlog.featuredPosts)
         ModlogEntry.fromModStickyPostView(
-          stickiedPost,
+          featuredPost,
           RichText(
             text: TextSpan(
               children: [
-                if (stickiedPost.modStickyPost.stickied ?? false)
+                if (featuredPost.post.featuredCommunity ||
+                    featuredPost.post.featuredLocal)
                   const TextSpan(text: 'stickied')
                 else
                   const TextSpan(text: 'unstickied'),
                 const TextSpan(text: ' post '),
                 TextSpan(
-                  text: '"${stickiedPost.post.name}"',
+                  text: '"${featuredPost.post.name}"',
                   style: TextStyle(color: theme.colorScheme.secondary),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => goToPost(
                           context,
-                          stickiedPost.instanceHost,
-                          stickiedPost.post.id,
+                          featuredPost.instanceHost,
+                          featuredPost.post.id,
                         ),
                 ),
               ],
@@ -279,32 +280,9 @@ class ModlogTable extends StatelessWidget {
         ),
     ]..sort((a, b) => b.when.compareTo(a.when));
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(8),
-      scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        width: 1000,
-        child: Table(
-          border: TableBorder.all(color: theme.colorScheme.onSurface),
-          columnWidths: const {
-            0: FixedColumnWidth(80),
-            1: FixedColumnWidth(200),
-            2: FlexColumnWidth(),
-            3: FixedColumnWidth(200),
-          },
-          children: [
-            const TableRow(
-              children: [
-                Center(child: Text('when')),
-                Center(child: Text('mod')),
-                Center(child: Text('action')),
-                Center(child: Text('reason')),
-              ],
-            ),
-            for (final modlogEntry in modlogEntries) modlogEntry.build(context)
-          ],
-        ),
-      ),
+    return ListView(
+      shrinkWrap: true,
+      children: modlogEntries.map((e) => e.build(context)).toList(),
     );
   }
 }
