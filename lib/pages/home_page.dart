@@ -89,21 +89,25 @@ class HomePage extends HookWidget {
       floatingActionButton: Platform.isAndroid ? const CreatePostFab() : null,
       floatingActionButtonLocation:
           Platform.isAndroid ? FloatingActionButtonLocation.centerDocked : null,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 7,
-        child: SizedBox(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              tabButton(Icons.home),
-              tabButton(Icons.list),
-              if (Platform.isAndroid) const SizedBox.shrink(),
-              if (Platform.isAndroid) const SizedBox.shrink(),
-              tabButton(Icons.search),
-              tabButton(Icons.person),
-            ],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+            boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 10)]),
+        child: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 7,
+          child: SizedBox(
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                tabButton(Icons.home),
+                tabButton(Icons.list),
+                if (Platform.isAndroid) const SizedBox.shrink(),
+                if (Platform.isAndroid) const SizedBox.shrink(),
+                tabButton(Icons.search),
+                tabButton(Icons.person),
+              ],
+            ),
           ),
         ),
       ),
