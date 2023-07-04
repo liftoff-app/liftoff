@@ -38,9 +38,6 @@ Future<void> _launchCustomTab(BuildContext context, String link) async {
         preferredBarTintColor: Theme.of(context).canvasColor,
         preferredControlTintColor:
             textColorBasedOnBackground(Theme.of(context).canvasColor),
-        barCollapsingEnabled: true,
-        entersReaderIfAvailable: false,
-        dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
       ),
     );
   } catch (e) {
