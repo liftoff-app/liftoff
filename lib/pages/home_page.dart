@@ -5,10 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../app_link_handler.dart';
+import '../hooks/stores.dart';
+import '../stores/accounts_store.dart';
 import '../util/extensions/brightness.dart';
+import '../util/mobx_provider.dart';
+import '../util/observer_consumers.dart';
 import 'communities_tab.dart';
 import 'create_post/create_post_fab.dart';
 import 'home_tab.dart';
+import 'inbox/inbox_store.dart';
 import 'profile_tab.dart';
 import 'search_tab.dart';
 
@@ -27,6 +32,8 @@ class HomePage extends HookWidget {
     final theme = Theme.of(context);
     final currentTab = useState(0);
     final snackBarShowing = useState(false);
+    final accStore = useAccountsStore();
+    final inboxStore = useStore((InboxStore store) => store);
 
     useEffect(() {
       Future.microtask(
@@ -47,7 +54,10 @@ class HomePage extends HookWidget {
       return IconButton(
         icon: Icon(icon),
         color: tabNum == currentTab.value ? theme.colorScheme.secondary : null,
-        onPressed: () => currentTab.value = tabNum,
+        onPressed: () async {
+          currentTab.value = tabNum;
+          await inboxStore.refresh(accStore.defaultUserData);
+        },
       );
     }
 

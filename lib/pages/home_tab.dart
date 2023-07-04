@@ -9,6 +9,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
+import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../stores/config_store.dart';
@@ -40,8 +41,7 @@ class HomeTab extends HookWidget {
         useStore((ConfigStore store) => store.defaultListingType);
     final showEverythingFeed =
         useStore((ConfigStore store) => store.showEverythingFeed);
-
-    // final badgeCount = useStore((InboxStore store) => store.unreadCounts);
+    final inboxStore = useStore((InboxStore store) => store);
 
     final selectedList = useState(_SelectedList(
         instanceHost: accStore.defaultInstanceHost,
@@ -251,16 +251,22 @@ class HomeTab extends HookWidget {
                 iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
                 titleTextStyle: theme.textTheme.titleLarge
                     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-                leading: MobxProvider(
-                  create: (context) => InboxStore(accStore.defaultInstanceHost!)
-                    ..fetchNotifications(accStore
-                        .defaultUserDataFor(accStore.defaultInstanceHost!)!
-                        .jwt),
-                  child: IconButton(
-                    icon: const Icon(Icons.notifications),
-                    onPressed: () => goTo(context, (_) => const InboxPage()),
-                  ),
-                ),
+                leading: inboxStore.notificationCount != null &&
+                        inboxStore.notificationCount! > 0
+                    ? Badge(
+                        offset: const Offset(-5, 5),
+                        label: Text(inboxStore.notificationCount.toString()),
+                        child: IconButton(
+                          icon: const Icon(Icons.notifications),
+                          onPressed: () =>
+                              goTo(context, (_) => const InboxPage()),
+                        ),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.notifications),
+                        onPressed: () =>
+                            goTo(context, (_) => const InboxPage()),
+                      ),
                 title: TextButton(
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -303,34 +309,6 @@ class HomeTab extends HookWidget {
                         }
                       }),
                     ),
-                  // IconButton(
-                  //   icon: const Icon(Icons.more_vert),
-                  //   onPressed: () {
-                  //     showBottomModal(
-                  //       context: context,
-                  //       builder: (context) => Column(
-                  //         children: [
-                  //           ListTile(
-                  //             leading: const Icon(Icons.settings),
-                  //             title: const Text('Settings'),
-                  //             onTap: () {
-                  //               Navigator.of(context).pop();
-                  //               goTo(context, (_) => const SettingsPage());
-                  //             },
-                  //           ),
-                  //           ListTile(
-                  //             leading: const Icon(Icons.refresh),
-                  //             title: const Text('Refresh'),
-                  //             onTap: () {
-                  //               Navigator.of(context).pop();
-                  //               isc.clear();
-                  //             },
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     );
-                  //   },
-                  // )
                   PopupMenuButton(itemBuilder: (context) {
                     return [
                       const PopupMenuItem<int>(
@@ -354,10 +332,6 @@ class HomeTab extends HookWidget {
                           title: Text('Settings'),
                         ),
                       ),
-                      // PopupMenuItem<int>(
-                      //   value: 2,
-                      //   child: Text("Logout"),
-                      // ),
                     ];
                   }, onSelected: (value) {
                     if (value == 0) {

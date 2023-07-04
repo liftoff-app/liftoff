@@ -9,6 +9,7 @@ import 'package:timeago/timeago.dart';
 import 'app.dart';
 import 'app_config.dart';
 import 'l10n/timeago/pl.dart';
+import 'pages/inbox/inbox_store.dart';
 import 'pages/log_console/log_console_page_store.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
@@ -29,6 +30,10 @@ Future<void> mainCommon(AppConfig appConfig) async {
     MultiProvider(
       providers: [
         MobxProvider(create: (context) => ConfigStore.load(sharedPrefs)),
+        MobxProvider(
+            create: (context) =>
+                InboxStore(accountsStore.defaultUserData!.instanceHost)
+                  ..refresh(accountsStore.defaultUserData)),
         ChangeNotifierProvider.value(value: accountsStore),
         MobxProvider.value(value: logConsoleStore),
       ],

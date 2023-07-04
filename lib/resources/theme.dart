@@ -42,6 +42,10 @@ ThemeData themeFactory(
       labelColor: theme.colorScheme.onSurface,
       indicatorColor: primaryColor,
     ),
+    badgeTheme: const BadgeThemeData(
+      textColor: Colors.white,
+      textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+    ),
     chipTheme: ChipThemeData(
       backgroundColor: primaryColor,
       disabledColor: Colors.amber,

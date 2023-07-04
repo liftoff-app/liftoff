@@ -1,6 +1,7 @@
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../stores/accounts_store.dart';
 import '../../util/async_store.dart';
 
 part 'inbox_store.g.dart';
@@ -11,33 +12,24 @@ abstract class _InboxStore with Store {
   final String instanceHost;
 
   _InboxStore(this.instanceHost);
-
   final unreadCounts = AsyncStore<UnreadCount>();
 
-  // Future<void> fetchNotifications() {
-  //     return Future.wait(
-  //       accStore.instances.map(
-  //         (e) => LemmyApiV3(e)
-  //             .run<UnreadCount?>(GetUnreadCount(
-  //               auth: accStore
-  //                   .defaultUserDataFor(accStore.defaultInstanceHost!)!
-  //                   .jwt
-  //                   .raw,
-  //             ))
-  //             .then((value) => value != null
-  //                 ? value.mentions + value.replies + value.privateMessages
-  //                 : 0)
-  //             .catchError((e) => 0),
-  //       ),
-  //     ).then((value) => value.reduce((value, element) => value + element));
-  //   }
+  @observable
+  int? notificationCount;
 
   @action
-  Future<void> fetchNotifications(Jwt token, {bool refresh = false}) async {
-    await unreadCounts.runLemmy(
-      instanceHost,
-      GetUnreadCount(auth: token.raw),
-      refresh: refresh,
-    );
+  Future<void> refresh(UserData? userData) async {
+    notificationCount = await LemmyApiV3(userData!.instanceHost)
+        .run(GetUnreadCount(
+          auth: userData.jwt.raw,
+        ))
+        .then((e) => e.mentions + e.replies + e.privateMessages);
+  }
+
+  @action
+  Future<void> fetchNotifications(UserData? userData) async {
+    await LemmyApiV3(userData!.instanceHost).run(GetUnreadCount(
+      auth: userData.jwt.raw,
+    ));
   }
 }

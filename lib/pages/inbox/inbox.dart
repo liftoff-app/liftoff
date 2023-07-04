@@ -24,6 +24,7 @@ import '../../widgets/radio_picker.dart';
 import '../../widgets/sortable_infinite_list.dart';
 import '../../widgets/tile_action.dart';
 import '../write_message.dart';
+import 'inbox_store.dart';
 
 class InboxPage extends HookWidget {
   const InboxPage();
@@ -31,6 +32,7 @@ class InboxPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
+    final inboxStore = useStore((InboxStore store) => store);
     final selected = useState(accStore.defaultInstanceHost);
     final theme = Theme.of(context);
     final isc = useInfiniteScrollController();
@@ -55,7 +57,6 @@ class InboxPage extends HookWidget {
       try {
         await LemmyApiV3(selectedInstance).run(MarkAllAsRead(
             auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw));
-
         isc.clear();
       } catch (e) {
         ScaffoldMessenger.of(context)
@@ -63,132 +64,143 @@ class InboxPage extends HookWidget {
       }
     }
 
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: RadioPicker<String>(
-            onChanged: (val) {
-              selected.value = val;
-              isc.clear();
-            },
-            title: 'select instance',
-            groupValue: selectedInstance,
-            buttonBuilder: (context, displayString, onPressed) => TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-              ),
-              onPressed: onPressed,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      displayString,
-                      style: theme.appBarTheme.titleTextStyle,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
+    return WillPopScope(
+      onWillPop: () async {
+        await inboxStore.refresh(accStore.defaultUserData);
+
+        return Future(() => true);
+      },
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: RadioPicker<String>(
+              onChanged: (val) {
+                selected.value = val;
+                isc.clear();
+              },
+              title: 'select instance',
+              groupValue: selectedInstance,
+              buttonBuilder: (context, displayString, onPressed) => TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                ),
+                onPressed: onPressed,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        displayString,
+                        style: theme.appBarTheme.titleTextStyle,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
                     ),
-                  ),
-                  const Icon(Icons.arrow_drop_down),
-                ],
+                    const Icon(Icons.arrow_drop_down),
+                  ],
+                ),
               ),
+              values: accStore.loggedInInstances.toList(),
             ),
-            values: accStore.loggedInInstances.toList(),
-          ),
-          actions: [
-            if (currentTab.value == 0)
+            actions: [
+              if (currentTab.value == 0)
+                IconButton(
+                  icon: const Icon(Icons.checklist),
+                  onPressed: markAllAsRead,
+                  tooltip: 'Mark all as read',
+                ),
               IconButton(
-                icon: const Icon(Icons.checklist),
-                onPressed: markAllAsRead,
-                tooltip: 'Mark all as read',
-              ),
-            IconButton(
-              icon: Icon(unreadOnly.value ? Icons.mail : Icons.mail_outline),
-              onPressed: toggleUnreadOnly,
-              tooltip: unreadOnly.value ? 'show all' : 'show only unread',
-            )
-          ],
-          bottom: TabBar(
-            indicatorColor: theme.colorScheme.primary,
-            onTap: (value) => currentTab.value = value,
-            tabs: [
-              Tab(text: L10n.of(context).replies),
-              Tab(text: L10n.of(context).mentions),
-              Tab(text: L10n.of(context).messages),
+                icon: Icon(unreadOnly.value ? Icons.mail : Icons.mail_outline),
+                onPressed: toggleUnreadOnly,
+                tooltip: unreadOnly.value ? 'show all' : 'show only unread',
+              )
             ],
+            bottom: TabBar(
+              indicatorColor: theme.colorScheme.primary,
+              onTap: (value) => currentTab.value = value,
+              tabs: [
+                Tab(text: L10n.of(context).replies),
+                Tab(text: L10n.of(context).mentions),
+                Tab(text: L10n.of(context).messages),
+              ],
+            ),
           ),
-        ),
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: TabBarView(
-              children: [
-                SortableInfiniteList<CommentView>(
-                  noItems: const Text('no replies'),
-                  controller: isc,
-                  defaultSort: SortType.new_,
-                  fetcher: (page, batchSize, sortType) =>
-                      LemmyApiV3(selectedInstance).run(GetReplies(
-                    auth:
-                        accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
-                    sort: sortType,
-                    limit: batchSize,
-                    page: page,
-                    unreadOnly: unreadOnly.value,
-                  )),
-                  itemBuilder: (cv) => CommentWidget.fromCommentView(
-                    cv,
-                    canBeMarkedAsRead: true,
-                    hideOnRead: unreadOnly.value,
-                  ),
-                  uniqueProp: (item) => item.comment.apId,
-                ),
-                SortableInfiniteList<PersonMentionView>(
-                  noItems: const Text('no mentions'),
-                  controller: isc,
-                  defaultSort: SortType.new_,
-                  fetcher: (page, batchSize, sortType) =>
-                      LemmyApiV3(selectedInstance).run(GetPersonMentions(
-                    auth:
-                        accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
-                    sort: sortType,
-                    limit: batchSize,
-                    page: page,
-                    unreadOnly: unreadOnly.value,
-                  )),
-                  itemBuilder: (umv) => CommentWidget.fromPersonMentionView(
-                    umv,
-                    hideOnRead: unreadOnly.value,
-                  ),
-                  uniqueProp: (item) => item.personMention.id,
-                ),
-                InfiniteScroll<PrivateMessageView>(
-                  noItems: const Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: Text('no messages'),
-                  ),
-                  controller: isc,
-                  fetcher: (page, batchSize) =>
-                      LemmyApiV3(selectedInstance).run(
-                    GetPrivateMessages(
+          body: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: TabBarView(
+                children: [
+                  SortableInfiniteList<CommentView>(
+                    noItems: const Text('no replies'),
+                    controller: isc,
+                    defaultSort: SortType.new_,
+                    fetcher: (page, batchSize, sortType) =>
+                        LemmyApiV3(selectedInstance).run(GetReplies(
                       auth: accStore
                           .defaultUserDataFor(selectedInstance)!
                           .jwt
                           .raw,
+                      sort: sortType,
                       limit: batchSize,
                       page: page,
                       unreadOnly: unreadOnly.value,
+                    )),
+                    itemBuilder: (cv) => CommentWidget.fromCommentView(
+                      cv,
+                      canBeMarkedAsRead: true,
+                      hideOnRead: unreadOnly.value,
                     ),
+                    uniqueProp: (item) => item.comment.apId,
                   ),
-                  itemBuilder: (mv) => PrivateMessageTile(
-                    privateMessageView: mv,
-                    hideOnRead: unreadOnly.value,
+                  SortableInfiniteList<PersonMentionView>(
+                    noItems: const Text('no mentions'),
+                    controller: isc,
+                    defaultSort: SortType.new_,
+                    fetcher: (page, batchSize, sortType) =>
+                        LemmyApiV3(selectedInstance).run(GetPersonMentions(
+                      auth: accStore
+                          .defaultUserDataFor(selectedInstance)!
+                          .jwt
+                          .raw,
+                      sort: sortType,
+                      limit: batchSize,
+                      page: page,
+                      unreadOnly: unreadOnly.value,
+                    )),
+                    itemBuilder: (umv) => CommentWidget.fromPersonMentionView(
+                      umv,
+                      hideOnRead: unreadOnly.value,
+                    ),
+                    uniqueProp: (item) => item.personMention.id,
                   ),
-                  uniqueProp: (item) => item.privateMessage.apId,
-                ),
-              ],
+                  InfiniteScroll<PrivateMessageView>(
+                    noItems: const Padding(
+                      padding: EdgeInsets.only(top: 60),
+                      child: Text('no messages'),
+                    ),
+                    controller: isc,
+                    fetcher: (page, batchSize) =>
+                        LemmyApiV3(selectedInstance).run(
+                      GetPrivateMessages(
+                        auth: accStore
+                            .defaultUserDataFor(selectedInstance)!
+                            .jwt
+                            .raw,
+                        limit: batchSize,
+                        page: page,
+                        unreadOnly: unreadOnly.value,
+                      ),
+                    ),
+                    itemBuilder: (mv) => PrivateMessageTile(
+                      privateMessageView: mv,
+                      hideOnRead: unreadOnly.value,
+                    ),
+                    uniqueProp: (item) => item.privateMessage.apId,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
