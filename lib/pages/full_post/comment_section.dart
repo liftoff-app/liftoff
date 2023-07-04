@@ -14,6 +14,7 @@ class CommentSection {
 
     final fullPostView = store.fullPostView;
     final postComments = store.postComments;
+    final newComments = store.newComments;
 
     // error & spinner handling
     if (fullPostView == null) {
@@ -42,7 +43,7 @@ class CommentSection {
     return [
       CommentListOptions(onSortChanged: store.updateSorting, sortValue: sort),
       // sorting menu goes here
-      if (postComments != null && postComments.isEmpty)
+      if (postComments != null && postComments.isEmpty && newComments.isEmpty)
         _centeredWithConstraints(
           child: const Padding(
             padding: EdgeInsets.symmetric(vertical: 50),
