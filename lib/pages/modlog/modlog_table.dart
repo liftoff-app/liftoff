@@ -280,32 +280,8 @@ class ModlogTable extends StatelessWidget {
         ),
     ]..sort((a, b) => b.when.compareTo(a.when));
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(8),
-      scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        width: 1000,
-        child: Table(
-          border: TableBorder.all(color: theme.colorScheme.onSurface),
-          columnWidths: const {
-            0: FixedColumnWidth(80),
-            1: FixedColumnWidth(150),
-            2: FlexColumnWidth(),
-            3: FixedColumnWidth(200),
-          },
-          children: [
-            const TableRow(
-              children: [
-                Center(child: Text('when')),
-                Center(child: Text('mod')),
-                Center(child: Text('action')),
-                Center(child: Text('reason')),
-              ],
-            ),
-            for (final modlogEntry in modlogEntries) modlogEntry.build(context)
-          ],
-        ),
-      ),
+    return ListView(
+      children: modlogEntries.map((e) => e.build(context)).toList(),
     );
   }
 }

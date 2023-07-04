@@ -163,60 +163,79 @@ class ModlogEntry {
           action: action,
         );
 
-  TableRow build(BuildContext context) {
-    return TableRow(
-      children: [
-        GestureDetector(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Center(
-                    heightFactor: 1,
-                    child: Text(when.toString()),
-                  ),
-                ),
+  ListTile build(BuildContext context) {
+    return ListTile(
+      leading: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 50),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Center(
+                          heightFactor: 1,
+                          child: Text(when.toString()),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Center(
+                    child: Chip(
+                        labelStyle: const TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 14),
+                        label: Text(
+                          when.timeagoShort(context),
+                        ))),
               ),
-            );
-          },
-          child: Center(child: Text(when.timeagoShort(context))),
-        ),
-        if (mod != null)
-          GestureDetector(
-            onTap: () => goToUser.byId(
-              context,
-              mod!.instanceHost,
-              mod!.id,
-            ),
-            child: Row(
-              children: [
-                Avatar(
-                  url: mod!.avatar,
-                  noBlank: true,
-                  radius: 10,
-                ),
-                Text(
-                  ' ${mod!.preferredName}',
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.secondary),
-                ),
-              ],
-            ),
-          )
-        else
-          const Center(child: Text('-')),
-        action,
-        if (reason == null) const Center(child: Text('-')) else Text(reason!),
-      ]
-          .map(
-            (widget) => Padding(
-              padding: const EdgeInsets.all(8),
-              child: widget,
-            ),
-          )
-          .toList(),
+            ],
+          )),
+      title: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 75, maxWidth: 600),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              action,
+              Row(
+                children: [
+                  if (mod != null)
+                    GestureDetector(
+                      onTap: () => goToUser.byId(
+                        context,
+                        mod!.instanceHost,
+                        mod!.id,
+                      ),
+                      child: Row(
+                        children: [
+                          Avatar(
+                            url: mod!.avatar,
+                            noBlank: true,
+                            radius: 10,
+                          ),
+                          Text(
+                            ' ${mod!.preferredName}',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (reason != null)
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 300),
+                      child: Text('Reason: $reason',
+                          style: const TextStyle(fontSize: 13),
+                          overflow: TextOverflow.fade),
+                    ),
+                ],
+              ),
+            ]),
+      ),
     );
   }
 }
