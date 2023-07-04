@@ -16,13 +16,14 @@ abstract class _FullPostStore with Store {
   final int postId;
   final String instanceHost;
 
-  _FullPostStore({
-    required this.postId,
-    required this.instanceHost,
-  });
+  _FullPostStore(
+      {required this.postId,
+      required this.instanceHost,
+      // ignore: unused_element
+      this.commentId});
 
   // ignore: unused_element
-  _FullPostStore.fromPostView(PostView postView)
+  _FullPostStore.fromPostView(PostView postView, {this.commentId})
       : postId = postView.post.id,
         instanceHost = postView.instanceHost,
         postStore = PostStore(postView);
@@ -30,6 +31,7 @@ abstract class _FullPostStore with Store {
   // ignore: unused_element
   _FullPostStore.fromPostStore(PostStore this.postStore)
       : postId = postStore.postView.post.id,
+        commentId = null,
         instanceHost = postStore.postView.instanceHost;
 
   @observable
@@ -51,6 +53,9 @@ abstract class _FullPostStore with Store {
   @observable
   PostStore? postStore;
 
+  @observable
+  int? commentId;
+
   final fullPostState = AsyncStore<FullPostView>();
   final commentsState = AsyncStore<List<CommentView>>();
   final communityBlockingState = AsyncStore<BlockedCommunity>();
@@ -61,11 +66,16 @@ abstract class _FullPostStore with Store {
     sorting = sort;
   }
 
+  @action
+  void getAllComments() {
+    commentId = null;
+  }
+
   @computed
   List<CommentTree>? get commentTree {
     if (fullPostView == null) return null;
     if (postComments == null) return null;
-    return CommentTree.fromList(postComments!);
+    return CommentTree.fromList(postComments!, topLevelCommentId: commentId);
   }
 
   @computed
@@ -81,13 +91,17 @@ abstract class _FullPostStore with Store {
 
   @action
   Future<void> refresh([UserData? userData]) async {
-    final result = await fullPostState.runLemmy(
-        instanceHost, GetPost(id: postId, auth: userData?.jwt.raw));
+    final result =
+        await fullPostState.runLemmy(instanceHost, GetPost(id: postId));
 
     final commentsResult = await commentsState.runLemmy(
         instanceHost,
         GetComments(
-            postId: postId, type: CommentListingType.all, maxDepth: 10));
+            postId: postId,
+            type: CommentListingType.all,
+            parentId: commentId,
+            maxDepth: 10,
+            auth: userData?.jwt.raw));
 
     if (result != null) {
       postStore ??= PostStore(result.postView);
