@@ -66,7 +66,7 @@ class FullPostPage extends HookWidget {
             return Scaffold(
               appBar: AppBar(),
               body: Center(
-                child: (store.fullPostState.isLoading)
+                child: (store.fullPostState.errorTerm == null)
                     ? const CircularProgressIndicator.adaptive()
                     : FailedToLoad(
                         message: 'Post failed to load', refresh: refresh),
