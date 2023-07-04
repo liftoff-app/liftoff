@@ -73,8 +73,9 @@ class CommentActions extends HookWidget {
             if (store.detached)
               TileAction(
                 icon: Icons.link,
-                onPressed: () =>
-                    goToPost(context, comment.instanceHost, post.id),
+                onPressed: () => goToPost(
+                    context, comment.instanceHost, post.id,
+                    commentId: comment.id),
                 tooltip: 'go to post',
               ),
             const CommentMoreMenuButton(),

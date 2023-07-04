@@ -65,8 +65,10 @@ abstract class goToUser {
       goToUser.byId(context, personSafe.instanceHost, personSafe.id);
 }
 
-void goToPost(BuildContext context, String instanceHost, int postId) =>
-    Navigator.of(context).push(FullPostPage.route(postId, instanceHost));
+void goToPost(BuildContext context, String instanceHost, int postId,
+        {int? commentId}) =>
+    Navigator.of(context)
+        .push(FullPostPage.route(postId, instanceHost, commentId: commentId));
 
 void goToMedia(BuildContext context, String url, String heroTag) {
   final store = Provider.of<ConfigStore>(context, listen: false);

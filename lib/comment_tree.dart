@@ -46,7 +46,8 @@ class CommentTree {
   CommentTree(this.comment);
 
   /// takes raw linear comments and turns them into a CommentTree
-  static List<CommentTree> fromList(List<CommentView> comments) {
+  static List<CommentTree> fromList(List<CommentView> comments,
+      {int? topLevelCommentId}) {
     CommentTree gatherChildren(CommentTree parent) {
       for (final el in comments) {
         // comments store a parth variable that can be used to traverse the comment tree
@@ -62,9 +63,10 @@ class CommentTree {
     }
 
     // pinned comment denoted by a path of 0
-    final topLevelParents = comments
-        .where((e) =>
-            e.comment.path.split('.').length == 2 || e.comment.path == '0')
+    final topLevelParents = (topLevelCommentId == null
+            ? comments.where((e) =>
+                e.comment.path.split('.').length == 2 || e.comment.path == '0')
+            : comments.where((e) => e.comment.id == topLevelCommentId))
         .map(CommentTree.new);
 
     final result = topLevelParents.map(gatherChildren).toList();

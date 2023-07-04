@@ -134,6 +134,22 @@ mixin _$FullPostStore on _FullPostStore, Store {
     });
   }
 
+  late final _$commentIdAtom =
+      Atom(name: '_FullPostStore.commentId', context: context);
+
+  @override
+  int? get commentId {
+    _$commentIdAtom.reportRead();
+    return super.commentId;
+  }
+
+  @override
+  set commentId(int? value) {
+    _$commentIdAtom.reportWrite(value, super.commentId, () {
+      super.commentId = value;
+    });
+  }
+
   late final _$refreshAsyncAction =
       AsyncAction('_FullPostStore.refresh', context: context);
 
@@ -166,6 +182,17 @@ mixin _$FullPostStore on _FullPostStore, Store {
   }
 
   @override
+  void getAllComments() {
+    final _$actionInfo = _$_FullPostStoreActionController.startAction(
+        name: '_FullPostStore.getAllComments');
+    try {
+      return super.getAllComments();
+    } finally {
+      _$_FullPostStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void addComment(CommentView commentView) {
     final _$actionInfo = _$_FullPostStoreActionController.startAction(
         name: '_FullPostStore.addComment');
@@ -185,6 +212,7 @@ pinnedComments: ${pinnedComments},
 newComments: ${newComments},
 sorting: ${sorting},
 postStore: ${postStore},
+commentId: ${commentId},
 commentTree: ${commentTree},
 sortedCommentTree: ${sortedCommentTree},
 postView: ${postView},
