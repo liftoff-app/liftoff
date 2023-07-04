@@ -30,14 +30,14 @@ class InboxPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accStore = useAccountsStore();
-    final selected = useState(accStore.defaultInstanceHost);
+    final accountsStore = useAccountsStore();
+    final selected = useState(accountsStore.defaultInstanceHost);
     final theme = Theme.of(context);
     final isc = useInfiniteScrollController();
     final unreadOnly = useState(true);
     final currentTab = useState(0);
 
-    if (accStore.hasNoAccount) {
+    if (accountsStore.hasNoAccount) {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(child: Text('no accounts added')),
@@ -54,7 +54,7 @@ class InboxPage extends HookWidget {
     markAllAsRead() async {
       try {
         await LemmyApiV3(selectedInstance).run(MarkAllAsRead(
-            auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw));
+            auth: accountsStore.defaultUserDataFor(selectedInstance)!.jwt.raw));
 
         isc.clear();
       } catch (e) {
@@ -68,35 +68,39 @@ class InboxPage extends HookWidget {
       child: Scaffold(
         appBar: AppBar(
           title: RadioPicker<String>(
-            onChanged: (val) {
-              selected.value = val;
-              isc.clear();
-            },
-            title: 'select instance',
-            groupValue: selectedInstance,
-            buttonBuilder: (context, displayString, onPressed) => TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-              ),
-              onPressed: onPressed,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      displayString,
-                      style: theme.appBarTheme.titleTextStyle,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
+        title: 'account',
+          values: accountsStore.loggedInInstances
+              .expand(
+                (instanceHost) => accountsStore
+                .usernamesFor(instanceHost)
+                .map((username) => '$username@$instanceHost'),
+          )
+              .toList(),
+          groupValue:
+          '${accountsStore.defaultUsername}@${accountsStore.defaultInstanceHost}',
+          onChanged: (value) {
+            final userTag = value.split('@');
+            accountsStore.setDefaultAccount(userTag[1], userTag[0]);
+          },
+          buttonBuilder: (context, displayValue, onPressed) => TextButton(
+            onPressed: onPressed,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    displayValue,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500),
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
                   ),
-                  const Icon(Icons.arrow_drop_down),
-                ],
-              ),
+                ),
+                const Icon(Icons.arrow_drop_down),
+              ],
             ),
-            values: accStore.loggedInInstances.toList(),
           ),
+        ),
           actions: [
             if (currentTab.value == 0)
               IconButton(
@@ -132,7 +136,7 @@ class InboxPage extends HookWidget {
                   fetcher: (page, batchSize, sortType) =>
                       LemmyApiV3(selectedInstance).run(GetReplies(
                     auth:
-                        accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
+                        accountsStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                     sort: sortType,
                     limit: batchSize,
                     page: page,
@@ -152,7 +156,7 @@ class InboxPage extends HookWidget {
                   fetcher: (page, batchSize, sortType) =>
                       LemmyApiV3(selectedInstance).run(GetPersonMentions(
                     auth:
-                        accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
+                        accountsStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                     sort: sortType,
                     limit: batchSize,
                     page: page,
@@ -173,7 +177,7 @@ class InboxPage extends HookWidget {
                   fetcher: (page, batchSize) =>
                       LemmyApiV3(selectedInstance).run(
                     GetPrivateMessages(
-                      auth: accStore
+                      auth: accountsStore
                           .defaultUserDataFor(selectedInstance)!
                           .jwt
                           .raw,
@@ -209,7 +213,7 @@ class PrivateMessageTile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accStore = useAccountsStore();
+    final accountsStore = useAccountsStore();
     final theme = Theme.of(context);
 
     final pmv = useState(privateMessageView);
@@ -223,7 +227,7 @@ class PrivateMessageTile extends HookWidget {
     final toMe = useMemoized(() =>
         pmv.value.recipient.originInstanceHost == pmv.value.instanceHost &&
         pmv.value.recipient.id ==
-            accStore.defaultUserDataFor(pmv.value.instanceHost)?.userId);
+            accountsStore.defaultUserDataFor(pmv.value.instanceHost)?.userId);
 
     final otherSide =
         useMemoized(() => toMe ? pmv.value.creator : pmv.value.recipient);
@@ -273,7 +277,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: DeletePrivateMessage(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
+            auth: accountsStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
             deleted: !deleted.value,
           ),
           onSuccess: (val) => deleted.value = val.privateMessage.deleted,
@@ -285,7 +289,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: MarkPrivateMessageAsRead(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
+            auth: accountsStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
             read: !read.value,
           ),
           // TODO: add notification for notifying parent list
