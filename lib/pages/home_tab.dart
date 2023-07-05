@@ -41,7 +41,6 @@ class HomeTab extends HookWidget {
         useStore((ConfigStore store) => store.showEverythingFeed);
     final inboxStore = useStore((InboxStore store) => store);
 
-    // final badgeCount = useStore((InboxStore store) => store.unreadCounts);
 
     final selectedList = useState(_SelectedList(
         instanceHost: accStore.defaultInstanceHost,
