@@ -117,14 +117,14 @@ class FullPostPage extends HookWidget {
                 child: RevealAfterScroll(
                   scrollController: scrollController,
                   after: 65,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Text(
-                        '${post.community.originPreferredName} > '
-                        '"${post.post.name}"',
-                        overflow: TextOverflow.fade,
-                      ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      '${post.community.originPreferredName} > '
+                      '"${post.post.name}"',
+                      overflow: TextOverflow.fade,
                     ),
+                  ),
                 ),
               ),
               actions: [
