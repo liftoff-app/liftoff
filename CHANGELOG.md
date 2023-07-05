@@ -1,3 +1,18 @@
+## v0.10.5 - 2023-07-04
+- Added configuration option to automatically convert .webp images to .png for saving (njshockey)
+- Added error messages and retry buttons for instance loading errors (zachatrocity)
+- Implemented comment contexts and added "Show context" and "View all comments" buttons (jcgurango, zachatrocity)
+- Fixed several issues with comments not loading correctly after posting a new comment (jcgurango, zachatrocity)
+- Fixed and updated ModLog Pages & API (zachatrocity)
+- Added menu item to view a community in a specific instance other than the originating instance (jcgurango)
+- Added shadow to bottom tab bar to visually offset it from cards underneath (swmarks)
+- Added Chrome Custom Tabs / Safari View Controller to replace in app browser on Android & iOS (swmarks)
+- Added deep link support for links like liftoff://lemmy.world/c/liftoff (shocklateboy92)
+- Updated l10n translation hooks, and added strings (mykdavies, zachatrocity)
+- Changed "You're not logged in, log in" message to dismiss after 7 seconds (christopher-conley)
+- Fixed an issue causing login to fail if there is a space after the username (christopher-conley)
+- Changed photo previews in post feed to have a consistent maximum height and updated opening animation (prefanatic)
+
 ## v0.10.4 - 2023-07-02
 - Added support for deep links like liftoff://lemmy.world/c/liftoff (shocklateboy92)
 - Fixed an issue preventing adding certain instances (swmarks)
