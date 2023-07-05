@@ -1,4 +1,4 @@
-## Unreleased
+## v0.10.5 - 2023-07-04
 - Added configuration option to automatically convert .webp images to .png for saving (njshockey)
 - Added error messages and retry buttons for instance loading errors (zachatrocity)
 - Implemented comment contexts and added "Show context" and "View all comments" buttons (jcgurango, zachatrocity)
