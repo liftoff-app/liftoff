@@ -7,6 +7,7 @@ import 'package:nested/nested.dart';
 import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../../hooks/logged_in_action.dart';
+import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
@@ -22,6 +23,8 @@ import '../../widgets/post/save_post_button.dart';
 import '../../widgets/pull_to_refresh.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/write_comment.dart';
+import '../federation_resolver.dart';
+import '../view_on_menu.dart';
 import 'comment_section.dart';
 import 'full_post_store.dart';
 
@@ -33,18 +36,20 @@ class FullPostPage extends HookWidget {
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
     final shareButtonKey = GlobalKey();
+    final fullPostStore = context.read<FullPostStore>();
     var scrollOffset = 0.0;
 
-    final loggedInAction =
-        useLoggedInAction(context.read<FullPostStore>().instanceHost);
+    final replyLoggedInAction = useLoggedInAction(fullPostStore.instanceHost,
+        fallback: () =>
+            ViewOnMenu.openForPost(context, fullPostStore.postView!.post.apId));
 
     return Nested(
       children: [
         AsyncStoreListener(
-          asyncStore: context.read<FullPostStore>().fullPostState,
+          asyncStore: fullPostStore.fullPostState,
         ),
         AsyncStoreListener<BlockedCommunity>(
-          asyncStore: context.read<FullPostStore>().communityBlockingState,
+          asyncStore: fullPostStore.communityBlockingState,
           successMessageBuilder: (context, data) {
             final name = data.communityView.community.originPreferredName;
             return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
@@ -136,7 +141,7 @@ class FullPostPage extends HookWidget {
                 ),
                 if (!Platform.isAndroid && !post.post.locked)
                   IconButton(
-                    onPressed: loggedInAction((_) => comment()),
+                    onPressed: replyLoggedInAction((_) => comment()),
                     icon: const Icon(Icons.reply),
                   ),
                 IconButton(
@@ -152,7 +157,7 @@ class FullPostPage extends HookWidget {
             floatingActionButton: !Platform.isAndroid || post.post.locked
                 ? null
                 : FloatingActionButton(
-                    onPressed: loggedInAction((_) => comment()),
+                    onPressed: replyLoggedInAction((_) => comment()),
                     child: const Icon(Icons.comment),
                   ),
             body: PullToRefresh(
@@ -203,5 +208,28 @@ class FullPostPage extends HookWidget {
                 _tryGetUserData(context, postStore.postView.instanceHost)),
           child: const FullPostPage._(),
         ),
+      );
+  static Route fromApIdRoute(UserData userData, String apId,
+          {bool isSingleComment = false}) =>
+      SwipeablePageRoute(
+        builder: (context) {
+          return FederationResolver(
+              userData: userData,
+              query: apId,
+              loadingMessage: L10n.of(context).federated_post_info,
+              exists: (response) => isSingleComment
+                  ? response.comment != null
+                  : response.post != null,
+              builder: (buildContext, object) => MobxProvider(
+                  create: (context) => FullPostStore(
+                      instanceHost: userData.instanceHost,
+                      postId: isSingleComment
+                          ? object.comment!.post.id
+                          : object.post!.post.id,
+                      commentId:
+                          isSingleComment ? object.comment!.comment.id : null)
+                    ..refresh(userData),
+                  child: const FullPostPage._()));
+        },
       );
 }

@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../pages/view_on_menu.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../tile_action.dart';
@@ -17,10 +18,13 @@ class CommentActions extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final commentStore = context.read<CommentStore>();
     final loggedInAction = useLoggedInAction(
-      context.select<CommentStore, String>(
-        (store) => store.comment.instanceHost,
-      ),
+      commentStore.comment.instanceHost,
+      fallback: () {
+        ViewOnMenu.openForPost(context, commentStore.comment.comment.apId,
+            isSingleComment: true);
+      },
     );
 
     return ObserverBuilder<CommentStore>(
@@ -70,15 +74,13 @@ class CommentActions extends HookWidget {
                     ? L10n.of(context).mark_as_unread
                     : L10n.of(context).mark_as_read,
               ),
-            if (store.detached)
-              TileAction(
-                icon: Icons.link,
-                onPressed: () => goToPost(
-                    context, comment.instanceHost, post.id,
-                    commentId: comment.id),
-                tooltip: 'go to post',
-              ),
             const CommentMoreMenuButton(),
+            TileAction(
+              icon: Icons.link,
+              onPressed: () => goToPost(context, comment.instanceHost, post.id,
+                  commentId: comment.id),
+              tooltip: 'go to post',
+            ),
             TileAction(
               loading: store.savingState.isLoading,
               icon:
