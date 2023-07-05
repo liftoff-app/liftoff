@@ -677,6 +677,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  l10n_esperanto:
+    dependency: "direct main"
+    description:
+      name: l10n_esperanto
+      sha256: "3df7e43c637690aa1c4bf0cf6eceded2e3ecbe55e429644cefc9c4a3264fb438"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   latinize:
     dependency: transitive
     description:
