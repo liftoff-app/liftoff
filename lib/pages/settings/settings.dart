@@ -241,6 +241,13 @@ class PostStyleConfigPage extends StatelessWidget {
                           store.showScores = checked;
                         },
                       ),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).trim_preview),
+                        value: store.trimPreviewImage,
+                        onChanged: (checked) {
+                          store.trimPreviewImage = checked;
+                        },
+                      ),
                       const SizedBox(height: 12),
                       _SectionHeading(L10n.of(context).font),
                       ListTile(

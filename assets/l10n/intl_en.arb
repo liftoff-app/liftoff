@@ -170,6 +170,8 @@
   "@post_view": {},
   "show_scores": "Show Scores",
   "@show_scores": {},
+  "trim_preview": "Trim Preview Image",
+  "@trim_preview": {},
   "font": "Font",
   "@font": {},
   "preview": "Preview",

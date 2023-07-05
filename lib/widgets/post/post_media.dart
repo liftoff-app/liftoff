@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../stores/config_store.dart';
 import '../../util/observer_consumers.dart';
 import '../cached_network_image.dart';
 import '../clipped_image.dart';
@@ -18,13 +19,16 @@ class PostMedia extends StatelessWidget {
         final post = store.postView.post;
         if (!store.hasMedia) return const SizedBox();
         final isFullPost = context.read<IsFullPost>();
+        final trimPreviewImage = context.read<ConfigStore>().trimPreviewImage;
 
         final url = post.url!; // hasMedia returns false if url is null
+
+        final calculatedHeight = MediaQuery.of(context).size.width;
 
         return FullscreenableImage(
           url: url,
           child: SizedBox(
-            height: !isFullPost ? 300 : null,
+            height: !isFullPost && trimPreviewImage ? calculatedHeight : null,
             child: CachedNetworkImage(
               imageUrl: url,
               errorBuilder: (_, ___) => const Center(
@@ -36,13 +40,14 @@ class PostMedia extends StatelessWidget {
                 ),
               ),
               imageBuilder: (context, imageProvider) {
-                if (isFullPost) {
+                if (isFullPost || !trimPreviewImage) {
                   return Image(
                     image: imageProvider,
                   );
                 }
 
                 return FitClippedWidget(
+                  height: calculatedHeight,
                   child: Image(
                     image: imageProvider,
                   ),

@@ -95,6 +95,10 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: 15)
   double postHeaderFontSize = 15;
 
+  @observable
+  @JsonKey(defaultValue: true)
+  bool trimPreviewImage = true;
+
   /// Allows the user to see the combined EVERYTHING feed, which can be
   /// confusing, so default it off.
   @observable

@@ -20,6 +20,7 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..showThumbnail = json['showThumbnail'] as bool? ?? true
   ..titleFontSize = (json['titleFontSize'] as num?)?.toDouble() ?? 16
   ..postHeaderFontSize = (json['postHeaderFontSize'] as num?)?.toDouble() ?? 15
+  ..trimPreviewImage = json['trimPreviewImage'] as bool? ?? true
   ..showEverythingFeed = json['showEverythingFeed'] as bool? ?? false
   ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
   ..defaultCommentSort =
@@ -42,6 +43,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'showThumbnail': instance.showThumbnail,
       'titleFontSize': instance.titleFontSize,
       'postHeaderFontSize': instance.postHeaderFontSize,
+      'trimPreviewImage': instance.trimPreviewImage,
       'showEverythingFeed': instance.showEverythingFeed,
       'defaultSortType': instance.defaultSortType,
       'defaultCommentSort': instance.defaultCommentSort,
@@ -262,6 +264,22 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  late final _$trimPreviewImageAtom =
+      Atom(name: '_ConfigStore.trimPreviewImage', context: context);
+
+  @override
+  bool get trimPreviewImage {
+    _$trimPreviewImageAtom.reportRead();
+    return super.trimPreviewImage;
+  }
+
+  @override
+  set trimPreviewImage(bool value) {
+    _$trimPreviewImageAtom.reportWrite(value, super.trimPreviewImage, () {
+      super.trimPreviewImage = value;
+    });
+  }
+
   late final _$showEverythingFeedAtom =
       Atom(name: '_ConfigStore.showEverythingFeed', context: context);
 
@@ -365,6 +383,7 @@ blurNsfw: ${blurNsfw},
 showThumbnail: ${showThumbnail},
 titleFontSize: ${titleFontSize},
 postHeaderFontSize: ${postHeaderFontSize},
+trimPreviewImage: ${trimPreviewImage},
 showEverythingFeed: ${showEverythingFeed},
 defaultSortType: ${defaultSortType},
 defaultCommentSort: ${defaultCommentSort},
