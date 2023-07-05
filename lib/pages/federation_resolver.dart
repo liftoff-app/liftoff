@@ -4,27 +4,45 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
-import 'community.dart';
 
-class FederatedCommunityPage extends HookWidget {
+class FederationResolver extends HookWidget {
   final UserData userData;
-  final String community;
+  final String query;
+  final String loadingMessage;
+  final bool Function(ResolveObjectResponse response) exists;
+  final Widget Function(BuildContext buildContext, ResolveObjectResponse object)
+      builder;
 
-  const FederatedCommunityPage(this.userData, this.community);
+  const FederationResolver({
+    required this.userData,
+    required this.query,
+    required this.loadingMessage,
+    required this.builder,
+    required this.exists,
+  });
 
   @override
   Widget build(BuildContext context) {
     final lemmyApi = LemmyApiV3(userData.instanceHost);
 
     return FutureBuilder(
-      future: lemmyApi
-          .run(ResolveObject(q: community, auth: userData.jwt.raw))
-          .then((data) {
-        Navigator.of(context).pop();
-        Navigator.of(context).push(CommunityPage.fromIdRoute(
-            userData.instanceHost, data.community!.community.id));
-      }),
+      future: lemmyApi.run(ResolveObject(q: query, auth: userData.jwt.raw)),
       builder: (context, snapshot) {
+        var message = loadingMessage;
+
+        if (snapshot.hasData) {
+          if (exists(snapshot.data!)) {
+            return Builder(
+                builder: (context) => builder(context, snapshot.data!));
+          } else {
+            message = L10n.of(context).not_found;
+          }
+        }
+
+        if (snapshot.hasError) {
+          message = 'Error: ${snapshot.error}';
+        }
+
         return Scaffold(
             appBar: AppBar(),
             body: Container(
@@ -40,9 +58,7 @@ class FederatedCommunityPage extends HookWidget {
                     ),
                     Container(height: 24),
                     Text(
-                      snapshot.hasError
-                          ? 'Error: ${snapshot.error}'
-                          : L10n.of(context).foreign_community_info,
+                      message,
                       textAlign: TextAlign.center,
                     ),
                   ],

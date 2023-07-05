@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
@@ -11,8 +10,8 @@ import '../util/mobx_provider.dart';
 import '../util/observer_consumers.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
+import 'community/community.dart';
 import 'community/community_store.dart';
-import 'community/federated_community.dart';
 
 class ViewOnMenu extends HookWidget {
   final void Function(UserData userData) onSelect;
@@ -97,9 +96,8 @@ class ViewOnMenu extends HookWidget {
   static void openForCommunity(
       BuildContext context, CommunityView communityView) {
     ViewOnMenu.open(context, (UserData userData) {
-      Navigator.of(context).push(SwipeablePageRoute(
-          builder: (context) => FederatedCommunityPage(
-              userData, communityView.community.actorId)));
+      Navigator.of(context).push(CommunityPage.fromApIdRoute(
+          userData, communityView.community.actorId));
     });
   }
 }
