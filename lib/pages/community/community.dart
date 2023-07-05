@@ -120,6 +120,7 @@ class CommunityPage extends HookWidget {
                 ),
               ],
               body: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   InfinitePostList(
                     fetcher: (page, batchSize, sort) =>
