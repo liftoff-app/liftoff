@@ -468,6 +468,13 @@ class GeneralConfigPage extends StatelessWidget {
                 store.useInAppBrowser = checked;
               },
             ),
+            SwitchListTile.adaptive(
+              title: const Text('Convert webp images to png'),
+              value: store.convertWebpToPng,
+              onChanged: (checked) {
+                store.convertWebpToPng = checked;
+              },
+            ),
             const SizedBox(height: 12),
             _SectionHeading(L10n.of(context).other_settings),
             SwitchListTile.adaptive(

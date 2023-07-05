@@ -16,6 +16,7 @@ import '../util/extensions/iterators.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
 import '../widgets/avatar.dart';
+import '../widgets/failed_to_load.dart';
 import '../widgets/pull_to_refresh.dart';
 import 'instance/instance.dart';
 
@@ -76,18 +77,12 @@ class CommunitiesTab extends HookWidget {
       return Scaffold(
         appBar: AppBar(),
         body: Center(
-          child: Row(
-            children: [
-              const Icon(Icons.error),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  communitiesRefreshable.snapshot.error?.toString() ??
-                      instancesRefreshable.snapshot.error!.toString(),
-                ),
-              )
-            ],
-          ),
+          child: FailedToLoad(
+              refresh: communitiesRefreshable.snapshot.error != null
+                  ? communitiesRefreshable.refresh
+                  : instancesRefreshable.refresh,
+              message: communitiesRefreshable.snapshot.error?.toString() ??
+                  instancesRefreshable.snapshot.error!.toString()),
         ),
       );
     } else if (!communitiesRefreshable.snapshot.hasData ||
