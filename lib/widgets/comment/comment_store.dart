@@ -166,6 +166,8 @@ abstract class _CommentStore with Store {
         }
       }
     }
+
+    await _accountsStore.checkNotifications(userData);
   }
 
   @action
