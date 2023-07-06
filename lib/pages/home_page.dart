@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../app_link_handler.dart';
+import '../hooks/stores.dart';
 import '../util/extensions/brightness.dart';
 import 'communities_tab.dart';
 import 'create_post/create_post_fab.dart';
@@ -27,6 +28,7 @@ class HomePage extends HookWidget {
     final theme = Theme.of(context);
     final currentTab = useState(0);
     final snackBarShowing = useState(false);
+    final accStore = useAccountsStore();
 
     useEffect(() {
       Future.microtask(
@@ -38,6 +40,12 @@ class HomePage extends HookWidget {
 
       return null;
     }, [theme.scaffoldBackgroundColor]);
+
+    useEffect(() {
+      accStore.checkNotifications(accStore.defaultUserData);
+
+      return null;
+    }, [accStore.defaultInstanceHost, currentTab]);
 
     var tabCounter = 0;
 
