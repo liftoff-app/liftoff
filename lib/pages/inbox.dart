@@ -135,10 +135,8 @@ class InboxPage extends HookWidget {
                   defaultSort: SortType.new_,
                   fetcher: (page, batchSize, sortType) =>
                       LemmyApiV3(selectedInstance).run(GetReplies(
-                    auth: accStore
-                        .defaultUserDataFor(selectedInstance)!
-                        .jwt
-                        .raw,
+                    auth:
+                        accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                     sort: sortType,
                     limit: batchSize,
                     page: page,
@@ -157,10 +155,8 @@ class InboxPage extends HookWidget {
                   defaultSort: SortType.new_,
                   fetcher: (page, batchSize, sortType) =>
                       LemmyApiV3(selectedInstance).run(GetPersonMentions(
-                    auth: accStore
-                        .defaultUserDataFor(selectedInstance)!
-                        .jwt
-                        .raw,
+                    auth:
+                        accStore.defaultUserDataFor(selectedInstance)!.jwt.raw,
                     sort: sortType,
                     limit: batchSize,
                     page: page,
@@ -281,10 +277,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: DeletePrivateMessage(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore
-                .defaultUserDataFor(pmv.value.instanceHost)!
-                .jwt
-                .raw,
+            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
             deleted: !deleted.value,
           ),
           onSuccess: (val) => deleted.value = val.privateMessage.deleted,
@@ -296,10 +289,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: MarkPrivateMessageAsRead(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore
-                .defaultUserDataFor(pmv.value.instanceHost)!
-                .jwt
-                .raw,
+            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
             read: !read.value,
           ),
           // TODO: add notification for notifying parent list
