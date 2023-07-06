@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'bottom_safe.dart';
 import 'pull_to_refresh.dart';
-import 'scoll_chainer.dart';
 
 class InfiniteScrollController {
   late VoidCallback clear;
@@ -102,60 +101,57 @@ class InfiniteScroll<T> extends HookWidget {
 
         await Future.delayed(const Duration(seconds: 1));
       },
-      child: ScrollChainer(
-        axis: Axis.vertical,
-        child: ListView.builder(
-          padding: padding,
-          // +2 for the loading widget and leading widget
-          itemCount: data.value.length + 2,
-          itemBuilder: (_, i) {
-            if (i == 0) {
-              return leading;
-            }
-            i -= 1;
+      child: ListView.builder(
+        padding: padding,
+        // +2 for the loading widget and leading widget
+        itemCount: data.value.length + 2,
+        itemBuilder: (_, i) {
+          if (i == 0) {
+            return leading;
+          }
+          i -= 1;
 
-            // if we are done but we have no data it means the list is empty
-            if (!hasMore.value && data.value.isEmpty) {
-              return Center(child: noItems);
-            }
+          // if we are done but we have no data it means the list is empty
+          if (!hasMore.value && data.value.isEmpty) {
+            return Center(child: noItems);
+          }
 
-            // reached the bottom, fetch more
-            if (i == data.value.length) {
-              // if there are no more, skip
-              if (!hasMore.value) {
-                return const BottomSafe();
-              }
-
-              // if it's already fetching more, skip
-              if (!isFetching.value) {
-                isFetching.value = true;
-                fetcher(page.value, batchSize).then((incoming) {
-                  // if got less than the batchSize, mark the list as done
-                  if (incoming.length < batchSize) {
-                    hasMore.value = false;
-                  }
-
-                  final newData = incoming.where(
-                    (e) => !dataSet.value.contains(uniquePropFunc(e)),
-                  );
-
-                  // append new data
-                  data.value = [...data.value, ...newData];
-                  dataSet.value.addAll(newData.map(uniquePropFunc));
-                  page.value += 1;
-                }).whenComplete(() => isFetching.value = false);
-              }
-
-              return SafeArea(
-                top: false,
-                child: loadingWidget,
-              );
+          // reached the bottom, fetch more
+          if (i == data.value.length) {
+            // if there are no more, skip
+            if (!hasMore.value) {
+              return const BottomSafe();
             }
 
-            // not last element, render list item
-            return itemBuilder(data.value[i]);
-          },
-        ),
+            // if it's already fetching more, skip
+            if (!isFetching.value) {
+              isFetching.value = true;
+              fetcher(page.value, batchSize).then((incoming) {
+                // if got less than the batchSize, mark the list as done
+                if (incoming.length < batchSize) {
+                  hasMore.value = false;
+                }
+
+                final newData = incoming.where(
+                  (e) => !dataSet.value.contains(uniquePropFunc(e)),
+                );
+
+                // append new data
+                data.value = [...data.value, ...newData];
+                dataSet.value.addAll(newData.map(uniquePropFunc));
+                page.value += 1;
+              }).whenComplete(() => isFetching.value = false);
+            }
+
+            return SafeArea(
+              top: false,
+              child: loadingWidget,
+            );
+          }
+
+          // not last element, render list item
+          return itemBuilder(data.value[i]);
+        },
       ),
     );
   }
