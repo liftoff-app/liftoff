@@ -7,6 +7,7 @@ import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/config_store.dart';
 import '../../util/observer_consumers.dart';
+import '../tile_toggle.dart';
 import 'post_store.dart';
 
 class PostVoting extends HookWidget {
@@ -14,7 +15,6 @@ class PostVoting extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final showScores = useStore((ConfigStore store) => store.showScores);
     final loggedInAction = useLoggedInAction(context
         .select<PostStore, String>((store) => store.postView.instanceHost));
@@ -22,18 +22,16 @@ class PostVoting extends HookWidget {
     return ObserverBuilder<PostStore>(builder: (context, store) {
       return Row(
         children: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_upward,
-              color: store.postView.myVote == VoteType.up
-                  ? theme.colorScheme.secondary
-                  : null,
-            ),
+          TileToggle(
+            icon: Icons.arrow_upward,
+            activated: store.postView.myVote == VoteType.up,
+            activeColor: Theme.of(context).colorScheme.secondary,
             onPressed: loggedInAction(store.upVote),
+            tooltip: 'upvote',
           ),
           if (store.votingState.isLoading)
             SizedBox(
-              width: showScores ? 30 : 20,
+              width: showScores ? 32 : 20,
               height: 15,
               child: const Center(
                   child: SizedBox(
@@ -43,7 +41,7 @@ class PostVoting extends HookWidget {
             )
           else if (showScores)
             SizedBox(
-              width: 30,
+              width: 32,
               height: 15,
               child: Center(
                   child: Text(store.postView.counts.score.compact(context))),
@@ -53,12 +51,12 @@ class PostVoting extends HookWidget {
               width: 20,
               height: 15,
             ),
-          IconButton(
-            icon: Icon(
-              Icons.arrow_downward,
-              color: store.postView.myVote == VoteType.down ? Colors.red : null,
-            ),
+          TileToggle(
+            icon: Icons.arrow_downward,
+            activated: store.postView.myVote == VoteType.down,
+            activeColor: Colors.orange,
             onPressed: loggedInAction(store.downVote),
+            tooltip: 'downvote',
           ),
         ],
       );

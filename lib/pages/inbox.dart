@@ -61,6 +61,7 @@ class InboxPage extends HookWidget {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
+      await accStore.checkNotifications(accStore.defaultUserData);
     }
 
     return DefaultTabController(
