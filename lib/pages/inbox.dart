@@ -30,14 +30,14 @@ class InboxPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accountsStore = useAccountsStore();
-    final selected = useState(accountsStore.defaultInstanceHost);
+    final accStore = useAccountsStore();
+    final selected = useState(accStore.defaultInstanceHost);
     final theme = Theme.of(context);
     final isc = useInfiniteScrollController();
     final unreadOnly = useState(true);
     final currentTab = useState(0);
 
-    if (accountsStore.hasNoAccount) {
+    if (accStore.hasNoAccount) {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(child: Text('no accounts added')),
@@ -54,7 +54,7 @@ class InboxPage extends HookWidget {
     markAllAsRead() async {
       try {
         await LemmyApiV3(selectedInstance).run(MarkAllAsRead(
-            auth: accountsStore.defaultUserDataFor(selectedInstance)!.jwt.raw));
+            auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw));
 
         isc.clear();
       } catch (e) {
@@ -69,18 +69,18 @@ class InboxPage extends HookWidget {
         appBar: AppBar(
           title: RadioPicker<String>(
             title: 'account',
-            values: accountsStore.loggedInInstances
+            values: accStore.loggedInInstances
                 .expand(
-                  (instanceHost) => accountsStore
+                  (instanceHost) => accStore
                       .usernamesFor(instanceHost)
                       .map((username) => '$username@$instanceHost'),
                 )
                 .toList(),
             groupValue:
-                '${accountsStore.defaultUsername}@${accountsStore.defaultInstanceHost}',
+                '${accStore.defaultUsername}@${accStore.defaultInstanceHost}',
             onChanged: (value) {
               final userTag = value.split('@');
-              accountsStore.setDefaultAccount(userTag[1], userTag[0]);
+              accStore.setDefaultAccount(userTag[1], userTag[0]);
             },
             buttonBuilder: (context, displayValue, onPressed) => TextButton(
               onPressed: onPressed,
@@ -135,7 +135,7 @@ class InboxPage extends HookWidget {
                   defaultSort: SortType.new_,
                   fetcher: (page, batchSize, sortType) =>
                       LemmyApiV3(selectedInstance).run(GetReplies(
-                    auth: accountsStore
+                    auth: accStore
                         .defaultUserDataFor(selectedInstance)!
                         .jwt
                         .raw,
@@ -157,7 +157,7 @@ class InboxPage extends HookWidget {
                   defaultSort: SortType.new_,
                   fetcher: (page, batchSize, sortType) =>
                       LemmyApiV3(selectedInstance).run(GetPersonMentions(
-                    auth: accountsStore
+                    auth: accStore
                         .defaultUserDataFor(selectedInstance)!
                         .jwt
                         .raw,
@@ -181,7 +181,7 @@ class InboxPage extends HookWidget {
                   fetcher: (page, batchSize) =>
                       LemmyApiV3(selectedInstance).run(
                     GetPrivateMessages(
-                      auth: accountsStore
+                      auth: accStore
                           .defaultUserDataFor(selectedInstance)!
                           .jwt
                           .raw,
@@ -217,7 +217,7 @@ class PrivateMessageTile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accountsStore = useAccountsStore();
+    final accStore = useAccountsStore();
     final theme = Theme.of(context);
 
     final pmv = useState(privateMessageView);
@@ -231,7 +231,7 @@ class PrivateMessageTile extends HookWidget {
     final toMe = useMemoized(() =>
         pmv.value.recipient.originInstanceHost == pmv.value.instanceHost &&
         pmv.value.recipient.id ==
-            accountsStore.defaultUserDataFor(pmv.value.instanceHost)?.userId);
+            accStore.defaultUserDataFor(pmv.value.instanceHost)?.userId);
 
     final otherSide =
         useMemoized(() => toMe ? pmv.value.creator : pmv.value.recipient);
@@ -281,7 +281,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: DeletePrivateMessage(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accountsStore
+            auth: accStore
                 .defaultUserDataFor(pmv.value.instanceHost)!
                 .jwt
                 .raw,
@@ -296,7 +296,7 @@ class PrivateMessageTile extends HookWidget {
           instanceHost: pmv.value.instanceHost,
           query: MarkPrivateMessageAsRead(
             privateMessageId: pmv.value.privateMessage.id,
-            auth: accountsStore
+            auth: accStore
                 .defaultUserDataFor(pmv.value.instanceHost)!
                 .jwt
                 .raw,
