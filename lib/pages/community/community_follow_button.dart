@@ -19,7 +19,7 @@ class CommunityFollowButton extends HookWidget {
 
     final loggedInAction = useLoggedInAction(
         context.read<CommunityStore>().instanceHost, fallback: () {
-      ViewOnMenu.openForCommunity(context, communityView);
+      ViewOnMenu.openForCommunity(context, communityView.community.actorId);
     });
 
     return ObserverBuilder<CommunityStore>(builder: (context, store) {
