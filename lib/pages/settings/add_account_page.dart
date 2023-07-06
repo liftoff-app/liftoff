@@ -201,7 +201,7 @@ class AddAccountPage extends HookWidget {
                       child: CircularProgressIndicator.adaptive(
                         valueColor: AlwaysStoppedAnimation<Color>(
                             textColorBasedOnBackground(
-                                Theme.of(context).colorScheme.primary)),
+                                theme.colorScheme.primary)),
                       ),
                     ),
             ),
