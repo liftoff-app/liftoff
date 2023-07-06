@@ -18,6 +18,7 @@ import '../../widgets/failed_to_load.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/sortable_infinite_list.dart';
 import '../create_post/create_post_fab.dart';
+import '../federation_resolver.dart';
 import 'community_about_tab.dart';
 import 'community_more_menu.dart';
 import 'community_overview.dart';
@@ -184,6 +185,27 @@ class CommunityPage extends HookWidget {
     return _route(
       instanceHost,
       CommunityStore.fromId(id: id, instanceHost: instanceHost),
+    );
+  }
+
+  static Route fromApIdRoute(UserData userData, String apId) {
+    return SwipeablePageRoute(
+      builder: (context) {
+        return FederationResolver(
+            userData: userData,
+            query: apId,
+            loadingMessage: L10n.of(context).foreign_community_info,
+            exists: (response) => response.community != null,
+            builder: (buildContext, object) {
+              return MobxProvider.value(
+                value: CommunityStore.fromId(
+                    id: object.community!.community.id,
+                    instanceHost: userData.instanceHost)
+                  ..refresh(userData),
+                child: const CommunityPage(),
+              );
+            });
+      },
     );
   }
 }

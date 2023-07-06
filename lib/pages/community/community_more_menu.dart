@@ -37,7 +37,8 @@ class CommunityMoreMenu extends HookWidget {
         ListTile(
           leading: const Icon(Icons.travel_explore),
           title: Text(L10n.of(context).view_on),
-          onTap: () => ViewOnMenu.openForCommunity(context, communityView),
+          onTap: () => ViewOnMenu.openForCommunity(
+              context, communityView.community.actorId),
         ),
         ObserverBuilder<CommunityStore>(builder: (context, store) {
           return ListTile(
