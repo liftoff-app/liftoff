@@ -6,6 +6,7 @@ import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
 import '../stores/accounts_store.dart';
 import '../util/extensions/api.dart';
+import '../util/text_color.dart';
 import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
 
@@ -119,13 +120,17 @@ class WriteMessagePage extends HookWidget {
             body,
             Align(
               alignment: Alignment.centerRight,
-              child: TextButton(
+              child: FilledButton(
                 onPressed: loading.value ? () {} : loggedInAction(handleSubmit),
                 child: loading.value
-                    ? const SizedBox(
+                    ? SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator.adaptive())
+                        child: CircularProgressIndicator.adaptive(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              textColorBasedOnBackground(
+                                  Theme.of(context).colorScheme.primary)),
+                        ))
                     : Text(submit),
               ),
             ),

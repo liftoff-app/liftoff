@@ -22,13 +22,15 @@ AccountsStore _$AccountsStoreFromJson(Map<String, dynamic> json) =>
                 (k, e) => MapEntry(k, e as String),
               ) ??
               {}
-      ..defaultAccount = json['defaultAccount'] as String?;
+      ..defaultAccount = json['defaultAccount'] as String?
+      ..notificationCount = json['notificationCount'] as int;
 
 Map<String, dynamic> _$AccountsStoreToJson(AccountsStore instance) =>
     <String, dynamic>{
       'accounts': instance.accounts,
       'defaultAccounts': instance.defaultAccounts,
       'defaultAccount': instance.defaultAccount,
+      'notificationCount': instance.notificationCount,
     };
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(

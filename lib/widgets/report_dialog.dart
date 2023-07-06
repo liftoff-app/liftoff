@@ -20,11 +20,11 @@ class ReportDialog extends HookWidget {
         maxLines: 3,
       ),
       actions: [
-        TextButton(
+        FilledButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('cancel'),
         ),
-        TextButton(
+        FilledButton(
           onPressed: controller.text.trim().isEmpty
               ? null
               : () => Navigator.of(context).pop(controller.text.trim()),

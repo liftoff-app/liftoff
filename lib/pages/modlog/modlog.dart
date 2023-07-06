@@ -61,14 +61,14 @@ class ModlogPage extends StatelessWidget {
                         builder: (context, store) => Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton(
+                            FilledButton(
                               onPressed: store.hasPreviousPage &&
                                       !store.modlogState.isLoading
                                   ? store.previousPage
                                   : null,
                               child: const Icon(Icons.skip_previous),
                             ),
-                            TextButton(
+                            FilledButton(
                               onPressed: store.hasNextPage &&
                                       !store.modlogState.isLoading
                                   ? store.nextPage

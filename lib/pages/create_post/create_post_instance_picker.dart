@@ -18,7 +18,7 @@ class CreatePostInstancePicker extends StatelessWidget {
         values: loggedInInstances,
         groupValue: store.instanceHost,
         onChanged: store.isEdit ? null : (value) => store.instanceHost = value,
-        buttonBuilder: (context, displayValue, onPressed) => TextButton(
+        buttonBuilder: (context, displayValue, onPressed) => FilledButton(
           onPressed: onPressed,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

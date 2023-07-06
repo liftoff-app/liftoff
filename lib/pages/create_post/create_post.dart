@@ -11,6 +11,7 @@ import '../../util/async_store_listener.dart';
 import '../../util/extensions/spaced.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
+import '../../util/text_color.dart';
 import '../../widgets/editor/editor.dart';
 import '../../widgets/markdown_mode_icon.dart';
 import 'create_post_community_picker.dart';
@@ -124,13 +125,24 @@ class CreatePostPage extends HookWidget {
                                 ),
                               ),
                               ObserverBuilder<CreatePostStore>(
-                                builder: (context, store) => TextButton(
+                                builder: (context, store) => FilledButton(
                                   onPressed: store.submitState.isLoading
                                       ? () {}
                                       : loggedInAction(handleSubmit),
                                   child: store.submitState.isLoading
-                                      ? const CircularProgressIndicator
-                                          .adaptive()
+                                      ? SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator
+                                              .adaptive(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    textColorBasedOnBackground(
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .primary)),
+                                          ),
+                                        )
                                       : Text(
                                           store.isEdit
                                               ? L10n.of(context).edit

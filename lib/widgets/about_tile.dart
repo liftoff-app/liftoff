@@ -38,18 +38,18 @@ class AboutTile extends HookWidget {
         const Text(
             'A client for Lemmy, written in Flutter.\n\nBased on the Lemmur project.'),
         const SizedBox(height: 40),
-        TextButton.icon(
+        FilledButton.icon(
             icon: const Icon(Icons.subject),
             label: const Text('changelog'),
             onPressed: () =>
                 Navigator.of(context).push(ChangelogPage.route(changelog))),
-        TextButton.icon(
+        FilledButton.icon(
           icon: const Icon(Icons.code),
           label: const Text('source code'),
           onPressed: () =>
               launchLink(link: liftoffRepositoryUrl, context: context),
         ),
-        TextButton.icon(
+        FilledButton.icon(
           icon: const Icon(Icons.list_alt),
           label: const Text('logs'),
           onPressed: () {
