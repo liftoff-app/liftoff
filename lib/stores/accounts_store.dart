@@ -33,6 +33,8 @@ class AccountsStore extends ChangeNotifier {
   @protected
   String? defaultAccount;
 
+  int? notificationCount;
+
   static Future<AccountsStore> load() async {
     final prefs = await _prefs;
 
@@ -161,6 +163,16 @@ class AccountsStore extends ChangeNotifier {
         userDataFor(instanceHost, account)!
       ]
     ];
+  }
+
+  Future<void> checkNotifications(UserData? userData) async {
+    notificationCount = await LemmyApiV3(userData!.instanceHost)
+        .run(GetUnreadCount(
+          auth: userData.jwt.raw,
+        ))
+        .then((e) => e.mentions + e.replies + e.privateMessages);
+
+    notifyListeners();
   }
 
   /// sets globally default account

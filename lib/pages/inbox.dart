@@ -56,6 +56,7 @@ class InboxPage extends HookWidget {
         await LemmyApiV3(selectedInstance).run(MarkAllAsRead(
             auth: accStore.defaultUserDataFor(selectedInstance)!.jwt.raw));
 
+        await accStore.checkNotifications(accStore.defaultUserData);
         isc.clear();
       } catch (e) {
         ScaffoldMessenger.of(context)
