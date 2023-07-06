@@ -73,6 +73,13 @@ class SettingsPage extends HookWidget {
               goTo(context, (_) => const PostStyleConfigPage());
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.comment),
+            title: Text(L10n.of(context).post_style),
+            onTap: () {
+              goTo(context, (_) => const PostStyleConfigPage());
+            },
+          ),
           const AboutTile()
         ],
       ),
@@ -336,6 +343,122 @@ class PostStyleConfigPage extends StatelessWidget {
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockLinkPost)))),
+                    ],
+                  )));
+    });
+  }
+}
+
+class CommentStyleConfigPage extends StatelessWidget {
+  const CommentStyleConfigPage();
+
+  @override
+  Widget build(BuildContext context) {
+    const decoder = JsonDecoder();
+
+    return Consumer<AppTheme>(builder: (context, state, child) {
+      return Scaffold(
+          appBar: AppBar(title: Text(L10n.of(context).post_style)),
+          body: ObserverBuilder<ConfigStore>(
+              builder: (context, store) => ListView(
+                    children: [
+                      _SectionHeading(L10n.of(context).post_view),
+
+                      const SizedBox(height: 12),
+                      _SectionHeading(L10n.of(context).font),
+                      ListTile(
+                        title: Text(L10n.of(context).post_title_size),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                              16,
+                              17,
+                              18,
+                              19,
+                              20,
+                              21,
+                              22,
+                              23
+                            ],
+                            groupValue: store.titleFontSize,
+                            onChanged: (value) => store.titleFontSize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                TextButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(L10n.of(context).post_header_size),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                              16,
+                              17,
+                              18,
+                              19,
+                              20,
+                              21,
+                              22,
+                              23
+                            ],
+                            groupValue: store.postHeaderFontSize,
+                            onChanged: (value) =>
+                                store.postHeaderFontSize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                TextButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _SectionHeading(L10n.of(context).preview),
+                      const SizedBox(height: 20),
+                      // IgnorePointer(
+                      //     child: PostTile.fromPostView(PostView.fromJson(
+                      //         decoder.convert(mockTextPostJson)))),
+                      // if (state.amoled) gradient,
+                      // SizedBox(height: store.compactPostView ? 2 : 10),
+                      // IgnorePointer(
+                      //     child: PostTile.fromPostView(PostView.fromJson(
+                      //         decoder.convert(mockMediaPost)))),
+                      // if (state.amoled) gradient,
+                      // SizedBox(height: store.compactPostView ? 2 : 10),
+                      // IgnorePointer(
+                      //     child: PostTile.fromPostView(PostView.fromJson(
+                      //         decoder.convert(mockLinkPost)))),
                     ],
                   )));
     });
