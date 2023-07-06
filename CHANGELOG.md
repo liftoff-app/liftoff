@@ -1,3 +1,11 @@
+## Unreleased
+- Inbox Notfication Badges
+- Bring back full height preview in card view
+- Fixed iOS photo orientation for uploads
+- Added horizontal scroll to post title in navbar like RIF had
+- Accessibility enhancement for upvote/downvote 
+- Small bug fixes
+
 ## v0.10.5 - 2023-07-04
 - Added configuration option to automatically convert .webp images to .png for saving (njshockey)
 - Added error messages and retry buttons for instance loading errors (zachatrocity)
