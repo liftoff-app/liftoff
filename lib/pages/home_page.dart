@@ -45,7 +45,7 @@ class HomePage extends HookWidget {
       accStore.checkNotifications(accStore.defaultUserData);
 
       return null;
-    }, [accStore.defaultInstanceHost, currentTab]);
+    }, [accStore.defaultInstanceHost]);
 
     var tabCounter = 0;
 
@@ -53,10 +53,13 @@ class HomePage extends HookWidget {
       final tabNum = tabCounter++;
 
       return IconButton(
-        icon: Icon(icon),
-        color: tabNum == currentTab.value ? theme.colorScheme.secondary : null,
-        onPressed: () => currentTab.value = tabNum,
-      );
+          icon: Icon(icon),
+          color:
+              tabNum == currentTab.value ? theme.colorScheme.secondary : null,
+          onPressed: () async {
+            currentTab.value = tabNum;
+            await accStore.checkNotifications(accStore.defaultUserData);
+          });
     }
 
     return Scaffold(
