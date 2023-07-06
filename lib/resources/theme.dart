@@ -74,6 +74,14 @@ ThemeData themeFactory(
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
+        //backgroundColor: theme.colorScheme.background,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: TextButton.styleFrom(
         backgroundColor: primaryColor,
         foregroundColor: textColorBasedOnBackground(primaryColor),
         shape: RoundedRectangleBorder(

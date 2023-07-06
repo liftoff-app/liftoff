@@ -251,8 +251,8 @@ class HomeTab extends HookWidget {
                   icon: const Icon(Icons.notifications),
                   onPressed: () => goTo(context, (_) => const InboxPage()),
                 ),
-                title: TextButton(
-                  style: TextButton.styleFrom(
+                title: FilledButton(
+                  style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                   ),
                   onPressed: handleListChange,
