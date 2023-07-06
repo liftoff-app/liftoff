@@ -68,7 +68,6 @@ class InboxPage extends HookWidget {
       child: Scaffold(
         appBar: AppBar(
           title: RadioPicker<String>(
-            title: 'account',
             values: accStore.loggedInInstances
                 .expand(
                   (instanceHost) => accStore
@@ -79,8 +78,10 @@ class InboxPage extends HookWidget {
             groupValue:
                 '${accStore.defaultUsername}@${accStore.defaultInstanceHost}',
             onChanged: (value) {
-              final userTag = value.split('@');
-              accStore.setDefaultAccount(userTag[1], userTag[0]);
+              final [user, instance] = value.split('@');
+              accStore.setDefaultAccount(instance, user);
+              selected.value = instance;
+              isc.clear();
             },
             buttonBuilder: (context, displayValue, onPressed) => TextButton(
               onPressed: onPressed,
