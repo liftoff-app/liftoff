@@ -33,7 +33,7 @@ class AccountsStore extends ChangeNotifier {
   @protected
   String? defaultAccount;
 
-  int? notificationCount;
+  int notificationCount = 0;
 
   static Future<AccountsStore> load() async {
     final prefs = await _prefs;

@@ -35,6 +35,9 @@ ThemeData themeFactory(
       titleTextStyle: theme.textTheme.titleLarge
           ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
     ),
+    badgeTheme: const BadgeThemeData(
+        textColor: Colors.white,
+        textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
     bottomAppBarTheme:
         BottomAppBarTheme(color: maybeAmoledColor, shadowColor: Colors.white),
     tabBarTheme: TabBarTheme(
