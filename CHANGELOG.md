@@ -1,4 +1,4 @@
-## Unreleased
+## v0.10.6 - 2023-07-06
 - Inbox Notfication Badges
 - Bring back full height preview in card view
 - Fixed iOS photo orientation for uploads

@@ -1,0 +1,6 @@
+- Bring back full height preview in card view
+- Fixed iOS photo orientation for uploads
+- Added horizontal scroll to post title in navbar like RIF had
+- Accessibility enhancement for upvote/downvote 
+- Small bug fixes
+
