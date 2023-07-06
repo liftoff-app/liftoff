@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../pages/view_on_menu.dart';
 import '../../stores/accounts_store.dart';
 import '../../url_launcher.dart';
 import '../../util/extensions/api.dart';
@@ -102,6 +103,12 @@ class _CommentMoreMenuPopup extends HookWidget {
 
                 Navigator.of(context).pop();
               },
+            ),
+            ListTile(
+              leading: const Icon(Icons.travel_explore),
+              title: Text(L10n.of(context).view_on),
+              onTap: () => ViewOnMenu.openForPost(context, comment.apId,
+                  isSingleComment: true),
             ),
             ListTile(
               leading: Icon(shareIcon),

@@ -198,6 +198,10 @@
   "@view_on": {},
   "foreign_community_info": "Loading the community in the other instance. Note that if this is the first time the community is being viewed in the instance, this process may take a while.",
   "@foreign_community_info": {},
+  "federated_post_info": "Loading the post in the other instance. Note that if this is the first time the post is being viewed in the instance, this process may take a while.",
+  "@federated_post_info": {},
+  "not_found": "Not found",
+  "@not_found": {},
 
   "error": "Error: {error_text}",
   "@error" :{
