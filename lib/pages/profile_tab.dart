@@ -16,7 +16,7 @@ class UserProfileTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     //final theme = Theme.of(context);
-    final accountsStore = useAccountsStore();
+    final accStore = useAccountsStore();
 
     final actions = [
       IconButton(
@@ -27,7 +27,7 @@ class UserProfileTab extends HookWidget {
       )
     ];
 
-    if (accountsStore.hasNoAccount) {
+    if (accStore.hasNoAccount) {
       return Scaffold(
         appBar: AppBar(actions: actions),
         body: Center(
@@ -57,18 +57,18 @@ class UserProfileTab extends HookWidget {
         ),
         title: RadioPicker<String>(
           title: 'account',
-          values: accountsStore.loggedInInstances
+          values: accStore.loggedInInstances
               .expand(
-                (instanceHost) => accountsStore
+                (instanceHost) => accStore
                     .usernamesFor(instanceHost)
                     .map((username) => '$username@$instanceHost'),
               )
               .toList(),
           groupValue:
-              '${accountsStore.defaultUsername}@${accountsStore.defaultInstanceHost}',
+              '${accStore.defaultUsername}@${accStore.defaultInstanceHost}',
           onChanged: (value) {
             final userTag = value.split('@');
-            accountsStore.setDefaultAccount(userTag[1], userTag[0]);
+            accStore.setDefaultAccount(userTag[1], userTag[0]);
           },
           buttonBuilder: (context, displayValue, onPressed) => TextButton(
             onPressed: onPressed,
@@ -92,8 +92,8 @@ class UserProfileTab extends HookWidget {
         actions: actions,
       ),
       body: UserProfile(
-        userId: accountsStore.defaultUserData!.userId,
-        instanceHost: accountsStore.defaultInstanceHost!,
+        userId: accStore.defaultUserData!.userId,
+        instanceHost: accStore.defaultInstanceHost!,
       ),
     );
   }
