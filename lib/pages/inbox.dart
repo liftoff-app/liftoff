@@ -68,25 +68,31 @@ class InboxPage extends HookWidget {
       child: Scaffold(
         appBar: AppBar(
           title: RadioPicker<String>(
-            onChanged: (val) {
-              selected.value = val;
+            values: accStore.loggedInInstances
+                .expand(
+                  (instanceHost) => accStore
+                      .usernamesFor(instanceHost)
+                      .map((username) => '$username@$instanceHost'),
+                )
+                .toList(),
+            groupValue:
+                '${accStore.defaultUsername}@${accStore.defaultInstanceHost}',
+            onChanged: (value) {
+              final [user, instance] = value.split('@');
+              accStore.setDefaultAccount(instance, user);
+              selected.value = instance;
               isc.clear();
             },
-            title: 'select instance',
-            groupValue: selectedInstance,
-            buttonBuilder: (context, displayString, onPressed) => TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-              ),
+            buttonBuilder: (context, displayValue, onPressed) => TextButton(
               onPressed: onPressed,
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
                     child: Text(
-                      displayString,
-                      style: theme.appBarTheme.titleTextStyle,
+                      displayValue,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w500),
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
@@ -95,7 +101,6 @@ class InboxPage extends HookWidget {
                 ],
               ),
             ),
-            values: accStore.loggedInInstances.toList(),
           ),
           actions: [
             if (currentTab.value == 0)
