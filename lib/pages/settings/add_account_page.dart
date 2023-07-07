@@ -9,6 +9,7 @@ import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import '../../stores/config_store.dart';
 import '../../url_launcher.dart';
+import '../../util/text_color.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/fullscreenable_image.dart';
 import '../../widgets/radio_picker.dart';
@@ -130,7 +131,7 @@ class AddAccountPage extends HookWidget {
               values: accountsStore.instances.toList(),
               groupValue: selectedInstance.value,
               onChanged: (value) => selectedInstance.value = value,
-              buttonBuilder: (context, displayValue, onPressed) => TextButton(
+              buttonBuilder: (context, displayValue, onPressed) => FilledButton(
                 onPressed: onPressed,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -198,12 +199,13 @@ class AddAccountPage extends HookWidget {
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator.adaptive(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(theme.canvasColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            textColorBasedOnBackground(
+                                theme.colorScheme.primary)),
                       ),
                     ),
             ),
-            TextButton(
+            FilledButton(
               onPressed: () {
                 launchLink(
                   // TODO: extract to LemmyUrls or something
