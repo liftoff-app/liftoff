@@ -172,7 +172,7 @@ class AccountsStore extends ChangeNotifier {
       return;
     }
 
-    notificationCount = await LemmyApiV3(userData!.instanceHost)
+    notificationCount = await LemmyApiV3(userData.instanceHost)
         .run(GetUnreadCount(
           auth: userData.jwt.raw,
         ))
