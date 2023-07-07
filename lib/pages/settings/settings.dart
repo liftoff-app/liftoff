@@ -358,7 +358,7 @@ class CommentStyleConfigPage extends StatelessWidget {
 
     return Consumer<AppTheme>(builder: (context, state, child) {
       return Scaffold(
-          appBar: AppBar(title: Text(L10n.of(context).post_style)),
+          appBar: AppBar(title: Text(L10n.of(context).comment_style)),
           body: ObserverBuilder<ConfigStore>(
               builder: (context, store) => ListView(
                     children: [
