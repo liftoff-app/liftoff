@@ -371,7 +371,7 @@ class AddLinkDialog extends HookWidget {
         ].spaced(10),
       ),
       actions: [
-        TextButton(
+        FilledButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(L10n.of(context).cancel)),
         ElevatedButton(

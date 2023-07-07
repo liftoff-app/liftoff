@@ -205,11 +205,11 @@ class _ManageAccount extends HookWidget {
                 ],
               ),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(L10n.of(context).no),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(L10n.of(context).yes),
                 ),
@@ -261,11 +261,11 @@ class _ManageAccount extends HookWidget {
                 ],
               ),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(L10n.of(context).no),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(L10n.of(context).yes),
                 ),

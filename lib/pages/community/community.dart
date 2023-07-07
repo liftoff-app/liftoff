@@ -72,7 +72,8 @@ class CommunityPage extends HookWidget {
         final fullCommunityView = communityAsyncState.data;
         final community = fullCommunityView.communityView;
 
-        void doShare() => share(community.community.actorId, context: context);
+        void doShare() => share(buildLemmyGuideUrl(community.community.actorId),
+            context: context);
 
         return Scaffold(
           floatingActionButton: CreatePostFab(community: community),

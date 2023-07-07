@@ -42,7 +42,8 @@ class UserPage extends HookWidget {
           shareButtonKey.currentContext!.findRenderObject()! as RenderBox;
       final position = renderbox.localToGlobal(Offset.zero);
 
-      return share(userDetailsSnap.data!.personView.person.actorId,
+      return share(
+          buildLemmyGuideUrl(userDetailsSnap.data!.personView.person.actorId),
           context: context,
           sharePositionOrigin: Rect.fromPoints(position,
               position.translate(renderbox.size.width, renderbox.size.height)));

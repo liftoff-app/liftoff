@@ -37,3 +37,8 @@ Future<void> _fallbackShare(
     const SnackBar(content: Text('Copied data to clipboard!')),
   );
 }
+
+/// Constructs an instance-agnostic link to the given target,
+/// using the `lemmy.guide` service
+String buildLemmyGuideUrl(String target) =>
+    'https://lemmy.guide/link?target=$target';

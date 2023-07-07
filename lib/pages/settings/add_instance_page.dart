@@ -14,7 +14,6 @@ class AddInstancePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final instanceController = useTextEditingController();
     useValueListenable(instanceController);
     final accountsStore = useAccountsStore();
@@ -126,13 +125,10 @@ class AddInstancePage extends HookWidget {
                     onPressed: handleAdd,
                     child: !debounce.loading
                         ? const Text('Add')
-                        : SizedBox(
+                        : const SizedBox(
                             height: 20,
                             width: 20,
-                            child: CircularProgressIndicator.adaptive(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  theme.canvasColor),
-                            ),
+                            child: CircularProgressIndicator.adaptive(),
                           ),
                   ),
                 ),
