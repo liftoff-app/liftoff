@@ -12,6 +12,8 @@
   "@appearance": {},
   "post_style": "Post Style",
   "@post_style": {},
+  "comment_style": "Comment Style",
+  "@comment_style": {},
   "password": "Password",
   "@password": {},
   "email_or_username": "Email or Username",

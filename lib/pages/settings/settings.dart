@@ -75,9 +75,9 @@ class SettingsPage extends HookWidget {
           ),
           ListTile(
             leading: const Icon(Icons.comment),
-            title: Text(L10n.of(context).post_style),
+            title: Text(L10n.of(context).comment_style),
             onTap: () {
-              goTo(context, (_) => const PostStyleConfigPage());
+              goTo(context, (_) => const CommentStyleConfigPage());
             },
           ),
           const AboutTile()
@@ -362,8 +362,6 @@ class CommentStyleConfigPage extends StatelessWidget {
           body: ObserverBuilder<ConfigStore>(
               builder: (context, store) => ListView(
                     children: [
-                      _SectionHeading(L10n.of(context).post_view),
-
                       const SizedBox(height: 12),
                       _SectionHeading(L10n.of(context).font),
                       ListTile(
