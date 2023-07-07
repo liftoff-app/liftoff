@@ -59,7 +59,10 @@ abstract class goToUser {
 
   static void byName(
           BuildContext context, String instanceHost, String userName) =>
-      throw UnimplementedError('need to create UserProfile constructor first');
+      goToSwipeable(
+          context,
+          (context) => UserPage.fromName(
+              instanceHost: instanceHost, username: userName));
 
   static void fromPersonSafe(BuildContext context, PersonSafe personSafe) =>
       goToUser.byId(context, personSafe.instanceHost, personSafe.id);
