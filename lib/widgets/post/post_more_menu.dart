@@ -149,6 +149,17 @@ class PostMoreMenu extends HookWidget {
                       },
                     );
                   },
+                )
+              else
+                ListTile(
+                  leading: store.communityBlockingState.isLoading
+                      ? const CircularProgressIndicator.adaptive()
+                      : const Icon(Icons.block),
+                  title: const Text('Block community'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    loggedInAction(store.blockCommunity)();
+                  },
                 ),
               ListTile(
                 leading: const Icon(Icons.translate),
