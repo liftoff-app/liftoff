@@ -33,7 +33,9 @@ class AccountsStore extends ChangeNotifier {
   @protected
   String? defaultAccount;
 
-  int notificationCount = 0;
+  @protected
+  @JsonKey(defaultValue: {})
+  late Map<String, int> notificationCount = {};
 
   static Future<AccountsStore> load() async {
     final prefs = await _prefs;
@@ -170,10 +172,24 @@ class AccountsStore extends ChangeNotifier {
         .run(GetUnreadCount(
           auth: userData.jwt.raw,
         ))
-        .then((e) => e.mentions + e.replies + e.privateMessages);
+        .then((e) => <String, int>{
+              'mentions': e.mentions,
+              'replies': e.replies,
+              'privateMessages': e.privateMessages
+            });
 
     notifyListeners();
   }
+
+  int get totalNotificationCount => notificationCount.isNotEmpty
+      ? notificationCount.values.reduce((sum, element) => sum + element)
+      : 0;
+
+  int get totalRepliesCount => notificationCount['replies'] ?? 0;
+
+  int get totalMentionsCount => notificationCount['mentions'] ?? 0;
+
+  int get totalPrivateMessageCount => notificationCount['privateMessages'] ?? 0;
 
   /// sets globally default account
   Future<void> setDefaultAccount(String instanceHost, String username) {

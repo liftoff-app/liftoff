@@ -31,7 +31,7 @@ class PostListOptions extends StatelessWidget {
                     onChanged: onSortChanged,
                     mapValueToString: (value) => value.tr(context),
                     buttonBuilder: (context, displayValue, onPressed) =>
-                        TextButton(
+                        FilledButton(
                       onPressed: onPressed,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

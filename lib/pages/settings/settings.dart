@@ -275,7 +275,7 @@ class PostStyleConfigPage extends StatelessWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -314,7 +314,7 @@ class PostStyleConfigPage extends StatelessWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -484,7 +484,7 @@ class GeneralConfigPage extends StatelessWidget {
                   onChanged: (value) => store.defaultSortType = value,
                   mapValueToString: (value) => value.value,
                   buttonBuilder: (context, displayValue, onPressed) =>
-                      TextButton(
+                      FilledButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -508,7 +508,7 @@ class GeneralConfigPage extends StatelessWidget {
                   onChanged: (value) => store.defaultCommentSort = value,
                   mapValueToString: (value) => value.value,
                   buttonBuilder: (context, displayValue, onPressed) =>
-                      TextButton(
+                      FilledButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -535,7 +535,7 @@ class GeneralConfigPage extends StatelessWidget {
                   onChanged: (value) => store.defaultListingType = value,
                   mapValueToString: (value) => value.value,
                   buttonBuilder: (context, displayValue, onPressed) =>
-                      TextButton(
+                      FilledButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -561,7 +561,7 @@ class GeneralConfigPage extends StatelessWidget {
                     store.locale = selected;
                   },
                   buttonBuilder: (context, displayValue, onPressed) =>
-                      TextButton(
+                      FilledButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -642,11 +642,11 @@ class _AccountOptions extends HookWidget {
               content: Text(L10n.of(context)
                   .remove_user_confirm_explanation('$username@$instanceHost')),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(L10n.of(context).no),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(L10n.of(context).yes),
                 ),
@@ -720,11 +720,11 @@ class AccountsConfigPage extends HookWidget {
               content: Text(L10n.of(context)
                   .remove_instance_confirm_explanation(instanceHost)),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(L10n.of(context).no),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(L10n.of(context).yes),
                 ),
@@ -794,7 +794,7 @@ class AccountsConfigPage extends HookWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 100),
-                  child: TextButton.icon(
+                  child: FilledButton.icon(
                     onPressed: () =>
                         Navigator.of(context).push(AddInstancePage.route()),
                     icon: const Icon(Icons.add),

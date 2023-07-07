@@ -84,7 +84,7 @@ class InboxPage extends HookWidget {
               selected.value = instance;
               isc.clear();
             },
-            buttonBuilder: (context, displayValue, onPressed) => TextButton(
+            buttonBuilder: (context, displayValue, onPressed) => FilledButton(
               onPressed: onPressed,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -120,9 +120,30 @@ class InboxPage extends HookWidget {
             indicatorColor: theme.colorScheme.primary,
             onTap: (value) => currentTab.value = value,
             tabs: [
-              Tab(text: L10n.of(context).replies),
-              Tab(text: L10n.of(context).mentions),
-              Tab(text: L10n.of(context).messages),
+              if (accStore.totalRepliesCount > 0)
+                Badge(
+                  offset: const Offset(15, 5),
+                  label: Text(accStore.totalRepliesCount.toString()),
+                  child: Tab(text: L10n.of(context).replies),
+                )
+              else
+                Tab(text: L10n.of(context).replies),
+              if (accStore.totalMentionsCount > 0)
+                Badge(
+                  offset: const Offset(15, 5),
+                  label: Text(accStore.totalMentionsCount.toString()),
+                  child: Tab(text: L10n.of(context).mentions),
+                )
+              else
+                Tab(text: L10n.of(context).mentions),
+              if (accStore.totalPrivateMessageCount > 0)
+                Badge(
+                  offset: const Offset(15, 5),
+                  label: Text(accStore.totalPrivateMessageCount.toString()),
+                  child: Tab(text: L10n.of(context).messages),
+                )
+              else
+                Tab(text: L10n.of(context).messages),
             ],
           ),
         ),
