@@ -295,29 +295,33 @@ class PrivateMessageTile extends HookWidget {
     }
 
     handleDelete() => delayedAction<PrivateMessageView>(
-          context: context,
-          delayedLoading: deleteDelayed,
-          instanceHost: pmv.value.instanceHost,
-          query: DeletePrivateMessage(
-            privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
-            deleted: !deleted.value,
-          ),
-          onSuccess: (val) => deleted.value = val.privateMessage.deleted,
-        );
+        context: context,
+        delayedLoading: deleteDelayed,
+        instanceHost: pmv.value.instanceHost,
+        query: DeletePrivateMessage(
+          privateMessageId: pmv.value.privateMessage.id,
+          auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
+          deleted: !deleted.value,
+        ),
+        onSuccess: (val) {
+          deleted.value = val.privateMessage.deleted;
+          accStore.checkNotifications(accStore.defaultUserData);
+        });
 
     handleRead() => delayedAction<PrivateMessageView>(
-          context: context,
-          delayedLoading: readDelayed,
-          instanceHost: pmv.value.instanceHost,
-          query: MarkPrivateMessageAsRead(
-            privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
-            read: !read.value,
-          ),
-          // TODO: add notification for notifying parent list
-          onSuccess: (val) => read.value = val.privateMessage.read,
-        );
+        context: context,
+        delayedLoading: readDelayed,
+        instanceHost: pmv.value.instanceHost,
+        query: MarkPrivateMessageAsRead(
+          privateMessageId: pmv.value.privateMessage.id,
+          auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
+          read: !read.value,
+        ),
+        // TODO: add notification for notifying parent list
+        onSuccess: (val) {
+          read.value = val.privateMessage.read;
+          accStore.checkNotifications(accStore.defaultUserData);
+        });
 
     if (hideOnRead && read.value) {
       return const SizedBox.shrink();

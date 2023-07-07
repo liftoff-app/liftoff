@@ -168,7 +168,11 @@ class AccountsStore extends ChangeNotifier {
   }
 
   Future<void> checkNotifications(UserData? userData) async {
-    notificationCount = await LemmyApiV3(userData!.instanceHost)
+    if (userData == null) {
+      return;
+    }
+
+    notificationCount = await LemmyApiV3(userData.instanceHost)
         .run(GetUnreadCount(
           auth: userData.jwt.raw,
         ))
