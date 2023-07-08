@@ -436,7 +436,7 @@ class CommentStyleConfigPage extends HookWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -475,7 +475,7 @@ class CommentStyleConfigPage extends HookWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -513,7 +513,7 @@ class CommentStyleConfigPage extends HookWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -537,7 +537,7 @@ class CommentStyleConfigPage extends HookWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -570,7 +570,7 @@ class CommentStyleConfigPage extends HookWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
