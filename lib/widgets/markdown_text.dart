@@ -41,9 +41,12 @@ class MarkdownText extends StatelessWidget {
   final String instanceHost;
   final String text;
   final bool selectable;
+  final double fontSize;
 
   const MarkdownText(this.text,
-      {required this.instanceHost, this.selectable = false});
+      {required this.instanceHost,
+      this.selectable = false,
+      this.fontSize = 15});
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +64,13 @@ class MarkdownText extends StatelessWidget {
             left: BorderSide(width: 2, color: theme.colorScheme.secondary),
           ),
         ),
-        a: TextStyle(
-          color: theme.colorScheme.secondary,
-        ),
+        p: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: fontSize),
+        a: TextStyle(color: theme.colorScheme.secondary, fontSize: fontSize),
         code: theme.textTheme.bodyLarge
             // TODO: use a font from google fonts maybe? the defaults aren't very pretty
-            ?.copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),
+            ?.copyWith(
+                fontFamily: Platform.isIOS ? 'Courier' : 'monospace',
+                fontSize: fontSize),
       ),
       inlineSyntaxes: [LemmyLinkSyntax()],
       onTapLink: (text, href, title) {

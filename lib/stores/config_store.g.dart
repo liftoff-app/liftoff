@@ -20,6 +20,13 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..showThumbnail = json['showThumbnail'] as bool? ?? true
   ..titleFontSize = (json['titleFontSize'] as num?)?.toDouble() ?? 16
   ..postHeaderFontSize = (json['postHeaderFontSize'] as num?)?.toDouble() ?? 15
+  ..postBodySize = (json['postBodySize'] as num?)?.toDouble() ?? 15
+  ..commentTitleSize = (json['commentTitleSize'] as num?)?.toDouble() ?? 15
+  ..commentBodySize = (json['commentBodySize'] as num?)?.toDouble() ?? 15
+  ..commentIndentWidth = (json['commentIndentWidth'] as num?)?.toDouble() ?? 3
+  ..commentPillSize = (json['commentPillSize'] as num?)?.toDouble() ?? 8
+  ..commentTimestampSize =
+      (json['commentTimestampSize'] as num?)?.toDouble() ?? 14
   ..showEverythingFeed = json['showEverythingFeed'] as bool? ?? false
   ..defaultSortType = _sortTypeFromJson(json['defaultSortType'] as String?)
   ..defaultCommentSort =
@@ -42,6 +49,12 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'showThumbnail': instance.showThumbnail,
       'titleFontSize': instance.titleFontSize,
       'postHeaderFontSize': instance.postHeaderFontSize,
+      'postBodySize': instance.postBodySize,
+      'commentTitleSize': instance.commentTitleSize,
+      'commentBodySize': instance.commentBodySize,
+      'commentIndentWidth': instance.commentIndentWidth,
+      'commentPillSize': instance.commentPillSize,
+      'commentTimestampSize': instance.commentTimestampSize,
       'showEverythingFeed': instance.showEverythingFeed,
       'defaultSortType': instance.defaultSortType,
       'defaultCommentSort': instance.defaultCommentSort,
@@ -262,6 +275,103 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  late final _$postBodySizeAtom =
+      Atom(name: '_ConfigStore.postBodySize', context: context);
+
+  @override
+  double get postBodySize {
+    _$postBodySizeAtom.reportRead();
+    return super.postBodySize;
+  }
+
+  @override
+  set postBodySize(double value) {
+    _$postBodySizeAtom.reportWrite(value, super.postBodySize, () {
+      super.postBodySize = value;
+    });
+  }
+
+  late final _$commentTitleSizeAtom =
+      Atom(name: '_ConfigStore.commentTitleSize', context: context);
+
+  @override
+  double get commentTitleSize {
+    _$commentTitleSizeAtom.reportRead();
+    return super.commentTitleSize;
+  }
+
+  @override
+  set commentTitleSize(double value) {
+    _$commentTitleSizeAtom.reportWrite(value, super.commentTitleSize, () {
+      super.commentTitleSize = value;
+    });
+  }
+
+  late final _$commentBodySizeAtom =
+      Atom(name: '_ConfigStore.commentBodySize', context: context);
+
+  @override
+  double get commentBodySize {
+    _$commentBodySizeAtom.reportRead();
+    return super.commentBodySize;
+  }
+
+  @override
+  set commentBodySize(double value) {
+    _$commentBodySizeAtom.reportWrite(value, super.commentBodySize, () {
+      super.commentBodySize = value;
+    });
+  }
+
+  late final _$commentIndentWidthAtom =
+      Atom(name: '_ConfigStore.commentIndentWidth', context: context);
+
+  @override
+  double get commentIndentWidth {
+    _$commentIndentWidthAtom.reportRead();
+    return super.commentIndentWidth;
+  }
+
+  @override
+  set commentIndentWidth(double value) {
+    _$commentIndentWidthAtom.reportWrite(value, super.commentIndentWidth, () {
+      super.commentIndentWidth = value;
+    });
+  }
+
+  late final _$commentPillSizeAtom =
+      Atom(name: '_ConfigStore.commentPillSize', context: context);
+
+  @override
+  double get commentPillSize {
+    _$commentPillSizeAtom.reportRead();
+    return super.commentPillSize;
+  }
+
+  @override
+  set commentPillSize(double value) {
+    _$commentPillSizeAtom.reportWrite(value, super.commentPillSize, () {
+      super.commentPillSize = value;
+    });
+  }
+
+  late final _$commentTimestampSizeAtom =
+      Atom(name: '_ConfigStore.commentTimestampSize', context: context);
+
+  @override
+  double get commentTimestampSize {
+    _$commentTimestampSizeAtom.reportRead();
+    return super.commentTimestampSize;
+  }
+
+  @override
+  set commentTimestampSize(double value) {
+    _$commentTimestampSizeAtom.reportWrite(value, super.commentTimestampSize,
+        () {
+      super.commentTimestampSize = value;
+    });
+  }
+
   late final _$showEverythingFeedAtom =
       Atom(name: '_ConfigStore.showEverythingFeed', context: context);
 
@@ -365,6 +475,12 @@ blurNsfw: ${blurNsfw},
 showThumbnail: ${showThumbnail},
 titleFontSize: ${titleFontSize},
 postHeaderFontSize: ${postHeaderFontSize},
+postBodySize: ${postBodySize},
+commentTitleSize: ${commentTitleSize},
+commentBodySize: ${commentBodySize},
+commentIndentWidth: ${commentIndentWidth},
+commentPillSize: ${commentPillSize},
+commentTimestampSize: ${commentTimestampSize},
 showEverythingFeed: ${showEverythingFeed},
 defaultSortType: ${defaultSortType},
 defaultCommentSort: ${defaultCommentSort},

@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
 
 import '../../comment_tree.dart';
+import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
@@ -119,7 +121,7 @@ class CommentWidget extends StatelessWidget {
   }
 }
 
-class _CommentWidget extends StatelessWidget {
+class _CommentWidget extends HookWidget {
   static const colors = [
     Colors.pink,
     Colors.green,
@@ -129,12 +131,12 @@ class _CommentWidget extends StatelessWidget {
   ];
 
   static const indentWidth = 6.0;
-  static const barWidth = 3.0;
   const _CommentWidget();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bodyFontSize = useStore((ConfigStore store) => store.commentBodySize);
 
     final body = ObserverBuilder<CommentStore>(
       builder: (context, store) {
@@ -143,15 +145,17 @@ class _CommentWidget extends StatelessWidget {
         if (comment.deleted) {
           return Text(
             L10n.of(context).deleted_by_creator,
-            style: const TextStyle(fontStyle: FontStyle.italic),
+            style:
+                TextStyle(fontStyle: FontStyle.italic, fontSize: bodyFontSize),
           );
         } else if (comment.removed) {
-          return const Text(
+          return Text(
             'comment deleted by moderator',
-            style: TextStyle(fontStyle: FontStyle.italic),
+            style:
+                TextStyle(fontStyle: FontStyle.italic, fontSize: bodyFontSize),
           );
         } else if (store.collapsed) {
-          return const Center(
+          return Center(
             child: Opacity(
               opacity: 0.3,
               child: Text(
@@ -159,6 +163,7 @@ class _CommentWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: bodyFontSize),
               ),
             ),
           );
@@ -166,12 +171,19 @@ class _CommentWidget extends StatelessWidget {
 
         return store.showRaw
             ? store.selectable
-                ? SelectableText(comment.content)
-                : Text(comment.content)
+                ? SelectableText(
+                    comment.content,
+                    style: TextStyle(fontSize: bodyFontSize),
+                  )
+                : Text(
+                    comment.content,
+                    style: TextStyle(fontSize: bodyFontSize),
+                  )
             : MarkdownText(
                 comment.content,
                 instanceHost: comment.instanceHost,
                 selectable: store.selectable,
+                fontSize: bodyFontSize,
               );
       },
     );
@@ -206,7 +218,8 @@ class _CommentWidget extends StatelessWidget {
                     left: store.depth > 0
                         ? BorderSide(
                             color: colors[store.depth % colors.length],
-                            width: barWidth,
+                            width:
+                                context.read<ConfigStore>().commentIndentWidth,
                           )
                         : BorderSide.none,
                     top: const BorderSide(width: 0.2),
@@ -238,6 +251,8 @@ class _CommentWidget extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
+                              fontSize:
+                                  context.read<ConfigStore>().commentTitleSize,
                               color: theme.colorScheme.secondary,
                             ),
                           ),
@@ -288,12 +303,28 @@ class _CommentWidget extends StatelessWidget {
                                     Text(
                                       store.comment.counts.score
                                           .compact(context),
+                                      style: TextStyle(
+                                          fontSize: context
+                                              .read<ConfigStore>()
+                                              .commentTimestampSize),
                                     ),
                                   if (configStore.showScores)
-                                    const Text(' · ')
+                                    Text(
+                                      ' · ',
+                                      style: TextStyle(
+                                          fontSize: context
+                                              .read<ConfigStore>()
+                                              .commentTimestampSize),
+                                    )
                                   else
                                     const SizedBox(width: 4),
-                                  Text(comment.published.timeago(context)),
+                                  Text(
+                                    comment.published.timeago(context),
+                                    style: TextStyle(
+                                        fontSize: context
+                                            .read<ConfigStore>()
+                                            .commentTimestampSize),
+                                  ),
                                 ],
                               ),
                             );
@@ -321,14 +352,15 @@ class _CommentWidget extends StatelessWidget {
   }
 }
 
-class _CommentTag extends StatelessWidget {
+class _CommentTag extends HookWidget {
   final String text;
   final Color backgroundColor;
-
   const _CommentTag(this.text, this.backgroundColor);
 
   @override
   Widget build(BuildContext context) {
+    final pillSize = useStore((ConfigStore store) => store.commentPillSize);
+
     return Padding(
       padding: const EdgeInsets.only(left: 5),
       child: Container(
@@ -341,7 +373,8 @@ class _CommentTag extends StatelessWidget {
           text,
           style: TextStyle(
             color: textColorBasedOnBackground(backgroundColor),
-            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize! - 5,
+            fontSize: pillSize,
+            // fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize! - 5,
             fontWeight: FontWeight.w800,
           ),
         ),
