@@ -587,7 +587,7 @@ class CommentStyleConfigPage extends HookWidget {
                       _SectionHeading(L10n.of(context).preview),
                       const SizedBox(height: 20),
                       SizedBox(
-                        height: 300,
+                        height: 400,
                         child: ListView(
                           children:
                               CommentSection.buildComments(context, postStore)
