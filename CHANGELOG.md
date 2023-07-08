@@ -1,3 +1,12 @@
+## Unreleased
+- Added Comment Style Settings page
+- Ability to adjust comment font size and post body font size
+- Implemented user deeplinking
+- Added separate notification counts on the inbox tabs
+- Fixes for copy/paste buttons and loading indicators (swmarks)
+- Added Android 13 Themed Icons (aquierick)
+- Adjust share links to use lemmy.guide for community and user
+
 ## v0.10.6 - 2023-07-06
 - Inbox Notfication Badges
 - Bring back full height preview in card view
