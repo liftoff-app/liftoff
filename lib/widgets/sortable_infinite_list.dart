@@ -132,7 +132,7 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
               builder: (context, state, child) => Column(
                     children: [
                       PostTile.fromPostView(post),
-                      if (state.useAmoled)
+                      if (state.amoled)
                         SizedBox(
                           width: 250,
                           height: 1,

@@ -111,12 +111,19 @@ class AppearanceConfigPage extends StatelessWidget {
                   onChanged: (selected) {
                     if (selected != null) {
                       state.switchtheme(selected);
+                      if (selected == ThemeMode.dark) {
+                        state.setPrimaryColor(
+                            ThemeData.dark().colorScheme.secondary);
+                      } else {
+                        state.setPrimaryColor(
+                            ThemeData.light().colorScheme.primary);
+                      }
                     }
                   },
                 ),
               SwitchListTile.adaptive(
                 title: Text(L10n.of(context).amoled_dark_mode),
-                value: state.amoledWanted,
+                value: state.amoled,
                 onChanged: (checked) => state.switchamoled(),
               ),
               ListTile(
@@ -127,7 +134,6 @@ class AppearanceConfigPage extends StatelessWidget {
                     Text(L10n.of(context).primary_color),
                     IconButton(
                       onPressed: () {
-                        // Pull default values from the system themes
                         if (state.theme == ThemeMode.dark) {
                           state.setPrimaryColor(
                               ThemeData.dark().colorScheme.secondary);
@@ -368,12 +374,12 @@ class PostStyleConfigPage extends StatelessWidget {
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockTextPostJson)))),
-                      if (state.useAmoled) gradient,
+                      if (state.amoled) gradient,
                       SizedBox(height: store.compactPostView ? 2 : 10),
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockMediaPost)))),
-                      if (state.useAmoled) gradient,
+                      if (state.amoled) gradient,
                       SizedBox(height: store.compactPostView ? 2 : 10),
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(

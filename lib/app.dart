@@ -28,22 +28,17 @@ class MyApp extends StatelessWidget {
           builder: (context, state, child) {
             return ObserverBuilder<ConfigStore>(
               builder: (context, store) => MaterialApp(
-                // Use a builder here to ensure that AppTheme can
-                // react to platform light/dark changes.
-                builder: (context, _) {
-                  return MaterialApp(
-                      title: 'Liftoff',
-                      supportedLocales: L10n.supportedLocales,
-                      localizationsDelegates: l10nDelegates,
-                      themeMode: state.theme,
-                      theme: themeFactory(primaryColor: state.primaryColor),
-                      darkTheme: themeFactory(
-                          primaryColor: state.primaryColor,
-                          amoled: state.useAmoled,
-                          dark: true),
-                      locale: store.locale,
-                      home: AppLinkHandler(const HomePage()));
-                },
+                title: 'Liftoff',
+                supportedLocales: L10n.supportedLocales,
+                localizationsDelegates: l10nDelegates,
+                themeMode: state.theme,
+                darkTheme: themeFactory(
+                    primaryColor: state.primaryColor,
+                    amoled: state.amoled,
+                    dark: true),
+                locale: store.locale,
+                theme: themeFactory(primaryColor: state.primaryColor),
+                home: AppLinkHandler(const HomePage()),
               ),
             );
           },
