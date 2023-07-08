@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../util/extensions/api.dart';
+import '../util/extensions/truncate.dart';
 import '../util/goto.dart';
 import '../widgets/avatar.dart';
 import '../widgets/infinite_scroll.dart';
@@ -44,17 +45,25 @@ class UsersListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Find a reasonable cutoff point for the description.
+    var desc = '';
+    if (user.person.bio != null) {
+      desc = user.person.bio!.truncate(200);
+      final par = desc.indexOf('\n');
+      if (par > 0) desc = desc.substring(0, par);
+    }
+
     return ListTile(
       title: Text(user.person.originPreferredName),
       subtitle: user.person.bio != null
           ? Opacity(
               opacity: 0.7,
               child: MarkdownText(
-                user.person.bio!,
+                desc,
                 instanceHost: user.instanceHost,
               ),
             )
-          : null,
+          : const SizedBox(height: 5),
       onTap: () => goToUser.fromPersonSafe(context, user.person),
       leading: Avatar(url: user.person.avatar),
     );
