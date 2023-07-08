@@ -10,7 +10,8 @@ class AppTheme extends ChangeNotifier {
 
   SharedPreferences? _prefs;
   bool _amoled = false;
-  late ThemeMode _theme;
+  // Will be set correctly in _loadprefs, but can be accessed before then...
+  ThemeMode _theme = ThemeMode.system;
 
   Color _primaryColorDark = ThemeData.dark().colorScheme.secondary;
   Color _primaryColorLight = ThemeData.light().colorScheme.primary;
@@ -21,6 +22,8 @@ class AppTheme extends ChangeNotifier {
   bool get useAmoled => areWeDark && _amoled;
   ThemeMode get theme => _theme;
   Color get primaryColor => areWeDark ? _primaryColorDark : _primaryColorLight;
+  Color get primaryColorDark => _primaryColorDark;
+  Color get primaryColorLight => _primaryColorLight;
 
   AppTheme() {
     _loadprefs();
