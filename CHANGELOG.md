@@ -1,4 +1,4 @@
-## Unreleased
+## v0.10.7 - 2023-07-08
 - Added Comment Style Settings page
 - Ability to adjust comment font size and post body font size
 - Implemented user deeplinking
