@@ -95,6 +95,30 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: 15)
   double postHeaderFontSize = 15;
 
+  @observable
+  @JsonKey(defaultValue: 15)
+  double postBodySize = 15;
+
+  @observable
+  @JsonKey(defaultValue: 15)
+  double commentTitleSize = 15;
+
+  @observable
+  @JsonKey(defaultValue: 15)
+  double commentBodySize = 15;
+
+  @observable
+  @JsonKey(defaultValue: 3)
+  double commentIndentWidth = 3;
+
+  @observable
+  @JsonKey(defaultValue: 8)
+  double commentPillSize = 8;
+
+  @observable
+  @JsonKey(defaultValue: 14)
+  double commentTimestampSize = 14;
+
   /// Allows the user to see the combined EVERYTHING feed, which can be
   /// confusing, so default it off.
   @observable

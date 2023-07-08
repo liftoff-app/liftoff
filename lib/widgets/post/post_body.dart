@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../stores/config_store.dart';
 import '../../util/observer_consumers.dart';
 import '../markdown_text.dart';
 import 'post_status.dart';
@@ -12,6 +13,7 @@ class PostBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final fullPost = context.read<IsFullPost>();
+    final bodyFontSize = context.read<ConfigStore>().postBodySize;
 
     return ObserverBuilder<PostStore>(builder: (context, store) {
       final body = store.postView.post.body;
@@ -24,6 +26,7 @@ class PostBody extends StatelessWidget {
             body,
             instanceHost: store.postView.instanceHost,
             selectable: true,
+            fontSize: bodyFontSize,
           ),
         );
       } else {
@@ -47,6 +50,7 @@ class PostBody extends StatelessWidget {
                         child: MarkdownText(
                           body,
                           instanceHost: store.postView.instanceHost,
+                          fontSize: bodyFontSize,
                         ),
                       ),
                     ),
@@ -78,6 +82,7 @@ class PostBody extends StatelessWidget {
                     child: MarkdownText(
                       body,
                       instanceHost: store.postView.instanceHost,
+                      fontSize: bodyFontSize,
                     ),
                   ),
                 ),
