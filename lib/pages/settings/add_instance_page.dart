@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/debounce.dart';
 import '../../hooks/stores.dart';
+import '../../l10n/gen/l10n.dart';
 import '../../util/cleanup_url.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/fullscreenable_image.dart';
@@ -64,14 +65,13 @@ class AddInstancePage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CloseButton(),
-        title: const Text('Add instance'),
+        title: Text(L10n.of(context).add_instance),
       ),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: Text('Please note that kbin instances are '
-                'not supported at present.'),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(L10n.of(context).kbin_instances_not_supported),
           ),
           ListView(
             shrinkWrap: true,
@@ -87,13 +87,13 @@ class AddInstancePage extends HookWidget {
                       ),
                     ))
               else if (isSite.value == false)
-                const SizedBox(
+                SizedBox(
                   height: 150,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.close, color: Colors.red),
-                      Text('instance not found')
+                      const Icon(Icons.close, color: Colors.red),
+                      Text(L10n.of(context).instance_not_found)
                     ],
                   ),
                 )
@@ -111,8 +111,8 @@ class AddInstancePage extends HookWidget {
                     keyboardType: TextInputType.url,
                     onSubmitted: (_) => handleAdd?.call(),
                     autocorrect: false,
-                    decoration:
-                        const InputDecoration(labelText: 'instance url'),
+                    decoration: InputDecoration(
+                        labelText: L10n.of(context).instance_url),
                   ),
                 ),
               ),

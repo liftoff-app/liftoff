@@ -7,8 +7,13 @@ import 'gen/l10n.dart';
 
 abstract class L10nStrings {
   static const settings = 'settings';
+  static const blocks = 'blocks';
+  static const add_account = 'add_account';
   static const password = 'password';
   static const email_or_username = 'email_or_username';
+  static const verification_email_sent = 'verification_email_sent';
+  static const registration_application_sent = 'registration_application_sent';
+  static const select_instance = 'select_instance';
   static const posts = 'posts';
   static const comments = 'comments';
   static const modlog = 'modlog';
@@ -52,6 +57,15 @@ abstract class L10nStrings {
   static const users = 'users';
   static const theme = 'theme';
   static const language = 'language';
+  static const show_everything_feed = 'show_everything_feed';
+  static const show_everything_feed_explanation =
+      'show_everything_feed_explanation';
+  static const use_in_app_browser = 'use_in_app_browser';
+  static const convert_webp_to_png = 'convert_webp_to_png';
+  static const other_settings = 'other_settings';
+  static const disable_animations = 'disable_animations';
+  static const hide_nsfw = 'hide_nsfw';
+  static const hide_nsfw_explanation = 'hide_nsfw_explanation';
   static const hot = 'hot';
   static const new_ = 'new_';
   static const old = 'old';
@@ -159,11 +173,19 @@ abstract class L10nStrings {
   static const week = 'week';
   static const month = 'month';
   static const six_months = 'six_months';
+  static const instance_url = 'instance_url';
   static const add_instance = 'add_instance';
+  static const instance_not_found = 'instance_not_found';
   static const instance_added = 'instance_added';
   static const required_field = 'required_field';
   static const no_communities_found = 'no_communities_found';
   static const network_error = 'network_error';
+  static const kbin_instances_not_supported = 'kbin_instances_not_supported';
+  static const block_user = 'block_user';
+  static const no_users_blocked = 'no_users_blocked';
+  static const block_community = 'block_community';
+  static const no_communities_blocked = 'no_communities_blocked';
+  static const unblock = 'unblock';
 }
 
 extension L10nFromString on String {
@@ -171,10 +193,20 @@ extension L10nFromString on String {
     switch (this) {
       case L10nStrings.settings:
         return L10n.of(context).settings;
+      case L10nStrings.blocks:
+        return L10n.of(context).blocks;
+      case L10nStrings.add_account:
+        return L10n.of(context).add_account;
       case L10nStrings.password:
         return L10n.of(context).password;
       case L10nStrings.email_or_username:
         return L10n.of(context).email_or_username;
+      case L10nStrings.verification_email_sent:
+        return L10n.of(context).verification_email_sent;
+      case L10nStrings.registration_application_sent:
+        return L10n.of(context).registration_application_sent;
+      case L10nStrings.select_instance:
+        return L10n.of(context).select_instance;
       case L10nStrings.posts:
         return L10n.of(context).posts;
       case L10nStrings.comments:
@@ -261,6 +293,22 @@ extension L10nFromString on String {
         return L10n.of(context).theme;
       case L10nStrings.language:
         return L10n.of(context).language;
+      case L10nStrings.show_everything_feed:
+        return L10n.of(context).show_everything_feed;
+      case L10nStrings.show_everything_feed_explanation:
+        return L10n.of(context).show_everything_feed_explanation;
+      case L10nStrings.use_in_app_browser:
+        return L10n.of(context).use_in_app_browser;
+      case L10nStrings.convert_webp_to_png:
+        return L10n.of(context).convert_webp_to_png;
+      case L10nStrings.other_settings:
+        return L10n.of(context).other_settings;
+      case L10nStrings.disable_animations:
+        return L10n.of(context).disable_animations;
+      case L10nStrings.hide_nsfw:
+        return L10n.of(context).hide_nsfw;
+      case L10nStrings.hide_nsfw_explanation:
+        return L10n.of(context).hide_nsfw_explanation;
       case L10nStrings.hot:
         return L10n.of(context).hot;
       case L10nStrings.new_:
@@ -449,8 +497,12 @@ extension L10nFromString on String {
         return L10n.of(context).month;
       case L10nStrings.six_months:
         return L10n.of(context).six_months;
+      case L10nStrings.instance_url:
+        return L10n.of(context).instance_url;
       case L10nStrings.add_instance:
         return L10n.of(context).add_instance;
+      case L10nStrings.instance_not_found:
+        return L10n.of(context).instance_not_found;
       case L10nStrings.instance_added:
         return L10n.of(context).instance_added;
       case L10nStrings.required_field:
@@ -459,6 +511,18 @@ extension L10nFromString on String {
         return L10n.of(context).no_communities_found;
       case L10nStrings.network_error:
         return L10n.of(context).network_error;
+      case L10nStrings.kbin_instances_not_supported:
+        return L10n.of(context).kbin_instances_not_supported;
+      case L10nStrings.block_user:
+        return L10n.of(context).block_user;
+      case L10nStrings.no_users_blocked:
+        return L10n.of(context).no_users_blocked;
+      case L10nStrings.block_community:
+        return L10n.of(context).block_community;
+      case L10nStrings.no_communities_blocked:
+        return L10n.of(context).no_communities_blocked;
+      case L10nStrings.unblock:
+        return L10n.of(context).unblock;
 
       default:
         return this;

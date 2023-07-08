@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../../l10n/gen/l10n.dart';
 import '../../../util/async_store_listener.dart';
 import '../../../util/extensions/api.dart';
 import '../../../util/goto.dart';
@@ -25,7 +26,7 @@ class BlockPersonTile extends StatelessWidget {
               icon: store.unblockingState.isLoading
                   ? const CircularProgressIndicator.adaptive()
                   : const Icon(Icons.cancel),
-              tooltip: 'unblock',
+              tooltip: L10n.of(context).unblock,
               onPressed: store.unblock,
             ),
             onTap: () {
@@ -55,7 +56,7 @@ class BlockCommunityTile extends HookWidget {
               icon: store.unblockingState.isLoading
                   ? const CircularProgressIndicator.adaptive()
                   : const Icon(Icons.cancel),
-              tooltip: 'unblock',
+              tooltip: L10n.of(context).unblock,
               onPressed: store.unblock,
             ),
             onTap: () {

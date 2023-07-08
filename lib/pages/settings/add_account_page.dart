@@ -82,12 +82,12 @@ class AddAccountPage extends HookWidget {
 
         Navigator.of(context).pop();
       } on VerifyEmailException {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Verification email sent'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(L10n.of(context).verification_email_sent),
         ));
       } on RegistrationApplicationSentException {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Registration application sent'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(L10n.of(context).registration_application_sent),
         ));
       } on Exception catch (err) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -107,7 +107,7 @@ class AddAccountPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CloseButton(),
-        title: const Text('Add account'),
+        title: Text(L10n.of(context).add_account),
       ),
       body: AutofillGroup(
         child: ListView(
@@ -127,7 +127,7 @@ class AddAccountPage extends HookWidget {
                 ),
               ),
             RadioPicker<String>(
-              title: 'select instance',
+              title: L10n.of(context).select_instance,
               values: accountsStore.instances.toList(),
               groupValue: selectedInstance.value,
               onChanged: (value) => selectedInstance.value = value,
@@ -146,7 +146,7 @@ class AddAccountPage extends HookWidget {
                   padding: EdgeInsets.all(8),
                   child: Icon(Icons.add),
                 ),
-                title: const Text('Add instance'),
+                title: Text(L10n.of(context).select_instance),
                 onTap: () async {
                   final value =
                       await Navigator.of(context).push(AddInstancePage.route());
@@ -194,7 +194,7 @@ class AddAccountPage extends HookWidget {
             ElevatedButton(
               onPressed: handleSubmit,
               child: !loading.loading
-                  ? const Text('Sign in')
+                  ? Text(L10n.of(context).sign_in)
                   : SizedBox(
                       width: 20,
                       height: 20,
@@ -213,7 +213,7 @@ class AddAccountPage extends HookWidget {
                   context: context,
                 );
               },
-              child: const Text('Register'),
+              child: Text(L10n.of(context).register),
             ),
           ],
         ),
