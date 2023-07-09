@@ -697,5 +697,14 @@
   },
   "kbin_instances_not_supported": "Please note that kbin instances are not supported at present.",
   "@kbin_instances_not_supported": {
+  },
+  "pick_a_photo": "Pick a photo",
+  "@pick_a_photo": {
+  },
+  "use_this_image": "Use this image",
+  "@use_this_image": {
+  },
+  "photo_picker_explanation": "Pick an image, then adjust the crop box to the right shape.\n\nYou can then drag the image until it's in the right place. \n\nResizing the crop box will zoom the selection in and out.",
+  "@photo_picker_explanation": {
   }
 }
