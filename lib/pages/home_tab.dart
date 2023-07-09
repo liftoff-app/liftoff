@@ -250,8 +250,8 @@ class HomeTab extends HookWidget {
                     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
                 title: TextButton(
                   style: TextButton.styleFrom(
-                    //padding: const EdgeInsets.symmetric(horizontal: 15),
-                  ),
+                      //padding: const EdgeInsets.symmetric(horizontal: 15),
+                      ),
                   onPressed: handleListChange,
                   child: Row(
                     //mainAxisSize: MainAxisSize.min,
@@ -267,7 +267,9 @@ class HomeTab extends HookWidget {
                           textAlign: TextAlign.left,
                         ),
                       ),
-                      const Icon(Icons.arrow_drop_down,),
+                      const Icon(
+                        Icons.arrow_drop_down,
+                      ),
                     ],
                   ),
                 ),
@@ -319,19 +321,21 @@ class HomeTab extends HookWidget {
                   //     );
                   //   },
                   // )
-                  if (accStore.totalNotificationCount > 0) Badge(
-                    offset: const Offset(-5, 5),
-                    label: Text(accStore.totalNotificationCount.toString()),
-                    child: IconButton(
+                  if (accStore.totalNotificationCount > 0)
+                    Badge(
+                      offset: const Offset(-5, 5),
+                      label: Text(accStore.totalNotificationCount.toString()),
+                      child: IconButton(
+                        icon: const Icon(Icons.notifications),
+                        onPressed: () =>
+                            goTo(context, (_) => const InboxPage()),
+                      ),
+                    )
+                  else
+                    IconButton(
                       icon: const Icon(Icons.notifications),
-                      onPressed: () =>
-                          goTo(context, (_) => const InboxPage()),
+                      onPressed: () => goTo(context, (_) => const InboxPage()),
                     ),
-                  ) else IconButton(
-                    icon: const Icon(Icons.notifications),
-                    onPressed: () =>
-                        goTo(context, (_) => const InboxPage()),
-                  ),
                   PopupMenuButton(itemBuilder: (context) {
                     return [
                       const PopupMenuItem<int>(
