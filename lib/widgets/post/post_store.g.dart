@@ -71,6 +71,15 @@ mixin _$PostStore on _PostStore, Store {
     return _$blockUserAsyncAction.run(() => super.blockUser(userData));
   }
 
+  late final _$blockCommunityAsyncAction =
+      AsyncAction('_PostStore.blockCommunity', context: context);
+
+  @override
+  Future<void> blockCommunity(UserData userData) {
+    return _$blockCommunityAsyncAction
+        .run(() => super.blockCommunity(userData));
+  }
+
   late final _$_voteAsyncAction =
       AsyncAction('_PostStore._vote', context: context);
 
