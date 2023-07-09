@@ -243,33 +243,19 @@ class HomeTab extends HookWidget {
                     : SystemUiOverlayStyle.dark,
                 backgroundColor: theme.canvasColor,
                 shadowColor: Colors.transparent,
-                centerTitle: true,
+                titleSpacing: 6,
+                //centerTitle: true,
                 iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
                 titleTextStyle: theme.textTheme.titleLarge
                     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-                leading: accStore.totalNotificationCount > 0
-                    ? Badge(
-                        offset: const Offset(-5, 5),
-                        label: Text(accStore.totalNotificationCount.toString()),
-                        child: IconButton(
-                          icon: const Icon(Icons.notifications),
-                          onPressed: () =>
-                              goTo(context, (_) => const InboxPage()),
-                        ),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.notifications),
-                        onPressed: () =>
-                            goTo(context, (_) => const InboxPage()),
-                      ),
-                title: FilledButton(
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                title: TextButton(
+                  style: TextButton.styleFrom(
+                    //padding: const EdgeInsets.symmetric(horizontal: 15),
                   ),
                   onPressed: handleListChange,
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    //mainAxisSize: MainAxisSize.min,
+                    //mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Flexible(
                         child: Text(
@@ -278,9 +264,10 @@ class HomeTab extends HookWidget {
                               fontSize: 20, fontWeight: FontWeight.w500),
                           overflow: TextOverflow.fade,
                           softWrap: false,
+                          textAlign: TextAlign.left,
                         ),
                       ),
-                      const Icon(Icons.arrow_drop_down),
+                      const Icon(Icons.arrow_drop_down,),
                     ],
                   ),
                 ),
@@ -332,6 +319,19 @@ class HomeTab extends HookWidget {
                   //     );
                   //   },
                   // )
+                  if (accStore.totalNotificationCount > 0) Badge(
+                    offset: const Offset(-5, 5),
+                    label: Text(accStore.totalNotificationCount.toString()),
+                    child: IconButton(
+                      icon: const Icon(Icons.notifications),
+                      onPressed: () =>
+                          goTo(context, (_) => const InboxPage()),
+                    ),
+                  ) else IconButton(
+                    icon: const Icon(Icons.notifications),
+                    onPressed: () =>
+                        goTo(context, (_) => const InboxPage()),
+                  ),
                   PopupMenuButton(itemBuilder: (context) {
                     return [
                       const PopupMenuItem<int>(

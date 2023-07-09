@@ -77,7 +77,7 @@ ThemeData themeFactory(
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        //backgroundColor: theme.colorScheme.background,
+        foregroundColor: textColorBasedOnBackground(theme.colorScheme.background),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -93,10 +93,14 @@ ThemeData themeFactory(
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: TextButton.styleFrom(
-        backgroundColor: theme.colorScheme.background,
-        shape: RoundedRectangleBorder(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(theme.canvasColor),
+        foregroundColor: MaterialStateProperty.all(textColorBasedOnBackground(theme.canvasColor)),
+        side: MaterialStateProperty.all(BorderSide(color: textColorBasedOnBackground(theme.canvasColor))),
+        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          side: BorderSide(color: textColorBasedOnBackground(theme.canvasColor)),
           borderRadius: BorderRadius.circular(10),
+        ),
         ),
       ),
     ),
