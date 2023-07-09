@@ -13,7 +13,10 @@ class PostLinkPreview extends StatelessWidget {
       builder: (context, store) {
         final url = store.postView.post.url;
 
-        if (store.hasMedia || url == null || url.isEmpty) {
+        if (store.hasMedia ||
+            url == null ||
+            url.isEmpty ||
+            url == 'redgifs.com') {
           return const SizedBox();
         }
 

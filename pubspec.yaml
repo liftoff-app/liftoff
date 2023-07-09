@@ -81,6 +81,7 @@ dependencies:
   app_links: ^3.4.3
   flutter_custom_tabs: ^1.0.4
   appinio_video_player: ^1.2.1
+  http: ^0.13.6
 
 # https://github.com/flutter/flutter/issues/127425
 dependency_overrides:
