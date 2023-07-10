@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_single_quotes
-
 import 'dart:io';
 
 import 'package:extended_image/extended_image.dart';
@@ -85,8 +83,8 @@ class PickImagePage extends HookWidget {
               ClipRect(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 500),
-                  child: ExtendedImage.asset(
-                    xfile.value!.path,
+                  child: ExtendedImage.file(
+                    File(xfile.value!.path),
                     fit: BoxFit.contain,
                     mode: ExtendedImageMode.editor,
                     enableLoadState: true,
