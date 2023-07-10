@@ -46,19 +46,33 @@ class PickImagePage extends HookWidget {
 
     final bytes = img.encodeJpg(imageOut);
     tempFile.writeAsBytesSync(bytes);
-    final xfile = XFile.fromData(
+    final outXFile = XFile.fromData(
       bytes,
       path: tempFile.path,
       length: bytes.length,
       name: 'chosen_image.jpg',
     );
-    Navigator.of(context).pop(xfile);
+    Navigator.of(context).pop(outXFile);
   }
 
   @override
   Widget build(BuildContext context) {
     final editorKey = GlobalKey<ExtendedImageEditorState>();
     final xfile = useState<XFile?>(null);
+
+    // Make this a function so we can use UseEffect() on it.
+    Future callPickImage() async {
+      xfile
+        ..value = null // clear image
+        ..value = await pickImage();
+    }
+
+    // Call a Hooks effect to load the image picker on startup.
+    // Passing [] to keys makes this only load on first build.
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) => callPickImage());
+      return null; // ie no dispose function needed.
+    }, const []);
 
     return Scaffold(
       appBar: AppBar(
@@ -104,11 +118,7 @@ class PickImagePage extends HookWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                    onPressed: () async {
-                      xfile
-                        ..value = null // clear image
-                        ..value = await pickImage();
-                    },
+                    onPressed: callPickImage,
                     child: Text(L10n.of(context).pick_a_photo)),
                 ElevatedButton(
                   onPressed: (xfile.value == null)
