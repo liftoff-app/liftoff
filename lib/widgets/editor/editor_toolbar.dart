@@ -4,12 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../markdown_formatter.dart';
+import '../../pages/pick_image.dart';
 import '../../resources/links.dart';
 import '../../url_launcher.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/extensions/spaced.dart';
-import '../../util/files.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/text_lines_iterator.dart';
@@ -155,7 +155,9 @@ class _ToolbarBody extends HookWidget {
                   return;
                 }
                 try {
-                  final pic = await pickImage();
+                  final pic = await Navigator.of(context).push(
+                    PickImagePage.route(),
+                  );
                   // pic is null when the picker was cancelled
 
                   if (pic != null) {
