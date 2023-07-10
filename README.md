@@ -14,6 +14,7 @@
 <!--
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.LiftoffOrg.liftoff)
 -->
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.liftoffapp.liftoff)
 [<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.liftoffapp.liftoff&pli=1)
 [<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/liftoff-app/liftoff/releases/latest)
 
@@ -38,6 +39,7 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
   - [FAQ](#faq)
     - [Version x.x.x was released, why is it not yet on F-droid?](#version-xxx-was-released-why-is-it-not-yet-on-f-droid)
     - ["App not installed" - what to do?](#app-not-installed---what-to-do)
+- [What is your privacy policy?](#what-is-your-privacy-policy?)
 
 # Contributing
 
@@ -92,3 +94,7 @@ We have no control over F-droid's build process. This process is automatic and n
 ### "App not installed" - what to do?
 
 When installing the APK directly you might get this message. This happens when you are trying to update liftoff from a different source than where you originally got it from. To fix it simply uninstall the previous version (you will lose all local data) and then install the new one. Always make sure to install liftoff APKs only from verified sources.
+
+# What is your privacy policy?
+
+As stated in our [Privacy Policy statement](PRIVACY_POLICY.md), we don't have access to any of your personal data or usage information from your device.

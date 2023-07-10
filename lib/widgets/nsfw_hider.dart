@@ -20,7 +20,7 @@ class NSFWHider extends HookWidget {
     if (!blurNsfW || !hideContent.value) return child;
     return Container(
       alignment: Alignment.center,
-      child: TextButton.icon(
+      child: FilledButton.icon(
           icon: const Icon(Icons.warning),
           label: const Text('NSFW content: click to view'),
           onPressed: () {

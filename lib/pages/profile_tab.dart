@@ -35,7 +35,7 @@ class UserProfileTab extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('No account was added.'),
-              TextButton.icon(
+              FilledButton.icon(
                 onPressed: () {
                   goTo(context, (_) => AccountsConfigPage());
                 },
@@ -70,7 +70,7 @@ class UserProfileTab extends HookWidget {
             final userTag = value.split('@');
             accountsStore.setDefaultAccount(userTag[1], userTag[0]);
           },
-          buttonBuilder: (context, displayValue, onPressed) => TextButton(
+          buttonBuilder: (context, displayValue, onPressed) => FilledButton(
             onPressed: onPressed,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

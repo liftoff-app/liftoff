@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../util/observer_consumers.dart';
+import '../view_on_menu.dart';
 import 'community_store.dart';
 
 class CommunityFollowButton extends HookWidget {
@@ -16,8 +17,10 @@ class CommunityFollowButton extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final loggedInAction =
-        useLoggedInAction(context.read<CommunityStore>().instanceHost);
+    final loggedInAction = useLoggedInAction(
+        context.read<CommunityStore>().instanceHost, fallback: () {
+      ViewOnMenu.openForCommunity(context, communityView.community.actorId);
+    });
 
     return ObserverBuilder<CommunityStore>(builder: (context, store) {
       return ElevatedButtonTheme(

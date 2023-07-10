@@ -130,7 +130,7 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
       AsyncAction('_CreatePostStore.submit', context: context);
 
   @override
-  Future<void> submit(Jwt token) {
+  Future<void> submit(UserData token) {
     return _$submitAsyncAction.run(() => super.submit(token));
   }
 
@@ -138,9 +138,9 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
       AsyncAction('_CreatePostStore.uploadImage', context: context);
 
   @override
-  Future<void> uploadImage(String filePath, Jwt token) {
+  Future<void> uploadImage(String filePath, UserData userData) {
     return _$uploadImageAsyncAction
-        .run(() => super.uploadImage(filePath, token));
+        .run(() => super.uploadImage(filePath, userData));
   }
 
   late final _$_CreatePostStoreActionController =
@@ -148,11 +148,11 @@ mixin _$CreatePostStore on _CreatePostStore, Store {
 
   @override
   Future<List<CommunityView>?> searchCommunities(
-      String searchTerm, Jwt? token) {
+      String searchTerm, UserData? userData) {
     final _$actionInfo = _$_CreatePostStoreActionController.startAction(
         name: '_CreatePostStore.searchCommunities');
     try {
-      return super.searchCommunities(searchTerm, token);
+      return super.searchCommunities(searchTerm, userData);
     } finally {
       _$_CreatePostStoreActionController.endAction(_$actionInfo);
     }

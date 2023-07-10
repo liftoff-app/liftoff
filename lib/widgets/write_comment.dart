@@ -5,6 +5,8 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
+import '../stores/accounts_store.dart';
+import '../util/text_color.dart';
 import 'editor/editor.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
@@ -63,7 +65,7 @@ class WriteComment extends HookWidget {
       );
     }();
 
-    handleSubmit(Jwt token) async {
+    handleSubmit(UserData userData) async {
       final api = LemmyApiV3(post.instanceHost);
 
       delayed.start();
@@ -73,14 +75,14 @@ class WriteComment extends HookWidget {
             return api.run(EditComment(
               commentId: comment!.id,
               content: editorController.textEditingController.text,
-              auth: token.raw,
+              auth: userData.jwt.raw,
             ));
           } else {
             return api.run(CreateComment(
               content: editorController.textEditingController.text,
               postId: post.id,
               parentId: comment?.id,
-              auth: token.raw,
+              auth: userData.jwt.raw,
             ));
           }
         }();
@@ -125,12 +127,21 @@ class WriteComment extends HookWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
+                      FilledButton(
                         onPressed: delayed.pending
                             ? () {}
                             : loggedInAction(handleSubmit),
                         child: delayed.loading
-                            ? const CircularProgressIndicator.adaptive()
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator.adaptive(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      textColorBasedOnBackground(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary)),
+                                ))
                             : Text(_isEdit
                                 ? L10n.of(context).edit
                                 : L10n.of(context).post),

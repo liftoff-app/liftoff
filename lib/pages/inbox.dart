@@ -61,6 +61,7 @@ class InboxPage extends HookWidget {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
+      await accStore.checkNotifications(accStore.defaultUserData);
     }
 
     return DefaultTabController(
@@ -68,25 +69,31 @@ class InboxPage extends HookWidget {
       child: Scaffold(
         appBar: AppBar(
           title: RadioPicker<String>(
-            onChanged: (val) {
-              selected.value = val;
+            values: accStore.loggedInInstances
+                .expand(
+                  (instanceHost) => accStore
+                      .usernamesFor(instanceHost)
+                      .map((username) => '$username@$instanceHost'),
+                )
+                .toList(),
+            groupValue:
+                '${accStore.defaultUsername}@${accStore.defaultInstanceHost}',
+            onChanged: (value) {
+              final [user, instance] = value.split('@');
+              accStore.setDefaultAccount(instance, user);
+              selected.value = instance;
               isc.clear();
             },
-            title: 'select instance',
-            groupValue: selectedInstance,
-            buttonBuilder: (context, displayString, onPressed) => TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-              ),
+            buttonBuilder: (context, displayValue, onPressed) => FilledButton(
               onPressed: onPressed,
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
                     child: Text(
-                      displayString,
-                      style: theme.appBarTheme.titleTextStyle,
+                      displayValue,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w500),
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
@@ -95,7 +102,6 @@ class InboxPage extends HookWidget {
                 ],
               ),
             ),
-            values: accStore.loggedInInstances.toList(),
           ),
           actions: [
             if (currentTab.value == 0)
@@ -114,9 +120,30 @@ class InboxPage extends HookWidget {
             indicatorColor: theme.colorScheme.primary,
             onTap: (value) => currentTab.value = value,
             tabs: [
-              Tab(text: L10n.of(context).replies),
-              Tab(text: L10n.of(context).mentions),
-              Tab(text: L10n.of(context).messages),
+              if (accStore.totalRepliesCount > 0)
+                Badge(
+                  offset: const Offset(15, 5),
+                  label: Text(accStore.totalRepliesCount.toString()),
+                  child: Tab(text: L10n.of(context).replies),
+                )
+              else
+                Tab(text: L10n.of(context).replies),
+              if (accStore.totalMentionsCount > 0)
+                Badge(
+                  offset: const Offset(15, 5),
+                  label: Text(accStore.totalMentionsCount.toString()),
+                  child: Tab(text: L10n.of(context).mentions),
+                )
+              else
+                Tab(text: L10n.of(context).mentions),
+              if (accStore.totalPrivateMessageCount > 0)
+                Badge(
+                  offset: const Offset(15, 5),
+                  label: Text(accStore.totalPrivateMessageCount.toString()),
+                  child: Tab(text: L10n.of(context).messages),
+                )
+              else
+                Tab(text: L10n.of(context).messages),
             ],
           ),
         ),
@@ -268,29 +295,33 @@ class PrivateMessageTile extends HookWidget {
     }
 
     handleDelete() => delayedAction<PrivateMessageView>(
-          context: context,
-          delayedLoading: deleteDelayed,
-          instanceHost: pmv.value.instanceHost,
-          query: DeletePrivateMessage(
-            privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
-            deleted: !deleted.value,
-          ),
-          onSuccess: (val) => deleted.value = val.privateMessage.deleted,
-        );
+        context: context,
+        delayedLoading: deleteDelayed,
+        instanceHost: pmv.value.instanceHost,
+        query: DeletePrivateMessage(
+          privateMessageId: pmv.value.privateMessage.id,
+          auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
+          deleted: !deleted.value,
+        ),
+        onSuccess: (val) {
+          deleted.value = val.privateMessage.deleted;
+          accStore.checkNotifications(accStore.defaultUserData);
+        });
 
     handleRead() => delayedAction<PrivateMessageView>(
-          context: context,
-          delayedLoading: readDelayed,
-          instanceHost: pmv.value.instanceHost,
-          query: MarkPrivateMessageAsRead(
-            privateMessageId: pmv.value.privateMessage.id,
-            auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
-            read: !read.value,
-          ),
-          // TODO: add notification for notifying parent list
-          onSuccess: (val) => read.value = val.privateMessage.read,
-        );
+        context: context,
+        delayedLoading: readDelayed,
+        instanceHost: pmv.value.instanceHost,
+        query: MarkPrivateMessageAsRead(
+          privateMessageId: pmv.value.privateMessage.id,
+          auth: accStore.defaultUserDataFor(pmv.value.instanceHost)!.jwt.raw,
+          read: !read.value,
+        ),
+        // TODO: add notification for notifying parent list
+        onSuccess: (val) {
+          read.value = val.privateMessage.read;
+          accStore.checkNotifications(accStore.defaultUserData);
+        });
 
     if (hideOnRead && read.value) {
       return const SizedBox.shrink();

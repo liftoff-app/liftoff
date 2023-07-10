@@ -247,12 +247,23 @@ class HomeTab extends HookWidget {
                 iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
                 titleTextStyle: theme.textTheme.titleLarge
                     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-                leading: IconButton(
-                  icon: const Icon(Icons.notifications),
-                  onPressed: () => goTo(context, (_) => const InboxPage()),
-                ),
-                title: TextButton(
-                  style: TextButton.styleFrom(
+                leading: accStore.totalNotificationCount > 0
+                    ? Badge(
+                        offset: const Offset(-5, 5),
+                        label: Text(accStore.totalNotificationCount.toString()),
+                        child: IconButton(
+                          icon: const Icon(Icons.notifications),
+                          onPressed: () =>
+                              goTo(context, (_) => const InboxPage()),
+                        ),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.notifications),
+                        onPressed: () =>
+                            goTo(context, (_) => const InboxPage()),
+                      ),
+                title: FilledButton(
+                  style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                   ),
                   onPressed: handleListChange,

@@ -1,30 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppTheme extends ChangeNotifier {
   final String themeKey = 'theme';
   final String amoledKey = 'amoled';
-  final String primaryKey = 'primary';
+  final String primaryColorDarkKey = 'primaryColorDark';
+  final String primaryColorLightKey = 'primaryColorLight';
 
   SharedPreferences? _prefs;
   bool _amoled = false;
-  ThemeMode _theme = ThemeMode.dark;
-  Color _primaryColor = ThemeData().colorScheme.secondary;
+  // Will be set correctly in _loadprefs, but can be accessed before then...
+  ThemeMode _theme = ThemeMode.system;
 
-  bool get amoled => _amoled;
+  Color _primaryColorDark = ThemeData.dark().colorScheme.secondary;
+  Color _primaryColorLight = ThemeData.light().colorScheme.primary;
+
+  // Reports user preference whether to use amoled.
+  bool get amoledWanted => _amoled;
+  // System decision whether we should be using amoled right now.
+  bool get useAmoled => areWeDark && _amoled;
   ThemeMode get theme => _theme;
-  Color get primaryColor => _primaryColor;
+  Color get primaryColor => areWeDark ? _primaryColorDark : _primaryColorLight;
+  Color get primaryColorDark => _primaryColorDark;
+  Color get primaryColorLight => _primaryColorLight;
 
   AppTheme() {
-    _theme = ThemeMode.dark;
     _loadprefs();
   }
 
+  bool get isSystemDark =>
+      SchedulerBinding.instance.platformDispatcher.platformBrightness ==
+      Brightness.dark;
+
+  bool get areWeDark =>
+      theme == ThemeMode.dark || (theme == ThemeMode.system && isSystemDark);
+
   void switchtheme(ThemeMode theme) {
     _theme = theme;
-    if (theme != ThemeMode.dark) {
-      _amoled = false;
-    }
+
     _saveprefs();
     notifyListeners();
   }
@@ -36,7 +50,11 @@ class AppTheme extends ChangeNotifier {
   }
 
   void setPrimaryColor(Color color) {
-    _primaryColor = color;
+    if (areWeDark) {
+      _primaryColorDark = color;
+    } else {
+      _primaryColorLight = color;
+    }
     _saveprefs();
     notifyListeners();
   }
@@ -45,16 +63,19 @@ class AppTheme extends ChangeNotifier {
     _prefs ??= await SharedPreferences.getInstance();
   }
 
+  // Set sensible default values for ThemeMode and primaryColor
   _loadprefs() async {
     await _initiateprefs();
-    _theme = ThemeMode.values[_prefs?.getInt(themeKey) ?? 2];
+
+    // Default new installations to following the system theme.
+    final oldMode = _prefs?.getInt(themeKey);
+    _theme = (oldMode == null) ? ThemeMode.system : ThemeMode.values[oldMode];
+
     _amoled = _prefs?.getBool(amoledKey) ?? false;
-
-    final defaultPrimary = _theme == ThemeMode.light
-        ? ThemeData.light().colorScheme.primary
-        : ThemeData.dark().colorScheme.secondary;
-    _primaryColor = Color(_prefs?.getInt(primaryKey) ?? defaultPrimary.value);
-
+    _primaryColorDark =
+        Color(_prefs?.getInt(primaryColorDarkKey) ?? _primaryColorDark.value);
+    _primaryColorLight =
+        Color(_prefs?.getInt(primaryColorLightKey) ?? _primaryColorLight.value);
     notifyListeners();
   }
 
@@ -62,6 +83,7 @@ class AppTheme extends ChangeNotifier {
     await _initiateprefs();
     await _prefs?.setInt(themeKey, _theme.index);
     await _prefs?.setBool(amoledKey, _amoled);
-    await _prefs?.setInt(primaryKey, _primaryColor.value);
+    await _prefs?.setInt(primaryColorDarkKey, _primaryColorDark.value);
+    await _prefs?.setInt(primaryColorLightKey, _primaryColorLight.value);
   }
 }

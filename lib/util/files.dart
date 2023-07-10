@@ -6,8 +6,8 @@ import 'package:image_picker/image_picker.dart';
 
 /// Picks a single image from the system
 Future<XFile?> pickImage() async {
-  if (kIsWeb || Platform.isIOS || Platform.isAndroid) {
-    return ImagePicker().pickImage(source: ImageSource.gallery);
+  if (kIsWeb || Platform.isIOS || Platform.isMacOS || Platform.isAndroid) {
+    return await ImagePicker().pickImage(source: ImageSource.gallery);
   } else {
     final result = await FilePicker.platform.pickFiles(type: FileType.image);
 

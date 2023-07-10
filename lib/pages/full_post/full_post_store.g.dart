@@ -134,20 +134,37 @@ mixin _$FullPostStore on _FullPostStore, Store {
     });
   }
 
+  late final _$commentIdAtom =
+      Atom(name: '_FullPostStore.commentId', context: context);
+
+  @override
+  int? get commentId {
+    _$commentIdAtom.reportRead();
+    return super.commentId;
+  }
+
+  @override
+  set commentId(int? value) {
+    _$commentIdAtom.reportWrite(value, super.commentId, () {
+      super.commentId = value;
+    });
+  }
+
   late final _$refreshAsyncAction =
       AsyncAction('_FullPostStore.refresh', context: context);
 
   @override
-  Future<void> refresh([Jwt? token]) {
-    return _$refreshAsyncAction.run(() => super.refresh(token));
+  Future<void> refresh([UserData? userData]) {
+    return _$refreshAsyncAction.run(() => super.refresh(userData));
   }
 
   late final _$blockCommunityAsyncAction =
       AsyncAction('_FullPostStore.blockCommunity', context: context);
 
   @override
-  Future<void> blockCommunity(Jwt token) {
-    return _$blockCommunityAsyncAction.run(() => super.blockCommunity(token));
+  Future<void> blockCommunity(UserData userData) {
+    return _$blockCommunityAsyncAction
+        .run(() => super.blockCommunity(userData));
   }
 
   late final _$_FullPostStoreActionController =
@@ -159,6 +176,17 @@ mixin _$FullPostStore on _FullPostStore, Store {
         name: '_FullPostStore.updateSorting');
     try {
       return super.updateSorting(sort);
+    } finally {
+      _$_FullPostStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void getAllComments() {
+    final _$actionInfo = _$_FullPostStoreActionController.startAction(
+        name: '_FullPostStore.getAllComments');
+    try {
+      return super.getAllComments();
     } finally {
       _$_FullPostStoreActionController.endAction(_$actionInfo);
     }
@@ -184,6 +212,7 @@ pinnedComments: ${pinnedComments},
 newComments: ${newComments},
 sorting: ${sorting},
 postStore: ${postStore},
+commentId: ${commentId},
 commentTree: ${commentTree},
 sortedCommentTree: ${sortedCommentTree},
 postView: ${postView},

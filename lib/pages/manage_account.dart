@@ -7,13 +7,13 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../url_launcher.dart';
-import '../util/files.dart';
 import '../util/icons.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/bottom_safe.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/editor/editor.dart';
+import 'pick_image.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
@@ -205,11 +205,11 @@ class _ManageAccount extends HookWidget {
                 ],
               ),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(L10n.of(context).no),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(L10n.of(context).yes),
                 ),
@@ -261,11 +261,11 @@ class _ManageAccount extends HookWidget {
                 ],
               ),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(L10n.of(context).no),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(L10n.of(context).yes),
                 ),
@@ -508,7 +508,9 @@ class _ImagePicker extends HookWidget {
 
     uploadImage() async {
       try {
-        final pic = await pickImage();
+        final pic = await Navigator.of(context).push(
+          PickImagePage.route(),
+        );
         // pic is null when the picker was cancelled
         if (pic != null) {
           delayedLoading.start();
@@ -578,8 +580,8 @@ class _ImagePicker extends HookWidget {
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator.adaptive())
-                    : const Row(
-                        children: [Text('upload'), Icon(Icons.publish)],
+                    : Row(
+                        children: [Text(L10n.of(context).pick_a_photo)],
                       ),
               )
             else

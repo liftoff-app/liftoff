@@ -2,6 +2,7 @@ import 'package:lemmy_api_client/pictrs.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../stores/accounts_store.dart';
 import '../../util/async_store.dart';
 import '../../util/pictrs.dart';
 
@@ -52,7 +53,7 @@ abstract class _CreatePostStore with Store {
   @action
   Future<List<CommunityView>?> searchCommunities(
     String searchTerm,
-    Jwt? token,
+    UserData? userData,
   ) {
     if (searchTerm.isEmpty) {
       return searchCommunitiesState.runLemmy(
@@ -61,7 +62,7 @@ abstract class _CreatePostStore with Store {
           type: PostListingType.all,
           sort: SortType.topAll,
           limit: 10,
-          auth: token?.raw,
+          auth: userData?.jwt.raw,
         ),
       );
     } else {
@@ -72,14 +73,14 @@ abstract class _CreatePostStore with Store {
           sort: SortType.topAll,
           listingType: PostListingType.all,
           limit: 10,
-          auth: token?.raw,
+          auth: userData?.jwt.raw,
         ),
       );
     }
   }
 
   @action
-  Future<void> submit(Jwt token) async {
+  Future<void> submit(UserData token) async {
     await submitState.runLemmy(
       instanceHost,
       isEdit
@@ -89,7 +90,7 @@ abstract class _CreatePostStore with Store {
               nsfw: nsfw,
               name: title,
               postId: postToEdit!.id,
-              auth: token.raw,
+              auth: token.jwt.raw,
             )
           : CreatePost(
               url: url.isEmpty ? null : url,
@@ -97,20 +98,20 @@ abstract class _CreatePostStore with Store {
               nsfw: nsfw,
               name: title,
               communityId: selectedCommunity!.community.id,
-              auth: token.raw,
+              auth: token.jwt.raw,
             ),
     );
   }
 
   @action
-  Future<void> uploadImage(String filePath, Jwt token) async {
+  Future<void> uploadImage(String filePath, UserData userData) async {
     final instanceHost = this.instanceHost;
 
     final upload = await imageUploadState.run(
       () => PictrsApi(instanceHost)
           .upload(
             filePath: filePath,
-            auth: token.raw,
+            auth: userData.jwt.raw,
           )
           .then((value) => value.files.single),
     );

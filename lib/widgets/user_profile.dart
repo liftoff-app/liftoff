@@ -77,8 +77,8 @@ class UserProfile extends HookWidget {
             bottom: PreferredSize(
               preferredSize: const TabBar(tabs: []).preferredSize,
               child: Material(
+                color: theme.cardColor,
                 child: TabBar(
-                  indicatorColor: theme.colorScheme.primary,
                   tabs: [
                     Tab(text: L10n.of(context).posts),
                     Tab(text: L10n.of(context).comments),
@@ -89,25 +89,12 @@ class UserProfile extends HookWidget {
             ),
           ),
         ],
-        body: TabBarView(children: [
-          // TODO: first batch is already fetched on render
-          // TODO: comment and post come from the same endpoint, could be shared
-          InfinitePostList(
-            fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
-                .run(GetPersonDetails(
-                  personId: userView.person.id,
-                  savedOnly: false,
-                  sort: SortType.active,
-                  page: page,
-                  limit: batchSize,
-                  auth: accountsStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-                ))
-                .then((val) => val.posts),
-          ),
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: InfiniteCommentList(
+        body: TabBarView(
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              // TODO: first batch is already fetched on render
+              // TODO: comment and post come from the same endpoint, could be shared
+              InfinitePostList(
                 fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
                     .run(GetPersonDetails(
                       personId: userView.person.id,
@@ -120,12 +107,30 @@ class UserProfile extends HookWidget {
                           ?.jwt
                           .raw,
                     ))
-                    .then((val) => val.comments),
+                    .then((val) => val.posts),
               ),
-            ),
-          ),
-          _AboutTab(fullPersonView),
-        ]),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: InfiniteCommentList(
+                    fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
+                        .run(GetPersonDetails(
+                          personId: userView.person.id,
+                          savedOnly: false,
+                          sort: SortType.active,
+                          page: page,
+                          limit: batchSize,
+                          auth: accountsStore
+                              .defaultUserDataFor(instanceHost)
+                              ?.jwt
+                              .raw,
+                        ))
+                        .then((val) => val.comments),
+                  ),
+                ),
+              ),
+              _AboutTab(fullPersonView),
+            ]),
       ),
     );
   }

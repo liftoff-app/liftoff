@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import './util/goto.dart';
 
-/// Wrapper widget that handles app links.
+/// Wrapper widget that handles app links / universal links / deep links.
 /// It currently supports:
 /// - Communities
 /// - Users
@@ -43,6 +43,8 @@ class AppLinkHandler extends HookWidget {
             case 'post':
               goToPost(context, uri.host, int.parse(target));
               break;
+            default:
+            // not supported -- ignore it.
           }
         });
       });

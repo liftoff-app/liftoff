@@ -59,14 +59,19 @@ abstract class goToUser {
 
   static void byName(
           BuildContext context, String instanceHost, String userName) =>
-      throw UnimplementedError('need to create UserProfile constructor first');
+      goToSwipeable(
+          context,
+          (context) => UserPage.fromName(
+              instanceHost: instanceHost, username: userName));
 
   static void fromPersonSafe(BuildContext context, PersonSafe personSafe) =>
       goToUser.byId(context, personSafe.instanceHost, personSafe.id);
 }
 
-void goToPost(BuildContext context, String instanceHost, int postId) =>
-    Navigator.of(context).push(FullPostPage.route(postId, instanceHost));
+void goToPost(BuildContext context, String instanceHost, int postId,
+        {int? commentId}) =>
+    Navigator.of(context)
+        .push(FullPostPage.route(postId, instanceHost, commentId: commentId));
 
 void goToMedia(BuildContext context, String url, String heroTag) {
   final store = Provider.of<ConfigStore>(context, listen: false);
@@ -76,16 +81,20 @@ void goToMedia(BuildContext context, String url, String heroTag) {
     PageRouteBuilder(
       pageBuilder: (_, __, ___) => MediaViewPage(url, heroTag: heroTag),
       opaque: false,
-      transitionDuration: Duration(
-        milliseconds: store.disableAnimations ? 1 : 200,
+      transitionsBuilder: (_, animation, __, child) =>
+          TweenAnimationBuilder<double>(
+        duration: Duration(
+          milliseconds: store.disableAnimations ? 1 : 200,
+        ),
+        tween: Tween<double>(begin: 0, end: 1),
+        builder: (_, value, child) {
+          return Opacity(
+            opacity: value,
+            child: child,
+          );
+        },
+        child: child,
       ),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curve = CurveTween(curve: Curves.easeOut);
-        return FadeTransition(
-          opacity: animation.drive(curve),
-          child: child,
-        );
-      },
     ),
   );
 }

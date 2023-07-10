@@ -1,6 +1,7 @@
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../stores/accounts_store.dart';
 import '../../util/async_store.dart';
 
 part 'instance_store.g.dart';
@@ -16,26 +17,27 @@ abstract class _InstanceStore with Store {
   final communitiesState = AsyncStore<List<CommunityView>>();
 
   @action
-  Future<void> fetch(Jwt? token, {bool refresh = false}) async {
+  Future<void> fetch(UserData? userData, {bool refresh = false}) async {
     await Future.wait([
       siteState.runLemmy(
         instanceHost,
-        GetSite(auth: token?.raw),
+        GetSite(auth: userData?.jwt.raw),
         refresh: refresh,
       ),
-      fetchCommunites(token, refresh: refresh),
+      fetchCommunites(userData, refresh: refresh),
     ]);
   }
 
   @action
-  Future<void> fetchCommunites(Jwt? token, {bool refresh = false}) async {
+  Future<void> fetchCommunites(UserData? userData,
+      {bool refresh = false}) async {
     await communitiesState.runLemmy(
       instanceHost,
       ListCommunities(
         type: PostListingType.local,
         sort: SortType.hot,
         limit: 6,
-        auth: token?.raw,
+        auth: userData?.jwt.raw,
       ),
       refresh: refresh,
     );

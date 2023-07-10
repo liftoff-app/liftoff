@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:nested/nested.dart';
 import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../../hooks/logged_in_action.dart';
+import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
@@ -23,6 +23,8 @@ import '../../widgets/post/save_post_button.dart';
 import '../../widgets/pull_to_refresh.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/write_comment.dart';
+import '../federation_resolver.dart';
+import '../view_on_menu.dart';
 import 'comment_section.dart';
 import 'full_post_store.dart';
 
@@ -34,18 +36,20 @@ class FullPostPage extends HookWidget {
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
     final shareButtonKey = GlobalKey();
+    final fullPostStore = context.read<FullPostStore>();
     var scrollOffset = 0.0;
 
-    final loggedInAction =
-        useLoggedInAction(context.read<FullPostStore>().instanceHost);
+    final replyLoggedInAction = useLoggedInAction(fullPostStore.instanceHost,
+        fallback: () =>
+            ViewOnMenu.openForPost(context, fullPostStore.postView!.post.apId));
 
     return Nested(
       children: [
         AsyncStoreListener(
-          asyncStore: context.read<FullPostStore>().fullPostState,
+          asyncStore: fullPostStore.fullPostState,
         ),
         AsyncStoreListener<BlockedCommunity>(
-          asyncStore: context.read<FullPostStore>().communityBlockingState,
+          asyncStore: fullPostStore.communityBlockingState,
           successMessageBuilder: (context, data) {
             final name = data.communityView.community.originPreferredName;
             return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
@@ -54,23 +58,16 @@ class FullPostPage extends HookWidget {
       ],
       child: ObserverBuilder<FullPostStore>(
         builder: (context, store) {
-          Future<void> refresh() async {
-            await store.refresh(context
-                .read<AccountsStore>()
-                .defaultUserDataFor(store.instanceHost)
-                ?.jwt);
-          }
-
           final postStore = store.postStore;
 
           if (postStore == null) {
             return Scaffold(
               appBar: AppBar(),
               body: Center(
-                child: (store.fullPostState.isLoading)
+                child: (store.fullPostState.errorTerm == null)
                     ? const CircularProgressIndicator.adaptive()
                     : FailedToLoad(
-                        message: 'Post failed to load', refresh: refresh),
+                        message: 'Post failed to load', refresh: store.refresh),
               ),
             );
           }
@@ -125,10 +122,13 @@ class FullPostPage extends HookWidget {
                 child: RevealAfterScroll(
                   scrollController: scrollController,
                   after: 65,
-                  child: Text(
-                    '${post.community.originPreferredName} > '
-                    '"${post.post.name}"',
-                    overflow: TextOverflow.fade,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      '${post.community.originPreferredName} > '
+                      '"${post.post.name}"',
+                      overflow: TextOverflow.fade,
+                    ),
                   ),
                 ),
               ),
@@ -144,7 +144,7 @@ class FullPostPage extends HookWidget {
                 ),
                 if (!Platform.isAndroid && !post.post.locked)
                   IconButton(
-                    onPressed: loggedInAction((_) => comment()),
+                    onPressed: replyLoggedInAction((_) => comment()),
                     icon: const Icon(Icons.reply),
                   ),
                 IconButton(
@@ -160,11 +160,11 @@ class FullPostPage extends HookWidget {
             floatingActionButton: !Platform.isAndroid || post.post.locked
                 ? null
                 : FloatingActionButton(
-                    onPressed: loggedInAction((_) => comment()),
+                    onPressed: replyLoggedInAction((_) => comment()),
                     child: const Icon(Icons.comment),
                   ),
             body: PullToRefresh(
-              onRefresh: refresh,
+              onRefresh: store.refresh,
               child: ListView(
                 controller: scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -181,31 +181,58 @@ class FullPostPage extends HookWidget {
     );
   }
 
-  static Jwt? _tryGetJwt(BuildContext context, String instanceHost) {
-    return context.read<AccountsStore>().defaultUserDataFor(instanceHost)?.jwt;
+  static UserData? _tryGetUserData(BuildContext context, String instanceHost) {
+    return context.read<AccountsStore>().defaultUserDataFor(instanceHost);
   }
 
-  static Route route(int id, String instanceHost) => SwipeablePageRoute(
+  static Route route(int id, String instanceHost, {int? commentId}) =>
+      SwipeablePageRoute(
         builder: (context) => MobxProvider(
-          create: (context) =>
-              FullPostStore(instanceHost: instanceHost, postId: id)
-                ..refresh(_tryGetJwt(context, instanceHost)),
+          create: (context) => FullPostStore(
+              instanceHost: instanceHost, postId: id, commentId: commentId)
+            ..refresh(_tryGetUserData(context, instanceHost)),
           child: const FullPostPage._(),
         ),
       );
 
-  static Route fromPostViewRoute(PostView postView) => SwipeablePageRoute(
+  static Route fromPostViewRoute(PostView postView, {int? commentId}) =>
+      SwipeablePageRoute(
         builder: (context) => MobxProvider(
-          create: (context) => FullPostStore.fromPostView(postView)
-            ..refresh(_tryGetJwt(context, postView.instanceHost)),
+          create: (context) =>
+              FullPostStore.fromPostView(postView, commentId: commentId)
+                ..refresh(_tryGetUserData(context, postView.instanceHost)),
           child: const FullPostPage._(),
         ),
       );
   static Route fromPostStoreRoute(PostStore postStore) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
           create: (context) => FullPostStore.fromPostStore(postStore)
-            ..refresh(_tryGetJwt(context, postStore.postView.instanceHost)),
+            ..refresh(
+                _tryGetUserData(context, postStore.postView.instanceHost)),
           child: const FullPostPage._(),
         ),
+      );
+  static Route fromApIdRoute(UserData userData, String apId,
+          {bool isSingleComment = false}) =>
+      SwipeablePageRoute(
+        builder: (context) {
+          return FederationResolver(
+              userData: userData,
+              query: apId,
+              loadingMessage: L10n.of(context).federated_post_info,
+              exists: (response) => isSingleComment
+                  ? response.comment != null
+                  : response.post != null,
+              builder: (buildContext, object) => MobxProvider(
+                  create: (context) => FullPostStore(
+                      instanceHost: userData.instanceHost,
+                      postId: isSingleComment
+                          ? object.comment!.post.id
+                          : object.post!.post.id,
+                      commentId:
+                          isSingleComment ? object.comment!.comment.id : null)
+                    ..refresh(userData),
+                  child: const FullPostPage._()));
+        },
       );
 }

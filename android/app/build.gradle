@@ -27,10 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion Math.max(flutter.compileSdkVersion, 32)
-    
-    lintOptions {
-        disable 'InvalidPackage'
-    }    
+
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -120,6 +117,10 @@ android {
             shrinkResources false
             zipAlignEnabled true
         }
+    }
+    namespace 'com.liftoffapp.liftoff'
+    lint {
+        disable 'InvalidPackage'
     }
 }
 

@@ -6,6 +6,7 @@ import '../../l10n/l10n.dart';
 import '../../pages/create_post/create_post.dart';
 import '../../pages/full_post/full_post_store.dart';
 import '../../pages/settings/settings.dart';
+import '../../pages/view_on_menu.dart';
 import '../../stores/accounts_store.dart';
 import '../../url_launcher.dart';
 import '../../util/goto.dart';
@@ -84,6 +85,11 @@ class PostMoreMenu extends HookWidget {
                   Navigator.of(context).pop();
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.travel_explore),
+                title: Text(L10n.of(context).view_on),
+                onTap: () => ViewOnMenu.openForPost(context, post.post.apId),
+              ),
               if (isMine) ...[
                 ListTile(
                   leading: const Icon(Icons.edit),
@@ -142,6 +148,17 @@ class PostMoreMenu extends HookWidget {
                         loggedInAction(store.blockCommunity)();
                       },
                     );
+                  },
+                )
+              else
+                ListTile(
+                  leading: store.communityBlockingState.isLoading
+                      ? const CircularProgressIndicator.adaptive()
+                      : const Icon(Icons.block),
+                  title: const Text('Block community'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    loggedInAction(store.blockCommunity)();
                   },
                 ),
               ListTile(

@@ -6,6 +6,6 @@ import '../observer_consumers.dart';
 
 extension BuildContextExtensions on BuildContext {
   /// Get default [Jwt] for an instance
-  Jwt? defaultJwt(String instanceHost) =>
-      read<AccountsStore>().defaultUserDataFor(instanceHost)?.jwt;
+  UserData? defaultUserData(String instanceHost) =>
+      read<AccountsStore>().defaultUserDataFor(instanceHost);
 }

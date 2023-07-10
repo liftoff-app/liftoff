@@ -5,9 +5,11 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../pages/view_on_menu.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../tile_action.dart';
+import '../tile_toggle.dart';
 import '../write_comment.dart';
 import 'comment_more_menu_button.dart';
 import 'comment_store.dart';
@@ -17,10 +19,13 @@ class CommentActions extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final commentStore = context.read<CommentStore>();
     final loggedInAction = useLoggedInAction(
-      context.select<CommentStore, String>(
-        (store) => store.comment.instanceHost,
-      ),
+      commentStore.comment.instanceHost,
+      fallback: () {
+        ViewOnMenu.openForPost(context, commentStore.comment.comment.apId,
+            isSingleComment: true);
+      },
     );
 
     return ObserverBuilder<CommentStore>(
@@ -70,14 +75,13 @@ class CommentActions extends HookWidget {
                     ? L10n.of(context).mark_as_unread
                     : L10n.of(context).mark_as_read,
               ),
-            if (store.detached)
-              TileAction(
-                icon: Icons.link,
-                onPressed: () =>
-                    goToPost(context, comment.instanceHost, post.id),
-                tooltip: 'go to post',
-              ),
             const CommentMoreMenuButton(),
+            TileAction(
+              icon: Icons.link,
+              onPressed: () => goToPost(context, comment.instanceHost, post.id,
+                  commentId: comment.id),
+              tooltip: 'go to post',
+            ),
             TileAction(
               loading: store.savingState.isLoading,
               icon:
@@ -91,17 +95,17 @@ class CommentActions extends HookWidget {
                 onPressed: loggedInAction((_) => reply()),
                 tooltip: L10n.of(context).reply,
               ),
-            TileAction(
+            TileToggle(
               icon: Icons.arrow_upward,
-              iconColor: store.myVote == VoteType.up
-                  ? Theme.of(context).colorScheme.secondary
-                  : null,
+              activated: store.myVote == VoteType.up,
+              activeColor: Theme.of(context).colorScheme.secondary,
               onPressed: loggedInAction(store.upVote),
               tooltip: 'upvote',
             ),
-            TileAction(
+            TileToggle(
               icon: Icons.arrow_downward,
-              iconColor: store.myVote == VoteType.down ? Colors.red : null,
+              activated: store.myVote == VoteType.down,
+              activeColor: Colors.orange,
               onPressed: loggedInAction(store.downVote),
               tooltip: 'downvote',
             ),

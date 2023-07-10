@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../stores/accounts_store.dart';
-import '../../util/observer_consumers.dart';
+import '../../l10n/l10n.dart';
 import '../../widgets/bottom_safe.dart';
 import '../../widgets/comment/comment.dart';
 import '../../widgets/comment_list_options.dart';
 import '../../widgets/failed_to_load.dart';
+import 'full_post.dart';
 import 'full_post_store.dart';
 
 /// Manages comments section, sorts them
@@ -14,6 +14,7 @@ class CommentSection {
 
     final fullPostView = store.fullPostView;
     final postComments = store.postComments;
+    final newComments = store.newComments;
 
     // error & spinner handling
     if (fullPostView == null) {
@@ -24,10 +25,7 @@ class CommentSection {
             child: FailedToLoad(
                 message: 'ERROR: Comments failed to load. '
                     '${store.fullPostState.errorTerm}',
-                refresh: () => store.refresh(context
-                    .read<AccountsStore>()
-                    .defaultUserDataFor(store.instanceHost)
-                    ?.jwt)),
+                refresh: store.refresh),
           )
         ];
       } else {
@@ -42,8 +40,34 @@ class CommentSection {
 
     return [
       CommentListOptions(onSortChanged: store.updateSorting, sortValue: sort),
+      if (store.commentId != null) ...[
+        Container(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Row(
+            children: [
+              OutlinedButton(
+                child: Text(L10n.of(context).view_all_comments),
+                onPressed: () => Navigator.of(context).push(
+                    FullPostPage.fromPostViewRoute(fullPostView.postView)),
+              ),
+              if (store.postComments![0].comment.path.split('.').length >
+                  2) ...[
+                Container(width: 8),
+                OutlinedButton(
+                  child: Text(L10n.of(context).show_context),
+                  onPressed: () => Navigator.of(context).push(
+                      FullPostPage.fromPostViewRoute(fullPostView.postView,
+                          commentId: int.parse(store
+                              .postComments![0].comment.path
+                              .split('.')[1]))),
+                )
+              ],
+            ],
+          ),
+        )
+      ],
       // sorting menu goes here
-      if (postComments != null && postComments.isEmpty)
+      if (postComments != null && postComments.isEmpty && newComments.isEmpty)
         _centeredWithConstraints(
           child: const Padding(
             padding: EdgeInsets.symmetric(vertical: 50),

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
+import '../../l10n/l10n.dart';
 import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
 import '../../widgets/avatar.dart';
@@ -72,10 +73,10 @@ class ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (removedPost.modRemovePost.removed ?? false)
-                  const TextSpan(text: 'removed')
+                  TextSpan(text: L10n.of(context).modlog_removed)
                 else
-                  const TextSpan(text: 'restored'),
-                const TextSpan(text: ' post '),
+                  TextSpan(text: L10n.of(context).modlog_restored),
+                TextSpan(text: ' ${L10n.of(context).modlog_post_separator} '),
                 TextSpan(
                   text: '"${removedPost.post.name}"',
                   style: TextStyle(color: theme.colorScheme.secondary),
@@ -98,10 +99,10 @@ class ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (lockedPost.modLockPost.locked ?? false)
-                  const TextSpan(text: 'locked')
+                  TextSpan(text: L10n.of(context).modlog_locked)
                 else
-                  const TextSpan(text: 'unlocked'),
-                const TextSpan(text: ' post '),
+                  TextSpan(text: L10n.of(context).modlog_unlocked),
+                TextSpan(text: ' ${L10n.of(context).modlog_post_separator} '),
                 TextSpan(
                   text: '"${lockedPost.post.name}"',
                   style: TextStyle(color: theme.colorScheme.secondary),
@@ -117,25 +118,26 @@ class ModlogTable extends StatelessWidget {
             ),
           ),
         ),
-      for (final stickiedPost in modlog.stickiedPosts)
+      for (final featuredPost in modlog.featuredPosts)
         ModlogEntry.fromModStickyPostView(
-          stickiedPost,
+          featuredPost,
           RichText(
             text: TextSpan(
               children: [
-                if (stickiedPost.modStickyPost.stickied ?? false)
-                  const TextSpan(text: 'stickied')
+                if (featuredPost.post.featuredCommunity ||
+                    featuredPost.post.featuredLocal)
+                  TextSpan(text: L10n.of(context).modlog_stickied)
                 else
-                  const TextSpan(text: 'unstickied'),
-                const TextSpan(text: ' post '),
+                  TextSpan(text: L10n.of(context).modlog_unstickied),
+                TextSpan(text: ' ${L10n.of(context).modlog_post_separator} '),
                 TextSpan(
-                  text: '"${stickiedPost.post.name}"',
+                  text: '"${featuredPost.post.name}"',
                   style: TextStyle(color: theme.colorScheme.secondary),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => goToPost(
                           context,
-                          stickiedPost.instanceHost,
-                          stickiedPost.post.id,
+                          featuredPost.instanceHost,
+                          featuredPost.post.id,
                         ),
                 ),
               ],
@@ -150,10 +152,11 @@ class ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (removedComment.modRemoveComment.removed ?? false)
-                  const TextSpan(text: 'removed')
+                  TextSpan(text: L10n.of(context).modlog_removed)
                 else
-                  const TextSpan(text: 'restored'),
-                const TextSpan(text: ' comment '),
+                  TextSpan(text: L10n.of(context).modlog_restored),
+                TextSpan(
+                    text: ' ${L10n.of(context).modlog_comment_separator} '),
                 TextSpan(
                   text:
                       '"${removedComment.comment.content.replaceAll('\n', ' ')}"',
@@ -165,7 +168,7 @@ class ModlogTable extends StatelessWidget {
                           removedComment.post.id,
                         ),
                 ),
-                const TextSpan(text: ' by '),
+                TextSpan(text: ' ${L10n.of(context).modlog_by} '),
                 user(removedComment.commenter),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
@@ -179,10 +182,11 @@ class ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (removedCommunity.modRemoveCommunity.removed ?? false)
-                  const TextSpan(text: 'removed')
+                  TextSpan(text: L10n.of(context).modlog_removed)
                 else
-                  const TextSpan(text: 'restored'),
-                const TextSpan(text: ' community '),
+                  TextSpan(text: L10n.of(context).modlog_restored),
+                TextSpan(
+                    text: ' ${L10n.of(context).modlog_community_separator} '),
                 community(removedCommunity.community),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
@@ -196,11 +200,12 @@ class ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (bannedFromCommunity.modBanFromCommunity.banned ?? false)
-                  const TextSpan(text: 'banned ')
+                  TextSpan(text: '${L10n.of(context).modlog_banned} ')
                 else
-                  const TextSpan(text: 'unbanned '),
+                  TextSpan(text: '${L10n.of(context).modlog_unbanned} '),
                 user(bannedFromCommunity.bannedPerson),
-                const TextSpan(text: ' from community '),
+                TextSpan(
+                    text: ' ${L10n.of(context).modlog_community_separator} '),
                 community(bannedFromCommunity.community),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
@@ -214,9 +219,9 @@ class ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (banned.modBan.banned ?? false)
-                  const TextSpan(text: 'banned ')
+                  TextSpan(text: '${L10n.of(context).modlog_banned} ')
                 else
-                  const TextSpan(text: 'unbanned '),
+                  TextSpan(text: '${L10n.of(context).modlog_unbanned} '),
                 user(banned.bannedPerson),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
@@ -230,11 +235,12 @@ class ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (addedToCommunity.modAddCommunity.removed ?? false)
-                  const TextSpan(text: 'removed ')
+                  TextSpan(text: '${L10n.of(context).modlog_removed} ')
                 else
-                  const TextSpan(text: 'appointed '),
+                  TextSpan(text: '${L10n.of(context).modlog_appointed} '),
                 user(addedToCommunity.moddedPerson),
-                const TextSpan(text: ' as mod of '),
+                TextSpan(
+                    text: ' ${L10n.of(context).modlog_appointed_separator} '),
                 community(addedToCommunity.community),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
@@ -249,11 +255,12 @@ class ModlogTable extends StatelessWidget {
               children: [
                 if (transferredToCommunity.modTransferCommunity.removed ??
                     false)
-                  const TextSpan(text: 'removed ')
+                  TextSpan(text: '${L10n.of(context).modlog_removed} ')
                 else
-                  const TextSpan(text: 'transferred '),
+                  TextSpan(text: '${L10n.of(context).modlog_transferred} '),
                 community(transferredToCommunity.community),
-                const TextSpan(text: ' to '),
+                TextSpan(
+                    text: ' ${L10n.of(context).modlog_transferred_separator} '),
                 user(transferredToCommunity.moddedPerson),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
@@ -267,11 +274,11 @@ class ModlogTable extends StatelessWidget {
             text: TextSpan(
               children: [
                 if (added.modAdd.removed ?? false)
-                  const TextSpan(text: 'removed ')
+                  TextSpan(text: '${L10n.of(context).modlog_removed} ')
                 else
-                  const TextSpan(text: 'apointed '),
+                  TextSpan(text: '${L10n.of(context).modlog_appointed} '),
                 user(added.moddedPerson),
-                const TextSpan(text: ' as admin'),
+                TextSpan(text: ' ${L10n.of(context).modlog_admin_separator}'),
               ],
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -279,32 +286,9 @@ class ModlogTable extends StatelessWidget {
         ),
     ]..sort((a, b) => b.when.compareTo(a.when));
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(8),
-      scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        width: 1000,
-        child: Table(
-          border: TableBorder.all(color: theme.colorScheme.onSurface),
-          columnWidths: const {
-            0: FixedColumnWidth(80),
-            1: FixedColumnWidth(200),
-            2: FlexColumnWidth(),
-            3: FixedColumnWidth(200),
-          },
-          children: [
-            const TableRow(
-              children: [
-                Center(child: Text('when')),
-                Center(child: Text('mod')),
-                Center(child: Text('action')),
-                Center(child: Text('reason')),
-              ],
-            ),
-            for (final modlogEntry in modlogEntries) modlogEntry.build(context)
-          ],
-        ),
-      ),
+    return ListView(
+      shrinkWrap: true,
+      children: modlogEntries.map((e) => e.build(context)).toList(),
     );
   }
 }

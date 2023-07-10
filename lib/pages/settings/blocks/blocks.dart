@@ -4,6 +4,7 @@ import 'package:nested/nested.dart';
 
 import '../../../hooks/logged_in_action.dart';
 import '../../../hooks/stores.dart';
+import '../../../l10n/gen/l10n.dart';
 import '../../../l10n/l10n_from_string.dart';
 import '../../../stores/accounts_store.dart';
 import '../../../util/async_store_listener.dart';
@@ -24,7 +25,7 @@ class BlocksPage extends HookWidget {
       length: accStore.loggedInInstances.length,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Blocks'),
+          title: Text(L10n.of(context).blocks),
           bottom: TabBar(
             isScrollable: true,
             indicatorColor: Theme.of(context).colorScheme.primary,
@@ -127,9 +128,9 @@ class _UserBlocks extends HookWidget {
                       child: const BlockPersonTile(),
                     ),
                   if (store.blockedUsers!.isEmpty)
-                    const ListTile(
+                    ListTile(
                       title: Center(
-                        child: Text('No users blocked'),
+                        child: Text(L10n.of(context).no_users_blocked),
                       ),
                     ),
                   ListTile(
@@ -142,16 +143,17 @@ class _UserBlocks extends HookWidget {
                     onTap: store.userBlockingState.isLoading
                         ? null
                         : loggedInAction(
-                            (token) async {
+                            (userData) async {
                               final person =
                                   await BlockPersonDialog.show(context);
 
                               if (person != null) {
-                                await store.blockUser(token, person.person.id);
+                                await store.blockUser(
+                                    userData, person.person.id);
                               }
                             },
                           ),
-                    title: const Text('Block User'),
+                    title: Text(L10n.of(context).block_user),
                   ),
                   const Divider(),
                   for (final community in store.blockedCommunities!)
@@ -161,9 +163,9 @@ class _UserBlocks extends HookWidget {
                       child: const BlockCommunityTile(),
                     ),
                   if (store.blockedCommunities!.isEmpty)
-                    const ListTile(
+                    ListTile(
                       title: Center(
-                        child: Text('No communities blocked'),
+                        child: Text(L10n.of(context).no_communities_blocked),
                       ),
                     ),
                   ListTile(
@@ -176,19 +178,19 @@ class _UserBlocks extends HookWidget {
                     onTap: store.communityBlockingState.isLoading
                         ? null
                         : loggedInAction(
-                            (token) async {
+                            (userData) async {
                               final community =
                                   await BlockCommunityDialog.show(context);
 
                               if (community != null) {
                                 await store.blockCommunity(
-                                  token,
+                                  userData,
                                   community.community.id,
                                 );
                               }
                             },
                           ),
-                    title: const Text('Block Community'),
+                    title: Text(L10n.of(context).block_community),
                   ),
                 ],
               ],

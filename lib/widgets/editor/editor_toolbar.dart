@@ -4,12 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../markdown_formatter.dart';
+import '../../pages/pick_image.dart';
 import '../../resources/links.dart';
 import '../../url_launcher.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/extensions/spaced.dart';
-import '../../util/files.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/text_lines_iterator.dart';
@@ -150,16 +150,18 @@ class _ToolbarBody extends HookWidget {
         ObserverBuilder<EditorToolbarStore>(
           builder: (context, store) {
             return IconButton(
-              onPressed: loggedInAction((token) async {
+              onPressed: loggedInAction((userData) async {
                 if (store.imageUploadState.isLoading) {
                   return;
                 }
                 try {
-                  final pic = await pickImage();
+                  final pic = await Navigator.of(context).push(
+                    PickImagePage.route(),
+                  );
                   // pic is null when the picker was cancelled
 
                   if (pic != null) {
-                    final picUrl = await store.uploadImage(pic.path, token);
+                    final picUrl = await store.uploadImage(pic.path, userData);
 
                     if (picUrl != null) {
                       controller.reformatSimple('![]($picUrl)');
@@ -371,7 +373,7 @@ class AddLinkDialog extends HookWidget {
         ].spaced(10),
       ),
       actions: [
-        TextButton(
+        FilledButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(L10n.of(context).cancel)),
         ElevatedButton(

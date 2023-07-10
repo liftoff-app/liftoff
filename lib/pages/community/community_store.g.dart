@@ -13,16 +13,16 @@ mixin _$CommunityStore on _CommunityStore, Store {
       AsyncAction('_CommunityStore.refresh', context: context);
 
   @override
-  Future<void> refresh(Jwt? token) {
-    return _$refreshAsyncAction.run(() => super.refresh(token));
+  Future<void> refresh(UserData? userData) {
+    return _$refreshAsyncAction.run(() => super.refresh(userData));
   }
 
   late final _$subscribeAsyncAction =
       AsyncAction('_CommunityStore.subscribe', context: context);
 
   @override
-  Future<void> subscribe(Jwt token) {
-    return _$subscribeAsyncAction.run(() => super.subscribe(token));
+  Future<void> subscribe(UserData userData) {
+    return _$subscribeAsyncAction.run(() => super.subscribe(userData));
   }
 
   @override

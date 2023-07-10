@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../app_link_handler.dart';
+import '../hooks/stores.dart';
 import '../util/extensions/brightness.dart';
 import 'communities_tab.dart';
 import 'create_post/create_post_fab.dart';
@@ -27,6 +28,7 @@ class HomePage extends HookWidget {
     final theme = Theme.of(context);
     final currentTab = useState(0);
     final snackBarShowing = useState(false);
+    final accStore = useAccountsStore();
 
     useEffect(() {
       Future.microtask(
@@ -39,16 +41,25 @@ class HomePage extends HookWidget {
       return null;
     }, [theme.scaffoldBackgroundColor]);
 
+    useEffect(() {
+      accStore.checkNotifications(accStore.defaultUserData);
+
+      return null;
+    }, [accStore.defaultInstanceHost]);
+
     var tabCounter = 0;
 
     tabButton(IconData icon) {
       final tabNum = tabCounter++;
 
       return IconButton(
-        icon: Icon(icon),
-        color: tabNum == currentTab.value ? theme.colorScheme.secondary : null,
-        onPressed: () => currentTab.value = tabNum,
-      );
+          icon: Icon(icon),
+          color:
+              tabNum == currentTab.value ? theme.colorScheme.secondary : null,
+          onPressed: () async {
+            currentTab.value = tabNum;
+            await accStore.checkNotifications(accStore.defaultUserData);
+          });
     }
 
     return Scaffold(
@@ -89,21 +100,25 @@ class HomePage extends HookWidget {
       floatingActionButton: Platform.isAndroid ? const CreatePostFab() : null,
       floatingActionButtonLocation:
           Platform.isAndroid ? FloatingActionButtonLocation.centerDocked : null,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 7,
-        child: SizedBox(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              tabButton(Icons.home),
-              tabButton(Icons.list),
-              if (Platform.isAndroid) const SizedBox.shrink(),
-              if (Platform.isAndroid) const SizedBox.shrink(),
-              tabButton(Icons.search),
-              tabButton(Icons.person),
-            ],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+            boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 10)]),
+        child: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 7,
+          child: SizedBox(
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                tabButton(Icons.home),
+                tabButton(Icons.list),
+                if (Platform.isAndroid) const SizedBox.shrink(),
+                if (Platform.isAndroid) const SizedBox.shrink(),
+                tabButton(Icons.search),
+                tabButton(Icons.person),
+              ],
+            ),
           ),
         ),
       ),

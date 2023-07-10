@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../pages/view_on_menu.dart';
+import '../../stores/accounts_store.dart';
 import '../../url_launcher.dart';
 import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
@@ -64,8 +65,8 @@ class _CommentMoreMenuPopup extends HookWidget {
         final comment = store.comment.comment;
         final post = store.comment.post;
 
-        handleDelete(Jwt token) {
-          store.delete(token);
+        handleDelete(UserData userData) {
+          store.delete(userData);
           Navigator.of(context).pop();
         }
 
@@ -102,6 +103,12 @@ class _CommentMoreMenuPopup extends HookWidget {
 
                 Navigator.of(context).pop();
               },
+            ),
+            ListTile(
+              leading: const Icon(Icons.travel_explore),
+              title: Text(L10n.of(context).view_on),
+              onTap: () => ViewOnMenu.openForPost(context, comment.apId,
+                  isSingleComment: true),
             ),
             ListTile(
               leading: Icon(shareIcon),
@@ -187,9 +194,9 @@ class _CommentMoreMenuPopup extends HookWidget {
                     : const Icon(Icons.block),
                 title: Text(
                     '${store.comment.creatorBlocked ? L10n.of(context).unblock : L10n.of(context).block} ${store.comment.creator.preferredName}'),
-                onTap: loggedInAction((token) {
+                onTap: loggedInAction((userData) {
                   Navigator.of(context).pop();
-                  store.block(token);
+                  store.block(userData);
                 }),
               ),
             ListTile(
@@ -201,10 +208,10 @@ class _CommentMoreMenuPopup extends HookWidget {
                   ? null
                   : () {
                       Navigator.of(context).pop();
-                      loggedInAction((token) async {
+                      loggedInAction((userData) async {
                         final reason = await ReportDialog.show(context);
                         if (reason != null) {
-                          await store.report(token, reason);
+                          await store.report(userData, reason);
                         }
                       })();
                     },

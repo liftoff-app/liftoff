@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
-import '../../util/files.dart';
+import '../../stores/accounts_store.dart';
 import '../../util/observer_consumers.dart';
+import '../pick_image.dart';
 import 'create_post_store.dart';
 
 class CreatePostUrlField extends HookWidget {
@@ -23,12 +23,14 @@ class CreatePostUrlField extends HookWidget {
       useStore((CreatePostStore store) => store.instanceHost),
     );
 
-    uploadImage(Jwt token) async {
-      final pic = await pickImage();
+    uploadImage(UserData userData) async {
+      final pic = await Navigator.of(context).push(
+        PickImagePage.route(),
+      );
 
       // pic is null when the picker was cancelled
       if (pic != null) {
-        await context.read<CreatePostStore>().uploadImage(pic.path, token);
+        await context.read<CreatePostStore>().uploadImage(pic.path, userData);
       }
     }
 

@@ -1,6 +1,7 @@
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../stores/accounts_store.dart';
 import '../../util/async_store.dart';
 
 part 'community_store.g.dart';
@@ -26,11 +27,11 @@ abstract class _CommunityStore with Store {
   final blockingState = AsyncStore<BlockedCommunity>();
 
   @action
-  Future<void> refresh(Jwt? token) async {
+  Future<void> refresh(UserData? userData) async {
     await communityState.runLemmy(
       instanceHost,
       GetCommunity(
-        auth: token?.raw,
+        auth: userData?.jwt.raw,
         id: id,
         name: communityName,
       ),
@@ -38,7 +39,7 @@ abstract class _CommunityStore with Store {
     );
   }
 
-  Future<void> block(Jwt token) async {
+  Future<void> block(UserData userData) async {
     final state = communityState.asyncState;
     if (state is! AsyncStateData<FullCommunityView>) {
       throw StateError('communityState should be ready at this point');
@@ -49,7 +50,7 @@ abstract class _CommunityStore with Store {
       BlockCommunity(
         communityId: state.data.communityView.community.id,
         block: !state.data.communityView.blocked,
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
 
@@ -60,7 +61,7 @@ abstract class _CommunityStore with Store {
   }
 
   @action
-  Future<void> subscribe(Jwt token) async {
+  Future<void> subscribe(UserData userData) async {
     final state = communityState.asyncState;
 
     if (state is! AsyncStateData<FullCommunityView>) {
@@ -81,7 +82,7 @@ abstract class _CommunityStore with Store {
             return true;
           }
         }(),
-        auth: token.raw,
+        auth: userData.jwt.raw,
       ),
     );
 

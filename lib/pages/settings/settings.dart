@@ -11,12 +11,15 @@ import '../../l10n/l10n.dart';
 import '../../resources/app_theme.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
+import '../../util/extensions/iterators.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/about_tile.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/post/post.dart';
 import '../../widgets/radio_picker.dart';
+import '../full_post/comment_section.dart';
+import '../full_post/full_post_store.dart';
 import '../manage_account.dart';
 import 'add_account_page.dart';
 import 'add_instance_page.dart';
@@ -73,6 +76,13 @@ class SettingsPage extends HookWidget {
               goTo(context, (_) => const PostStyleConfigPage());
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.comment),
+            title: Text(L10n.of(context).comment_style),
+            onTap: () {
+              goTo(context, (_) => const CommentStyleConfigPage());
+            },
+          ),
           const AboutTile()
         ],
       ),
@@ -101,19 +111,12 @@ class AppearanceConfigPage extends StatelessWidget {
                   onChanged: (selected) {
                     if (selected != null) {
                       state.switchtheme(selected);
-                      if (selected == ThemeMode.dark) {
-                        state.setPrimaryColor(
-                            ThemeData.dark().colorScheme.secondary);
-                      } else {
-                        state.setPrimaryColor(
-                            ThemeData.light().colorScheme.primary);
-                      }
                     }
                   },
                 ),
               SwitchListTile.adaptive(
                 title: Text(L10n.of(context).amoled_dark_mode),
-                value: state.amoled,
+                value: state.amoledWanted,
                 onChanged: (checked) => state.switchamoled(),
               ),
               ListTile(
@@ -124,6 +127,7 @@ class AppearanceConfigPage extends StatelessWidget {
                     Text(L10n.of(context).primary_color),
                     IconButton(
                       onPressed: () {
+                        // Pull default values from the system themes
                         if (state.theme == ThemeMode.dark) {
                           state.setPrimaryColor(
                               ThemeData.dark().colorScheme.secondary);
@@ -268,7 +272,7 @@ class PostStyleConfigPage extends StatelessWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -307,7 +311,45 @@ class PostStyleConfigPage extends StatelessWidget {
                             mapValueToString: (value) =>
                                 value.round().toString(),
                             buttonBuilder: (context, displayValue, onPressed) =>
-                                TextButton(
+                                FilledButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(L10n.of(context).post_body_size),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                              16,
+                              17,
+                              18,
+                              19,
+                              20,
+                              21,
+                              22,
+                              23
+                            ],
+                            groupValue: store.postBodySize,
+                            onChanged: (value) => store.postBodySize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                FilledButton(
                               onPressed: onPressed,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -326,16 +368,228 @@ class PostStyleConfigPage extends StatelessWidget {
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockTextPostJson)))),
-                      if (state.amoled) gradient,
+                      if (state.useAmoled) gradient,
                       SizedBox(height: store.compactPostView ? 2 : 10),
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockMediaPost)))),
-                      if (state.amoled) gradient,
+                      if (state.useAmoled) gradient,
                       SizedBox(height: store.compactPostView ? 2 : 10),
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockLinkPost)))),
+                    ],
+                  )));
+    });
+  }
+}
+
+class CommentStyleConfigPage extends HookWidget {
+  const CommentStyleConfigPage();
+
+  @override
+  Widget build(BuildContext context) {
+    final postStore =
+        FullPostStore(postId: 51, instanceHost: 'stable.liftoff-app.org');
+    // ignore: cascade_invocations
+    postStore.sorting = CommentSortType.top;
+    // ignore: cascade_invocations
+    postStore.refresh();
+
+    return Consumer<AppTheme>(builder: (context, state, child) {
+      return Scaffold(
+          appBar: AppBar(title: Text(L10n.of(context).comment_style)),
+          body: ObserverBuilder<ConfigStore>(
+              builder: (context, store) => ListView(
+                    children: [
+                      const SizedBox(height: 12),
+                      _SectionHeading(L10n.of(context).font),
+                      ListTile(
+                        title: Text(L10n.of(context).comment_title_size),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                              16,
+                              17,
+                              18,
+                              19,
+                              20,
+                              21,
+                              22,
+                              23
+                            ],
+                            groupValue: store.commentTitleSize,
+                            onChanged: (value) =>
+                                store.commentTitleSize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                FilledButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(L10n.of(context).comment_time_stamp),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                              16,
+                              17,
+                              18,
+                              19,
+                              20,
+                              21,
+                              22,
+                              23
+                            ],
+                            groupValue: store.commentTimestampSize,
+                            onChanged: (value) =>
+                                store.commentTimestampSize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                FilledButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(L10n.of(context).comment_body_size),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                              16,
+                              17,
+                              18,
+                              19,
+                              20,
+                              21,
+                              22,
+                              23
+                            ],
+                            groupValue: store.commentBodySize,
+                            onChanged: (value) => store.commentBodySize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                FilledButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(L10n.of(context).comment_pill_size),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [8, 9, 10, 11, 12, 13, 14, 15, 16],
+                            groupValue: store.commentPillSize,
+                            onChanged: (value) => store.commentPillSize = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                FilledButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(L10n.of(context).comment_indent_width),
+                        trailing: SizedBox(
+                          width: 120,
+                          child: RadioPicker<double>(
+                            values: const [
+                              2,
+                              3,
+                              4,
+                              5,
+                              6,
+                              7,
+                              8,
+                            ],
+                            groupValue: store.commentIndentWidth,
+                            onChanged: (value) =>
+                                store.commentIndentWidth = value,
+                            mapValueToString: (value) =>
+                                value.round().toString(),
+                            buttonBuilder: (context, displayValue, onPressed) =>
+                                FilledButton(
+                              onPressed: onPressed,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(displayValue),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _SectionHeading(L10n.of(context).preview),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 400,
+                        child: ListView(
+                          children:
+                              CommentSection.buildComments(context, postStore)
+                                  .mapWithIndex((e, i) => e)
+                                  // i == 0 ? e : IgnorePointer(child: e))
+                                  .toList(),
+                        ),
+                      ),
                     ],
                   )));
     });
@@ -363,7 +617,7 @@ class GeneralConfigPage extends StatelessWidget {
                   onChanged: (value) => store.defaultSortType = value,
                   mapValueToString: (value) => value.value,
                   buttonBuilder: (context, displayValue, onPressed) =>
-                      TextButton(
+                      FilledButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -387,7 +641,7 @@ class GeneralConfigPage extends StatelessWidget {
                   onChanged: (value) => store.defaultCommentSort = value,
                   mapValueToString: (value) => value.value,
                   buttonBuilder: (context, displayValue, onPressed) =>
-                      TextButton(
+                      FilledButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -414,7 +668,7 @@ class GeneralConfigPage extends StatelessWidget {
                   onChanged: (value) => store.defaultListingType = value,
                   mapValueToString: (value) => value.value,
                   buttonBuilder: (context, displayValue, onPressed) =>
-                      TextButton(
+                      FilledButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -440,7 +694,7 @@ class GeneralConfigPage extends StatelessWidget {
                     store.locale = selected;
                   },
                   buttonBuilder: (context, displayValue, onPressed) =>
-                      TextButton(
+                      FilledButton(
                     onPressed: onPressed,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -466,6 +720,13 @@ class GeneralConfigPage extends StatelessWidget {
               value: store.useInAppBrowser,
               onChanged: (checked) {
                 store.useInAppBrowser = checked;
+              },
+            ),
+            SwitchListTile.adaptive(
+              title: Text(L10n.of(context).convert_webp_to_png),
+              value: store.convertWebpToPng,
+              onChanged: (checked) {
+                store.convertWebpToPng = checked;
               },
             ),
             const SizedBox(height: 12),
@@ -514,11 +775,11 @@ class _AccountOptions extends HookWidget {
               content: Text(L10n.of(context)
                   .remove_user_confirm_explanation('$username@$instanceHost')),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(L10n.of(context).no),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(L10n.of(context).yes),
                 ),
@@ -592,11 +853,11 @@ class AccountsConfigPage extends HookWidget {
               content: Text(L10n.of(context)
                   .remove_instance_confirm_explanation(instanceHost)),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(L10n.of(context).no),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(L10n.of(context).yes),
                 ),
@@ -666,7 +927,7 @@ class AccountsConfigPage extends HookWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 100),
-                  child: TextButton.icon(
+                  child: FilledButton.icon(
                     onPressed: () =>
                         Navigator.of(context).push(AddInstancePage.route()),
                     icon: const Icon(Icons.add),
