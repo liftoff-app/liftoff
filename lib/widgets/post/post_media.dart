@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../util/observer_consumers.dart';
 import '../cached_network_image.dart';
@@ -39,9 +39,7 @@ class PostMedia extends StatelessWidget {
               future: videoUrl,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  final videoController =
-                      VideoPlayerController.networkUrl(snapshot.data!);
-                  return VideoPlayer(videoController);
+                  return VideoPlayerScreen(snapshot.data!);
                 } else if (snapshot.hasError) {
                   return const Text('UNABLE TO GET VIDEO');
                 } else {
@@ -65,8 +63,9 @@ class PostMedia extends StatelessWidget {
 }
 
 Future<String> getRedgifAuthtoken() async {
-  final response =
-      await http.get(Uri.parse('https://api.redgifs.com/v2/auth/temporary'));
+  final response = await http.get(
+      Uri.parse('https://api.redgifs.com/v2/auth/temporary'),
+      headers: {'user-agent': 'liftoff'});
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     return json['token'];
@@ -81,11 +80,72 @@ Future<Uri> getRedgifUrl(String url) async {
 
   final response = await http.get(
       Uri.parse('https://api.redgifs.com/v2/gifs/${id}'),
-      headers: {'Authorization': 'Bearer $token'});
+      headers: {'Authorization': 'Bearer $token', 'user-agent': 'liftoff'});
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     return Uri.parse(json['gif']['urls']['sd']);
   } else {
     throw Exception("Unable to query redgifs for url");
+  }
+}
+
+class VideoPlayerScreen extends StatefulWidget {
+  final Uri url;
+  const VideoPlayerScreen(this.url, {super.key});
+
+  @override
+  State<VideoPlayerScreen> createState() => _VideoPlayerScreenState(url);
+}
+
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
+  final Uri url;
+  _VideoPlayerScreenState(this.url);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = VideoPlayerController.networkUrl(url,
+        httpHeaders: {'user-agent': 'liftoff'});
+
+    _initializeVideoPlayerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      ListTile(
+          leading: Icon(
+              _controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
+          title: Text(_controller.value.isPlaying ? 'Pause' : 'Play'),
+          onTap: () {
+            setState(() {
+              if (_controller.value.isPlaying) {
+                _controller.pause();
+              } else {
+                _controller.play();
+              }
+            });
+          }),
+      FutureBuilder(
+          future: _initializeVideoPlayerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller));
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          })
+    ]);
   }
 }
