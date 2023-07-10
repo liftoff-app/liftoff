@@ -706,5 +706,8 @@
   },
   "photo_picker_explanation": "Pick an image, then adjust the crop box to the right shape.\n\nYou can then drag the image until it's in the right place. \n\nResizing the crop box will zoom the selection in and out.",
   "@photo_picker_explanation": {
+  },
+  "accounts_explanation": "The first instance on this screen will be treated as your default in other screens, and the marked account will be the default on that instance.\n\nPress and hold on an account to make it your default on that instance.\n\nPress and hold an instance or account to remove it from this app. You can add it back later. You may lose some local settings but your bookmarks, subscriptions etc will still be held on your instance.",
+  "@accounts_explanation": {
   }
 }
