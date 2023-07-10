@@ -78,14 +78,15 @@ Future<Uri> getRedgifUrl(String url) async {
   final token = await getRedgifAuthtoken();
   final id = basename(File(url).path);
 
-  final details = await http.get(Uri.parse('https://api.redgifs.com/info'));
+  final details = await http.get(Uri.parse('https://api.redgifs.com/info'),
+      headers: {HttpHeaders.userAgentHeader: "ExoPlayer"});
 
   _logger.info('DETAILS: ${details.body}');
 
   final response = await http
       .get(Uri.parse('https://api.redgifs.com/v2/gifs/${id}'), headers: {
     HttpHeaders.authorizationHeader: 'Bearer $token',
-    HttpHeaders.userAgentHeader: 'liftoff/1.0'
+    HttpHeaders.userAgentHeader: 'ExoPlayer'
   });
 
   if (response.statusCode == 200) {
