@@ -65,7 +65,7 @@ class PostMedia extends StatelessWidget {
 Future<String> getRedgifAuthtoken() async {
   final response = await http.get(
       Uri.parse('https://api.redgifs.com/v2/auth/temporary'),
-      headers: {'user-agent': 'liftoff'});
+      headers: {HttpHeaders.userAgentHeader: 'liftoff/1.0'});
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     return json['token'];
@@ -78,12 +78,19 @@ Future<Uri> getRedgifUrl(String url) async {
   final token = await getRedgifAuthtoken();
   final id = basename(File(url).path);
 
-  final response = await http.get(
-      Uri.parse('https://api.redgifs.com/v2/gifs/${id}'),
-      headers: {'Authorization': 'Bearer $token', 'user-agent': 'liftoff'});
+  final details = await http.get(Uri.parse('https://api.redgifs.com/info'));
+
+  _logger.info('DETAILS: ${details.body}');
+
+  final response = await http
+      .get(Uri.parse('https://api.redgifs.com/v2/gifs/${id}'), headers: {
+    HttpHeaders.authorizationHeader: 'Bearer $token',
+    HttpHeaders.userAgentHeader: 'liftoff/1.0'
+  });
+
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
-    return Uri.parse(json['gif']['urls']['sd']);
+    return Uri.parse(json['gif']['urls']['hd']);
   } else {
     throw Exception("Unable to query redgifs for url");
   }
@@ -108,7 +115,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     super.initState();
 
     _controller = VideoPlayerController.networkUrl(url,
-        httpHeaders: {'user-agent': 'liftoff'});
+        httpHeaders: {HttpHeaders.userAgentHeader: 'Dart/3.0 (dart:io)'});
 
     _initializeVideoPlayerFuture = _controller.initialize();
   }
