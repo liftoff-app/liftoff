@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 
 bool isRedGif(String? url) {
-  return url != null && url.contains("redgifs.com");
+  return url != null && url.contains('redgifs.com');
 }
 
 //TODO Get a real API Key

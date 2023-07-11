@@ -6,8 +6,8 @@ import '../../util/observer_consumers.dart';
 import '../../util/redgif.dart';
 import '../cached_network_image.dart';
 import '../fullscreenable_image.dart';
-import 'post_video.dart' as video;
 import 'post_store.dart';
+import 'post_video.dart' as video;
 
 final _logger = Logger('postMedia');
 
