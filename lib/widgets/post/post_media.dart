@@ -78,16 +78,13 @@ Future<Uri> getRedgifUrl(String url) async {
   final token = await getRedgifAuthtoken();
   final id = basename(File(url).path);
 
-  final details = await http.get(Uri.parse('https://api.redgifs.com/info'),
-      headers: {HttpHeaders.userAgentHeader: "ExoPlayer"});
-
-  _logger.info('DETAILS: ${details.body}');
-
-  final response = await http
-      .get(Uri.parse('https://api.redgifs.com/v2/gifs/${id}'), headers: {
-    HttpHeaders.authorizationHeader: 'Bearer $token',
-    HttpHeaders.userAgentHeader: 'ExoPlayer'
-  });
+  final headers = {HttpHeaders.authorizationHeader: 'Bearer $token'};
+  if (Platform.isAndroid) {
+    headers.putIfAbsent(HttpHeaders.userAgentHeader, () => 'ExoPlayer');
+  }
+  final response = await http.get(
+      Uri.parse('https://api.redgifs.com/v2/gifs/${id}'),
+      headers: headers);
 
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
@@ -117,6 +114,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
     _controller = VideoPlayerController.networkUrl(url,
         httpHeaders: {HttpHeaders.userAgentHeader: 'Dart/3.0 (dart:io)'});
+    _controller
+      ..play()
+      ..setLooping(true);
 
     _initializeVideoPlayerFuture = _controller.initialize();
   }
@@ -147,9 +147,19 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           future: _initializeVideoPlayerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller));
+              return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (_controller.value.isPlaying) {
+                        _controller.pause();
+                      } else {
+                        _controller.play();
+                      }
+                    });
+                  },
+                  child: AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller)));
             } else {
               return const Center(child: CircularProgressIndicator());
             }
