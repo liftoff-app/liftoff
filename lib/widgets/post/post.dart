@@ -86,7 +86,6 @@ class _Post extends StatelessWidget {
             },
       child: ObserverBuilder<ConfigStore>(
         builder: (context, store) => WithSwipeActions(
-          instanceHost: postStore.postView.instanceHost,
           actions: [
             PostUpvoteAction(post: postStore, context: context),
             PostSaveAction(post: postStore, context: context),
