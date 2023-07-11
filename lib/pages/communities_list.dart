@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
+import '../stores/config_store.dart';
 import '../util/extensions/truncate.dart';
 import '../util/goto.dart';
+import '../util/observer_consumers.dart';
 import '../widgets/avatar.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
@@ -51,24 +53,35 @@ class CommunitiesListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Find a reasonable cutoff point for the description.
-    var desc = '';
-    if (community.community.description != null) {
-      desc = community.community.description!.truncate(200);
-      final par = desc.indexOf('\n');
-      if (par > 0) desc = desc.substring(0, par);
-    }
+    // var desc = '';
+    // if (community.community.description != null) {
+    //   desc = community.community.description!.truncate(200);
+    //   final par = desc.indexOf('\n');
+    //   if (par > 0) desc = desc.substring(0, par);
+    // }
+    final bodyFontSize = context.read<ConfigStore>().postBodySize;
 
     return ListTile(
       title: Text(community.community.name),
       subtitle: community.community.description != null
-          ? Opacity(
-              opacity: 0.7,
-              child: MarkdownText(
-                desc,
-                instanceHost: community.instanceHost,
+          ? SizedBox(
+              height: bodyFontSize * 2 + 5, // 2 lines + padding
+              child: ClipRect(
+                child: OverflowBox(
+                  alignment: Alignment.topCenter,
+                  maxHeight: double.infinity,
+                  child: Opacity(
+                    opacity: 0.7,
+                    child: MarkdownText(
+                      community.community.description!,
+                      instanceHost: community.instanceHost,
+                      fontSize: bodyFontSize,
+                    ),
+                  ),
+                ),
               ),
             )
-          : const SizedBox(height: 5),
+          : const SizedBox.shrink(),
       onTap: () => goToCommunity.byId(
           context, community.instanceHost, community.community.id),
       leading: Avatar(url: community.community.icon),

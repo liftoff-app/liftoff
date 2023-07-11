@@ -41,10 +41,9 @@ class Avatar extends HookWidget {
 
     final blankWidget = () {
       if (noBlank) return const SizedBox.shrink();
-
-      return SizedBox(
-        width: radius * 2,
-        height: radius * 2,
+      return CircleAvatar(
+        radius: radius,
+        backgroundColor: Colors.grey.withOpacity(0.2),
       );
     }();
 
