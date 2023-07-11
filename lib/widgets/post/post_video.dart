@@ -94,8 +94,9 @@ class _PostVideoState extends State<PostVideo> {
 }
 
 Widget buildRedGifVideo(Uri url) {
+  final redgifUrl = redgif.getHDUrl(url);
   return FutureBuilder(
-      future: redgif.getHDUrl(url),
+      future: redgifUrl,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return PostVideo(snapshot.data!);
