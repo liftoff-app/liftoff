@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../../util/redgif.dart' as redgif;
 
+//TODO Support for full screen video
+
 class PostVideo extends StatefulWidget {
   final Uri url;
   const PostVideo(this.url, {super.key});
