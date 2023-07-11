@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 
 bool isRedGif(String? url) {
-  return url != null && url.contains("redgif.com");
+  return url != null && url.contains("redgifs.com");
 }
 
 //TODO Get a real API Key
@@ -22,7 +22,7 @@ Future<String> _getAuthtoken() async {
   }
 }
 
-Future<Map<String, String>> _getUrls(Uri url) async {
+Future<Uri> getHDUrl(Uri url) async {
   final token = await _getAuthtoken();
   final id = basename(url.path);
 
@@ -35,18 +35,8 @@ Future<Map<String, String>> _getUrls(Uri url) async {
 
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
-    return json['gif']['urls'];
+    return Uri.parse(json['gif']['urls']['hd']);
   } else {
     throw Exception('Unable to query redgifs for url');
   }
-}
-
-Future<Uri> getHDUrl(Uri url) async {
-  final urls = await _getUrls(url);
-  return Uri.parse(urls['hd']!);
-}
-
-Future<Uri> getSDUrl(Uri url) async {
-  final urls = await _getUrls(url);
-  return Uri.parse(urls['sd']!);
 }
