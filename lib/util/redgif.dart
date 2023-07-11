@@ -11,9 +11,8 @@ bool isRedGif(String? url) {
 //TODO Get a real API Key
 //TODO Cache this value (looks to be good for about a day)
 Future<String> _getAuthtoken() async {
-  final response = await http.get(
-      Uri.parse('https://api.redgifs.com/v2/auth/temporary'),
-      headers: {HttpHeaders.userAgentHeader: 'liftoff/1.0'});
+  final response =
+      await http.get(Uri.parse('https://api.redgifs.com/v2/auth/temporary'));
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     return json['token'];
