@@ -93,7 +93,7 @@ class _PostVideoState extends State<PostVideo> {
   }
 }
 
-buildRedGifVideo(Uri url) {
+Widget buildRedGifVideo(Uri url) {
   return FutureBuilder(
       future: redgif.getHDUrl(url),
       builder: (context, snapshot) {
