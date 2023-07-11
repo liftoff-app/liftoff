@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../../util/redgif.dart' as redgif;
@@ -22,7 +24,10 @@ class _PostVideoState extends State<PostVideo> {
   void initState() {
     super.initState();
 
-    _controller = VideoPlayerController.networkUrl(url);
+    _controller = VideoPlayerController.networkUrl(url, httpHeaders: {
+      HttpHeaders.userAgentHeader:
+          Platform.isAndroid ? 'ExoPlayer' : 'Dart/3.0 (dart:io)'
+    });
     _controller
       ..play()
       ..setLooping(true)
@@ -91,9 +96,8 @@ class _PostVideoState extends State<PostVideo> {
 }
 
 Widget buildRedGifVideo(Uri url) {
-  final redgifUrl = redgif.getHDUrl(url);
   return FutureBuilder(
-      future: redgifUrl,
+      future: redgif.getHDUrl(url),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return PostVideo(snapshot.data!);
