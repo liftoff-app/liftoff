@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../../util/redgif.dart' as redgif;
@@ -24,8 +22,7 @@ class _PostVideoState extends State<PostVideo> {
   void initState() {
     super.initState();
 
-    _controller = VideoPlayerController.networkUrl(url,
-        httpHeaders: {HttpHeaders.userAgentHeader: 'Dart/3.0 (dart:io)'});
+    _controller = VideoPlayerController.networkUrl(url);
     _controller
       ..play()
       ..setLooping(true)
