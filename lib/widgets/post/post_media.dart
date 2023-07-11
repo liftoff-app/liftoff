@@ -8,8 +8,10 @@ import 'package:path/path.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../util/observer_consumers.dart';
+import '../../util/redgif.dart';
 import '../cached_network_image.dart';
 import '../fullscreenable_image.dart';
+import 'post_video.dart' as video;
 import 'post_store.dart';
 
 final _logger = Logger('postMedia');
@@ -23,34 +25,25 @@ class PostMedia extends StatelessWidget {
     return ObserverBuilder<PostStore>(
       builder: (context, store) {
         final post = store.postView.post;
-        final isRedgif = store.urlDomain == 'redgifs.com';
+        final isRedgif = isRedGif(store.urlDomain);
+
         if (!store.hasMedia && !isRedgif) return const SizedBox();
 
-        final url = post.url!; // hasMedia returns false if url is null
-        final path = File(url);
+        final url =
+            Uri.parse(post.url!); // hasMedia returns false if url is null
 
         _logger.info(
-            'MEDIA URL: extension: ${extension(path.path)} host: ${store.urlDomain}');
+            'MEDIA URL: extension: ${extension(url.path)} host: ${store.urlDomain}');
 
-        if ('.mp4' == extension(path.path) || isRedgif) {
-          //TODO Add mp4 support
-          final videoUrl = getRedgifUrl(url);
-          return FutureBuilder(
-              future: videoUrl,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return VideoPlayerScreen(snapshot.data!);
-                } else if (snapshot.hasError) {
-                  return const Text('UNABLE TO GET VIDEO');
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              });
+        if (isRedgif) {
+          return video.buildRedGifVideo(url);
+        } else if ('.mp4' == extension(url.path) || isRedgif) {
+          return video.PostVideo(url);
         } else {
           return FullscreenableImage(
-            url: url,
+            url: url.toString(),
             child: CachedNetworkImage(
-              imageUrl: url,
+              imageUrl: url.toString(),
               errorBuilder: (_, ___) => const Icon(Icons.warning),
               loadingBuilder: (context, progress) =>
                   CircularProgressIndicator.adaptive(value: progress?.progress),
@@ -82,15 +75,14 @@ Future<Uri> getRedgifUrl(String url) async {
   if (Platform.isAndroid) {
     headers.putIfAbsent(HttpHeaders.userAgentHeader, () => 'ExoPlayer');
   }
-  final response = await http.get(
-      Uri.parse('https://api.redgifs.com/v2/gifs/${id}'),
-      headers: headers);
+  final response = await http
+      .get(Uri.parse('https://api.redgifs.com/v2/gifs/$id'), headers: headers);
 
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     return Uri.parse(json['gif']['urls']['hd']);
   } else {
-    throw Exception("Unable to query redgifs for url");
+    throw Exception('Unable to query redgifs for url');
   }
 }
 
@@ -116,7 +108,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         httpHeaders: {HttpHeaders.userAgentHeader: 'Dart/3.0 (dart:io)'});
     _controller
       ..play()
-      ..setLooping(true);
+      ..setLooping(true)
+      ..setVolume(0);
 
     _initializeVideoPlayerFuture = _controller.initialize();
   }
@@ -127,35 +120,47 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     super.dispose();
   }
 
+  void togglePlay() {
+    if (_controller.value.isPlaying) {
+      _controller.pause();
+    } else {
+      _controller.play();
+    }
+  }
+
+  void toggleMute() {
+    if (_controller.value.volume == 0) {
+      _controller.setVolume(1);
+    } else {
+      _controller.setVolume(0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      ListTile(
-          leading: Icon(
-              _controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
-          title: Text(_controller.value.isPlaying ? 'Pause' : 'Play'),
-          onTap: () {
-            setState(() {
-              if (_controller.value.isPlaying) {
-                _controller.pause();
-              } else {
-                _controller.play();
-              }
-            });
-          }),
+      ButtonBar(children: [
+        IconButton(
+            onPressed: () {
+              setState(togglePlay);
+            },
+            icon: Icon(
+                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow)),
+        IconButton(
+            onPressed: () {
+              setState(toggleMute);
+            },
+            icon: Icon(_controller.value.volume == 0.0
+                ? Icons.volume_off
+                : Icons.volume_up))
+      ]),
       FutureBuilder(
           future: _initializeVideoPlayerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      if (_controller.value.isPlaying) {
-                        _controller.pause();
-                      } else {
-                        _controller.play();
-                      }
-                    });
+                    setState(togglePlay);
                   },
                   child: AspectRatio(
                       aspectRatio: _controller.value.aspectRatio,
