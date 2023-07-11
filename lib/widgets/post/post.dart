@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
 
+import '../../actions/post.dart';
 import '../../pages/full_post/full_post.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
@@ -9,6 +10,7 @@ import '../../util/extensions/api.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../nsfw_hider.dart';
+import '../swipe_actions.dart';
 import 'post_actions.dart';
 import 'post_body.dart';
 import 'post_info_section.dart';
@@ -21,6 +23,8 @@ import 'post_title.dart';
 class PostTile extends StatelessWidget {
   final PostStore postStore;
   final IsFullPost fullPost;
+
+  static const double rounding = 10;
 
   const PostTile.fromPostStore(this.postStore, {this.fullPost = true});
   PostTile.fromPostView(PostView post, {this.fullPost = false})
@@ -81,52 +85,59 @@ class _Post extends StatelessWidget {
                   .push(FullPostPage.fromPostStoreRoute(postStore));
             },
       child: ObserverBuilder<ConfigStore>(
-        builder: (context, store) => DecoratedBox(
-          decoration: BoxDecoration(
-            boxShadow: store.postCardShadow
-                ? const [BoxShadow(blurRadius: 15, color: Colors.black45)]
-                : null,
-            color: theme.cardColor,
-            borderRadius: store.postRoundedCorners
-                ? const BorderRadius.all(Radius.circular(10))
-                : const BorderRadius.all(Radius.circular(5)),
-          ),
-          child: Material(
-            type: MaterialType.transparency,
-            child: Column(
-              children: [
-                if (isFullPost) ...[
-                  const PostInfoSection(),
-                  Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 600),
-                      child: Column(children: [
-                        const PostTitle(),
-                        possiblyBlurred,
-                        const PostActions(),
-                      ]),
-                    ),
-                  ),
-                ] else if (store.compactPostView) ...[
-                  const PostInfoSection(),
-                  const PostTitle(),
-                  const PostActions(),
-                ] else ...[
-                  const PostInfoSection(),
-                  Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 600),
-                      child: Column(
-                        children: [
+        builder: (context, store) => WithSwipeActions(
+          instanceHost: postStore.postView.instanceHost,
+          actions: [
+            PostUpvoteAction(post: postStore, context: context),
+            PostSaveAction(post: postStore, context: context),
+          ],
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              boxShadow: store.postCardShadow
+                  ? const [BoxShadow(blurRadius: 15, color: Colors.black45)]
+                  : null,
+              color: theme.cardColor,
+              borderRadius: store.postRoundedCorners
+                  ? const BorderRadius.all(Radius.circular(PostTile.rounding))
+                  : const BorderRadius.all(Radius.circular(5)),
+            ),
+            child: Material(
+              type: MaterialType.transparency,
+              child: Column(
+                children: [
+                  if (isFullPost) ...[
+                    const PostInfoSection(),
+                    Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 600),
+                        child: Column(children: [
                           const PostTitle(),
                           possiblyBlurred,
                           const PostActions(),
-                        ],
+                        ]),
                       ),
                     ),
-                  ),
-                ]
-              ],
+                  ] else if (store.compactPostView) ...[
+                    const PostInfoSection(),
+                    const PostTitle(),
+                    const PostActions(),
+                  ] else ...[
+                    const PostInfoSection(),
+                    Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 600),
+                        child: Column(
+                          children: [
+                            const PostTitle(),
+                            possiblyBlurred,
+                            const PostActions(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ]
+                ],
+              ),
             ),
           ),
         ),
