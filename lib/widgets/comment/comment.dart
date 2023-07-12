@@ -261,9 +261,8 @@ class _CommentWidget extends HookWidget {
                       ),
                       if (creator.isCakeDay) const Text(' 🍰'),
                       if (creator.id ==
-                          (_tryGetUserData(context, store.comment.instanceHost)
-                                  ?.userId ??
-                              -1))
+                          _tryGetUserData(context, store.comment.instanceHost)
+                              ?.userId)
                         _CommentTag(
                             L10n.of(context).comment_tag_you, Colors.indigo),
                       if (store.isOP)
