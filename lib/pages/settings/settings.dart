@@ -751,7 +751,6 @@ class GeneralConfigPage extends HookWidget {
                   store.blurNsfw = checked;
                 },
               ),
-              // const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -760,6 +759,7 @@ class GeneralConfigPage extends HookWidget {
                     Text(L10n.of(context).instance_filter,
                         style: TextStyle(fontSize: store.commentTitleSize)),
                     TextField(
+                      maxLength: 40, // Don't let them go mad...
                       focusNode: instanceFilterFocusNode,
                       controller: instanceFilterController,
                       onChanged: (change) async {
