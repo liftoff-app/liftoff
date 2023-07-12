@@ -2,16 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logging/logging.dart';
 
 import '../actions/abstract_action.dart';
-import '../hooks/logged_in_action.dart';
-import '../util/observer_consumers.dart';
 import 'post/post.dart';
-import 'post/post_store.dart';
 
-final _logger = Logger('SwipeActions');
-
+/// Widget that wraps [child] and allows for swipe actions to be performed on it.
+/// [actions] are the actions that can be performed, and [onTrigger] is called
+/// when the user triggers an action.
 class WithSwipeActions extends HookWidget {
   final Widget child;
   final List<LiftoffAction> actions;
@@ -31,7 +28,15 @@ class WithSwipeActions extends HookWidget {
       begin: Offset.zero,
       end: const Offset(-1, 0),
     ).animate(animationController);
+
+    // This starts at -1, and must be dragged to > 0 (at least 2 spaces) to
+    // trigger an action That way, the user has a chance to see the action
+    // without triggering it
     final activeActionIndex = useState(-1);
+    final activeAction = activeActionIndex.value > 0
+        ? actions[min(activeActionIndex.value, actions.length) - 1]
+        : null;
+
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         final newPosition = animationController.value -
@@ -45,30 +50,30 @@ class WithSwipeActions extends HookWidget {
         }
       },
       onHorizontalDragEnd: (details) {
+        // if the user returns the widget to normal, do nothing
         if (activeActionIndex.value > 0) {
           onTrigger(actions[activeActionIndex.value - 1]);
         }
+
+        // reset and put the widget back to normal
         activeActionIndex.value = -1;
         animationController.reverse();
       },
       child: Stack(children: [
-        if (activeActionIndex.value > 0)
+        if (activeAction != null)
           Positioned(
             right: 0,
             top: PostTile.rounding,
             bottom: PostTile.rounding,
             left: 0,
             child: ColoredBox(
-                color: actions[min(activeActionIndex.value, actions.length) - 1]
-                    .activeColor,
+                color: activeAction.activeColor,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: EdgeInsets.only(
                         right: MediaQuery.of(context).size.width / 10),
-                    child: Icon(actions[
-                            min(activeActionIndex.value, actions.length) - 1]
-                        .icon),
+                    child: Icon(activeAction.icon),
                   ),
                 )),
           ),

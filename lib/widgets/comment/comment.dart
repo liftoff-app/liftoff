@@ -219,14 +219,7 @@ class _CommentWidget extends HookWidget {
                   actions: [
                     CommentUpvoteAction(comment: store, context: context)
                   ],
-                  onTrigger: (action) {
-                    _logger.info('Triggered $action');
-                    // doesn't seem to do anything
-                    loggedInAction(action.invoke);
-
-                    // doesn't work even if I just do:
-                    // loggedInAction(store.upVote);
-                  },
+                  onTrigger: (action) => loggedInAction(action.invoke)(),
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     margin: EdgeInsets.only(
