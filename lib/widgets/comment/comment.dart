@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:logging/logging.dart';
 import 'package:nested/nested.dart';
 
 import '../../comment_tree.dart';
@@ -11,6 +10,7 @@ import '../../hooks/logged_in_action.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../liftoff_action.dart';
+import '../../stores/accounts_store.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
@@ -125,8 +125,6 @@ class CommentWidget extends StatelessWidget {
   }
 }
 
-final _logger = Logger('_CommentWidget');
-
 class _CommentWidget extends HookWidget {
   static const colors = [
     Colors.pink,
@@ -138,6 +136,9 @@ class _CommentWidget extends HookWidget {
 
   static const indentWidth = 6.0;
   const _CommentWidget();
+  static UserData? _tryGetUserData(BuildContext context, String instanceHost) {
+    return context.read<AccountsStore>().defaultUserDataFor(instanceHost);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -220,14 +221,13 @@ class _CommentWidget extends HookWidget {
                     CommentUpvoteAction(comment: store, context: context),
                     CommentSaveAction(comment: store),
                   ],
-                  onTrigger: (action) => loggedInAction(action.invoke)(),
+                  onTrigger: (action) => loggedInAction(action)(),
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     margin: EdgeInsets.only(
                       left: max(store.depth * indentWidth, 0),
                     ),
                     decoration: BoxDecoration(
-                      color: theme.cardColor,
                       border: Border(
                         left: store.depth > 0
                             ? BorderSide(
@@ -239,6 +239,7 @@ class _CommentWidget extends HookWidget {
                             : BorderSide.none,
                         top: const BorderSide(width: 0.2),
                       ),
+                      color: theme.cardColor,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,26 +258,31 @@ class _CommentWidget extends HookWidget {
                                 ),
                               ),
                             ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () =>
-                                  goToUser.fromPersonSafe(context, creator),
-                              child: Text(
-                                creator.originPreferredName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: context
-                                      .read<ConfigStore>()
-                                      .commentTitleSize,
-                                  color: theme.colorScheme.secondary,
-                                ),
+                          InkWell(
+                            onTap: () =>
+                                goToUser.fromPersonSafe(context, creator),
+                            child: Text(
+                              creator.originPreferredName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: context
+                                    .read<ConfigStore>()
+                                    .commentTitleSize,
+                                color: theme.colorScheme.secondary,
                               ),
                             ),
                           ),
                           if (creator.isCakeDay) const Text(' 🍰'),
+                          if (creator.id ==
+                              _tryGetUserData(
+                                      context, store.comment.instanceHost)
+                                  ?.userId)
+                            _CommentTag(L10n.of(context).comment_tag_you,
+                                Colors.indigo),
                           if (store.isOP)
-                            _CommentTag('OP', theme.colorScheme.secondary),
+                            _CommentTag(L10n.of(context).comment_tag_op,
+                                theme.colorScheme.secondary),
                           if (creator.admin)
                             _CommentTag(
                               L10n.of(context).admin.toUpperCase(),

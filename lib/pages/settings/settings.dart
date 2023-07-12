@@ -921,6 +921,10 @@ class AccountsConfigPage extends HookWidget {
       ),
       body: ListView(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(L10n.of(context).accounts_explanation),
+          ),
           if (accountsStore.instances.isEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
