@@ -6,7 +6,7 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:logging/logging.dart';
 import 'package:nested/nested.dart';
 
-import '../../actions/post.dart';
+import '../../liftoff_action.dart';
 import '../../comment_tree.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../hooks/stores.dart';
@@ -217,7 +217,8 @@ class _CommentWidget extends HookWidget {
             children: [
               WithSwipeActions(
                   actions: [
-                    CommentUpvoteAction(comment: store, context: context)
+                    CommentUpvoteAction(comment: store, context: context),
+                    CommentSaveAction(comment: store),
                   ],
                   onTrigger: (action) => loggedInAction(action.invoke)(),
                   child: Container(
