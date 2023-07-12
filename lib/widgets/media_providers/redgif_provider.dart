@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'liftoff_media_provider.dart';
 
 class RedgifProvider implements LiftoffMediaProvider {
+  const RedgifProvider();
   static String? _authToken;
 
   Future<Uri> _getRedgifUrl(Uri url, {allowRetries = true}) async {

@@ -3,9 +3,10 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 
 import '../../util/observer_consumers.dart';
-import '../../util/redgif.dart';
 import '../cached_network_image.dart';
 import '../fullscreenable_image.dart';
+import '../media_providers/liftoff_media_provider.dart';
+import '../media_providers/redgif_provider.dart';
 import 'post_store.dart';
 import 'post_video.dart' as video;
 
@@ -15,24 +16,26 @@ final _logger = Logger('postMedia');
 class PostMedia extends StatelessWidget {
   const PostMedia();
 
+  static const redgifProvider = RedgifProvider();
+  static const mp4Provider = MP4MediaProvider();
+
   @override
   Widget build(BuildContext context) {
     return ObserverBuilder<PostStore>(
       builder: (context, store) {
         final post = store.postView.post;
-        final isRedgif = isRedGif(store.urlDomain);
 
-        if (!store.hasMedia && !isRedgif) return const SizedBox();
+        if (!store.hasMedia && post.url == null) return const SizedBox();
 
         final url =
             Uri.parse(post.url!); // hasMedia returns false if url is null
 
-        _logger.info(
+        _logger.finer(
             'MEDIA URL: extension: ${extension(url.path)} host: ${store.urlDomain}');
 
-        if (isRedgif) {
+        if (redgifProvider.providesFor(url)) {
           return video.buildRedGifVideo(url);
-        } else if ('.mp4' == extension(url.path)) {
+        } else if (mp4Provider.providesFor(url)) {
           return video.PostVideo(url);
         } else {
           return FullscreenableImage(

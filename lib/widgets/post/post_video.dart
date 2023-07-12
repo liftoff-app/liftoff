@@ -1,28 +1,30 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
-import '../../util/redgif.dart' as redgif;
+import '../media_providers/liftoff_media_provider.dart';
 
 //TODO Support for full screen video
 
 class PostVideo extends StatefulWidget {
-  final Uri url;
-  const PostVideo(this.url, {super.key});
+  final LiftoffMediaProvider mediaProvider;
+  const PostVideo(this.mediaProvider, {super.key});
 
   @override
-  State<PostVideo> createState() => _PostVideoState(url);
+  State<PostVideo> createState() => _PostVideoState(mediaProvider);
 }
 
 class _PostVideoState extends State<PostVideo> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
-  final Uri url;
-  _PostVideoState(this.url);
+  final LiftoffMediaProvider mediaProvider;
+  _PostVideoState(this.mediaProvider);
 
   @override
   void initState() {
     super.initState();
+    urlSnapshot = useFuture(mediaProvider.getMediaUrl(url))
 
     _controller = VideoPlayerController.networkUrl(url, httpHeaders: {
       HttpHeaders.userAgentHeader:
