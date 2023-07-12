@@ -50,9 +50,9 @@ class WithSwipeActions extends HookWidget {
         }
       },
       onHorizontalDragEnd: (details) {
-        // if the user returns the widget to normal, do nothing
-        if (activeActionIndex.value > 0) {
-          onTrigger(actions[activeActionIndex.value - 1]);
+        // only trigger if the user has dragged far enough
+        if (activeAction != null) {
+          onTrigger(activeAction);
         }
 
         // reset and put the widget back to normal

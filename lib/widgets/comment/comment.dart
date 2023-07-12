@@ -221,7 +221,7 @@ class _CommentWidget extends HookWidget {
                     CommentUpvoteAction(comment: store, context: context),
                     CommentSaveAction(comment: store),
                   ],
-                  onTrigger: (action) => loggedInAction(action)(),
+                  onTrigger: (action) => loggedInAction(action.invoke)(),
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     margin: EdgeInsets.only(
