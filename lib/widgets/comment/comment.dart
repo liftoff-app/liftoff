@@ -6,11 +6,11 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:logging/logging.dart';
 import 'package:nested/nested.dart';
 
-import '../../liftoff_action.dart';
 import '../../comment_tree.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
+import '../../liftoff_action.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
