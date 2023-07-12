@@ -9,7 +9,7 @@ import 'liftoff_media_provider.dart';
 class RedgifProvider implements LiftoffMediaProvider {
   static String? _authToken;
 
-  Future<Uri> _getRedgifUrl(Uri url, {allow_retries = true}) async {
+  Future<Uri> _getRedgifUrl(Uri url, {allowRetries = true}) async {
     final token = await _getAuthtoken();
     final id = basename(url.path);
 
@@ -25,9 +25,9 @@ class RedgifProvider implements LiftoffMediaProvider {
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       return Uri.parse(json['gif']['urls']['hd']);
-    } else if (allow_retries && (statusCode == 401 || statusCode == 403)) {
+    } else if (allowRetries && (statusCode == 401 || statusCode == 403)) {
       _authToken = null;
-      return _getRedgifUrl(url, allow_retries: false);
+      return _getRedgifUrl(url, allowRetries: false);
     } else {
       throw Exception('Unable to query redgifs for url');
     }
