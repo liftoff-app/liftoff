@@ -42,8 +42,8 @@ class WithSwipeActions extends HookWidget {
         final newPosition = animationController.value -
             details.primaryDelta! / MediaQuery.of(context).size.width;
 
-        // each action is 1/10 of the screen
-        final newActiveActionIndex = newPosition ~/ 0.1;
+        // each action is 1/5 of the screen
+        final newActiveActionIndex = newPosition ~/ 0.2;
         if (newActiveActionIndex <= actions.length) {
           animationController.value = newPosition;
           activeActionIndex.value = newActiveActionIndex;
