@@ -39,6 +39,22 @@ mixin _$PostStore on _PostStore, Store {
     });
   }
 
+  late final _$newCommentsAtom =
+      Atom(name: '_PostStore.newComments', context: context);
+
+  @override
+  ObservableList<CommentView> get newComments {
+    _$newCommentsAtom.reportRead();
+    return super.newComments;
+  }
+
+  @override
+  set newComments(ObservableList<CommentView> value) {
+    _$newCommentsAtom.reportWrite(value, super.newComments, () {
+      super.newComments = value;
+    });
+  }
+
   late final _$saveAsyncAction =
       AsyncAction('_PostStore.save', context: context);
 
@@ -125,9 +141,21 @@ mixin _$PostStore on _PostStore, Store {
   }
 
   @override
+  void addComment(CommentView commentView) {
+    final _$actionInfo =
+        _$_PostStoreActionController.startAction(name: '_PostStore.addComment');
+    try {
+      return super.addComment(commentView);
+    } finally {
+      _$_PostStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 postView: ${postView},
+newComments: ${newComments},
 urlDomain: ${urlDomain},
 hasMedia: ${hasMedia}
     ''';

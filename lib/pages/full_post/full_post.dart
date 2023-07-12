@@ -14,14 +14,11 @@ import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
-import '../../util/share.dart';
 import '../../widgets/failed_to_load.dart';
 import '../../widgets/post/post.dart';
 import '../../widgets/post/post_more_menu.dart';
 import '../../widgets/post/post_store.dart';
-import '../../widgets/post/save_post_button.dart';
 import '../../widgets/pull_to_refresh.dart';
-import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/write_comment.dart';
 import '../federation_resolver.dart';
 import '../view_on_menu.dart';
@@ -35,7 +32,6 @@ class FullPostPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
-    final shareButtonKey = GlobalKey();
     final fullPostStore = context.read<FullPostStore>();
     var scrollOffset = 0.0;
 
@@ -76,19 +72,6 @@ class FullPostPage extends HookWidget {
 
           // VARIABLES
 
-          sharePost() {
-            final renderbox =
-                shareButtonKey.currentContext!.findRenderObject()! as RenderBox;
-            final position = renderbox.localToGlobal(Offset.zero);
-
-            return share(post.post.apId,
-                context: context,
-                sharePositionOrigin: Rect.fromPoints(
-                    position,
-                    position.translate(
-                        renderbox.size.width, renderbox.size.height)));
-          }
-
           comment() async {
             final newComment = await Navigator.of(context).push(
               WriteComment.toPostRoute(post.post),
@@ -117,36 +100,16 @@ class FullPostPage extends HookWidget {
                 onTap: tapScrollAction,
               ),
               centerTitle: false,
+              leadingWidth: 25,
               title: GestureDetector(
                 onTap: tapScrollAction,
-                child: RevealAfterScroll(
-                  scrollController: scrollController,
-                  after: 65,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Text(
-                      '${post.community.originPreferredName} > '
-                      '"${post.post.name}"',
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
+                child: Text(
+                  '${post.community.originPreferredName}: '
+                  '"${post.post.name}"',
+                  overflow: TextOverflow.fade,
                 ),
               ),
               actions: [
-                IconButton(
-                  key: shareButtonKey,
-                  icon: Icon(shareIcon),
-                  onPressed: sharePost,
-                ),
-                MobxProvider.value(
-                  value: postStore,
-                  child: const SavePostButton(),
-                ),
-                if (!Platform.isAndroid && !post.post.locked)
-                  IconButton(
-                    onPressed: replyLoggedInAction((_) => comment()),
-                    icon: const Icon(Icons.reply),
-                  ),
                 IconButton(
                   icon: Icon(moreIcon),
                   onPressed: () => PostMoreMenuButton.show(
