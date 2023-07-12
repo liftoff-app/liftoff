@@ -61,11 +61,7 @@ class WithSwipeActions extends HookWidget {
       },
       child: Stack(children: [
         if (activeAction != null)
-          Positioned(
-            right: 0,
-            top: PostTile.rounding,
-            bottom: PostTile.rounding,
-            left: 0,
+          Positioned.fill(
             child: ColoredBox(
                 color: activeAction.activeColor,
                 child: Align(
