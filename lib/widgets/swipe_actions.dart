@@ -37,6 +37,7 @@ class WithSwipeActions extends HookWidget {
         : null;
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onHorizontalDragUpdate: (details) {
         final newPosition = animationController.value -
             details.primaryDelta! / MediaQuery.of(context).size.width;
