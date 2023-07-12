@@ -15,12 +15,13 @@ final _logger = Logger('SwipeActions');
 class WithSwipeActions extends HookWidget {
   final Widget child;
   final List<LiftoffAction> actions;
+  final void Function(LiftoffAction) onTrigger;
 
-  const WithSwipeActions({
-    super.key,
-    required this.child,
-    required this.actions,
-  });
+  const WithSwipeActions(
+      {super.key,
+      required this.child,
+      required this.actions,
+      required this.onTrigger});
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +32,6 @@ class WithSwipeActions extends HookWidget {
       end: const Offset(-1, 0),
     ).animate(animationController);
     final activeActionIndex = useState(-1);
-    final loggedInAction = useLoggedInAction(context
-        .select<PostStore, String>((store) => store.postView.instanceHost));
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         final newPosition = animationController.value -
@@ -51,8 +50,9 @@ class WithSwipeActions extends HookWidget {
       onHorizontalDragEnd: (details) {
         animationController.reverse();
         if (activeActionIndex.value > 0) {
-          loggedInAction(actions[activeActionIndex.value - 1].invoke);
+          onTrigger(actions[activeActionIndex.value - 1]);
         }
+        activeActionIndex.value = -1;
       },
       child: Stack(children: [
         if (activeActionIndex.value > 0)

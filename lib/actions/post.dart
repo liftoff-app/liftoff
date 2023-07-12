@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../stores/accounts_store.dart';
+import '../widgets/comment/comment_store.dart';
 import '../widgets/post/post_store.dart';
 import 'abstract_action.dart';
 
-class PostUpvoteAction implements LiftoffAction {
-  final PostStore post;
+abstract class UpvoteAction implements LiftoffAction {
   final BuildContext context;
 
-  const PostUpvoteAction({
-    required this.post,
+  const UpvoteAction({
     required this.context,
   });
 
@@ -21,16 +20,40 @@ class PostUpvoteAction implements LiftoffAction {
   IconData get icon => Icons.arrow_upward;
 
   @override
-  Future<void> Function(UserData userData) get invoke => post.upVote;
-
-  @override
-  bool get isActivated => post.postView.myVote == VoteType.up;
-
-  @override
   String get name => 'Upvote';
 
   @override
   String get tooltip => 'upvote';
+}
+
+class PostUpvoteAction extends UpvoteAction {
+  final PostStore post;
+
+  const PostUpvoteAction({
+    required this.post,
+    required super.context,
+  });
+
+  @override
+  Future<void> Function(UserData userData) get invoke => post.upVote;
+
+  @override
+  bool get isActivated => post.postView.myVote == VoteType.up;
+}
+
+class CommentUpvoteAction extends UpvoteAction {
+  final CommentStore comment;
+
+  const CommentUpvoteAction({
+    required this.comment,
+    required super.context,
+  });
+
+  @override
+  Future<void> Function(UserData userData) get invoke => comment.upVote;
+
+  @override
+  bool get isActivated => comment.comment.myVote == VoteType.up;
 }
 
 class PostSaveAction implements LiftoffAction {

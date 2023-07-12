@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
 
 import '../../actions/post.dart';
+import '../../hooks/logged_in_action.dart';
 import '../../pages/full_post/full_post.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
@@ -56,13 +58,16 @@ class PostTile extends StatelessWidget {
 }
 
 /// A post overview card
-class _Post extends StatelessWidget {
+class _Post extends HookWidget {
   const _Post();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isFullPost = context.read<IsFullPost>();
+
+    final loggedInAction = useLoggedInAction(context
+        .select<PostStore, String>((store) => store.postView.instanceHost));
 
     final postStore = context.read<PostStore>();
     const sensitiveContent = Column(
@@ -90,6 +95,7 @@ class _Post extends StatelessWidget {
             PostUpvoteAction(post: postStore, context: context),
             PostSaveAction(post: postStore, context: context),
           ],
+          onTrigger: (action) => loggedInAction(action.invoke),
           child: DecoratedBox(
             decoration: BoxDecoration(
               boxShadow: store.postCardShadow
