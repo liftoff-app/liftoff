@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../liftoff_action.dart';
-import 'post/post.dart';
 
 /// Widget that wraps [child] and allows for swipe actions to be performed on it.
 /// [actions] are the actions that can be performed, and [onTrigger] is called
