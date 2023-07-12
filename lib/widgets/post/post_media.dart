@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 
@@ -13,7 +14,7 @@ import 'post_video.dart' as video;
 final _logger = Logger('postMedia');
 
 /// assembles image
-class PostMedia extends StatelessWidget {
+class PostMedia extends HookWidget {
   const PostMedia();
 
   static const redgifProvider = RedgifProvider();
@@ -33,11 +34,27 @@ class PostMedia extends StatelessWidget {
         _logger.finer(
             'MEDIA URL: extension: ${extension(url.path)} host: ${store.urlDomain}');
 
+        LiftoffMediaProvider? provider;
+
         if (redgifProvider.providesFor(url)) {
-          return video.buildRedGifVideo(url);
+          provider = redgifProvider;
         } else if (mp4Provider.providesFor(url)) {
-          return video.PostVideo(url);
-        } else {
+          provider = mp4Provider;
+        }
+
+        if (provider != null) {
+          return FutureBuilder(
+              future: provider.getMediaUrl(url),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return video.PostVideo(snapshot.data!);
+                } else if (snapshot.hasError) {
+                  return const Text('Unable to fetch video');
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              });
+        } else if (store.hasMedia) {
           return FullscreenableImage(
             url: url.toString(),
             child: CachedNetworkImage(
@@ -47,6 +64,8 @@ class PostMedia extends StatelessWidget {
                   CircularProgressIndicator.adaptive(value: progress?.progress),
             ),
           );
+        } else {
+          return const SizedBox();
         }
       },
     );

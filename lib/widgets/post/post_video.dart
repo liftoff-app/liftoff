@@ -1,30 +1,27 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
-import '../media_providers/liftoff_media_provider.dart';
 
 //TODO Support for full screen video
 
 class PostVideo extends StatefulWidget {
-  final LiftoffMediaProvider mediaProvider;
-  const PostVideo(this.mediaProvider, {super.key});
+  final Uri url;
+  const PostVideo(this.url, {super.key});
 
   @override
-  State<PostVideo> createState() => _PostVideoState(mediaProvider);
+  State<PostVideo> createState() => _PostVideoState(url);
 }
 
 class _PostVideoState extends State<PostVideo> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
-  final LiftoffMediaProvider mediaProvider;
-  _PostVideoState(this.mediaProvider);
+  final Uri url;
+  _PostVideoState(this.url);
 
   @override
   void initState() {
     super.initState();
-    urlSnapshot = useFuture(mediaProvider.getMediaUrl(url))
 
     _controller = VideoPlayerController.networkUrl(url, httpHeaders: {
       HttpHeaders.userAgentHeader:
@@ -95,18 +92,4 @@ class _PostVideoState extends State<PostVideo> {
           })
     ]);
   }
-}
-
-Widget buildRedGifVideo(Uri url) {
-  return FutureBuilder(
-      future: redgif.getHDUrl(url),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return PostVideo(snapshot.data!);
-        } else if (snapshot.hasError) {
-          return const Text('UNABLE TO GET VIDEO');
-        } else {
-          return const CircularProgressIndicator();
-        }
-      });
 }
