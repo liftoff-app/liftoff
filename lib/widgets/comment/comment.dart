@@ -8,6 +8,7 @@ import 'package:nested/nested.dart';
 import '../../comment_tree.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
+import '../../stores/accounts_store.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
@@ -132,6 +133,9 @@ class _CommentWidget extends HookWidget {
 
   static const indentWidth = 6.0;
   const _CommentWidget();
+  static UserData? _tryGetUserData(BuildContext context, String instanceHost) {
+    return context.read<AccountsStore>().defaultUserDataFor(instanceHost);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -242,25 +246,29 @@ class _CommentWidget extends HookWidget {
                             ),
                           ),
                         ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () =>
-                              goToUser.fromPersonSafe(context, creator),
-                          child: Text(
-                            creator.originPreferredName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize:
-                                  context.read<ConfigStore>().commentTitleSize,
-                              color: theme.colorScheme.secondary,
-                            ),
+                      InkWell(
+                        onTap: () => goToUser.fromPersonSafe(context, creator),
+                        child: Text(
+                          creator.originPreferredName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize:
+                                context.read<ConfigStore>().commentTitleSize,
+                            color: theme.colorScheme.secondary,
                           ),
                         ),
                       ),
                       if (creator.isCakeDay) const Text(' 🍰'),
+                      if (creator.id ==
+                          (_tryGetUserData(context, store.comment.instanceHost)
+                                  ?.userId ??
+                              -1))
+                        _CommentTag(
+                            L10n.of(context).comment_tag_you, Colors.indigo),
                       if (store.isOP)
-                        _CommentTag('OP', theme.colorScheme.secondary),
+                        _CommentTag(L10n.of(context).comment_tag_op,
+                            theme.colorScheme.secondary),
                       if (creator.admin)
                         _CommentTag(
                           L10n.of(context).admin.toUpperCase(),
