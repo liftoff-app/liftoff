@@ -39,7 +39,8 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
   - [FAQ](#faq)
     - [Version x.x.x was released, why is it not yet on F-droid?](#version-xxx-was-released-why-is-it-not-yet-on-f-droid)
     - ["App not installed" - what to do?](#app-not-installed---what-to-do)
-- [What is your privacy policy?](#what-is-your-privacy-policy?)
+- [What is your privacy policy?](#what-is-your-privacy-policy)
+- [End User Code of Conduct](#end-user-code-of-conduct)
 
 # Contributing
 
@@ -98,3 +99,7 @@ When installing the APK directly you might get this message. This happens when y
 # What is your privacy policy?
 
 As stated in our [Privacy Policy statement](PRIVACY_POLICY.md), we don't have access to any of your personal data or usage information from your device.
+
+# End User Code of Conduct
+
+We want Liftoff! to be a great way of interacting with the Lemmy network in a safe manner, so end-users of the packages that we produce and distribute are required to read and follow our [End User Code of Conduct](CODE_OF_CONDUCT.md).
