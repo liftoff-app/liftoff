@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
@@ -16,9 +17,10 @@ final _logger = Logger('postMedia');
 /// assembles image
 class PostMedia extends HookWidget {
   const PostMedia();
-
-  static const redgifProvider = RedgifProvider();
-  static const mp4Provider = MP4MediaProvider();
+  static const List<LiftoffMediaProvider> providers = [
+    RedgifProvider(),
+    MP4MediaProvider()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +36,8 @@ class PostMedia extends HookWidget {
         _logger.finer(
             'MEDIA URL: extension: ${extension(url.path)} host: ${store.urlDomain}');
 
-        LiftoffMediaProvider? provider;
-
-        if (redgifProvider.providesFor(url)) {
-          provider = redgifProvider;
-        } else if (mp4Provider.providesFor(url)) {
-          provider = mp4Provider;
-        }
+        final provider =
+            providers.firstWhereOrNull((provider) => provider.providesFor(url));
 
         if (provider != null) {
           return FutureBuilder(

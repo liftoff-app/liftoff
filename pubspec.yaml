@@ -81,6 +81,7 @@ dependencies:
   flutter_custom_tabs: ^1.0.4
   http: ^0.13.6
   video_player: ^2.7.0
+  collection: ^1.17.1
 
 # https://github.com/flutter/flutter/issues/127425
 dependency_overrides:
