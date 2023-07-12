@@ -95,7 +95,7 @@ class _Post extends HookWidget {
             PostUpvoteAction(post: postStore, context: context),
             PostSaveAction(post: postStore, context: context),
           ],
-          onTrigger: (action) => loggedInAction(action.invoke),
+          onTrigger: (action) => loggedInAction(action.invoke)(),
           child: DecoratedBox(
             decoration: BoxDecoration(
               boxShadow: store.postCardShadow
