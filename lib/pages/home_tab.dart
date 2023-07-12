@@ -12,6 +12,7 @@ import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../stores/config_store.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
@@ -400,6 +401,12 @@ class InfiniteHomeList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
+    final instanceFilter =
+        useStore((ConfigStore store) => store.instanceFilter);
+    // Brutally simple parsing.
+    final banned = instanceFilter == ''
+        ? <String>[]
+        : instanceFilter.split(RegExp(r'\s+'));
 
     /// fetches post from many instances at once and combines them into a single
     /// list
@@ -433,31 +440,70 @@ class InfiniteHomeList extends HookWidget {
       final instancePosts = await Future.wait(futures);
       final longest = instancePosts.map((e) => e.length).reduce(max);
 
-      final newPosts = [
+      final unfilteredPosts = [
         for (var i = 0; i < longest; i++)
           for (final posts in instancePosts)
             if (i < posts.length) posts[i]
       ];
+      // We assume here that the total list even filtered will be longer
+      // than `limit` posts long. If not then the lists ends here.
 
-      return newPosts;
+      final filtered = unfilteredPosts.where((e) =>
+          banned.every((b) => !e.community.originInstanceHost.contains(b)));
+
+      return filtered.toList();
     }
 
-    FetcherWithSorting<PostView> fetcherFromInstance(
-            String instanceHost, PostListingType listingType) =>
-        (page, batchSize, sort) => LemmyApiV3(instanceHost).run(GetPosts(
-              type: listingType,
-              sort: sort,
-              page: page,
-              limit: batchSize,
-              savedOnly: false,
-              auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-            ));
+    Future<List<PostView>> fetcherFromInstance(
+      int page,
+      int limit,
+      SortType sort,
+      String instanceHost,
+      PostListingType listingType,
+    ) async {
+      // Get twice as many as we need, so we will keep the pipeline full,
+      // unless the user has blocked 'lemmy', in which case their
+      // feed will end early.
+      final limitWithBans = banned.isEmpty ? limit : 2 * limit;
+      final unfilteredPosts = await LemmyApiV3(instanceHost).run(GetPosts(
+        type: listingType,
+        sort: sort,
+        page: page,
+        limit: limitWithBans,
+        savedOnly: false,
+        auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+      ));
+      final filtered = unfilteredPosts.where((e) =>
+          banned.every((b) => !e.community.originInstanceHost.contains(b)));
+
+      return filtered.toList();
+    }
+    // Preserved here for history.
+    // FetcherWithSorting<PostView> fetcherFromInstance(
+    //     String instanceHost, PostListingType listingType) {
+    //   return (page, batchSize, sort) => LemmyApiV3(instanceHost).run(GetPosts(
+    //         type: listingType,
+    //         sort: sort,
+    //         page: page,
+    //         limit: batchSize,
+    //         savedOnly: false,
+    //         auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+    //       ));
+    // }
+    // return InfinitePostList(
+    //   fetcher: selectedList.instanceHost == null
+    //       ? (page, limit, sort) =>
+    //           generalFetcher(page, limit, sort, selectedList.listingType)
+    //       : fetcherFromInstance(
+    //           selectedList.instanceHost!, selectedList.listingType),
+    //   controller: controller,
+    // );
 
     return InfinitePostList(
       fetcher: selectedList.instanceHost == null
           ? (page, limit, sort) =>
               generalFetcher(page, limit, sort, selectedList.listingType)
-          : fetcherFromInstance(
+          : (page, limit, sort) => fetcherFromInstance(page, limit, sort,
               selectedList.instanceHost!, selectedList.listingType),
       controller: controller,
     );

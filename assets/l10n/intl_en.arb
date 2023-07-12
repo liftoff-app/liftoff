@@ -715,5 +715,14 @@
   },
   "comment_tag_you": "YOU",
   "@comment_tag_you": {
+  },
+  "instance_filter": "Instance filter",
+  "@instance_filter": {
+  },
+  "instance_filter_explanation": "A list of terms, separated by spaces, to identify instances you wish to block from your home tab posts feed. e.g. 'nsfw blahaj'",
+  "@instance_filter_explanation": {
+  },
+  "sensitive_content": "Sensitive Content",
+  "@sensitive_content": {
   }
 }
