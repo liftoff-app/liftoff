@@ -41,18 +41,15 @@ class WithSwipeActions extends HookWidget {
         final newActiveActionIndex = newPosition ~/ 0.1;
         if (newActiveActionIndex <= actions.length) {
           animationController.value = newPosition;
-        }
-
-        if (newActiveActionIndex != activeActionIndex.value) {
           activeActionIndex.value = newActiveActionIndex;
         }
       },
       onHorizontalDragEnd: (details) {
-        animationController.reverse();
         if (activeActionIndex.value > 0) {
           onTrigger(actions[activeActionIndex.value - 1]);
         }
         activeActionIndex.value = -1;
+        animationController.reverse();
       },
       child: Stack(children: [
         if (activeActionIndex.value > 0)

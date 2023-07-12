@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:logging/logging.dart';
 import 'package:nested/nested.dart';
 
 import '../../actions/post.dart';
@@ -124,6 +125,8 @@ class CommentWidget extends StatelessWidget {
   }
 }
 
+final _logger = Logger('_CommentWidget');
+
 class _CommentWidget extends HookWidget {
   static const colors = [
     Colors.pink,
@@ -140,8 +143,7 @@ class _CommentWidget extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bodyFontSize = useStore((ConfigStore store) => store.commentBodySize);
-    final loggedInAction = useLoggedInAction(context
-        .select<CommentStore, String>((store) => store.comment.instanceHost));
+    final loggedInAction = useLoggedInActionForComment();
 
     final body = ObserverBuilder<CommentStore>(
       builder: (context, store) {
@@ -217,13 +219,21 @@ class _CommentWidget extends HookWidget {
                   actions: [
                     CommentUpvoteAction(comment: store, context: context)
                   ],
-                  onTrigger: (action) => loggedInAction(action.invoke),
+                  onTrigger: (action) {
+                    _logger.info('Triggered $action');
+                    // doesn't seem to do anything
+                    loggedInAction(action.invoke);
+
+                    // doesn't work even if I just do:
+                    // loggedInAction(store.upVote);
+                  },
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     margin: EdgeInsets.only(
                       left: max(store.depth * indentWidth, 0),
                     ),
                     decoration: BoxDecoration(
+                      color: theme.cardColor,
                       border: Border(
                         left: store.depth > 0
                             ? BorderSide(
