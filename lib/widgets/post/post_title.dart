@@ -3,10 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../hooks/stores.dart';
 import '../../stores/config_store.dart';
-import '../../url_launcher.dart';
 import '../../util/observer_consumers.dart';
-import '../cached_network_image.dart';
-import '../fullscreenable_image.dart';
 import 'post_store.dart';
 
 class PostTitle extends HookWidget {

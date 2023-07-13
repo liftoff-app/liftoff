@@ -11,10 +11,7 @@ import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../avatar.dart';
-import 'post_more_menu.dart';
-import 'post_status.dart';
 import 'post_store.dart';
-import 'post_thumbnail.dart';
 
 class PostInfoSection extends HookWidget {
   const PostInfoSection();
