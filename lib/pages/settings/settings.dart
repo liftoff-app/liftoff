@@ -723,7 +723,7 @@ class GeneralConfigPage extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text('Convert webp images to png'),
+              title: Text(L10n.of(context).convert_webp_to_png),
               value: store.convertWebpToPng,
               onChanged: (checked) {
                 store.convertWebpToPng = checked;
@@ -921,6 +921,10 @@ class AccountsConfigPage extends HookWidget {
       ),
       body: ListView(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(L10n.of(context).accounts_explanation),
+          ),
           if (accountsStore.instances.isEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

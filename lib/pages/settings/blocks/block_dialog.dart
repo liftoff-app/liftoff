@@ -3,6 +3,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
+import '../../../l10n/gen/l10n.dart';
 import '../../../util/extensions/api.dart';
 import '../../../widgets/avatar.dart';
 import 'blocks_store.dart';
@@ -15,7 +16,7 @@ class BlockPersonDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Block User'),
+      title: Text(L10n.of(context).block_user),
       content: TypeAheadField<PersonViewSafe>(
         suggestionsCallback: (pattern) async {
           if (pattern.trim().isEmpty) return const Iterable.empty();
@@ -73,7 +74,7 @@ class BlockCommunityDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Block Community'),
+      title: Text(L10n.of(context).block_community),
       content: TypeAheadField<CommunityView>(
         suggestionsCallback: (pattern) async {
           if (pattern.trim().isEmpty) return const Iterable.empty();

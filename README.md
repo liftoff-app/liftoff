@@ -39,6 +39,8 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
   - [FAQ](#faq)
     - [Version x.x.x was released, why is it not yet on F-droid?](#version-xxx-was-released-why-is-it-not-yet-on-f-droid)
     - ["App not installed" - what to do?](#app-not-installed---what-to-do)
+- [What is your privacy policy?](#what-is-your-privacy-policy)
+- [End User Code of Conduct](#end-user-code-of-conduct)
 
 # Contributing
 
@@ -93,3 +95,11 @@ We have no control over F-droid's build process. This process is automatic and n
 ### "App not installed" - what to do?
 
 When installing the APK directly you might get this message. This happens when you are trying to update liftoff from a different source than where you originally got it from. To fix it simply uninstall the previous version (you will lose all local data) and then install the new one. Always make sure to install liftoff APKs only from verified sources.
+
+# What is your privacy policy?
+
+As stated in our [Privacy Policy statement](PRIVACY_POLICY.md), we don't have access to any of your personal data or usage information from your device.
+
+# End User Code of Conduct
+
+We want Liftoff! to be a great way of interacting with the Lemmy network in a safe manner, so end-users of the packages that we produce and distribute are required to read and follow our [End User Code of Conduct](CODE_OF_CONDUCT.md).

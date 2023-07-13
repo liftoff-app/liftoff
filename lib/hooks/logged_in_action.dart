@@ -3,8 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../pages/settings/settings.dart';
+import '../pages/view_on_menu.dart';
 import '../stores/accounts_store.dart';
 import '../util/goto.dart';
+import '../util/observer_consumers.dart';
+import '../widgets/comment/comment_store.dart';
 import 'stores.dart';
 
 /// If user has an account for the given instance the passed wrapper will call
@@ -63,4 +66,16 @@ VoidCallback Function(
     final userData = store.defaultUserDataFor(instanceHost)!;
     return () => action(userData);
   };
+}
+
+Function useLoggedInActionForComment() {
+  final context = useContext();
+  final commentStore = context.read<CommentStore>();
+  return useLoggedInAction(
+    commentStore.comment.instanceHost,
+    fallback: () {
+      ViewOnMenu.openForPost(context, commentStore.comment.comment.apId,
+          isSingleComment: true);
+    },
+  );
 }

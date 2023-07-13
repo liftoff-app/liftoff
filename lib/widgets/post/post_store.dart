@@ -22,6 +22,9 @@ abstract class _PostStore with Store {
   @observable
   PostView postView;
 
+  @observable
+  ObservableList<CommentView> newComments = ObservableList<CommentView>();
+
   @computed
   String? get urlDomain =>
       postView.post.url != null ? urlHost(postView.post.url!) : null;
@@ -140,4 +143,8 @@ abstract class _PostStore with Store {
   @action
   Future<void> downVote(UserData userData) => _vote(userData,
       postView.myVote == VoteType.down ? VoteType.none : VoteType.down);
+
+  @action
+  void addComment(CommentView commentView) =>
+      newComments.insert(0, commentView);
 }
