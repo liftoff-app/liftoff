@@ -7,8 +7,18 @@ ThemeData themeFactory(
     {bool dark = false, bool amoled = false, required Color primaryColor}) {
   assert(dark || !amoled, "Can't have amoled without dark mode");
 
-  final theme = dark ? ThemeData.dark() : ThemeData.light();
-  final maybeAmoledColor = amoled ? Colors.black : null;
+  final theme = dark
+      ? ThemeData.dark().copyWith(
+          colorScheme: ColorScheme.dark(background: Colors.grey[850]!),
+          canvasColor: Colors.grey[850],
+          cardColor: Colors.grey.shade900)
+      : ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light(background: Colors.grey.shade50),
+        );
+  final backgroundColor = amoled ? Colors.black : theme.colorScheme.background;
+  final canvasColor = amoled ? Colors.black : theme.canvasColor;
+  final cardColor = amoled ? Colors.black : theme.cardColor;
+  final splashColor = amoled ? Colors.black : theme.splashColor;
 
   return theme.copyWith(
     pageTransitionsTheme: const PageTransitionsTheme(
@@ -18,10 +28,10 @@ ThemeData themeFactory(
         TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
       },
     ),
-    scaffoldBackgroundColor: maybeAmoledColor,
-    canvasColor: maybeAmoledColor,
-    cardColor: maybeAmoledColor,
-    splashColor: maybeAmoledColor,
+    scaffoldBackgroundColor: backgroundColor,
+    canvasColor: canvasColor,
+    cardColor: cardColor,
+    splashColor: splashColor,
     visualDensity: VisualDensity.adaptivePlatformDensity,
     appBarTheme: AppBarTheme(
       elevation: 0,
@@ -39,7 +49,7 @@ ThemeData themeFactory(
         textColor: Colors.white,
         textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
     bottomAppBarTheme:
-        BottomAppBarTheme(color: maybeAmoledColor, shadowColor: Colors.white),
+        BottomAppBarTheme(color: backgroundColor, shadowColor: Colors.white),
     tabBarTheme: TabBarTheme(
       unselectedLabelColor: Colors.grey,
       labelColor: theme.colorScheme.onSurface,
@@ -77,7 +87,8 @@ ThemeData themeFactory(
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        //backgroundColor: theme.colorScheme.background,
+        foregroundColor:
+            textColorBasedOnBackground(theme.colorScheme.background),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -93,10 +104,18 @@ ThemeData themeFactory(
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: TextButton.styleFrom(
-        backgroundColor: theme.colorScheme.background,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(theme.canvasColor),
+        foregroundColor: MaterialStateProperty.all(
+            textColorBasedOnBackground(theme.canvasColor)),
+        side: MaterialStateProperty.all(
+            BorderSide(color: textColorBasedOnBackground(theme.canvasColor))),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            side: BorderSide(
+                color: textColorBasedOnBackground(theme.canvasColor)),
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       ),
     ),

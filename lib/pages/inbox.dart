@@ -84,7 +84,7 @@ class InboxPage extends HookWidget {
               selected.value = instance;
               isc.clear();
             },
-            buttonBuilder: (context, displayValue, onPressed) => FilledButton(
+            buttonBuilder: (context, displayValue, onPressed) => TextButton(
               onPressed: onPressed,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
