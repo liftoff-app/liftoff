@@ -78,7 +78,7 @@ abstract class _UpvoteAction implements LiftoffAction {
   });
 
   @override
-  Color get activeColor => Theme.of(context).colorScheme.secondary;
+  Color get activeColor => Colors.blue.withAlpha(180);
 
   @override
   IconData get icon => Icons.arrow_upward;
@@ -124,7 +124,7 @@ abstract class _SaveAction implements LiftoffAction {
   const _SaveAction();
 
   @override
-  Color get activeColor => Colors.green;
+  Color get activeColor => Colors.green.withAlpha(180);
 
   @override
   IconData get icon => Icons.bookmark;

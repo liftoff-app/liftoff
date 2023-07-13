@@ -90,7 +90,7 @@ class CommentActions extends HookWidget {
             TileToggle(
               icon: Icons.arrow_upward,
               activated: store.myVote == VoteType.up,
-              activeColor: Theme.of(context).colorScheme.secondary,
+              activeColor: Colors.blue,
               onPressed: loggedInAction(store.upVote),
               tooltip: 'upvote',
             ),
