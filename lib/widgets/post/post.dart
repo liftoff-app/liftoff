@@ -99,12 +99,12 @@ class _Post extends HookWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               boxShadow: store.postCardShadow
-                  ? const [BoxShadow(blurRadius: 15, color: Colors.black45)]
+                  ? const [BoxShadow(blurRadius: 5, color: Colors.black45)]
                   : null,
               color: theme.cardColor,
               borderRadius: store.postRoundedCorners
                   ? const BorderRadius.all(Radius.circular(PostTile.rounding))
-                  : const BorderRadius.all(Radius.circular(5)),
+                  : null,
             ),
             child: Material(
               type: MaterialType.transparency,
