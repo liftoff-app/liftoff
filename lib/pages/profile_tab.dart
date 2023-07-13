@@ -20,6 +20,10 @@ class UserProfileTab extends HookWidget {
 
     final actions = [
       IconButton(
+        onPressed: () => goTo(context, (context) => SavedPage()),
+        icon: const Icon(Icons.bookmark),
+      ),
+      IconButton(
         icon: const Icon(Icons.settings),
         onPressed: () {
           goTo(context, (_) => const SettingsPage());
@@ -51,10 +55,6 @@ class UserProfileTab extends HookWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => goTo(context, (context) => SavedPage()),
-          icon: const Icon(Icons.bookmark),
-        ),
         title: RadioPicker<String>(
           title: 'account',
           values: accountsStore.loggedInInstances
@@ -75,14 +75,13 @@ class UserProfileTab extends HookWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Flexible(
-                  child: Text(
-                    displayValue,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w500),
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                  ),
+                Text(
+                  displayValue,
+                  //textAlign: TextAlign.left,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500),
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                 ),
                 const Icon(Icons.arrow_drop_down),
               ],

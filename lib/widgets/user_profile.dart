@@ -71,14 +71,15 @@ class UserProfile extends HookWidget {
             expandedHeight: 300,
             toolbarHeight: 0,
             forceElevated: true,
-            backgroundColor: theme.cardColor,
+            backgroundColor: theme.canvasColor,
             flexibleSpace:
                 FlexibleSpaceBar(background: _UserOverview(userView)),
             bottom: PreferredSize(
               preferredSize: const TabBar(tabs: []).preferredSize,
               child: Material(
-                color: theme.cardColor,
+                color: theme.canvasColor,
                 child: TabBar(
+                  indicatorColor: theme.colorScheme.primary,
                   tabs: [
                     Tab(text: L10n.of(context).posts),
                     Tab(text: L10n.of(context).comments),
@@ -192,7 +193,7 @@ class _UserOverview extends HookWidget {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(15),
                 ),
-                color: theme.cardColor,
+                color: theme.canvasColor,
               ),
             ),
           ),

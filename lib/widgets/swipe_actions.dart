@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../liftoff_action.dart';
-import 'post/post.dart';
 
 /// Widget that wraps [child] and allows for swipe actions to be performed on it.
 /// [actions] are the actions that can be performed, and [onTrigger] is called
@@ -38,12 +37,13 @@ class WithSwipeActions extends HookWidget {
         : null;
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onHorizontalDragUpdate: (details) {
         final newPosition = animationController.value -
             details.primaryDelta! / MediaQuery.of(context).size.width;
 
-        // each action is 1/10 of the screen
-        final newActiveActionIndex = newPosition ~/ 0.1;
+        // each action is 1/5 of the screen
+        final newActiveActionIndex = newPosition ~/ 0.2;
         if (newActiveActionIndex <= actions.length) {
           animationController.value = newPosition;
           activeActionIndex.value = newActiveActionIndex;
@@ -61,11 +61,7 @@ class WithSwipeActions extends HookWidget {
       },
       child: Stack(children: [
         if (activeAction != null)
-          Positioned(
-            right: 0,
-            top: PostTile.rounding,
-            bottom: PostTile.rounding,
-            left: 0,
+          Positioned.fill(
             child: ColoredBox(
                 color: activeAction.activeColor,
                 child: Align(
