@@ -1,3 +1,15 @@
+## Unreleased
+- Added photo cropping prior to upload (mykdavies)
+- Added MP4 and some redgif support (jjcomer)
+- Added swipe gesture actions! (shocklateboy92)
+- Added code of conduct and tweaks for iOS release (mykdavies)
+- Redesign of home tab and themes colors (swmarks & a_minh)
+- Fixed alignment of post pills/chips (mykdavies)
+- Redseign of compact view to be more compact (zachatrocity)
+- Added help text on account page to help guide the user (mykdavies)
+- Added RU and EO languages
+- Tons of bug fixes!
+
 ## v0.10.7 - 2023-07-08
 - Added Comment Style Settings page
 - Ability to adjust comment font size and post body font size
