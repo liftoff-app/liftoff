@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -36,28 +37,36 @@ class WithSwipeActions extends HookWidget {
         ? actions[min(activeActionIndex.value, actions.length) - 1]
         : null;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onHorizontalDragUpdate: (details) {
-        final newPosition = animationController.value -
-            details.primaryDelta! / MediaQuery.of(context).size.width;
+    return RawGestureDetector(
+      gestures: <Type, GestureRecognizerFactory>{
+        HorizontalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+            HorizontalDragGestureRecognizer>(
+          () => HorizontalDragGestureRecognizer(debugOwner: this),
+          (HorizontalDragGestureRecognizer instance) {
+            instance
+              ..onUpdate = (details) {
+                final newPosition = animationController.value -
+                    details.primaryDelta! / MediaQuery.of(context).size.width;
 
-        // each action is 1/5 of the screen
-        final newActiveActionIndex = newPosition ~/ 0.2;
-        if (newActiveActionIndex <= actions.length) {
-          animationController.value = newPosition;
-          activeActionIndex.value = newActiveActionIndex;
-        }
-      },
-      onHorizontalDragEnd: (details) {
-        // only trigger if the user has dragged far enough
-        if (activeAction != null) {
-          onTrigger(activeAction);
-        }
+                // each action is 1/5 of the screen
+                final newActiveActionIndex = newPosition ~/ 0.2;
+                if (newActiveActionIndex <= actions.length) {
+                  animationController.value = newPosition;
+                  activeActionIndex.value = newActiveActionIndex;
+                }
+              }
+              ..onEnd = (details) {
+                // only trigger if the user has dragged far enough
+                if (activeAction != null) {
+                  onTrigger(activeAction);
+                }
 
-        // reset and put the widget back to normal
-        activeActionIndex.value = -1;
-        animationController.reverse();
+                // reset and put the widget back to normal
+                activeActionIndex.value = -1;
+                animationController.reverse();
+              };
+          },
+        ),
       },
       child: Stack(children: [
         if (activeAction != null)
