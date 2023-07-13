@@ -14,11 +14,13 @@ class RedgifProvider implements LiftoffMediaProvider {
     final token = await _getAuthtoken();
     final id = basename(url.path);
 
-    final headers = {HttpHeaders.authorizationHeader: 'Bearer $token'};
-    var requestUrl = 'https://api.redgifs.com/v2/gifs/$id';
-    if (Platform.isAndroid) {
-      requestUrl = '$requestUrl?user-agent=ExoPlayer';
-    }
+    final headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.userAgentHeader:
+          Platform.isAndroid ? 'ExoPlayer' : 'Liftoff/1.0'
+    };
+
+    final requestUrl = 'https://api.redgifs.com/v2/gifs/$id';
 
     final response = await http.get(Uri.parse(requestUrl), headers: headers);
 
