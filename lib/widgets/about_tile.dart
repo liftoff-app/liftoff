@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../gen/assets.gen.dart';
 import '../hooks/memo_future.dart';
+import '../pages/display_document.dart';
 import '../resources/links.dart';
 import '../url_launcher.dart';
-import 'bottom_safe.dart';
 
 /// Title that opens a dialog with information about Liftoff.
 /// Licenses, changelog, version etc.
@@ -82,39 +81,4 @@ class AboutTile extends HookWidget {
       applicationVersion: packageInfo.version,
     );
   }
-}
-
-class DisplayDocumentPage extends StatelessWidget {
-  final String title;
-  final String contents;
-
-  const DisplayDocumentPage(this.title, this.contents, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text(title)),
-        body: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            MarkdownBody(
-              data: contents,
-              onTapLink: (text, href, title) async {
-                final didLaunch = await launchLink(
-                  link: href!,
-                  context: context,
-                );
-                if (didLaunch) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-            const BottomSafe(),
-          ],
-        ));
-  }
-
-  static Route route(String title, String contents) => MaterialPageRoute(
-        builder: (context) => DisplayDocumentPage(title, contents),
-      );
 }
