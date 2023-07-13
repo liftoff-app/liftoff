@@ -24,13 +24,12 @@ class PostInfoSection extends HookWidget {
     final configStore = useStore((ConfigStore store) => store);
 
     return ObserverBuilder<PostStore>(builder: (context, store) {
-      final fullPost = context.read<IsFullPost>();
       final post = store.postView;
       final instanceHost = store.postView.instanceHost;
       final theme = Theme.of(context);
 
       return Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+        padding: const EdgeInsets.all(10),
         child: Row(
           children: [
             Avatar(
@@ -39,7 +38,7 @@ class PostInfoSection extends HookWidget {
                 onTap: () => Navigator.of(context).push(
                     CommunityPage.fromIdRoute(instanceHost, post.community.id)),
                 noBlank: true,
-                radius: 20,
+                radius: 15,
                 isNsfw: post.community.nsfw),
             Expanded(
               child: Column(
@@ -138,9 +137,6 @@ class PostInfoSection extends HookWidget {
                 ],
               ),
             ),
-            if (!fullPost && !configStore.compactPostView)
-              const PostMoreMenuButton(),
-            if (configStore.compactPostView) const PostThumbnail()
           ],
         ),
       );

@@ -20,7 +20,7 @@ class PostTitle extends HookWidget {
       builder: (context, store) {
         final post = store.postView.post;
         return Padding(
-          padding: const EdgeInsets.all(10).copyWith(top: 0),
+          padding: const EdgeInsets.all(10).copyWith(top: 0, bottom: 5),
           child: Row(
             children: [
               Expanded(

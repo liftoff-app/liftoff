@@ -37,7 +37,7 @@ class PostActions extends HookWidget {
       }
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           children: [
             const Icon(Icons.comment_rounded),
