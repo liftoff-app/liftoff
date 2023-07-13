@@ -20,6 +20,7 @@ import 'post_link_preview.dart';
 import 'post_media.dart';
 import 'post_status.dart';
 import 'post_store.dart';
+import 'post_thumbnail.dart';
 import 'post_title.dart';
 
 class PostTile extends StatelessWidget {
@@ -123,8 +124,18 @@ class _Post extends HookWidget {
                       ),
                     ),
                   ] else if (store.compactPostView) ...[
-                    const PostInfoSection(),
-                    const PostTitle(),
+                    const Row(
+                      children: [
+                        Expanded(
+                            child: Column(
+                          children: [
+                            PostInfoSection(),
+                            PostTitle(),
+                          ],
+                        )),
+                        PostThumbnail()
+                      ],
+                    ),
                     const PostActions(),
                   ] else ...[
                     const PostInfoSection(),

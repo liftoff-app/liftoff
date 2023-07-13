@@ -3,10 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../hooks/stores.dart';
 import '../../stores/config_store.dart';
-import '../../url_launcher.dart';
 import '../../util/observer_consumers.dart';
-import '../cached_network_image.dart';
-import '../fullscreenable_image.dart';
 import 'post_store.dart';
 
 class PostTitle extends HookWidget {
@@ -19,10 +16,8 @@ class PostTitle extends HookWidget {
     return ObserverBuilder<PostStore>(
       builder: (context, store) {
         final post = store.postView.post;
-        final thumbnailUrl = post.thumbnailUrl;
-        final url = post.url;
         return Padding(
-          padding: const EdgeInsets.all(10).copyWith(top: 0),
+          padding: const EdgeInsets.all(10).copyWith(top: 0, bottom: 5),
           child: Row(
             children: [
               Expanded(
@@ -35,61 +30,6 @@ class PostTitle extends HookWidget {
                       fontWeight: FontWeight.w500),
                 ),
               ),
-              if ((!store.hasMedia &&
-                      configStore.showThumbnail &&
-                      configStore.compactPostView) &&
-                  !(post.nsfw && configStore.blurNsfw) &&
-                  thumbnailUrl != null &&
-                  url != null) ...[
-                InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () => linkLauncher(
-                      context: context,
-                      url: url,
-                      instanceHost: store.postView.instanceHost),
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: CachedNetworkImage(
-                          imageUrl: thumbnailUrl,
-                          width: 70,
-                          height: 70,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error) =>
-                              Text(error.toString()),
-                        ),
-                      ),
-                      const Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Icon(
-                          Icons.launch,
-                          size: 20,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-              if ((store.hasMedia &&
-                      configStore.showThumbnail &&
-                      configStore.compactPostView) &&
-                  !(post.nsfw && configStore.blurNsfw) &&
-                  url != null) ...[
-                FullscreenableImage(
-                  url: url,
-                  child: CachedNetworkImage(
-                    width: 70,
-                    height: 70,
-                    imageUrl: url,
-                    errorBuilder: (_, ___) => const Icon(Icons.warning),
-                    loadingBuilder: (context, progress) =>
-                        CircularProgressIndicator.adaptive(
-                            value: progress?.progress),
-                  ),
-                )
-              ]
             ],
           ),
         );
