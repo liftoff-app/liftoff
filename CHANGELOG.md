@@ -1,4 +1,4 @@
-## Unreleased
+## v0.10.8 - 2023-07-13
 - Added photo cropping prior to upload (mykdavies)
 - Added MP4 and some redgif support (jjcomer)
 - Added swipe gesture actions! (shocklateboy92)
