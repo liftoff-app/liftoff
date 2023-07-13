@@ -238,24 +238,14 @@ class HomeTab extends HookWidget {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return [
               SliverAppBar(
-                systemOverlayStyle: theme.brightness == Brightness.dark
-                    ? SystemUiOverlayStyle.light
-                    : SystemUiOverlayStyle.dark,
-                backgroundColor: theme.canvasColor,
-                shadowColor: Colors.transparent,
                 titleSpacing: 6,
-                //centerTitle: true,
                 iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+                backgroundColor: theme.canvasColor,
                 titleTextStyle: theme.textTheme.titleLarge
                     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
                 title: TextButton(
-                  style: TextButton.styleFrom(
-                      //padding: const EdgeInsets.symmetric(horizontal: 15),
-                      ),
                   onPressed: handleListChange,
                   child: Row(
-                    //mainAxisSize: MainAxisSize.min,
-                    //mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Flexible(
                         child: Text(
@@ -293,34 +283,6 @@ class HomeTab extends HookWidget {
                         }
                       }),
                     ),
-                  // IconButton(
-                  //   icon: const Icon(Icons.more_vert),
-                  //   onPressed: () {
-                  //     showBottomModal(
-                  //       context: context,
-                  //       builder: (context) => Column(
-                  //         children: [
-                  //           ListTile(
-                  //             leading: const Icon(Icons.settings),
-                  //             title: const Text('Settings'),
-                  //             onTap: () {
-                  //               Navigator.of(context).pop();
-                  //               goTo(context, (_) => const SettingsPage());
-                  //             },
-                  //           ),
-                  //           ListTile(
-                  //             leading: const Icon(Icons.refresh),
-                  //             title: const Text('Refresh'),
-                  //             onTap: () {
-                  //               Navigator.of(context).pop();
-                  //               isc.clear();
-                  //             },
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     );
-                  //   },
-                  // )
                   if (accStore.totalNotificationCount > 0)
                     Badge(
                       offset: const Offset(-5, 5),
