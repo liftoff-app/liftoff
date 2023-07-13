@@ -25,8 +25,9 @@ class _PostVideoState extends State<PostVideo> {
 
     _controller = VideoPlayerController.networkUrl(url, httpHeaders: {
       HttpHeaders.userAgentHeader:
-          Platform.isAndroid ? 'ExoPlayer' : 'Dart/3.0 (dart:io)'
+          Platform.isAndroid ? 'ExoPlayer' : 'Liftoff/1.0'
     });
+
     _controller
       ..play()
       ..setLooping(true)

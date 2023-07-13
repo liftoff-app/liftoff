@@ -715,5 +715,8 @@
   },
   "comment_tag_you": "YOU",
   "@comment_tag_you": {
+  },
+  "code_of_conduct_clickthrough": "By accessing the Lemmy network using Liftoff! you agree to adhere to our Code of Conduct",
+  "@code_of_conduct_clickthrough": {
   }
 }
