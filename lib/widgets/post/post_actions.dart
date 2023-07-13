@@ -9,6 +9,7 @@ import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../write_comment.dart';
+import 'post_more_menu.dart';
 import 'post_store.dart';
 import 'post_voting.dart';
 import 'save_post_button.dart';
@@ -50,6 +51,7 @@ class PostActions extends HookWidget {
                 softWrap: false,
               ),
             ),
+            const PostMoreMenuButton(),
             IconButton(
               key: shareButtonKey,
               icon: Icon(shareIcon),
@@ -65,8 +67,7 @@ class PostActions extends HookWidget {
                             renderbox.size.width, renderbox.size.height)));
               },
             ),
-            const SavePostButton(),
-            if (!Platform.isAndroid && !store.postView.post.locked)
+            if (!store.postView.post.locked)
               IconButton(
                 onPressed: replyLoggedInAction((_) => comment()),
                 icon: const Icon(Icons.reply),

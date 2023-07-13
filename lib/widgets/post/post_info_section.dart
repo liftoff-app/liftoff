@@ -14,6 +14,7 @@ import '../avatar.dart';
 import 'post_more_menu.dart';
 import 'post_status.dart';
 import 'post_store.dart';
+import 'post_thumbnail.dart';
 
 class PostInfoSection extends HookWidget {
   const PostInfoSection();
@@ -29,7 +30,7 @@ class PostInfoSection extends HookWidget {
       final theme = Theme.of(context);
 
       return Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
         child: Row(
           children: [
             Avatar(
@@ -137,7 +138,9 @@ class PostInfoSection extends HookWidget {
                 ],
               ),
             ),
-            if (!fullPost) const PostMoreMenuButton(),
+            if (!fullPost && !configStore.compactPostView)
+              const PostMoreMenuButton(),
+            if (configStore.compactPostView) const PostThumbnail()
           ],
         ),
       );
