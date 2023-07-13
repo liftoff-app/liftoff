@@ -17,7 +17,6 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 0.10.7+29
 
-
 environment:
   sdk: ">=3.0.0 <4.0.0"
   flutter: ">=3.0.0 <4.0.0"
@@ -80,6 +79,9 @@ dependencies:
   image: ^4.0.17
   app_links: ^3.4.3
   flutter_custom_tabs: ^1.0.4
+  http: ^0.13.6
+  video_player: ^2.7.0
+  collection: ^1.17.1
 
 # https://github.com/flutter/flutter/issues/127425
 dependency_overrides:
