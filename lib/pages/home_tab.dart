@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
@@ -238,38 +237,14 @@ class HomeTab extends HookWidget {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return [
               SliverAppBar(
-                systemOverlayStyle: theme.brightness == Brightness.dark
-                    ? SystemUiOverlayStyle.light
-                    : SystemUiOverlayStyle.dark,
-                backgroundColor: theme.canvasColor,
-                shadowColor: Colors.transparent,
-                centerTitle: true,
+                titleSpacing: 6,
                 iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+                backgroundColor: theme.canvasColor,
                 titleTextStyle: theme.textTheme.titleLarge
                     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-                leading: accStore.totalNotificationCount > 0
-                    ? Badge(
-                        offset: const Offset(-5, 5),
-                        label: Text(accStore.totalNotificationCount.toString()),
-                        child: IconButton(
-                          icon: const Icon(Icons.notifications),
-                          onPressed: () =>
-                              goTo(context, (_) => const InboxPage()),
-                        ),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.notifications),
-                        onPressed: () =>
-                            goTo(context, (_) => const InboxPage()),
-                      ),
-                title: FilledButton(
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                  ),
+                title: TextButton(
                   onPressed: handleListChange,
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Flexible(
                         child: Text(
@@ -278,9 +253,12 @@ class HomeTab extends HookWidget {
                               fontSize: 20, fontWeight: FontWeight.w500),
                           overflow: TextOverflow.fade,
                           softWrap: false,
+                          textAlign: TextAlign.left,
                         ),
                       ),
-                      const Icon(Icons.arrow_drop_down),
+                      const Icon(
+                        Icons.arrow_drop_down,
+                      ),
                     ],
                   ),
                 ),
@@ -304,34 +282,21 @@ class HomeTab extends HookWidget {
                         }
                       }),
                     ),
-                  // IconButton(
-                  //   icon: const Icon(Icons.more_vert),
-                  //   onPressed: () {
-                  //     showBottomModal(
-                  //       context: context,
-                  //       builder: (context) => Column(
-                  //         children: [
-                  //           ListTile(
-                  //             leading: const Icon(Icons.settings),
-                  //             title: const Text('Settings'),
-                  //             onTap: () {
-                  //               Navigator.of(context).pop();
-                  //               goTo(context, (_) => const SettingsPage());
-                  //             },
-                  //           ),
-                  //           ListTile(
-                  //             leading: const Icon(Icons.refresh),
-                  //             title: const Text('Refresh'),
-                  //             onTap: () {
-                  //               Navigator.of(context).pop();
-                  //               isc.clear();
-                  //             },
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     );
-                  //   },
-                  // )
+                  if (accStore.totalNotificationCount > 0)
+                    Badge(
+                      offset: const Offset(-5, 5),
+                      label: Text(accStore.totalNotificationCount.toString()),
+                      child: IconButton(
+                        icon: const Icon(Icons.notifications),
+                        onPressed: () =>
+                            goTo(context, (_) => const InboxPage()),
+                      ),
+                    )
+                  else
+                    IconButton(
+                      icon: const Icon(Icons.notifications),
+                      onPressed: () => goTo(context, (_) => const InboxPage()),
+                    ),
                   PopupMenuButton(itemBuilder: (context) {
                     return [
                       const PopupMenuItem<int>(

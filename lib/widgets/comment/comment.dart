@@ -6,8 +6,11 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
 
 import '../../comment_tree.dart';
+import '../../hooks/logged_in_action.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
+import '../../liftoff_action.dart';
+import '../../stores/accounts_store.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
@@ -18,6 +21,7 @@ import '../../util/text_color.dart';
 import '../avatar.dart';
 import '../info_table_popup.dart';
 import '../markdown_text.dart';
+import '../swipe_actions.dart';
 import 'comment_actions.dart';
 import 'comment_store.dart';
 
@@ -132,11 +136,15 @@ class _CommentWidget extends HookWidget {
 
   static const indentWidth = 6.0;
   const _CommentWidget();
+  static UserData? _tryGetUserData(BuildContext context, String instanceHost) {
+    return context.read<AccountsStore>().defaultUserDataFor(instanceHost);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bodyFontSize = useStore((ConfigStore store) => store.commentBodySize);
+    final loggedInAction = useLoggedInActionForComment();
 
     final body = ObserverBuilder<CommentStore>(
       builder: (context, store) {
@@ -208,137 +216,180 @@ class _CommentWidget extends HookWidget {
           onTap: store.selectable ? null : store.toggleCollapsed,
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                margin: EdgeInsets.only(
-                  left: max(store.depth * indentWidth, 0),
-                ),
-                decoration: BoxDecoration(
-                  border: Border(
-                    left: store.depth > 0
-                        ? BorderSide(
-                            color: colors[store.depth % colors.length],
-                            width:
-                                context.read<ConfigStore>().commentIndentWidth,
-                          )
-                        : BorderSide.none,
-                    top: const BorderSide(width: 0.2),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      if (creator.avatar != null)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: InkWell(
-                            onTap: () =>
-                                goToUser.fromPersonSafe(context, creator),
-                            child: Avatar(
-                              url: creator.avatar,
-                              radius: 10,
-                              noBlank: true,
-                            ),
-                          ),
-                        ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () =>
-                              goToUser.fromPersonSafe(context, creator),
-                          child: Text(
-                            creator.originPreferredName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize:
-                                  context.read<ConfigStore>().commentTitleSize,
-                              color: theme.colorScheme.secondary,
-                            ),
-                          ),
-                        ),
+              WithSwipeActions(
+                  actions: [
+                    CommentUpvoteAction(comment: store, context: context),
+                    CommentSaveAction(comment: store),
+                  ],
+                  onTrigger: (action) => loggedInAction(action.invoke)(),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    margin: EdgeInsets.only(
+                      left: max(store.depth * indentWidth, 0),
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: store.depth > 0
+                            ? BorderSide(
+                                color: colors[store.depth % colors.length],
+                                width: context
+                                    .read<ConfigStore>()
+                                    .commentIndentWidth,
+                              )
+                            : BorderSide.none,
+                        top: const BorderSide(width: 0.2),
                       ),
-                      if (creator.isCakeDay) const Text(' 🍰'),
-                      if (store.isOP)
-                        _CommentTag('OP', theme.colorScheme.secondary),
-                      if (creator.admin)
-                        _CommentTag(
-                          L10n.of(context).admin.toUpperCase(),
-                          theme.colorScheme.secondary,
-                        ),
-                      if (comment.path == '0')
-                        _CommentTag(
-                          L10n.of(context).pinned.toUpperCase(),
-                          Colors.orangeAccent,
-                        ),
-                      if (creator.banned)
-                        const _CommentTag('BANNED', Colors.red),
-                      if (store.comment.creatorBannedFromCommunity)
-                        const _CommentTag('BANNED FROM COMMUNITY', Colors.red),
-                      const Spacer(),
-                      if (store.collapsed && store.children.isNotEmpty) ...[
-                        _CommentTag(
-                          '+${store.children.length}',
-                          Theme.of(context).colorScheme.secondary,
-                        ),
-                        const SizedBox(width: 7),
-                      ],
-                      InkWell(
-                        onTap: () => CommentWidget.showCommentInfo(
-                          context,
-                          store.comment,
-                        ),
-                        child: Consumer<ConfigStore>(
-                          builder: (context, configStore, child) {
-                            return ObserverBuilder<CommentStore>(
-                              builder: (context, store) => Row(
+                      color: theme.cardColor,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Comment header row.
+                        Row(
+                          children: [
+                            Flexible(
+                              flex: 10,
+                              child: Row(
                                 children: [
-                                  if (store.votingState.isLoading)
-                                    SizedBox.fromSize(
-                                      size: const Size.square(16),
-                                      child: const CircularProgressIndicator
-                                          .adaptive(),
-                                    )
-                                  else if (configStore.showScores)
-                                    Text(
-                                      store.comment.counts.score
-                                          .compact(context),
-                                      style: TextStyle(
-                                          fontSize: context
-                                              .read<ConfigStore>()
-                                              .commentTimestampSize),
+                                  if (creator.avatar != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: InkWell(
+                                        onTap: () => goToUser.fromPersonSafe(
+                                            context, creator),
+                                        child: Avatar(
+                                          url: creator.avatar,
+                                          radius: 10,
+                                          noBlank: true,
+                                        ),
+                                      ),
                                     ),
-                                  if (configStore.showScores)
-                                    Text(
-                                      ' · ',
-                                      style: TextStyle(
+                                  Flexible(
+                                    child: InkWell(
+                                      onTap: () => goToUser.fromPersonSafe(
+                                          context, creator),
+                                      child: Text(
+                                        creator.originPreferredName,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
                                           fontSize: context
                                               .read<ConfigStore>()
-                                              .commentTimestampSize),
-                                    )
-                                  else
-                                    const SizedBox(width: 4),
-                                  Text(
-                                    comment.published.timeago(context),
-                                    style: TextStyle(
-                                        fontSize: context
-                                            .read<ConfigStore>()
-                                            .commentTimestampSize),
+                                              .commentTitleSize,
+                                          color: theme.colorScheme.secondary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Row(
+                                    children: [
+                                      if (creator.isCakeDay) const Text(' 🍰'),
+                                      if (creator.id ==
+                                          _tryGetUserData(context,
+                                                  store.comment.instanceHost)
+                                              ?.userId)
+                                        _CommentTag(
+                                            L10n.of(context).comment_tag_you,
+                                            Colors.indigo),
+                                      if (store.isOP)
+                                        _CommentTag(
+                                            L10n.of(context).comment_tag_op,
+                                            theme.colorScheme.secondary),
+                                      if (creator.admin)
+                                        _CommentTag(
+                                          L10n.of(context).admin.toUpperCase(),
+                                          theme.colorScheme.secondary,
+                                        ),
+                                      if (comment.path == '0')
+                                        _CommentTag(
+                                          L10n.of(context).pinned.toUpperCase(),
+                                          Colors.orangeAccent,
+                                        ),
+                                      if (creator.banned)
+                                        const _CommentTag('BANNED', Colors.red),
+                                      if (store
+                                          .comment.creatorBannedFromCommunity)
+                                        const _CommentTag(
+                                            'BANNED FROM COMMUNITY',
+                                            Colors.red),
+                                    ],
                                   ),
                                 ],
                               ),
-                            );
-                          },
+                            ),
+                            Row(
+                              children: [
+                                const SizedBox(width: 8),
+                                if (store.collapsed &&
+                                    store.children.isNotEmpty) ...[
+                                  _CommentTag(
+                                    '+${store.children.length}',
+                                    Theme.of(context).colorScheme.secondary,
+                                  ),
+                                  const SizedBox(width: 7),
+                                ],
+                                InkWell(
+                                  onTap: () => CommentWidget.showCommentInfo(
+                                    context,
+                                    store.comment,
+                                  ),
+                                  child: Consumer<ConfigStore>(
+                                    builder: (context, configStore, child) {
+                                      return ObserverBuilder<CommentStore>(
+                                        builder: (context, store) => Row(
+                                          children: [
+                                            if (store.votingState.isLoading)
+                                              SizedBox.fromSize(
+                                                size: const Size.square(16),
+                                                child:
+                                                    const CircularProgressIndicator
+                                                        .adaptive(),
+                                              )
+                                            else if (configStore.showScores)
+                                              Text(
+                                                store.comment.counts.score
+                                                    .compact(context),
+                                                style: TextStyle(
+                                                    fontSize: context
+                                                        .read<ConfigStore>()
+                                                        .commentTimestampSize),
+                                              ),
+                                            if (configStore.showScores)
+                                              Text(
+                                                ' · ',
+                                                style: TextStyle(
+                                                    fontSize: context
+                                                        .read<ConfigStore>()
+                                                        .commentTimestampSize),
+                                              )
+                                            else
+                                              const SizedBox(width: 4),
+                                            Text(
+                                              comment.published
+                                                  .timeago(context),
+                                              style: TextStyle(
+                                                  fontSize: context
+                                                      .read<ConfigStore>()
+                                                      .commentTimestampSize),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      )
-                    ]),
-                    const SizedBox(height: 10),
-                    body,
-                    const SizedBox(height: 5),
-                    const CommentActions(),
-                  ],
-                ),
-              ),
+                        const SizedBox(height: 10),
+                        body,
+                        const SizedBox(height: 5),
+                        const CommentActions(),
+                      ],
+                    ),
+                  )),
               if (!store.collapsed)
                 for (final c in store.children)
                   CommentWidget(c,

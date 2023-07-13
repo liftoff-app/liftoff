@@ -5,7 +5,6 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
-import '../../pages/view_on_menu.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../tile_action.dart';
@@ -19,14 +18,7 @@ class CommentActions extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final commentStore = context.read<CommentStore>();
-    final loggedInAction = useLoggedInAction(
-      commentStore.comment.instanceHost,
-      fallback: () {
-        ViewOnMenu.openForPost(context, commentStore.comment.comment.apId,
-            isSingleComment: true);
-      },
-    );
+    final loggedInAction = useLoggedInActionForComment();
 
     return ObserverBuilder<CommentStore>(
       builder: (context, store) {
@@ -98,7 +90,7 @@ class CommentActions extends HookWidget {
             TileToggle(
               icon: Icons.arrow_upward,
               activated: store.myVote == VoteType.up,
-              activeColor: Theme.of(context).colorScheme.secondary,
+              activeColor: Colors.blue,
               onPressed: loggedInAction(store.upVote),
               tooltip: 'upvote',
             ),

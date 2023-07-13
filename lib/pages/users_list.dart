@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
+import '../stores/config_store.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../util/observer_consumers.dart';
 import '../widgets/avatar.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/markdown_text.dart';
@@ -44,17 +46,28 @@ class UsersListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bodyFontSize = context.read<ConfigStore>().postBodySize;
+
     return ListTile(
       title: Text(user.person.originPreferredName),
       subtitle: user.person.bio != null
-          ? Opacity(
-              opacity: 0.7,
-              child: MarkdownText(
-                user.person.bio!,
-                instanceHost: user.instanceHost,
+          ? SizedBox(
+              height: bodyFontSize * 2 + 5, // 2 lines + padding
+              child: ClipRect(
+                child: OverflowBox(
+                  alignment: Alignment.topCenter,
+                  maxHeight: double.infinity,
+                  child: Opacity(
+                    opacity: 0.7,
+                    child: MarkdownText(
+                      user.person.bio!,
+                      instanceHost: user.instanceHost,
+                    ),
+                  ),
+                ),
               ),
             )
-          : null,
+          : const SizedBox.shrink(),
       onTap: () => goToUser.fromPersonSafe(context, user.person),
       leading: Avatar(url: user.person.avatar),
     );

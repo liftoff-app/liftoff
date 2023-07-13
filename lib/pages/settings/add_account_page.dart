@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
 import '../../hooks/delayed_loading.dart';
+import '../../hooks/memo_future.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
@@ -13,6 +14,7 @@ import '../../util/text_color.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/fullscreenable_image.dart';
 import '../../widgets/radio_picker.dart';
+import '../display_document.dart';
 import 'add_instance_page.dart';
 
 /// A modal where an account can be added for a given instance
@@ -31,6 +33,12 @@ class AddAccountPage extends HookWidget {
     final totpController = useListenable(useTextEditingController());
     final totpFocusNode = useFocusNode();
     final accountsStore = useAccountsStore();
+    final clickThroughFontSize =
+        useStore((ConfigStore store) => store.postHeaderFontSize);
+    final assetBundle = DefaultAssetBundle.of(context);
+    final codeOfConductSnap =
+        useMemoFuture(() => assetBundle.loadString('CODE_OF_CONDUCT.md'));
+    final codeOfConduct = codeOfConductSnap.data ?? '';
 
     final loading = useDelayedLoading();
     final selectedInstance = useState(instanceHost);
@@ -47,7 +55,7 @@ class AddAccountPage extends HookWidget {
       try {
         final isFirstAccount = accountsStore.hasNoAccount;
 
-        // MYKL HACK - let the addAccount() run and then check to see if it
+        // Let the addAccount() run and then check to see if it
         // succeeded. This means that a users' very first account creation will
         // run properly.
         if (isFirstAccount) {
@@ -63,7 +71,7 @@ class AddAccountPage extends HookWidget {
           totpController.text,
         );
 
-        // MYKL recover from HACK - it failed, so clear the account.
+        // addAccount() run failed, so clear the account.
         if (isFirstAccount && accountsStore.hasNoAccount) {
           await accountsStore.clearDefaultAccount();
         }
@@ -113,6 +121,15 @@ class AddAccountPage extends HookWidget {
         child: ListView(
           padding: const EdgeInsets.all(15),
           children: [
+            GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                  DisplayDocumentPage.route('Code of Conduct', codeOfConduct)),
+              child: Text(L10n.of(context).code_of_conduct_clickthrough,
+                  style: TextStyle(
+                      color: theme.colorScheme.primary,
+                      fontSize: clickThroughFontSize,
+                      decoration: TextDecoration.underline)),
+            ),
             if (icon.value == null)
               const SizedBox(height: 150)
             else
@@ -154,6 +171,7 @@ class AddAccountPage extends HookWidget {
                 },
               ),
             ),
+            const SizedBox(height: 10),
             TextField(
               autofocus: true,
               controller: usernameController,
@@ -170,7 +188,7 @@ class AddAccountPage extends HookWidget {
               decoration: InputDecoration(
                   labelText: L10n.of(context).email_or_username),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             TextField(
               controller: passwordController,
               maxLength: 60,
@@ -191,6 +209,7 @@ class AddAccountPage extends HookWidget {
               decoration:
                   InputDecoration(labelText: L10n.of(context).totp_2fa_token),
             ),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: handleSubmit,
               child: !loading.loading
@@ -205,6 +224,7 @@ class AddAccountPage extends HookWidget {
                       ),
                     ),
             ),
+            const SizedBox(height: 10),
             FilledButton(
               onPressed: () {
                 launchLink(
