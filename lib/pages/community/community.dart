@@ -72,7 +72,9 @@ class CommunityPage extends HookWidget {
         final fullCommunityView = communityAsyncState.data;
         final community = fullCommunityView.communityView;
 
-        void doShare() => share(buildLemmyGuideUrl(community.community.actorId),
+        void doShare() => share(
+            buildLemmyGuideUrl(
+                '!${community.community.name}@${community.instanceHost}'),
             context: context);
 
         return Scaffold(
