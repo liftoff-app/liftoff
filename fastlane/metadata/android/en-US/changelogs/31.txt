@@ -1,0 +1,2 @@
+- Improvements to swipe actions (shocklateboy92)
+- Improvements to media support (hal9001)

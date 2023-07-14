@@ -1,3 +1,8 @@
+## v0.10.9 - 2023-07-14
+- More design tweaks (zachatrocity)
+- Improvements to swipe actions (shocklateboy92)
+- Improvements to media support (hal9001)
+
 ## v0.10.8 - 2023-07-13
 - Added photo cropping prior to upload (mykdavies)
 - Added MP4 and some redgif support (jjcomer)
