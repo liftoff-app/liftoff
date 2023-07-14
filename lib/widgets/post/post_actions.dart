@@ -10,6 +10,7 @@ import '../write_comment.dart';
 import 'post_more_menu.dart';
 import 'post_store.dart';
 import 'post_voting.dart';
+import 'save_post_button.dart';
 
 class PostActions extends HookWidget {
   const PostActions();
@@ -34,7 +35,7 @@ class PostActions extends HookWidget {
       }
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Row(
           children: [
             const Icon(Icons.comment_rounded),
@@ -64,6 +65,7 @@ class PostActions extends HookWidget {
                             renderbox.size.width, renderbox.size.height)));
               },
             ),
+            const SavePostButton(),
             if (!store.postView.post.locked)
               IconButton(
                 onPressed: replyLoggedInAction((_) => comment()),
