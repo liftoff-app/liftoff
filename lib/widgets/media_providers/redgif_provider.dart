@@ -9,6 +9,7 @@ import 'liftoff_media_provider.dart';
 class RedgifProvider implements LiftoffMediaProvider {
   const RedgifProvider();
   static String? _authToken;
+  static RegExp urlExpression = RegExp(r'(www\.)?redgifs\.com');
 
   Future<Uri> _getRedgifUrl(Uri url, {allowRetries = true}) async {
     final token = await _getAuthtoken();
@@ -43,7 +44,7 @@ class RedgifProvider implements LiftoffMediaProvider {
 
   @override
   bool providesFor(Uri url) {
-    return url.host == 'redgifs.com';
+    return urlExpression.hasMatch(url.host);
   }
 
   //TODO Get a real API Key
