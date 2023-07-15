@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../stores/config_store.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/observer_consumers.dart';
 import '../widgets/avatar.dart';
@@ -61,7 +62,8 @@ class CommunitiesListItem extends StatelessWidget {
     final bodyFontSize = context.read<ConfigStore>().postBodySize;
 
     return ListTile(
-      title: Text(community.community.name),
+      title: Text('${community.community.name}'
+          '@${community.community.originInstanceHost}'),
       subtitle: community.community.description != null
           ? SizedBox(
               height: bodyFontSize * 2 + 5, // 2 lines + padding
