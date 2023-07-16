@@ -9,6 +9,7 @@ class NSFWHider extends HookWidget {
   final Widget child;
 
   const NSFWHider({
+    super.key,
     required this.child,
   });
 

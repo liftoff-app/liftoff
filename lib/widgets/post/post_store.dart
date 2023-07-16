@@ -7,7 +7,9 @@ import '../../util/cleanup_url.dart';
 
 part 'post_store.g.dart';
 
-class PostStore = _PostStore with _$PostStore;
+class PostStore extends _PostStore with _$PostStore {
+  PostStore(super.postView);
+}
 
 abstract class _PostStore with Store {
   _PostStore(this.postView);

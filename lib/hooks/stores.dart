@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../stores/accounts_store.dart';
 
 AccountsStore useAccountsStore() => useContext().watch<AccountsStore>();
-T useAccountsStoreSelect<T>(T selector(AccountsStore store)) =>
+T useAccountsStoreSelect<T>(T Function(AccountsStore store) selector) =>
     useContext().select<AccountsStore, T>(selector);
 
 V useStore<S extends Store, V>(V Function(S value) selector) {

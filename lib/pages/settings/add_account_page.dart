@@ -21,7 +21,7 @@ import 'add_instance_page.dart';
 class AddAccountPage extends HookWidget {
   final String instanceHost;
 
-  const AddAccountPage({required this.instanceHost});
+  const AddAccountPage({super.key, required this.instanceHost});
 
   @override
   Widget build(BuildContext context) {
@@ -79,16 +79,19 @@ class AddAccountPage extends HookWidget {
         // if first account try to import settings
         if (isFirstAccount) {
           try {
-            await context.read<ConfigStore>().importLemmyUserSettings(
-                accountsStore
-                    .userDataFor(
-                        selectedInstance.value, usernameController.text)!
-                    .jwt);
+            if (context.mounted) {
+              await context.read<ConfigStore>().importLemmyUserSettings(
+                  accountsStore
+                      .userDataFor(
+                          selectedInstance.value, usernameController.text)!
+                      .jwt);
+            }
             // ignore: empty_catches
           } catch (e) {}
         }
-
-        Navigator.of(context).pop();
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       } on VerifyEmailException {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(L10n.of(context).verification_email_sent),
@@ -167,7 +170,9 @@ class AddAccountPage extends HookWidget {
                 onTap: () async {
                   final value =
                       await Navigator.of(context).push(AddInstancePage.route());
-                  Navigator.of(context).pop(value);
+                  if (context.mounted) {
+                    Navigator.of(context).pop(value);
+                  }
                 },
               ),
             ),

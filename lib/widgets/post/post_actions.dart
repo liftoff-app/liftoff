@@ -13,7 +13,7 @@ import 'post_voting.dart';
 import 'save_post_button.dart';
 
 class PostActions extends HookWidget {
-  const PostActions();
+  const PostActions({super.key});
 
   @override
   Widget build(BuildContext context) {

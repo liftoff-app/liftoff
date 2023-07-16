@@ -48,11 +48,13 @@ class CommentActions extends HookWidget {
                 tooltip: 'copy',
                 onPressed: () async {
                   await Clipboard.setData(ClipboardData(text: comment.content));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('comment copied to clipboard'),
-                    ),
-                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('comment copied to clipboard'),
+                      ),
+                    );
+                  }
                 },
               ),
             const Spacer(),

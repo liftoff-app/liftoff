@@ -65,6 +65,7 @@ dependencies:
   logging: ^1.0.1
   nested: ^1.0.0
   l10n_esperanto: ^2.0.5
+  uuid: ^3.0.7
 
   flutter:
     sdk: flutter
