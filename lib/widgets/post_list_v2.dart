@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:liftoff/widgets/post_list_options.dart';
 
 import '../resources/app_theme.dart';
 import '../stores/config_store.dart';
@@ -25,48 +26,59 @@ class PostListV2 extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = Provider.of<ConfigStore>(context);
+    final sort = useState(config.defaultSortType);
+
     final pagingController = useMemoized(() {
       final controller = PagingController<int, PostStore>(firstPageKey: 1);
       controller.addPageRequestListener((pageKey) async {
-        final newItems = await fetcher(pageKey, 10, SortType.active);
+        final newItems = await fetcher(pageKey, 10, sort.value);
         controller.appendPage(
             newItems.map(PostStore.new).toList(), pageKey + 1);
       });
       return controller;
     });
 
-    return PagedListView.separated(
-        pagingController: pagingController,
-        
-        builderDelegate: PagedChildBuilderDelegate<PostStore>(
-            itemBuilder: (context, item, index) {
-          final read = context.read<ConfigStore>();
-          return Column(
-            children: [
-              PostTile.fromPostStore(item),
-              SizedBox(height: read.compactPostView ? 2 : 10),
-            ],
-          );
-        }),
-        separatorBuilder: (BuildContext context, int index) =>
-            Consumer<AppTheme>(
-                builder: (context, theme, child) => (theme.useAmoled)
-                    ? SizedBox(
-                        width: 250,
-                        height: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Theme.of(context).primaryColorDark,
-                              Theme.of(context).colorScheme.secondary,
-                              Theme.of(context).primaryColorDark,
-                            ],
-                          )),
-                        ),
-                      )
-                    : const SizedBox.shrink()));
+    return CustomScrollView(slivers: <Widget>[
+      // PostListOptions(
+      //   sortValue: sort.value,
+      //   onSortChanged: (sortType) {
+      //     sort.value = sortType;
+      //     pagingController.refresh();
+      //   },
+      // ),
+      PagedSliverList<int, PostStore>.separated(
+          pagingController: pagingController,
+          builderDelegate: PagedChildBuilderDelegate<PostStore>(
+              itemBuilder: (context, item, index) {
+            final read = context.read<ConfigStore>();
+            return Column(
+              children: [
+                PostTile.fromPostStore(item, fullPost: false),
+                SizedBox(height: read.compactPostView ? 2 : 10),
+              ],
+            );
+          }),
+          separatorBuilder: (BuildContext context, int index) =>
+              Consumer<AppTheme>(
+                  builder: (context, theme, child) => (theme.useAmoled)
+                      ? SizedBox(
+                          width: 250,
+                          height: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Theme.of(context).primaryColorDark,
+                                Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).primaryColorDark,
+                              ],
+                            )),
+                          ),
+                        )
+                      : const SizedBox.shrink()))
+    ]);
   }
 }
