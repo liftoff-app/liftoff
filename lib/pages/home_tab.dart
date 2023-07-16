@@ -389,8 +389,6 @@ class InfiniteHomeList extends HookWidget {
     return PostListV2(
       fetcher: fetcher,
       infiniteScrollController: controller,
-      contentKey: selectedList.instanceHost.toString() +
-          selectedList.listingType.toString(),
     );
   }
 
