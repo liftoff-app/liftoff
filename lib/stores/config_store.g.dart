@@ -18,6 +18,8 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..showScores = json['showScores'] as bool? ?? true
   ..blurNsfw = json['blurNsfw'] as bool? ?? true
   ..showThumbnail = json['showThumbnail'] as bool? ?? true
+  ..autoPlayVideo = json['autoPlayVideo'] as bool? ?? true
+  ..autoMuteVideo = json['autoMuteVideo'] as bool? ?? true
   ..titleFontSize = (json['titleFontSize'] as num?)?.toDouble() ?? 16
   ..postHeaderFontSize = (json['postHeaderFontSize'] as num?)?.toDouble() ?? 15
   ..postBodySize = (json['postBodySize'] as num?)?.toDouble() ?? 15
@@ -47,6 +49,8 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'showScores': instance.showScores,
       'blurNsfw': instance.blurNsfw,
       'showThumbnail': instance.showThumbnail,
+      'autoPlayVideo': instance.autoPlayVideo,
+      'autoMuteVideo': instance.autoMuteVideo,
       'titleFontSize': instance.titleFontSize,
       'postHeaderFontSize': instance.postHeaderFontSize,
       'postBodySize': instance.postBodySize,
@@ -240,6 +244,38 @@ mixin _$ConfigStore on _ConfigStore, Store {
   set showThumbnail(bool value) {
     _$showThumbnailAtom.reportWrite(value, super.showThumbnail, () {
       super.showThumbnail = value;
+    });
+  }
+
+  late final _$autoPlayVideoAtom =
+      Atom(name: '_ConfigStore.autoPlayVideo', context: context);
+
+  @override
+  bool get autoPlayVideo {
+    _$autoPlayVideoAtom.reportRead();
+    return super.autoPlayVideo;
+  }
+
+  @override
+  set autoPlayVideo(bool value) {
+    _$autoPlayVideoAtom.reportWrite(value, super.autoPlayVideo, () {
+      super.autoPlayVideo = value;
+    });
+  }
+
+  late final _$autoMuteVideoAtom =
+      Atom(name: '_ConfigStore.autoMuteVideo', context: context);
+
+  @override
+  bool get autoMuteVideo {
+    _$autoMuteVideoAtom.reportRead();
+    return super.autoMuteVideo;
+  }
+
+  @override
+  set autoMuteVideo(bool value) {
+    _$autoMuteVideoAtom.reportWrite(value, super.autoMuteVideo, () {
+      super.autoMuteVideo = value;
     });
   }
 
@@ -473,6 +509,8 @@ showAvatars: ${showAvatars},
 showScores: ${showScores},
 blurNsfw: ${blurNsfw},
 showThumbnail: ${showThumbnail},
+autoPlayVideo: ${autoPlayVideo},
+autoMuteVideo: ${autoMuteVideo},
 titleFontSize: ${titleFontSize},
 postHeaderFontSize: ${postHeaderFontSize},
 postBodySize: ${postBodySize},

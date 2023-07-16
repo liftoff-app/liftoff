@@ -245,6 +245,20 @@ class PostStyleConfigPage extends StatelessWidget {
                           store.showScores = checked;
                         },
                       ),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).auto_play_video),
+                        value: store.autoPlayVideo,
+                        onChanged: (checked) {
+                          store.autoPlayVideo = checked;
+                        },
+                      ),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).auto_mute_video),
+                        value: store.autoMuteVideo,
+                        onChanged: (checked) {
+                          store.autoMuteVideo = checked;
+                        },
+                      ),
                       const SizedBox(height: 12),
                       _SectionHeading(L10n.of(context).font),
                       ListTile(

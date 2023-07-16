@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../stores/config_store.dart';
+import '../../util/observer_consumers.dart';
+
 //TODO Support for full screen video
 
 class PostVideo extends StatefulWidget {
@@ -28,10 +31,7 @@ class _PostVideoState extends State<PostVideo> {
           Platform.isAndroid ? 'ExoPlayer' : 'Liftoff/1.0'
     });
 
-    _controller
-      ..play()
-      ..setLooping(true)
-      ..setVolume(0);
+    _controller.setLooping(true);
 
     _initializeVideoPlayerFuture = _controller.initialize();
   }
@@ -60,6 +60,13 @@ class _PostVideoState extends State<PostVideo> {
 
   @override
   Widget build(BuildContext context) {
+    if (context.read<ConfigStore>().autoMuteVideo) {
+      _controller.setVolume(0);
+    }
+    if (context.read<ConfigStore>().autoPlayVideo) {
+      _controller.play();
+    }
+
     return Column(children: [
       ButtonBar(children: [
         IconButton(
