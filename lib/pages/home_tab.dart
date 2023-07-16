@@ -4,6 +4,7 @@ import 'dart:math' show max;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:logging/logging.dart';
 
 import '../hooks/infinite_scroll.dart';
 import '../hooks/logged_in_action.dart';
@@ -15,6 +16,8 @@ import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
+import '../widgets/post/post_store.dart';
+import '../widgets/post_list_v2.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'create_post/create_post.dart';
 import 'full_post/full_post.dart';
@@ -206,7 +209,6 @@ class HomeTab extends HookWidget {
       );
       if (val != null) {
         selectedList.value = val;
-        isc.clear();
       }
     }
 
@@ -352,6 +354,8 @@ class HomeTab extends HookWidget {
   }
 }
 
+final _logger = Logger('home_page');
+
 /// Infinite list of posts
 class InfiniteHomeList extends HookWidget {
   final InfiniteScrollController controller;
@@ -418,14 +422,24 @@ class InfiniteHomeList extends HookWidget {
               auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
             ));
 
-    return InfinitePostList(
-      fetcher: selectedList.instanceHost == null
-          ? (page, limit, sort) =>
-              generalFetcher(page, limit, sort, selectedList.listingType)
-          : fetcherFromInstance(
-              selectedList.instanceHost!, selectedList.listingType),
-      controller: controller,
-    );
+    final selectedInstanceHost = selectedList.instanceHost;
+    _logger.fine('selectedInstanceHost: $selectedInstanceHost');
+
+    if (selectedInstanceHost == null) {
+      return PostListV2(
+        fetcher: (page, limit, sort) =>
+            generalFetcher(page, limit, sort, selectedList.listingType),
+      );
+    }
+
+    return PostListV2(
+        fetcher: fetcherFromInstance(
+            selectedInstanceHost, selectedList.listingType));
+    // return InfinitePostList(
+    //   fetcher:
+    //       fetcherFromInstance(selectedInstanceHost, selectedList.listingType),
+    //   controller: controller,
+    // );
   }
 }
 
