@@ -26,7 +26,7 @@ import '../widgets/tile_action.dart';
 import 'write_message.dart';
 
 class InboxPage extends HookWidget {
-  const InboxPage();
+  const InboxPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -229,6 +229,7 @@ class PrivateMessageTile extends HookWidget {
   final bool hideOnRead;
 
   const PrivateMessageTile({
+    super.key,
     required this.privateMessageView,
     this.hideOnRead = false,
   });

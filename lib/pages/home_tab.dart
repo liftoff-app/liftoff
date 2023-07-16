@@ -27,7 +27,7 @@ import 'settings/settings.dart';
 /// First thing users sees when opening the app
 /// Shows list of posts from all or just specific instances
 class HomeTab extends HookWidget {
-  const HomeTab();
+  const HomeTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class HomeTab extends HookWidget {
     final showEverythingFeed =
         useStore((ConfigStore store) => store.showEverythingFeed);
 
-    final selectedList = useState(_SelectedList(
+    final selectedList = useState(SelectedList(
         instanceHost: accStore.defaultInstanceHost,
         listingType: accStore.hasNoAccount &&
                 defaultListingType == PostListingType.subscribed
@@ -69,7 +69,7 @@ class HomeTab extends HookWidget {
                   accStore.isAnonymousFor(selectedList.value.instanceHost!)) &&
               selectedList.value.listingType == PostListingType.subscribed ||
           !accStore.instances.contains(selectedList.value.instanceHost)) {
-        selectedList.value = _SelectedList(
+        selectedList.value = SelectedList(
           listingType: accStore.hasNoAccount &&
                   defaultListingType == PostListingType.subscribed
               ? PostListingType.all
@@ -86,10 +86,10 @@ class HomeTab extends HookWidget {
     ]);
 
     handleListChange() async {
-      final val = await showBottomModal<_SelectedList>(
+      final val = await showBottomModal<SelectedList>(
         context: context,
         builder: (context) {
-          pop(_SelectedList thing) => Navigator.of(context).pop(thing);
+          pop(SelectedList thing) => Navigator.of(context).pop(thing);
 
           final everythingChoices = [
             const ListTile(
@@ -112,7 +112,7 @@ class HomeTab extends HookWidget {
               onTap: accStore.hasNoAccount
                   ? null
                   : () => pop(
-                        const _SelectedList(
+                        const SelectedList(
                           listingType: PostListingType.subscribed,
                         ),
                       ),
@@ -125,7 +125,7 @@ class HomeTab extends HookWidget {
               ListTile(
                 title: Text(listingType.value),
                 leading: const SizedBox(width: 20, height: 20),
-                onTap: () => pop(_SelectedList(listingType: listingType)),
+                onTap: () => pop(SelectedList(listingType: listingType)),
               ),
           ];
           return Column(
@@ -178,7 +178,7 @@ class HomeTab extends HookWidget {
                   onTap: accStore.isAnonymousFor(instance)
                       ? () => Navigator.of(context)
                           .push(AddAccountPage.route(instance))
-                      : () => pop(_SelectedList(
+                      : () => pop(SelectedList(
                             listingType: PostListingType.subscribed,
                             instanceHost: instance,
                           )),
@@ -186,7 +186,7 @@ class HomeTab extends HookWidget {
                 ),
                 ListTile(
                   title: Text(L10n.of(context).local),
-                  onTap: () => pop(_SelectedList(
+                  onTap: () => pop(SelectedList(
                     listingType: PostListingType.local,
                     instanceHost: instance,
                   )),
@@ -194,7 +194,7 @@ class HomeTab extends HookWidget {
                 ),
                 ListTile(
                   title: Text(L10n.of(context).all),
-                  onTap: () => pop(_SelectedList(
+                  onTap: () => pop(SelectedList(
                     listingType: PostListingType.all,
                     instanceHost: instance,
                   )),
@@ -279,7 +279,7 @@ class HomeTab extends HookWidget {
                           CreatePostPage.route(),
                         );
 
-                        if (postView != null) {
+                        if (postView != null && context.mounted) {
                           await Navigator.of(context)
                               .push(FullPostPage.fromPostViewRoute(postView));
                         }
@@ -355,9 +355,10 @@ class HomeTab extends HookWidget {
 /// Infinite list of posts
 class InfiniteHomeList extends HookWidget {
   final InfiniteScrollController controller;
-  final _SelectedList selectedList;
+  final SelectedList selectedList;
 
   const InfiniteHomeList({
+    super.key,
     required this.selectedList,
     required this.controller,
   });
@@ -442,12 +443,12 @@ class InfiniteHomeList extends HookWidget {
   }
 }
 
-class _SelectedList {
+class SelectedList {
   /// when null it implies the 'EVERYTHING' mode
   final String? instanceHost;
   final PostListingType listingType;
 
-  const _SelectedList({
+  const SelectedList({
     required this.listingType,
     this.instanceHost,
   });

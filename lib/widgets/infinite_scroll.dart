@@ -59,6 +59,7 @@ class InfiniteScroll<T> extends HookWidget {
   final bool refreshOnFetcherUpdate;
 
   const InfiniteScroll({
+    super.key,
     this.batchSize = 10,
     this.leading = const SizedBox.shrink(),
     this.padding,

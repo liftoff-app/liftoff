@@ -22,7 +22,7 @@ import 'instance/instance.dart';
 
 /// List of subscribed communities per instance
 class CommunitiesTab extends HookWidget {
-  const CommunitiesTab();
+  const CommunitiesTab({super.key});
 
   @override
   Widget build(BuildContext context) {

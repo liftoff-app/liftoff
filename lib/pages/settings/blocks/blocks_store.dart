@@ -8,7 +8,9 @@ import 'user_block_store.dart';
 
 part 'blocks_store.g.dart';
 
-class BlocksStore = _BlocksStore with _$BlocksStore;
+class BlocksStore extends _BlocksStore with _$BlocksStore {
+  BlocksStore({required super.instanceHost, required super.token});
+}
 
 abstract class _BlocksStore with Store {
   final String instanceHost;
