@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:lemmy_api_client/v3.dart';
-import 'package:liftoff/widgets/post_list_options.dart';
-import 'package:logging/logging.dart';
 
 import '../resources/app_theme.dart';
 import '../stores/config_store.dart';
@@ -11,6 +8,7 @@ import '../util/observer_consumers.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
 import 'post/post_store.dart';
+import 'post_list_options.dart';
 import 'sortable_infinite_list.dart';
 
 class PostListV2 extends HookWidget {
@@ -67,13 +65,14 @@ class PostListV2 extends HookWidget {
     }, [pagingController]);
 
     return CustomScrollView(slivers: <Widget>[
-      // PostListOptions(
-      //   sortValue: sort.value,
-      //   onSortChanged: (sortType) {
-      //     sort.value = sortType;
-      //     pagingController.refresh();
-      //   },
-      // ),
+      SliverToBoxAdapter(
+          child: PostListOptions(
+        sortValue: sort.value,
+        onSortChanged: (sortType) {
+          sort.value = sortType;
+          pagingController.refresh();
+        },
+      )),
       PagedSliverList<int, PostStore>.separated(
           pagingController: pagingController,
           builderDelegate: PagedChildBuilderDelegate<PostStore>(
