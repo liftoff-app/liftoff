@@ -11,6 +11,7 @@ import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../stores/accounts_store.dart';
 import '../stores/config_store.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
@@ -207,6 +208,7 @@ class HomeTab extends HookWidget {
           );
         },
       );
+      _logger.fine('val: $val');
       if (val != null) {
         selectedList.value = val;
       }
@@ -329,10 +331,7 @@ class HomeTab extends HookWidget {
                     ];
                   }, onSelected: (value) {
                     if (value == 0) {
-                      // unable to tie a controller to the infinite scroll
-                      // table, for now just reload
-                      // isc.scrollToTop();
-                      isc.clear();
+                      isc.scrollToTop();
                     } else if (value == 1) {
                       isc.clear();
                     } else if (value == 2) {
@@ -370,76 +369,93 @@ class InfiniteHomeList extends HookWidget {
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
 
-    /// fetches post from many instances at once and combines them into a single
-    /// list
-    ///
-    /// Process of combining them works sort of like zip function in python
-    Future<List<PostView>> generalFetcher(
-      int page,
-      int limit,
-      SortType sort,
-      PostListingType listingType,
-    ) async {
-      final instances = () {
-        if (listingType == PostListingType.subscribed) {
-          return accStore.loggedInInstances;
-        }
+    final FetcherWithSorting<PostStore> fetcher =
+        useCallback((page, limit, sort) {
+      final selectedInstanceHost = selectedList.instanceHost;
+      // refresh selection changes:
+      // e.g. All@lemmy.world -> Subscribed@example.com
+      _logger.fine('selectedInstanceHost: $selectedInstanceHost, '
+          'selectedList: ${selectedList.listingType}');
 
-        return accStore.instances;
-      }();
+      if (selectedInstanceHost == null) {
+        return generalFetcher(
+            page, limit, sort, selectedList.listingType, accStore);
+      }
 
-      final futures = [
-        for (final instanceHost in instances)
-          LemmyApiV3(instanceHost).run(GetPosts(
-            type: listingType,
-            sort: sort,
-            page: page,
-            limit: limit,
-            savedOnly: false,
-            auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-          ))
-      ];
-      final instancePosts = await Future.wait(futures);
-      final longest = instancePosts.map((e) => e.length).reduce(max);
+      return fetcherFromInstance(page, limit, sort, selectedInstanceHost,
+          selectedList.listingType, accStore);
+    }, [selectedList.instanceHost, selectedList.listingType, accStore]);
 
-      final newPosts = [
-        for (var i = 0; i < longest; i++)
-          for (final posts in instancePosts)
-            if (i < posts.length) posts[i]
-      ];
+    return PostListV2(
+      fetcher: fetcher,
+      infiniteScrollController: controller,
+      contentKey: selectedList.instanceHost.toString() +
+          selectedList.listingType.toString(),
+    );
+  }
 
-      return newPosts;
-    }
+  /// fetches post from many instances at once and combines them into a single
+  /// list
+  ///
+  /// Process of combining them works sort of like zip function in python
+  Future<List<PostStore>> generalFetcher(
+    int page,
+    int limit,
+    SortType sort,
+    PostListingType listingType,
+    AccountsStore accStore,
+  ) async {
+    final instances = () {
+      if (listingType == PostListingType.subscribed) {
+        return accStore.loggedInInstances;
+      }
 
-    FetcherWithSorting<PostView> fetcherFromInstance(
-            String instanceHost, PostListingType listingType) =>
-        (page, batchSize, sort) => LemmyApiV3(instanceHost).run(GetPosts(
+      return accStore.instances;
+    }();
+
+    final futures = [
+      for (final instanceHost in instances)
+        LemmyApiV3(instanceHost)
+            .run(GetPosts(
               type: listingType,
               sort: sort,
               page: page,
-              limit: batchSize,
+              limit: limit,
               savedOnly: false,
               auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-            ));
+            ))
+            .mapToPostStore()
+    ];
+    final instancePosts = await Future.wait(futures);
+    final longest = instancePosts.map((e) => e.length).reduce(max);
 
-    final selectedInstanceHost = selectedList.instanceHost;
-    _logger.fine('selectedInstanceHost: $selectedInstanceHost');
+    final newPosts = [
+      for (var i = 0; i < longest; i++)
+        for (final posts in instancePosts)
+          if (i < posts.length) posts[i]
+    ];
 
-    if (selectedInstanceHost == null) {
-      return PostListV2(
-        fetcher: (page, limit, sort) =>
-            generalFetcher(page, limit, sort, selectedList.listingType),
-      );
-    }
+    return newPosts;
+  }
 
-    return PostListV2(
-        fetcher: fetcherFromInstance(
-            selectedInstanceHost, selectedList.listingType));
-    // return InfinitePostList(
-    //   fetcher:
-    //       fetcherFromInstance(selectedInstanceHost, selectedList.listingType),
-    //   controller: controller,
-    // );
+  Future<List<PostStore>> fetcherFromInstance(
+      int page,
+      int batchSize,
+      SortType sort,
+      String instanceHost,
+      PostListingType listingType,
+      AccountsStore accStore) {
+    _logger.fine('fetching from $instanceHost with $listingType');
+    return LemmyApiV3(instanceHost)
+        .run(GetPosts(
+          type: listingType,
+          sort: sort,
+          page: page,
+          limit: batchSize,
+          savedOnly: false,
+          auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+        ))
+        .mapToPostStore();
   }
 }
 

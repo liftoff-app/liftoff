@@ -3,43 +3,74 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:liftoff/widgets/post_list_options.dart';
+import 'package:logging/logging.dart';
 
 import '../resources/app_theme.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
+import 'infinite_scroll.dart';
 import 'post/post.dart';
 import 'post/post_store.dart';
 import 'sortable_infinite_list.dart';
 
-PagingController useMyController(PagingController Function() constructor) {
-  final controller = useMemoized(constructor, []);
-  useEffect(() => controller.dispose, [controller]);
-  return controller;
-}
+final _logger = Logger('post_list_v2');
 
 class PostListV2 extends HookWidget {
-  final FetcherWithSorting<PostView> fetcher;
+  final FetcherWithSorting<PostStore> _fetcher;
+  final InfiniteScrollController infiniteScrollController;
+
+  /// if contentKey is provided, the list will be refreshed
+  /// when the contentKey changes
+  final dynamic contentKey;
+
+  FetcherWithSorting<PostStore> get fetcher => _fetcher;
 
   const PostListV2({
-    required this.fetcher,
-  });
+    required FetcherWithSorting<PostStore> fetcher,
+    required this.infiniteScrollController,
+    this.contentKey,
+  }) : _fetcher = fetcher;
 
   @override
   Widget build(BuildContext context) {
     final config = Provider.of<ConfigStore>(context);
     final sort = useState(config.defaultSortType);
 
+    final scrollController = useScrollController();
+    infiniteScrollController.scrollToTop = () => scrollController.animateTo(0,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+
+    // controller stores the data, so we need to keep it
+    // persistent between rebuilds.
     final pagingController = useMemoized(() {
+      _logger.info('creating new paging controller');
       final controller = PagingController<int, PostStore>(firstPageKey: 1);
-      controller.addPageRequestListener((pageKey) async {
-        final newItems = await fetcher(pageKey, 10, sort.value);
-        controller.appendPage(
-            newItems.map(PostStore.new).toList(), pageKey + 1);
-      });
+
+      infiniteScrollController.clear = controller.refresh;
+
       return controller;
     });
 
-    return CustomScrollView(slivers: <Widget>[
+    final listener = useCallback((page) async {
+      _logger.info('fetching page $page with sort $sort');
+      final posts = await _fetcher(page, 10, sort.value);
+      if (posts.isEmpty) {
+        pagingController.appendLastPage([]);
+      } else {
+        pagingController.appendPage(posts, page + 1);
+      }
+    }, [contentKey]);
+    useEffect(() {
+      pagingController.addPageRequestListener(listener);
+      return () => pagingController.removePageRequestListener(listener);
+    }, [listener]);
+
+    // dispose the old controller if we get a new one or the widget is disposed
+    useEffect(() => pagingController.dispose, [pagingController]);
+    useValueChanged(
+        contentKey, (oldValue, oldResult) => pagingController.refresh());
+
+    return CustomScrollView(controller: scrollController, slivers: <Widget>[
       // PostListOptions(
       //   sortValue: sort.value,
       //   onSortChanged: (sortType) {

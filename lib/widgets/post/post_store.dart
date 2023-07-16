@@ -9,6 +9,11 @@ part 'post_store.g.dart';
 
 class PostStore = _PostStore with _$PostStore;
 
+extension PostStoreMapping on Future<List<PostView>> {
+  Future<List<PostStore>> mapToPostStore() async =>
+      then((posts) => posts.map(PostStore.new).toList());
+}
+
 abstract class _PostStore with Store {
   _PostStore(this.postView);
 

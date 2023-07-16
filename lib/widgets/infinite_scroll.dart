@@ -7,16 +7,11 @@ import 'bottom_safe.dart';
 import 'pull_to_refresh.dart';
 
 class InfiniteScrollController {
-  late VoidCallback clear;
-  late VoidCallback scrollToTop;
+  VoidCallback clear = _usedBeforeCreation;
+  VoidCallback scrollToTop = _usedBeforeCreation;
 
-  InfiniteScrollController() {
-    usedBeforeCreation() => throw Exception(
-        'Tried to use $runtimeType before it being initialized');
-
-    clear = usedBeforeCreation;
-    scrollToTop = usedBeforeCreation;
-  }
+  static _usedBeforeCreation() => throw Exception(
+      'Tried to use InfiniteScrollController before it being initialized');
 }
 
 typedef Fetcher<T> = Future<List<T>> Function(int page, int batchSize);
