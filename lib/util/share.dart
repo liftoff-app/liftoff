@@ -33,9 +33,11 @@ Future<void> _fallbackShare(
   required BuildContext context,
 }) async {
   await Clipboard.setData(ClipboardData(text: text));
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('Copied data to clipboard!')),
-  );
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Copied data to clipboard!')),
+    );
+  }
 }
 
 /// Constructs an instance-agnostic link to the given target,

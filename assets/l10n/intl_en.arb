@@ -186,6 +186,10 @@
   "@post_view": {},
   "show_scores": "Show Scores",
   "@show_scores": {},
+  "auto_play_video": "Auto Play Video",
+  "@auto_play_video": {},
+  "auto_mute_video": "Auto Mute Video",
+  "@auto_mute_video": {},
   "font": "Font",
   "@font": {},
   "preview": "Preview",
@@ -218,9 +222,8 @@
   "@federated_post_info": {},
   "not_found": "Not found",
   "@not_found": {},
-
   "error": "Error: {error_text}",
-  "@error" :{
+  "@error": {
     "placeholders": {
       "error_text": {
         "type": "String"
@@ -416,10 +419,10 @@
     }
   },
   "set_as_default": "Set as default",
-  "@set_as_default" : {},
-  "import_settings" :"Import settings to Liftoff",
+  "@set_as_default": {},
+  "import_settings": "Import settings to Liftoff",
   "@import_settings": {},
-  "import_successful" : "Import successful",
+  "import_successful": "Import successful",
   "@import_successful": {},
   "instance_url": "instance url",
   "@instance_url": {},
@@ -441,26 +444,22 @@
       }
     }
   },
-
   "block": "Block",
-  "@block":{},
+  "@block": {},
   "block_user": "Block user",
-  "@block_user":{},
+  "@block_user": {},
   "no_users_blocked": "No users blocked",
-  "@no_users_blocked":{},
+  "@no_users_blocked": {},
   "block_community": "Block community",
-  "@block_community":{},
+  "@block_community": {},
   "no_communities_blocked": "No communities blocked",
-  "@no_communities_blocked":{},
+  "@no_communities_blocked": {},
   "unblock": "Unblock",
-  "@unblock":{},
+  "@unblock": {},
   "unblock_user": "Unblock user",
-  "@unblock_user":{},
+  "@unblock_user": {},
   "unblock_community": "Unblock community",
-  "@unblock_community":{},
-
-
-
+  "@unblock_community": {},
   "remove_account_confirm": "This will delete your account and data from this app. Your account and data will remain on the instance.",
   "@remove_account_confirm": {},
   "delete_account_confirm": "Warning: this will permanently delete your account and all of your data from the app AND instance. Your data may not be deleted on other, existing instances. Enter your password to confirm.",
@@ -540,32 +539,31 @@
   "open_in_browser": "Open in browser",
   "@open_in_browser": {},
   "share_text": "Share text",
-  "@share_text":{},
+  "@share_text": {},
   "share_url": "Share URL",
-  "@share_url":{},
+  "@share_url": {},
   "translate": "Translate",
-  "@translate":{},
+  "@translate": {},
   "make_text_selectable": "Make text selectable",
-  "@make_text_selectable":{},
+  "@make_text_selectable": {},
   "make_text_unselectable": "Make text unselectable",
-  "@make_text_unselectable":{},
+  "@make_text_unselectable": {},
   "show_fancy_text": "Show fancy text",
-  "@make_fancy_text":{},
+  "@make_fancy_text": {},
   "show_raw_text": "Show raw text",
-  "@make_raw_text":{},
+  "@make_raw_text": {},
   "delete_comment": "Delete comment",
-  "@delete_comment":{},
+  "@delete_comment": {},
   "restore_comment": "Restore comment",
-  "@restore_comment":{},
+  "@restore_comment": {},
   "report_comment": "Report comment",
-  "@report_comment":{},
+  "@report_comment": {},
   "delete_post": "Delete post",
-  "@delete_post":{},
+  "@delete_post": {},
   "restore_post": "Restore post",
-  "@restore_post":{},
+  "@restore_post": {},
   "report_post": "Report post",
-  "@report_post":{},
-  
+  "@report_post": {},
   "cannot_open_in_browser": "Can't open in browser",
   "@cannot_open_in_browser": {},
   "about": "About",
@@ -687,36 +685,25 @@
     "description": "shows up on a snackbar when the image upload failed"
   },
   "instance_error": "Hmm... it seems like your instance is having trouble responding.",
-  "@instance_error": {
-  },
+  "@instance_error": {},
   "instance_record_notfound": "Hmm... it seems like your instance couldn't find what you were looking for.",
-  "@instance_record_notfound": {
-  },
+  "@instance_record_notfound": {},
   "try_again": "Try Again",
-  "@try_again": {
-  },
+  "@try_again": {},
   "kbin_instances_not_supported": "Please note that kbin instances are not supported at present.",
-  "@kbin_instances_not_supported": {
-  },
+  "@kbin_instances_not_supported": {},
   "pick_a_photo": "Pick a photo",
-  "@pick_a_photo": {
-  },
+  "@pick_a_photo": {},
   "use_this_image": "Use this image",
-  "@use_this_image": {
-  },
+  "@use_this_image": {},
   "photo_picker_explanation": "Pick an image, then adjust the crop box to the right shape.\n\nYou can then drag the image until it's in the right place. \n\nResizing the crop box will zoom the selection in and out.",
-  "@photo_picker_explanation": {
-  },
+  "@photo_picker_explanation": {},
   "accounts_explanation": "The first instance on this screen will be treated as your default in other screens, and the marked account will be the default on that instance.\n\nPress and hold on an account to make it your default on that instance.\n\nPress and hold an instance or account to remove it from this app. You can add it back later. You may lose some local settings but your bookmarks, subscriptions etc will still be held on your instance.",
-  "@accounts_explanation": {
-  },
+  "@accounts_explanation": {},
   "comment_tag_op": "OP",
-  "@comment_tag_op": {
-  },
+  "@comment_tag_op": {},
   "comment_tag_you": "YOU",
-  "@comment_tag_you": {
-  },
+  "@comment_tag_you": {},
   "code_of_conduct_clickthrough": "By accessing the Lemmy network using Liftoff! you agree to adhere to our Code of Conduct",
-  "@code_of_conduct_clickthrough": {
-  }
+  "@code_of_conduct_clickthrough": {}
 }

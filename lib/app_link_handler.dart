@@ -17,7 +17,7 @@ import './util/goto.dart';
 ///  - liftoff://programming.dev/c/programmer_humor
 ///  - liftoff://lemmy.world/u/zachatrocity
 class AppLinkHandler extends HookWidget {
-  AppLinkHandler(this.child);
+  AppLinkHandler(this.child, {super.key});
 
   final Widget child;
   final _appLinks = AppLinks();
