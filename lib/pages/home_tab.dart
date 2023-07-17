@@ -434,6 +434,18 @@ class InfiniteHomeList extends HookWidget {
       [selectedList],
     );
 
+    final memoizedFetcher = useMemoized(
+      () {
+        final selectedInstanceHost = selectedList.instanceHost;
+        return selectedInstanceHost == null
+            ? (page, limit, sort) =>
+                generalFetcher(page, limit, sort, selectedList.listingType)
+            : fetcherFromInstance(
+                selectedInstanceHost, selectedList.listingType);
+      },
+      [selectedList],
+    );
+
     return InfinitePostList(
       fetcher: memoizedFetcher,
       refreshOnFetcherUpdate: true,
