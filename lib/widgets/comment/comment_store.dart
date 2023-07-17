@@ -7,15 +7,7 @@ import '../../util/async_store.dart';
 
 part 'comment_store.g.dart';
 
-class CommentStore extends _CommentStore with _$CommentStore {
-  CommentStore(super.accountsStore,
-      {required super.commentTree,
-      required super.depth,
-      required super.canBeMarkedAsRead,
-      required super.detached,
-      required super.hideOnRead,
-      super.userMentionId});
-}
+class CommentStore = _CommentStore with _$CommentStore;
 
 abstract class _CommentStore with Store {
   @observable

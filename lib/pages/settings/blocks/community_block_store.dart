@@ -5,13 +5,7 @@ import '../../../util/async_store.dart';
 
 part 'community_block_store.g.dart';
 
-class CommunityBlockStore extends _CommunityBlockStore
-    with _$CommunityBlockStore {
-  CommunityBlockStore(
-      {required super.instanceHost,
-      required super.token,
-      required super.community});
-}
+class CommunityBlockStore = _CommunityBlockStore with _$CommunityBlockStore;
 
 abstract class _CommunityBlockStore with Store {
   final String instanceHost;

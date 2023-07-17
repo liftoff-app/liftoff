@@ -15,7 +15,6 @@ class SearchResultsPage extends HookWidget {
   final String query;
 
   SearchResultsPage({
-    super.key,
     required this.instanceHost,
     required this.query,
   })  : assert(instanceHost.isNotEmpty),

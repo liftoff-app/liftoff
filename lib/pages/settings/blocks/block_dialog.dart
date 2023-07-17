@@ -11,7 +11,7 @@ import 'blocks_store.dart';
 class BlockPersonDialog extends StatelessWidget {
   final BlocksStore store;
 
-  const BlockPersonDialog(this.store, {super.key});
+  const BlockPersonDialog(this.store);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class BlockPersonDialog extends StatelessWidget {
 class BlockCommunityDialog extends StatelessWidget {
   final BlocksStore store;
 
-  const BlockCommunityDialog(this.store, {super.key});
+  const BlockCommunityDialog(this.store);
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ import 'instance_store.dart';
 
 /// Displays posts, comments, and general info about the given instance
 class InstancePage extends HookWidget {
-  const InstancePage({super.key});
+  const InstancePage();
 
   @override
   Widget build(BuildContext context) {

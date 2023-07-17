@@ -10,18 +10,7 @@ import '../../widgets/post/post_store.dart';
 
 part 'full_post_store.g.dart';
 
-class FullPostStore extends _FullPostStore with _$FullPostStore {
-  FullPostStore(
-      {required super.postId, required super.instanceHost, super.commentId});
-
-  static FullPostStore fromPostStore(PostStore postStore) {
-    throw Exception('FullPostStore could not be created');
-  }
-
-  static FullPostStore fromPostView(PostView postView, {int? commentId}) {
-    throw Exception('FullPostStore could not be created');
-  }
-}
+class FullPostStore = _FullPostStore with _$FullPostStore;
 
 abstract class _FullPostStore with Store {
   final int postId;

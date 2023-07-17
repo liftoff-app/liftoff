@@ -14,7 +14,6 @@ class FederationResolver extends HookWidget {
       builder;
 
   const FederationResolver({
-    super.key,
     required this.userData,
     required this.query,
     required this.loadingMessage,

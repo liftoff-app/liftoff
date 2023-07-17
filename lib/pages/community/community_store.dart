@@ -6,15 +6,7 @@ import '../../util/async_store.dart';
 
 part 'community_store.g.dart';
 
-class CommunityStore extends _CommunityStore with _$CommunityStore {
-  CommunityStore.fromId({required super.id, required super.instanceHost})
-      : super.fromId();
-
-  static CommunityStore fromName(
-      {required String communityName, required String instanceHost}) {
-    throw Exception('CommunityStore could not be created');
-  }
-}
+class CommunityStore = _CommunityStore with _$CommunityStore;
 
 abstract class _CommunityStore with Store {
   final String instanceHost;
@@ -26,7 +18,6 @@ abstract class _CommunityStore with Store {
     required String this.communityName,
     required this.instanceHost,
   }) : id = null;
-
   // ignore: unused_element
   _CommunityStore.fromId({required this.id, required this.instanceHost})
       : communityName = null;

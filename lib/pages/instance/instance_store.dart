@@ -6,9 +6,7 @@ import '../../util/async_store.dart';
 
 part 'instance_store.g.dart';
 
-class InstanceStore extends _InstanceStore with _$InstanceStore {
-  InstanceStore(super.instanceHost);
-}
+class InstanceStore = _InstanceStore with _$InstanceStore;
 
 abstract class _InstanceStore with Store {
   final String instanceHost;

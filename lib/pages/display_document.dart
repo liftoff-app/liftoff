@@ -27,7 +27,7 @@ class DisplayDocumentPage extends StatelessWidget {
                   link: href!,
                   context: context,
                 );
-                if (didLaunch && context.mounted) {
+                if (didLaunch) {
                   Navigator.of(context).pop();
                 }
               },
