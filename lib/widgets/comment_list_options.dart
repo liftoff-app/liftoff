@@ -27,7 +27,6 @@ class CommentListOptions extends StatelessWidget {
   };
 
   const CommentListOptions({
-    super.key,
     required this.onSortChanged,
     required this.sortValue,
     this.styleButton = true,

@@ -53,7 +53,6 @@ class InfiniteScroll<T> extends HookWidget {
   final Object Function(T item)? uniqueProp;
 
   const InfiniteScroll({
-    super.key,
     this.batchSize = 10,
     this.leading = const SizedBox.shrink(),
     this.padding,

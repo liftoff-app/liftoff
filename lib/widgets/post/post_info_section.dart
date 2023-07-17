@@ -14,7 +14,7 @@ import '../avatar.dart';
 import 'post_store.dart';
 
 class PostInfoSection extends HookWidget {
-  const PostInfoSection({super.key});
+  const PostInfoSection();
 
   @override
   Widget build(BuildContext context) {

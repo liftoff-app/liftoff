@@ -7,9 +7,7 @@ import '../../util/pictrs.dart';
 
 part 'editor_toolbar_store.g.dart';
 
-class EditorToolbarStore extends _EditorToolbarStore with _$EditorToolbarStore {
-  EditorToolbarStore(super.instanceHost);
-}
+class EditorToolbarStore = _EditorToolbarStore with _$EditorToolbarStore;
 
 abstract class _EditorToolbarStore with Store {
   final String instanceHost;

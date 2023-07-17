@@ -11,7 +11,7 @@ import 'create_post.dart';
 class CreatePostFab extends HookWidget {
   final CommunityView? community;
 
-  const CreatePostFab({super.key, this.community});
+  const CreatePostFab({this.community});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class CreatePostFab extends HookWidget {
               : CreatePostPage.toCommunityRoute(community!),
         );
 
-        if (postView != null && context.mounted) {
+        if (postView != null) {
           await Navigator.of(context)
               .push(FullPostPage.fromPostViewRoute(postView));
         }

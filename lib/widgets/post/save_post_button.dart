@@ -6,7 +6,7 @@ import '../../util/observer_consumers.dart';
 import 'post_store.dart';
 
 class SavePostButton extends HookWidget {
-  const SavePostButton({super.key});
+  const SavePostButton();
 
   @override
   Widget build(BuildContext context) {

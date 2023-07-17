@@ -21,13 +21,12 @@ class WriteMessagePage extends HookWidget {
   final bool _isEdit;
 
   const WriteMessagePage.send({
-    super.key,
     required this.recipient,
     required this.instanceHost,
   })  : privateMessage = null,
         _isEdit = false;
 
-  WriteMessagePage.edit(PrivateMessageView pmv, {super.key})
+  WriteMessagePage.edit(PrivateMessageView pmv)
       : privateMessage = pmv.privateMessage,
         recipient = pmv.recipient,
         instanceHost = pmv.instanceHost,
@@ -52,9 +51,7 @@ class WriteMessagePage extends HookWidget {
             privateMessageId: privateMessage!.id,
             content: bodyController.text,
           ));
-          if (context.mounted) {
-            Navigator.of(context).pop(msg);
-          }
+          Navigator.of(context).pop(msg);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(e.toString()),
@@ -69,9 +66,7 @@ class WriteMessagePage extends HookWidget {
             content: bodyController.text,
             recipientId: recipient.id,
           ));
-          if (context.mounted) {
-            Navigator.of(context).pop();
-          }
+          Navigator.of(context).pop();
           // TODO: maybe send notification so that infinite list
           //       containing this widget adds new message?
         } catch (e) {

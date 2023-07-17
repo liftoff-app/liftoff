@@ -24,11 +24,10 @@ class UserProfile extends HookWidget {
 
   final FullPersonView? _fullUserView;
 
-  const UserProfile(
-      {super.key, required this.userId, required this.instanceHost})
+  const UserProfile({required this.userId, required this.instanceHost})
       : _fullUserView = null;
 
-  UserProfile.fromFullPersonView(FullPersonView this._fullUserView, {super.key})
+  UserProfile.fromFullPersonView(FullPersonView this._fullUserView)
       : userId = _fullUserView.personView.person.id,
         instanceHost = _fullUserView.instanceHost;
 

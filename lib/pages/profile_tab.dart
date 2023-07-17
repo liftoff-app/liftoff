@@ -11,7 +11,7 @@ import 'settings/settings.dart';
 /// Profile page for a logged in user. The difference between this and
 /// UserPage is that here you have access to settings
 class UserProfileTab extends HookWidget {
-  const UserProfileTab({super.key});
+  const UserProfileTab();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class UserProfileTab extends HookWidget {
 
     final actions = [
       IconButton(
-        onPressed: () => goTo(context, (context) => const SavedPage()),
+        onPressed: () => goTo(context, (context) => SavedPage()),
         icon: const Icon(Icons.bookmark),
       ),
       IconButton(

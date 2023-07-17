@@ -22,7 +22,7 @@ import 'create_post_url_field.dart';
 /// Modal for creating a post to some community in some instance
 /// Pops the navigator stack with a [PostView]
 class CreatePostPage extends HookWidget {
-  const CreatePostPage({super.key});
+  const CreatePostPage();
 
   @override
   Widget build(BuildContext context) {

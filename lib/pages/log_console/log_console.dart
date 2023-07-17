@@ -7,7 +7,7 @@ import '../../widgets/bottom_safe.dart';
 import 'log_console_page_store.dart';
 
 class LogConsolePage extends StatelessWidget {
-  const LogConsolePage({super.key});
+  const LogConsolePage();
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +46,11 @@ class LogConsolePage extends StatelessWidget {
 
           await Clipboard.setData(ClipboardData(text: data.join('\n')));
 
-          if (context.mounted) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(
-                    content: Text('all logs copied to the clipboard')),
-              );
-          }
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(content: Text('all logs copied to the clipboard')),
+            );
         },
         tooltip: 'Copy to clipboard',
         child: const Icon(Icons.copy),

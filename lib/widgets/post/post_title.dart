@@ -7,7 +7,7 @@ import '../../util/observer_consumers.dart';
 import 'post_store.dart';
 
 class PostTitle extends HookWidget {
-  const PostTitle({super.key});
+  const PostTitle();
 
   @override
   Widget build(BuildContext context) {

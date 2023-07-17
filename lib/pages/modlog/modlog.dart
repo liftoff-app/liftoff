@@ -107,8 +107,7 @@ class ModlogPage extends StatelessWidget {
     return MaterialPageRoute(
       builder: (context) => MobxProvider(
         create: (context) =>
-            ModlogPageStore(instanceHost, communityId: communityId)
-              ..fetchPage(),
+            ModlogPageStore(instanceHost, communityId)..fetchPage(),
         child: ModlogPage._(name: '!$communityName'),
       ),
     );
