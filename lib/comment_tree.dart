@@ -74,7 +74,7 @@ class CommentTree {
   }
 
   /// recursive sorter
-  void _sort(int Function(CommentTree a, CommentTree b) compare) {
+  void _sort(int compare(CommentTree a, CommentTree b)) {
     children.sort(compare);
     for (final el in children) {
       el._sort(compare);

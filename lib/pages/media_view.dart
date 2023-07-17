@@ -21,10 +21,6 @@ import '../util/icons.dart';
 import '../util/share.dart';
 import '../widgets/bottom_modal.dart';
 
-// FIXME: Remove this when linting fix for this rule is in Flutter SDK
-// See: https://github.com/dart-lang/linter/issues/4007
-// ignore_for_file: use_build_context_synchronously
-
 /// View to interact with a media object. Zoom in/out, download, share, etc.
 class MediaViewPage extends HookWidget {
   final String url;
@@ -32,7 +28,7 @@ class MediaViewPage extends HookWidget {
   static const yThreshold = 150;
   static const speedThreshold = 45;
 
-  const MediaViewPage(this.url, {super.key, this.heroTag});
+  const MediaViewPage(this.url, {this.heroTag});
 
   @override
   Widget build(BuildContext context) {

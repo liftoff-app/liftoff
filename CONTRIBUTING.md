@@ -8,7 +8,7 @@ From issues to wikis: everything is on [GitHub](https://github.com/liftoff-app/l
 
 ## Linting / Formatting
 
-Everything is formatted with `dart format` (no flags) and linted with `flutter analyze` ([see rules](analysis_options.yaml)). Both are enforced by the CI.
+Everything is formatted with `dart format` (no flags) and linted with `dart analyze` ([see rules](analysis_options.yaml)). Both are enforced by the CI.
 
 ## Translations
 

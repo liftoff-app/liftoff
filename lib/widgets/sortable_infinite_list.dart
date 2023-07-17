@@ -32,7 +32,6 @@ class SortableInfiniteList<T> extends HookWidget {
   final SortType? defaultSort;
   final Object Function(T item)? uniqueProp;
   const SortableInfiniteList({
-    super.key,
     required this.fetcher,
     required this.itemBuilder,
     this.controller,
@@ -90,7 +89,6 @@ class SortableInfiniteCommentList<T> extends HookWidget {
   final dynamic defaultSort;
   final Object Function(T item)? uniqueProp;
   const SortableInfiniteCommentList({
-    super.key,
     required this.fetcher,
     required this.itemBuilder,
     this.controller,
@@ -131,7 +129,6 @@ class SortableInfiniteCommentList<T> extends HookWidget {
 
 class InfinitePostList extends SortableInfiniteList<PostStore> {
   InfinitePostList({
-    super.key,
     required super.fetcher,
     super.controller,
     super.refreshOnFetcherUpdate = false,
@@ -170,7 +167,6 @@ class InfinitePostList extends SortableInfiniteList<PostStore> {
 
 class InfiniteCommentList extends SortableInfiniteCommentList<CommentView> {
   InfiniteCommentList({
-    super.key,
     required super.fetcher,
     super.controller,
   }) : super(

@@ -3,8 +3,7 @@ import 'package:mobx/mobx.dart';
 
 part 'log_console_page_store.g.dart';
 
-class LogConsolePageStore extends _LogConsolePageStore
-    with _$LogConsolePageStore {}
+class LogConsolePageStore = _LogConsolePageStore with _$LogConsolePageStore;
 
 abstract class _LogConsolePageStore with Store {
   // TODO: implement as an ObservableDeque

@@ -10,8 +10,6 @@ import '../widgets/sortable_infinite_list.dart';
 /// Page with saved posts/comments. Fetches such saved data from the default user
 /// Assumes there is at least one logged in user
 class SavedPage extends HookWidget {
-  const SavedPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     final accountStore = useAccountsStore();

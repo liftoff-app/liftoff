@@ -5,12 +5,7 @@ import '../../../util/async_store.dart';
 
 part 'user_block_store.g.dart';
 
-class UserBlockStore extends _UserBlockStore with _$UserBlockStore {
-  UserBlockStore(
-      {required super.instanceHost,
-      required super.token,
-      required super.person});
-}
+class UserBlockStore = _UserBlockStore with _$UserBlockStore;
 
 abstract class _UserBlockStore with Store {
   final String instanceHost;

@@ -14,12 +14,11 @@ class UserPage extends HookWidget {
   final String instanceHost;
   final Future<FullPersonView> _userDetails;
 
-  UserPage({super.key, required this.userId, required this.instanceHost})
+  UserPage({required this.userId, required this.instanceHost})
       : _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
             personId: userId, savedOnly: true, sort: SortType.active));
 
-  UserPage.fromName(
-      {super.key, required this.instanceHost, required String username})
+  UserPage.fromName({required this.instanceHost, required String username})
       : userId = null,
         _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
             username: username, savedOnly: true, sort: SortType.active));
@@ -73,7 +72,7 @@ class UserPage extends HookWidget {
 class SendMessageButton extends HookWidget {
   final PersonSafe user;
 
-  const SendMessageButton(this.user, {super.key});
+  const SendMessageButton(this.user);
 
   @override
   Widget build(BuildContext context) {

@@ -13,7 +13,7 @@ import 'community_follow_button.dart';
 class CommunityOverview extends StatelessWidget {
   final FullCommunityView fullCommunityView;
 
-  const CommunityOverview(this.fullCommunityView, {super.key});
+  const CommunityOverview(this.fullCommunityView);
 
   @override
   Widget build(BuildContext context) {

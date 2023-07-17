@@ -28,7 +28,7 @@ import 'mock_post.dart';
 
 /// Page with a list of different settings sections
 class SettingsPage extends HookWidget {
-  const SettingsPage({super.key});
+  const SettingsPage();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,7 @@ class SettingsPage extends HookWidget {
 
 /// Settings for theme color, AMOLED switch
 class AppearanceConfigPage extends StatelessWidget {
-  const AppearanceConfigPage({super.key});
+  const AppearanceConfigPage();
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +174,7 @@ class AppearanceConfigPage extends StatelessWidget {
 
 /// Settings for theme color, AMOLED switch
 class PostStyleConfigPage extends StatelessWidget {
-  const PostStyleConfigPage({super.key});
+  const PostStyleConfigPage();
 
   @override
   Widget build(BuildContext context) {
@@ -399,7 +399,7 @@ class PostStyleConfigPage extends StatelessWidget {
 }
 
 class CommentStyleConfigPage extends HookWidget {
-  const CommentStyleConfigPage({super.key});
+  const CommentStyleConfigPage();
 
   @override
   Widget build(BuildContext context) {
@@ -612,7 +612,7 @@ class CommentStyleConfigPage extends HookWidget {
 
 /// General settings
 class GeneralConfigPage extends StatelessWidget {
-  const GeneralConfigPage({super.key});
+  const GeneralConfigPage();
 
   @override
   Widget build(BuildContext context) {
@@ -802,9 +802,7 @@ class _AccountOptions extends HookWidget {
           ) ??
           false) {
         await accountsStore.removeAccount(instanceHost, username);
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
+        Navigator.of(context).pop();
       }
     }
 
@@ -842,9 +840,7 @@ class _AccountOptions extends HookWidget {
                 await context.read<ConfigStore>().importLemmyUserSettings(
                       accountsStore.userDataFor(instanceHost, username)!.jwt,
                     );
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
+                Navigator.of(context).pop();
               },
             ),
           ),
@@ -857,8 +853,6 @@ class _AccountOptions extends HookWidget {
 /// Settings for managing accounts
 class AccountsConfigPage extends HookWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
-  AccountsConfigPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -886,9 +880,7 @@ class AccountsConfigPage extends HookWidget {
           ) ??
           false) {
         await accountsStore.removeInstance(instanceHost);
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
+        Navigator.of(context).pop();
       }
     }
 
