@@ -5,13 +5,10 @@ import 'package:lemmy_api_client/v3.dart';
 import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
-import '../resources/app_theme.dart';
 import '../stores/config_store.dart';
-import '../util/observer_consumers.dart';
 import 'comment/comment.dart';
 import 'comment_list_options.dart';
 import 'infinite_scroll.dart';
-import 'post/post.dart';
 import 'post_list_options.dart';
 
 typedef FetcherWithSorting<T> = Future<List<T>> Function(
