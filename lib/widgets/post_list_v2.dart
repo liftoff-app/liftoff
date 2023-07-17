@@ -16,11 +16,11 @@ class PostListV2 extends HookWidget {
   /// This *must* be memoized. The widget will refresh
   /// all the content if the function instance changes.
   final FetcherWithSorting<PostStore> fetcher;
-  final InfiniteScrollController infiniteScrollController;
+  final InfiniteScrollController? infiniteScrollController;
 
   const PostListV2({
     required this.fetcher,
-    required this.infiniteScrollController,
+    this.infiniteScrollController,
   });
 
   @override
@@ -53,10 +53,11 @@ class PostListV2 extends HookWidget {
     }, [listener]);
 
     useEffect(() {
-      infiniteScrollController
-        ..clear = pagingController.refresh
-        ..scrollToTop = () => PrimaryScrollController.of(context).animateTo(0,
-            duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+      infiniteScrollController?.clear = pagingController.refresh;
+      infiniteScrollController?.scrollToTop = () =>
+          PrimaryScrollController.of(context).animateTo(0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut);
 
       // dispose the old controller if we get a new one or the widget is disposed
       return () => pagingController

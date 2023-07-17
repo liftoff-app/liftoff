@@ -15,6 +15,8 @@ import 'avatar.dart';
 import 'cached_network_image.dart';
 import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
+import 'post/post_store.dart';
+import 'post_list_v2.dart';
 import 'sortable_infinite_list.dart';
 
 /// Shared widget of UserPage and ProfileTab
@@ -62,6 +64,20 @@ class UserProfile extends HookWidget {
     final fullPersonView = userDetailsSnap.data!;
     final userView = fullPersonView.personView;
 
+    final fetcher = useCallback(
+        (page, batchSize, sort) => LemmyApiV3(instanceHost)
+            .run(GetPersonDetails(
+              personId: userView.person.id,
+              savedOnly: false,
+              sort: SortType.active,
+              page: page,
+              limit: batchSize,
+              auth: accountsStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+            ))
+            .then((val) => val.posts)
+            .mapToPostStore(),
+        [instanceHost, userView.person.id]);
+
     return DefaultTabController(
       length: 3,
       child: NestedScrollView(
@@ -95,20 +111,8 @@ class UserProfile extends HookWidget {
             children: [
               // TODO: first batch is already fetched on render
               // TODO: comment and post come from the same endpoint, could be shared
-              InfinitePostList(
-                fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
-                    .run(GetPersonDetails(
-                      personId: userView.person.id,
-                      savedOnly: false,
-                      sort: SortType.active,
-                      page: page,
-                      limit: batchSize,
-                      auth: accountsStore
-                          .defaultUserDataFor(instanceHost)
-                          ?.jwt
-                          .raw,
-                    ))
-                    .then((val) => val.posts),
+              PostListV2(
+                fetcher: fetcher,
               ),
               Center(
                 child: ConstrainedBox(

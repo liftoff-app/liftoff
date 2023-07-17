@@ -12,6 +12,8 @@ import '../../util/text_color.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/failed_to_load.dart';
 import '../../widgets/fullscreenable_image.dart';
+import '../../widgets/post/post_store.dart';
+import '../../widgets/post_list_v2.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/sortable_infinite_list.dart';
 import 'instance_about_tab.dart';
@@ -27,6 +29,21 @@ class InstancePage extends HookWidget {
     final theme = Theme.of(context);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
     final scrollController = useScrollController();
+    final instanceHost =
+        context.select((InstanceStore store) => store.instanceHost);
+    final postsFetcher = useCallback(
+        (page, batchSize, sort) => LemmyApiV3(instanceHost)
+            .run(GetPosts(
+              // TODO: switch between all and subscribed
+              type: PostListingType.all,
+              sort: sort,
+              limit: batchSize,
+              page: page,
+              savedOnly: false,
+              auth: context.defaultUserData(instanceHost)?.jwt.raw,
+            ))
+            .mapToPostStore(),
+        [instanceHost]);
 
     return ObserverBuilder<InstanceStore>(
       builder: (context, store) {
@@ -152,21 +169,10 @@ class InstancePage extends HookWidget {
                     ),
                   ],
                   body: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      InfinitePostList(
-                        fetcher: (page, batchSize, sort) =>
-                            LemmyApiV3(store.instanceHost).run(GetPosts(
-                          // TODO: switch between all and subscribed
-                          type: PostListingType.all,
-                          sort: sort,
-                          limit: batchSize,
-                          page: page,
-                          savedOnly: false,
-                          auth: context
-                              .defaultUserData(store.instanceHost)
-                              ?.jwt
-                              .raw,
-                        )),
+                      PostListV2(
+                        fetcher: postsFetcher,
                       ),
                       InfiniteCommentList(
                         fetcher: (page, batchSize, sort) =>
