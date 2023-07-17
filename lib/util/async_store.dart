@@ -11,7 +11,7 @@ part 'async_store.freezed.dart';
 part 'async_store.g.dart';
 
 /// [AsyncState] but observable with helper methods/getters
-class AsyncStore<T> extends _AsyncStore<T> with _$AsyncStore<T> {}
+class AsyncStore<T> = _AsyncStore<T> with _$AsyncStore<T>;
 
 abstract class _AsyncStore<T> with Store {
   @observable

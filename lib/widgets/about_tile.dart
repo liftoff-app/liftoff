@@ -11,7 +11,7 @@ import '../url_launcher.dart';
 /// Title that opens a dialog with information about Liftoff.
 /// Licenses, changelog, version etc.
 class AboutTile extends HookWidget {
-  const AboutTile({super.key});
+  const AboutTile();
 
   @override
   Widget build(BuildContext context) {

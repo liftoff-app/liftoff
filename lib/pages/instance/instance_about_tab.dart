@@ -21,8 +21,7 @@ class InstanceAboutTab extends HookWidget {
   final FullSiteView site;
   final SiteView siteView;
 
-  const InstanceAboutTab(
-      {super.key, required this.site, required this.siteView});
+  const InstanceAboutTab({required this.site, required this.siteView});
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class ReportDialog extends HookWidget {
-  const ReportDialog({super.key});
+  const ReportDialog();
 
   @override
   Widget build(BuildContext context) {

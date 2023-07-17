@@ -44,8 +44,7 @@ class MarkdownText extends StatelessWidget {
   final double fontSize;
 
   const MarkdownText(this.text,
-      {super.key,
-      required this.instanceHost,
+      {required this.instanceHost,
       this.selectable = false,
       this.fontSize = 15});
 

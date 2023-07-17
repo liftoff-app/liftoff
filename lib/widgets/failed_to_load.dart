@@ -6,7 +6,7 @@ class FailedToLoad extends StatelessWidget {
   final String message;
   final VoidCallback refresh;
 
-  const FailedToLoad({super.key, required this.refresh, required this.message});
+  const FailedToLoad({required this.refresh, required this.message});
 
   @override
   Widget build(BuildContext context) {

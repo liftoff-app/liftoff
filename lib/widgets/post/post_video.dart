@@ -10,18 +10,19 @@ import '../../util/observer_consumers.dart';
 
 class PostVideo extends StatefulWidget {
   final Uri url;
-  const PostVideo({super.key, required this.url});
+  const PostVideo(this.url, {super.key});
 
   @override
-  State<PostVideo> createState() => _PostVideoState();
+  State<PostVideo> createState() => _PostVideoState(url);
 }
 
 class _PostVideoState extends State<PostVideo> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
-  late Uri url = widget.url;
+  final Uri url;
   bool? isPlaying;
   bool? isMute;
+  _PostVideoState(this.url);
 
   @override
   void initState() {

@@ -14,7 +14,7 @@ import '../util/files.dart';
 /// Modal for picking and editing a photo from the OS.
 /// Pops the navigator stack with a [XFile]
 class PickImagePage extends HookWidget {
-  const PickImagePage({super.key});
+  const PickImagePage();
 
   /// read the supplied XFile, check orientation and
   /// provide the corrected XFile.

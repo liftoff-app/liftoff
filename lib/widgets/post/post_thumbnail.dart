@@ -10,7 +10,7 @@ import '../fullscreenable_image.dart';
 import 'post_store.dart';
 
 class PostThumbnail extends HookWidget {
-  const PostThumbnail({super.key});
+  const PostThumbnail();
 
   @override
   Widget build(BuildContext context) {
