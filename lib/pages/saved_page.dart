@@ -4,6 +4,8 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../widgets/post/post_store.dart';
+import '../widgets/post_list_v2.dart';
 import '../widgets/sortable_infinite_list.dart';
 
 /// Page with saved posts/comments. Fetches such saved data from the default user
@@ -12,7 +14,6 @@ class SavedPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accountStore = useAccountsStore();
-
     if (accountStore.hasNoAccount) {
       Scaffold(
         appBar: AppBar(),
@@ -21,6 +22,22 @@ class SavedPage extends HookWidget {
         ),
       );
     }
+
+    final postFetcher = useCallback(
+        (page, batchSize, sortType) =>
+            LemmyApiV3(accountStore.defaultInstanceHost!)
+                .run(
+                  GetPosts(
+                    type: PostListingType.all,
+                    sort: sortType,
+                    savedOnly: true,
+                    page: page,
+                    limit: batchSize,
+                    auth: accountStore.defaultUserData!.jwt.raw,
+                  ),
+                )
+                .mapToPostStore(),
+        [accountStore.defaultInstanceHost, accountStore.defaultUserData]);
 
     return DefaultTabController(
       length: 2,
@@ -37,18 +54,8 @@ class SavedPage extends HookWidget {
         ),
         body: TabBarView(
           children: [
-            InfinitePostList(
-              fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(accountStore.defaultInstanceHost!).run(
-                GetPosts(
-                  type: PostListingType.all,
-                  sort: sortType,
-                  savedOnly: true,
-                  page: page,
-                  limit: batchSize,
-                  auth: accountStore.defaultUserData!.jwt.raw,
-                ),
-              ),
+            PostListV2(
+              fetcher: postFetcher,
             ),
             InfiniteCommentList(
               fetcher: (page, batchSize, sortType) =>

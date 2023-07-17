@@ -123,43 +123,6 @@ class SortableInfiniteCommentList<T> extends HookWidget {
   }
 }
 
-class InfinitePostList extends SortableInfiniteList<PostView> {
-  InfinitePostList({
-    required super.fetcher,
-    super.controller,
-  }) : super(
-          itemBuilder: (post) => Consumer<AppTheme>(
-              builder: (context, state, child) => Column(
-                    children: [
-                      PostTile.fromPostView(post),
-                      if (state.useAmoled)
-                        SizedBox(
-                          width: 250,
-                          height: 1,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Theme.of(context).primaryColorDark,
-                                Theme.of(context).colorScheme.secondary,
-                                Theme.of(context).primaryColorDark,
-                              ],
-                            )),
-                          ),
-                        ),
-                      SizedBox(
-                          height: context.read<ConfigStore>().compactPostView
-                              ? 2
-                              : 10),
-                    ],
-                  )),
-          noItems: const Text('there are no posts'),
-          uniqueProp: (item) => item.post.apId,
-        );
-}
-
 class InfiniteCommentList extends SortableInfiniteCommentList<CommentView> {
   InfiniteCommentList({
     required super.fetcher,
