@@ -206,7 +206,9 @@ class HomeTab extends HookWidget {
       );
       if (val != null) {
         selectedList.value = val;
-        isc.clear();
+        // This will be cleared automatically by the fetcher changing,
+        // since we set `refreshOnFetcherUpdate` to true.
+        // isc.clear();
       }
     }
 
@@ -327,10 +329,7 @@ class HomeTab extends HookWidget {
                     ];
                   }, onSelected: (value) {
                     if (value == 0) {
-                      // unable to tie a controller to the infinite scroll
-                      // table, for now just reload
-                      // isc.scrollToTop();
-                      isc.clear();
+                      isc.scrollToTop();
                     } else if (value == 1) {
                       isc.clear();
                     } else if (value == 2) {
@@ -418,12 +417,21 @@ class InfiniteHomeList extends HookWidget {
               auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
             ));
 
+    final memoizedFetcher = useMemoized(
+      () {
+        final selectedInstanceHost = selectedList.instanceHost;
+        return selectedInstanceHost == null
+            ? (page, limit, sort) =>
+                generalFetcher(page, limit, sort, selectedList.listingType)
+            : fetcherFromInstance(
+                selectedInstanceHost, selectedList.listingType);
+      },
+      [selectedList],
+    );
+
     return InfinitePostList(
-      fetcher: selectedList.instanceHost == null
-          ? (page, limit, sort) =>
-              generalFetcher(page, limit, sort, selectedList.listingType)
-          : fetcherFromInstance(
-              selectedList.instanceHost!, selectedList.listingType),
+      fetcher: memoizedFetcher,
+      refreshOnFetcherUpdate: true,
       controller: controller,
     );
   }

@@ -669,6 +669,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
+  infinite_scroll_pagination:
+    dependency: "direct main"
+    description:
+      name: infinite_scroll_pagination
+      sha256: "9517328f4e373f08f57dbb11c5aac5b05554142024d6b60c903f3b73476d52db"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   intl:
     dependency: "direct main"
     description:
@@ -1155,6 +1163,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliver_tools:
+    dependency: transitive
+    description:
+      name: sliver_tools
+      sha256: ccdc502098a8bfa07b3ec582c282620031481300035584e1bb3aca296a505e8c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.10"
   source_gen:
     dependency: transitive
     description:
