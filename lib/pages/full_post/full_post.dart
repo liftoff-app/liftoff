@@ -133,7 +133,7 @@ class FullPostPage extends HookWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: [
                   const SizedBox(height: 15),
-                  PostTile.fromPostStore(postStore),
+                  PostTile.fromPostStore(postStore, fullPost: true),
                   ...CommentSection.buildComments(context, store),
                 ],
               ),

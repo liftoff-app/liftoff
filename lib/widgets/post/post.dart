@@ -30,7 +30,7 @@ class PostTile extends StatelessWidget {
   static const double rounding = 10;
 
   const PostTile.fromPostStore(this.postStore,
-      {super.key, this.fullPost = true});
+      {super.key, required this.fullPost});
   PostTile.fromPostView(PostView post, {super.key, this.fullPost = false})
       : postStore = PostStore(post);
 

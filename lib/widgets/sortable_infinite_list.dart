@@ -139,7 +139,7 @@ class InfinitePostList extends SortableInfiniteList<PostStore> {
           itemBuilder: (post) => Consumer<AppTheme>(
               builder: (context, state, child) => Column(
                     children: [
-                      PostTile.fromPostStore(post),
+                      PostTile.fromPostStore(post, fullPost: false),
                       if (state.useAmoled)
                         SizedBox(
                           width: 250,
