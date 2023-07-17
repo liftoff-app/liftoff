@@ -5,7 +5,7 @@ import '../../util/observer_consumers.dart';
 import 'post_store.dart';
 
 class PostLinkPreview extends StatelessWidget {
-  const PostLinkPreview();
+  const PostLinkPreview({super.key});
 
   @override
   Widget build(BuildContext context) {

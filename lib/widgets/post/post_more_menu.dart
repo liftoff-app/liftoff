@@ -18,7 +18,7 @@ import '../report_dialog.dart';
 import 'post_store.dart';
 
 class PostMoreMenuButton extends StatelessWidget {
-  const PostMoreMenuButton();
+  const PostMoreMenuButton({super.key});
 
   static void show({
     required BuildContext context,
@@ -52,6 +52,7 @@ class PostMoreMenu extends HookWidget {
   final PostStore postStore;
   final FullPostStore? fullPostStore;
   const PostMoreMenu({
+    super.key,
     required this.postStore,
     required this.fullPostStore,
   });
@@ -169,8 +170,9 @@ class PostMoreMenu extends HookWidget {
                       link:
                           'https://translate.google.com/?tl=$targetLanguage&text=$sourceText',
                       context: context);
-
-                  Navigator.of(context).pop();
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
                 },
               ),
               ListTile(

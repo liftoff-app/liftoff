@@ -9,7 +9,7 @@ import '../widgets/radio_picker.dart';
 import 'search_results.dart';
 
 class SearchTab extends HookWidget {
-  const SearchTab();
+  const SearchTab({super.key});
 
   @override
   Widget build(BuildContext context) {

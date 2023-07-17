@@ -16,7 +16,7 @@ final _logger = Logger('postMedia');
 
 /// assembles image
 class PostMedia extends HookWidget {
-  const PostMedia();
+  const PostMedia({super.key});
   static const List<LiftoffMediaProvider> providers = [
     RedgifProvider(),
     MP4MediaProvider()
@@ -44,7 +44,7 @@ class PostMedia extends HookWidget {
               future: provider.getMediaUrl(url),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return video.PostVideo(snapshot.data!);
+                  return video.PostVideo(url: snapshot.data!);
                 } else if (snapshot.hasError) {
                   return const Text('Unable to fetch video');
                 } else {

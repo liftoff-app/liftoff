@@ -11,7 +11,7 @@ import '../tile_toggle.dart';
 import 'post_store.dart';
 
 class PostVoting extends HookWidget {
-  const PostVoting();
+  const PostVoting({super.key});
 
   @override
   Widget build(BuildContext context) {
