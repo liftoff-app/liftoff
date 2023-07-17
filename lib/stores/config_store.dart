@@ -86,6 +86,14 @@ abstract class _ConfigStore with Store {
   @JsonKey(defaultValue: true)
   bool showThumbnail = true;
 
+  @observable
+  @JsonKey(defaultValue: true)
+  bool autoPlayVideo = true;
+
+  @observable
+  @JsonKey(defaultValue: true)
+  bool autoMuteVideo = true;
+
   // font size
   @observable
   @JsonKey(defaultValue: 16)
