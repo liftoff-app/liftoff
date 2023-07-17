@@ -30,6 +30,7 @@ dependencies:
   flutter_typeahead: ^4.0.0
   modal_bottom_sheet: ^3.0.0-pre
   swipeable_page_route: ^0.4.0
+  infinite_scroll_pagination: ^3.2.0
 
   # native
   share_plus: ^7.0.2

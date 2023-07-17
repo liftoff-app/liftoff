@@ -24,6 +24,7 @@ class SortableInfiniteList<T> extends HookWidget {
   final InfiniteScrollController? controller;
   final Function? onStyleChange;
   final Widget noItems;
+  final bool refreshOnFetcherUpdate;
 
   /// if no defaultSort is provided, the defaultSortType
   /// from the configStore will be used
@@ -36,6 +37,7 @@ class SortableInfiniteList<T> extends HookWidget {
     this.onStyleChange,
     this.noItems = const SizedBox.shrink(),
     this.defaultSort,
+    this.refreshOnFetcherUpdate = false,
     this.uniqueProp,
   });
 
@@ -64,6 +66,7 @@ class SortableInfiniteList<T> extends HookWidget {
       controller: isc,
       batchSize: 20,
       noItems: noItems,
+      refreshOnFetcherUpdate: refreshOnFetcherUpdate,
       uniqueProp: uniqueProp,
     );
   }
@@ -127,6 +130,7 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
   InfinitePostList({
     required super.fetcher,
     super.controller,
+    super.refreshOnFetcherUpdate = false,
   }) : super(
           itemBuilder: (post) => Consumer<AppTheme>(
               builder: (context, state, child) => Column(
