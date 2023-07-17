@@ -15,6 +15,8 @@ import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../../widgets/failed_to_load.dart';
+import '../../widgets/post/post_store.dart';
+import '../../widgets/post_list_v2.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/sortable_infinite_list.dart';
 import '../create_post/create_post_fab.dart';
@@ -126,21 +128,7 @@ class CommunityPage extends HookWidget {
               body: TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  InfinitePostList(
-                    fetcher: (page, batchSize, sort) =>
-                        LemmyApiV3(community.instanceHost).run(GetPosts(
-                      type: PostListingType.local,
-                      sort: sort,
-                      communityId: community.community.id,
-                      page: page,
-                      limit: batchSize,
-                      savedOnly: false,
-                      auth: accountsStore
-                          .defaultUserDataFor(community.instanceHost)
-                          ?.jwt
-                          .raw,
-                    )),
-                  ),
+                  CommunityPostList(community: community),
                   InfiniteCommentList(
                       fetcher: (page, batchSize, sortType) =>
                           LemmyApiV3(community.instanceHost).run(GetComments(
@@ -211,5 +199,34 @@ class CommunityPage extends HookWidget {
             });
       },
     );
+  }
+}
+
+class CommunityPostList extends HookWidget {
+  final CommunityView community;
+
+  const CommunityPostList({required this.community});
+
+  @override
+  Widget build(BuildContext context) {
+    final accountsStore = useAccountsStore();
+    final fetcher = useCallback((page, batchSize, sort) {
+      return LemmyApiV3(community.instanceHost)
+          .run(GetPosts(
+            type: PostListingType.local,
+            sort: sort,
+            communityId: community.community.id,
+            page: page,
+            limit: batchSize,
+            savedOnly: false,
+            auth: accountsStore
+                .defaultUserDataFor(community.instanceHost)
+                ?.jwt
+                .raw,
+          ))
+          .mapToPostStore();
+    }, []);
+
+    return PostListV2(fetcher: fetcher);
   }
 }
