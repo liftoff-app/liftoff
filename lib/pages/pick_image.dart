@@ -94,22 +94,24 @@ class PickImagePage extends HookWidget {
                 ),
               )
             else
-              ClipRect(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 500),
-                  child: ExtendedImage.file(
-                    File(xfile.value!.path),
-                    fit: BoxFit.contain,
-                    mode: ExtendedImageMode.editor,
-                    enableLoadState: true,
-                    extendedImageEditorKey: editorKey,
-                    cacheRawData: true,
-                    initEditorConfigHandler: (ExtendedImageState? state) {
-                      return EditorConfig(
-                        maxScale: 4,
-                        initCropRectType: InitCropRectType.layoutRect,
-                      );
-                    },
+              Flexible(
+                child: ClipRect(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 500),
+                    child: ExtendedImage.file(
+                      File(xfile.value!.path),
+                      fit: BoxFit.contain,
+                      mode: ExtendedImageMode.editor,
+                      enableLoadState: true,
+                      extendedImageEditorKey: editorKey,
+                      cacheRawData: true,
+                      initEditorConfigHandler: (ExtendedImageState? state) {
+                        return EditorConfig(
+                          maxScale: 4,
+                          initCropRectType: InitCropRectType.layoutRect,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
