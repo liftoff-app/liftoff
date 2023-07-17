@@ -109,11 +109,11 @@ Future<void> updateChangelog(Version version) async {
 
   confirm('Changelog looks good?\n$currentChangelog\n');
 
-  //await changelogFile.writeAsString(changelogContents.replaceFirst(
-  //    'Unreleased', 'v${version.toStringNoCode()} - $dateString'));
+  await changelogFile.writeAsString(changelogContents.replaceFirst(
+      'Unreleased', 'v${version.toStringNoCode()} - $dateString'));
 
-  //await File('fastlane/metadata/android/en-US/changelogs/${version.code}.txt')
-  //    .writeAsString(currentChangelog.split('\n').skip(2).join('\n'));
+  await File('fastlane/metadata/android/en-US/changelogs/${version.code}.txt')
+      .writeAsString(currentChangelog.split('\n').skip(2).join('\n'));
 
   var appStreamList = new XmlElement(new XmlName('ul'));
   currentChangelog.split('\n').forEach((String element) {
