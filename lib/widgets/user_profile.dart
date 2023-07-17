@@ -15,6 +15,7 @@ import 'avatar.dart';
 import 'cached_network_image.dart';
 import 'fullscreenable_image.dart';
 import 'markdown_text.dart';
+import 'post/post_store.dart';
 import 'sortable_infinite_list.dart';
 
 /// Shared widget of UserPage and ProfileTab
@@ -109,7 +110,8 @@ class UserProfile extends HookWidget {
                           ?.jwt
                           .raw,
                     ))
-                    .then((val) => val.posts),
+                    .then((val) => val.posts)
+                    .toPostStores(),
               ),
               Center(
                 child: ConstrainedBox(

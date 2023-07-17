@@ -15,6 +15,7 @@ import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
+import '../widgets/post/post_store.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'create_post/create_post.dart';
 import 'full_post/full_post.dart';
@@ -370,7 +371,7 @@ class InfiniteHomeList extends HookWidget {
     /// list
     ///
     /// Process of combining them works sort of like zip function in python
-    Future<List<PostView>> generalFetcher(
+    Future<List<PostStore>> generalFetcher(
       int page,
       int limit,
       SortType sort,
@@ -386,14 +387,16 @@ class InfiniteHomeList extends HookWidget {
 
       final futures = [
         for (final instanceHost in instances)
-          LemmyApiV3(instanceHost).run(GetPosts(
-            type: listingType,
-            sort: sort,
-            page: page,
-            limit: limit,
-            savedOnly: false,
-            auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-          ))
+          LemmyApiV3(instanceHost)
+              .run(GetPosts(
+                type: listingType,
+                sort: sort,
+                page: page,
+                limit: limit,
+                savedOnly: false,
+                auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+              ))
+              .toPostStores()
       ];
       final instancePosts = await Future.wait(futures);
       final longest = instancePosts.map((e) => e.length).reduce(max);
@@ -407,16 +410,18 @@ class InfiniteHomeList extends HookWidget {
       return newPosts;
     }
 
-    FetcherWithSorting<PostView> fetcherFromInstance(
+    FetcherWithSorting<PostStore> fetcherFromInstance(
             String instanceHost, PostListingType listingType) =>
-        (page, batchSize, sort) => LemmyApiV3(instanceHost).run(GetPosts(
+        (page, batchSize, sort) => LemmyApiV3(instanceHost)
+            .run(GetPosts(
               type: listingType,
               sort: sort,
               page: page,
               limit: batchSize,
               savedOnly: false,
               auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-            ));
+            ))
+            .toPostStores();
 
     final memoizedFetcher = useMemoized(
       () {

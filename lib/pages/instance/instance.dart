@@ -12,6 +12,7 @@ import '../../util/text_color.dart';
 import '../../widgets/cached_network_image.dart';
 import '../../widgets/failed_to_load.dart';
 import '../../widgets/fullscreenable_image.dart';
+import '../../widgets/post/post_store.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/sortable_infinite_list.dart';
 import 'instance_about_tab.dart';
@@ -155,18 +156,20 @@ class InstancePage extends HookWidget {
                     children: [
                       InfinitePostList(
                         fetcher: (page, batchSize, sort) =>
-                            LemmyApiV3(store.instanceHost).run(GetPosts(
-                          // TODO: switch between all and subscribed
-                          type: PostListingType.all,
-                          sort: sort,
-                          limit: batchSize,
-                          page: page,
-                          savedOnly: false,
-                          auth: context
-                              .defaultUserData(store.instanceHost)
-                              ?.jwt
-                              .raw,
-                        )),
+                            LemmyApiV3(store.instanceHost)
+                                .run(GetPosts(
+                                  // TODO: switch between all and subscribed
+                                  type: PostListingType.all,
+                                  sort: sort,
+                                  limit: batchSize,
+                                  page: page,
+                                  savedOnly: false,
+                                  auth: context
+                                      .defaultUserData(store.instanceHost)
+                                      ?.jwt
+                                      .raw,
+                                ))
+                                .toPostStores(),
                       ),
                       InfiniteCommentList(
                         fetcher: (page, batchSize, sort) =>

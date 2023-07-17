@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../widgets/post/post_store.dart';
 import '../widgets/sortable_infinite_list.dart';
 
 /// Page with saved posts/comments. Fetches such saved data from the default user
@@ -41,16 +42,18 @@ class SavedPage extends HookWidget {
           children: [
             InfinitePostList(
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(accountStore.defaultInstanceHost!).run(
-                GetPosts(
-                  type: PostListingType.all,
-                  sort: sortType,
-                  savedOnly: true,
-                  page: page,
-                  limit: batchSize,
-                  auth: accountStore.defaultUserData!.jwt.raw,
-                ),
-              ),
+                  LemmyApiV3(accountStore.defaultInstanceHost!)
+                      .run(
+                        GetPosts(
+                          type: PostListingType.all,
+                          sort: sortType,
+                          savedOnly: true,
+                          page: page,
+                          limit: batchSize,
+                          auth: accountStore.defaultUserData!.jwt.raw,
+                        ),
+                      )
+                      .toPostStores(),
             ),
             InfiniteCommentList(
               fetcher: (page, batchSize, sortType) =>

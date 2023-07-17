@@ -12,6 +12,7 @@ import 'comment/comment.dart';
 import 'comment_list_options.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
+import 'post/post_store.dart';
 import 'post_list_options.dart';
 
 typedef FetcherWithSorting<T> = Future<List<T>> Function(
@@ -128,7 +129,7 @@ class SortableInfiniteCommentList<T> extends HookWidget {
   }
 }
 
-class InfinitePostList extends SortableInfiniteList<PostView> {
+class InfinitePostList extends SortableInfiniteList<PostStore> {
   InfinitePostList({
     super.key,
     required super.fetcher,
@@ -138,7 +139,7 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
           itemBuilder: (post) => Consumer<AppTheme>(
               builder: (context, state, child) => Column(
                     children: [
-                      PostTile.fromPostView(post),
+                      PostTile.fromPostStore(post),
                       if (state.useAmoled)
                         SizedBox(
                           width: 250,
@@ -163,7 +164,7 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
                     ],
                   )),
           noItems: const Text('there are no posts'),
-          uniqueProp: (item) => item.post.apId,
+          uniqueProp: (item) => item.postView.post.apId,
         );
 }
 

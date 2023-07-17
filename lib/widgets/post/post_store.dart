@@ -150,3 +150,8 @@ abstract class _PostStore with Store {
   void addComment(CommentView commentView) =>
       newComments.insert(0, commentView);
 }
+
+extension PostStoreBuilder on Future<List<PostView>> {
+  Future<List<PostStore>> toPostStores() =>
+      then((value) => value.map(PostStore.new).toList());
+}
