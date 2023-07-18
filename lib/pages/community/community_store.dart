@@ -6,6 +6,8 @@ import '../../util/async_store.dart';
 
 part 'community_store.g.dart';
 
+// Temp ignore until mobx stores are updated to satisfy linting rules
+// ignore: library_private_types_in_public_api
 class CommunityStore = _CommunityStore with _$CommunityStore;
 
 abstract class _CommunityStore with Store {
@@ -18,6 +20,7 @@ abstract class _CommunityStore with Store {
     required String this.communityName,
     required this.instanceHost,
   }) : id = null;
+
   // ignore: unused_element
   _CommunityStore.fromId({required this.id, required this.instanceHost})
       : communityName = null;

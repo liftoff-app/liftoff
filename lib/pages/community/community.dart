@@ -27,7 +27,7 @@ import 'community_store.dart';
 
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
-  const CommunityPage();
+  const CommunityPage({super.key});
 
   @override
   Widget build(BuildContext context) {

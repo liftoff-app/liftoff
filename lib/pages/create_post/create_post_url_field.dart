@@ -12,7 +12,7 @@ import 'create_post_store.dart';
 class CreatePostUrlField extends HookWidget {
   final FocusNode titleFocusNode;
 
-  const CreatePostUrlField(this.titleFocusNode);
+  const CreatePostUrlField(this.titleFocusNode, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class CreatePostUrlField extends HookWidget {
       );
 
       // pic is null when the picker was cancelled
-      if (pic != null) {
+      if (pic != null && context.mounted) {
         await context.read<CreatePostStore>().uploadImage(pic.path, userData);
       }
     }

@@ -12,6 +12,7 @@ class PostListOptions extends StatelessWidget {
   final bool styleButton;
 
   const PostListOptions({
+    super.key,
     required this.onSortChanged,
     required this.sortValue,
     this.styleButton = true,

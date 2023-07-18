@@ -6,14 +6,16 @@ import '../../util/mobx_provider.dart';
 
 part 'modlog_page_store.g.dart';
 
-class ModlogPageStore = _ModlogPageStore with _$ModlogPageStore;
+class ModlogPageStore extends _ModlogPageStore with _$ModlogPageStore {
+  ModlogPageStore(super.instanceHost, {super.communityId});
+}
 
 abstract class _ModlogPageStore with Store, DisposableStore {
   final String instanceHost;
   final int? communityId;
 
   // ignore: unused_element
-  _ModlogPageStore(this.instanceHost, [this.communityId]) {
+  _ModlogPageStore(this.instanceHost, {this.communityId}) {
     addReaction(reaction((_) => page, (_) => fetchPage()));
   }
 

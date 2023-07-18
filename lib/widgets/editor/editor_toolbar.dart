@@ -17,11 +17,11 @@ import 'editor.dart';
 import 'editor_picking_dialog.dart';
 import 'editor_toolbar_store.dart';
 
-class _Reformat {
+class Reformat {
   final String text;
   final int selectionBeginningShift;
   final int selectionEndingShift;
-  _Reformat({
+  Reformat({
     required this.text,
     this.selectionBeginningShift = 0,
     this.selectionEndingShift = 0,
@@ -45,7 +45,7 @@ class EditorToolbar extends HookWidget {
 
   static const _height = 50.0;
 
-  const EditorToolbar(this.controller);
+  const EditorToolbar(this.controller, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class EditorToolbar extends HookWidget {
 
 class BottomSticky extends StatelessWidget {
   final Widget child;
-  const BottomSticky({required this.child});
+  const BottomSticky({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) => Positioned(
@@ -297,7 +297,7 @@ class _ToolbarBody extends HookWidget {
               final textMid = selection.isNotEmpty ? selection : '___';
               const textEnd = '\n:::\n';
 
-              return _Reformat(
+              return Reformat(
                 text: textBeg + textMid + textEnd,
                 selectionBeginningShift: textBeg.length,
                 selectionEndingShift:
@@ -327,7 +327,7 @@ class AddLinkDialog extends HookWidget {
 
   static final _websiteRegex = RegExp(r'https?:\/\/', caseSensitive: false);
 
-  AddLinkDialog(this.selection)
+  AddLinkDialog(this.selection, {super.key})
       : label = selection.startsWith(_websiteRegex) ? '' : selection,
         url = selection.startsWith(_websiteRegex) ? selection : '';
 
@@ -345,7 +345,7 @@ class AddLinkDialog extends HookWidget {
         }
       }();
       final finalString = '[${labelController.text}]($link)';
-      Navigator.of(context).pop(_Reformat(
+      Navigator.of(context).pop(Reformat(
         text: finalString,
         selectionBeginningShift: finalString.length,
         selectionEndingShift: finalString.length - selection.length,
@@ -384,7 +384,7 @@ class AddLinkDialog extends HookWidget {
     );
   }
 
-  static Future<_Reformat?> show(BuildContext context, String selection) async {
+  static Future<Reformat?> show(BuildContext context, String selection) async {
     return showDialog(
       context: context,
       builder: (context) => AddLinkDialog(selection),
@@ -486,7 +486,7 @@ extension on TextEditingController {
     );
   }
 
-  void reformat(_Reformat Function(String selection) reformatter) {
+  void reformat(Reformat Function(String selection) reformatter) {
     final beg = beforeSelectionText;
     final mid = selectionText;
     final end = afterSelectionText;
@@ -502,5 +502,5 @@ extension on TextEditingController {
   }
 
   void reformatSimple(String text) =>
-      reformat((selection) => _Reformat(text: text));
+      reformat((selection) => Reformat(text: text));
 }

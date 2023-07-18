@@ -10,6 +10,8 @@ import '../../widgets/post/post_store.dart';
 
 part 'full_post_store.g.dart';
 
+// Temp ignore until mobx stores are updated to satisfy linting rules
+// ignore: library_private_types_in_public_api
 class FullPostStore = _FullPostStore with _$FullPostStore;
 
 abstract class _FullPostStore with Store {

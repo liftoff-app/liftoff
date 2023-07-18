@@ -8,6 +8,7 @@ class BottomModal extends StatelessWidget {
   final Widget child;
 
   const BottomModal({
+    super.key,
     this.title,
     this.padding = EdgeInsets.zero,
     required this.child,
