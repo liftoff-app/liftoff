@@ -161,16 +161,12 @@ class _ManageAccount extends HookWidget {
           auth: token!.raw,
           avatar: avatar.value,
           banner: banner.value,
-          matrixUserId: matrixUserController.text.isEmpty
-              ? null
-              : matrixUserController.text,
-          displayName: displayNameController.text.isEmpty
-              ? null
-              : displayNameController.text,
-          bio: bioController.textEditingController.text.isEmpty
-              ? null
-              : bioController.textEditingController.text,
-          email: emailController.text.isEmpty ? null : emailController.text,
+          // Following values must all be set to value or '',
+          // sending null just leaves any existing value unchanged.
+          matrixUserId: matrixUserController.text,
+          displayName: displayNameController.text,
+          bio: bioController.textEditingController.text,
+          email: emailController.text,
         ));
 
         informAcceptedAvatarRef.value?.call();
