@@ -5,6 +5,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:mobx/mobx.dart';
 
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
@@ -603,8 +604,22 @@ class GeneralConfigPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final instanceFilterFocusNode = useFocusNode();
-    final instanceFilterController = useTextEditingController(
-        text: useStore((ConfigStore store) => store.instanceFilter));
+    final instanceFilterController = useTextEditingController();
+    final instanceFilterFieldIsValid = useListenableSelector(
+        instanceFilterController,
+        () =>
+            instanceFilterController.text.isNotEmpty &&
+            !instanceFilterController.text.contains(' '));
+
+    updateInstanceFilter(ConfigStore store) {
+      store.instanceFilter = ((store.instanceFilter == '')
+              ? instanceFilterController.text
+              : '${store.instanceFilter} ${instanceFilterController.text}')
+          .toLowerCase();
+      instanceFilterController.clear();
+    }
+
+    ;
     return Scaffold(
       appBar: AppBar(title: Text(L10n.of(context).general)),
       body: ObserverBuilder<ConfigStore>(
@@ -751,6 +766,8 @@ class GeneralConfigPage extends HookWidget {
                   store.blurNsfw = checked;
                 },
               ),
+
+              // Instance Filter setting
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -758,15 +775,55 @@ class GeneralConfigPage extends HookWidget {
                   children: [
                     Text(L10n.of(context).instance_filter,
                         style: TextStyle(fontSize: store.commentTitleSize)),
-                    TextField(
-                      maxLength: 40, // Don't let them go mad...
-                      focusNode: instanceFilterFocusNode,
-                      controller: instanceFilterController,
-                      onChanged: (change) async {
-                        store.instanceFilter = change;
-                      },
-                    ),
                     Text(L10n.of(context).instance_filter_explanation),
+                    Wrap(
+                      spacing: 5,
+                      children: store.instanceFilter.isEmpty
+                          ? [
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 8),
+                                  child: Text(
+                                      L10n.of(context).instance_filter_none,
+                                      style: const TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                      )))
+                            ]
+                          : store.instanceFilter
+                              .split(' ')
+                              .map<InputChip>((e) => InputChip(
+                                    label: Text(e),
+                                    onDeleted: () => store.instanceFilter =
+                                        store.instanceFilter
+                                            .replaceFirst(e, '')
+                                            .replaceAll('  ', ' ')
+                                            .trim(),
+                                  ))
+                              .toList(),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: TextField(
+                              maxLength: 10,
+                              controller: instanceFilterController,
+                              focusNode: instanceFilterFocusNode,
+                              onEditingComplete: () =>
+                                  updateInstanceFilter(store),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        ElevatedButton(
+                            onPressed: instanceFilterFieldIsValid
+                                ? () => updateInstanceFilter(store)
+                                : null,
+                            child: Text(L10n.of(context).instance_filter_add))
+                      ],
+                    ),
                   ],
                 ),
               ),

@@ -448,8 +448,8 @@ class InfiniteHomeList extends HookWidget {
       // We assume here that the total list even filtered will be longer
       // than `limit` posts long. If not then the lists ends here.
 
-      final filtered = unfilteredPosts.where((e) =>
-          banned.every((b) => !e.community.originInstanceHost.contains(b)));
+      final filtered = unfilteredPosts.where((e) => banned.every(
+          (b) => !e.community.originInstanceHost.toLowerCase().contains(b)));
 
       return filtered.toList();
     }
@@ -473,8 +473,8 @@ class InfiniteHomeList extends HookWidget {
         savedOnly: false,
         auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
       ));
-      final filtered = unfilteredPosts.where((e) =>
-          banned.every((b) => !e.community.originInstanceHost.contains(b)));
+      final filtered = unfilteredPosts.where((e) => banned.every(
+          (b) => !e.community.originInstanceHost.toLowerCase().contains(b)));
 
       return filtered.toList();
     }
