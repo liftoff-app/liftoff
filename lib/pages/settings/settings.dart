@@ -29,7 +29,7 @@ import 'mock_post.dart';
 
 /// Page with a list of different settings sections
 class SettingsPage extends HookWidget {
-  const SettingsPage();
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class SettingsPage extends HookWidget {
 
 /// Settings for theme color, AMOLED switch
 class AppearanceConfigPage extends StatelessWidget {
-  const AppearanceConfigPage();
+  const AppearanceConfigPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +175,7 @@ class AppearanceConfigPage extends StatelessWidget {
 
 /// Settings for theme color, AMOLED switch
 class PostStyleConfigPage extends StatelessWidget {
-  const PostStyleConfigPage();
+  const PostStyleConfigPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -244,6 +244,20 @@ class PostStyleConfigPage extends StatelessWidget {
                         value: store.showScores,
                         onChanged: (checked) {
                           store.showScores = checked;
+                        },
+                      ),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).auto_play_video),
+                        value: store.autoPlayVideo,
+                        onChanged: (checked) {
+                          store.autoPlayVideo = checked;
+                        },
+                      ),
+                      SwitchListTile.adaptive(
+                        title: Text(L10n.of(context).auto_mute_video),
+                        value: store.autoMuteVideo,
+                        onChanged: (checked) {
+                          store.autoMuteVideo = checked;
                         },
                       ),
                       const SizedBox(height: 12),
@@ -386,7 +400,7 @@ class PostStyleConfigPage extends StatelessWidget {
 }
 
 class CommentStyleConfigPage extends HookWidget {
-  const CommentStyleConfigPage();
+  const CommentStyleConfigPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -598,8 +612,8 @@ class CommentStyleConfigPage extends HookWidget {
 }
 
 /// General settings
-class GeneralConfigPage extends HookWidget {
-  const GeneralConfigPage();
+class GeneralConfigPage extends StatelessWidget {
+  const GeneralConfigPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -795,7 +809,9 @@ class _AccountOptions extends HookWidget {
           ) ??
           false) {
         await accountsStore.removeAccount(instanceHost, username);
-        Navigator.of(context).pop();
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       }
     }
 
@@ -833,7 +849,9 @@ class _AccountOptions extends HookWidget {
                 await context.read<ConfigStore>().importLemmyUserSettings(
                       accountsStore.userDataFor(instanceHost, username)!.jwt,
                     );
-                Navigator.of(context).pop();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               },
             ),
           ),
@@ -846,6 +864,8 @@ class _AccountOptions extends HookWidget {
 /// Settings for managing accounts
 class AccountsConfigPage extends HookWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  AccountsConfigPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -873,7 +893,9 @@ class AccountsConfigPage extends HookWidget {
           ) ??
           false) {
         await accountsStore.removeInstance(instanceHost);
-        Navigator.of(context).pop();
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       }
     }
 

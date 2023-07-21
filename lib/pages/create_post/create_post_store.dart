@@ -8,7 +8,10 @@ import '../../util/pictrs.dart';
 
 part 'create_post_store.g.dart';
 
-class CreatePostStore = _CreatePostStore with _$CreatePostStore;
+class CreatePostStore extends _CreatePostStore with _$CreatePostStore {
+  CreatePostStore(
+      {required super.instanceHost, super.postToEdit, super.selectedCommunity});
+}
 
 abstract class _CreatePostStore with Store {
   final Post? postToEdit;

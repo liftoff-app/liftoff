@@ -19,14 +19,16 @@ class WriteComment extends HookWidget {
   final Comment? comment;
   final bool _isEdit;
 
-  const WriteComment.toPost(this.post)
+  const WriteComment.toPost(this.post, {super.key})
       : comment = null,
         _isEdit = false;
   const WriteComment.toComment({
+    super.key,
     required Comment this.comment,
     required this.post,
   }) : _isEdit = false;
   const WriteComment.edit({
+    super.key,
     required Comment this.comment,
     required this.post,
   }) : _isEdit = true;
@@ -86,7 +88,9 @@ class WriteComment extends HookWidget {
             ));
           }
         }();
-        Navigator.of(context).pop(res.commentView);
+        if (context.mounted) {
+          Navigator.of(context).pop(res.commentView);
+        }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to post comment')));

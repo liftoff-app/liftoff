@@ -15,6 +15,7 @@ import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../../widgets/failed_to_load.dart';
+import '../../widgets/post/post_store.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/sortable_infinite_list.dart';
 import '../create_post/create_post_fab.dart';
@@ -26,7 +27,7 @@ import 'community_store.dart';
 
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
-  const CommunityPage();
+  const CommunityPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,9 @@ class CommunityPage extends HookWidget {
         final fullCommunityView = communityAsyncState.data;
         final community = fullCommunityView.communityView;
 
-        void doShare() => share(buildLemmyGuideUrl(community.community.actorId),
+        void doShare() => share(
+            buildLemmyGuideUrl(
+                '!${community.community.name}@${community.instanceHost}'),
             context: context);
 
         return Scaffold(
@@ -126,18 +129,20 @@ class CommunityPage extends HookWidget {
                 children: [
                   InfinitePostList(
                     fetcher: (page, batchSize, sort) =>
-                        LemmyApiV3(community.instanceHost).run(GetPosts(
-                      type: PostListingType.local,
-                      sort: sort,
-                      communityId: community.community.id,
-                      page: page,
-                      limit: batchSize,
-                      savedOnly: false,
-                      auth: accountsStore
-                          .defaultUserDataFor(community.instanceHost)
-                          ?.jwt
-                          .raw,
-                    )),
+                        LemmyApiV3(community.instanceHost)
+                            .run(GetPosts(
+                              type: PostListingType.local,
+                              sort: sort,
+                              communityId: community.community.id,
+                              page: page,
+                              limit: batchSize,
+                              savedOnly: false,
+                              auth: accountsStore
+                                  .defaultUserDataFor(community.instanceHost)
+                                  ?.jwt
+                                  .raw,
+                            ))
+                            .toPostStores(),
                   ),
                   InfiniteCommentList(
                       fetcher: (page, batchSize, sortType) =>

@@ -7,7 +7,7 @@ import 'post_status.dart';
 import 'post_store.dart';
 
 class PostBody extends StatelessWidget {
-  const PostBody();
+  const PostBody({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ import '../tile_toggle.dart';
 import 'post_store.dart';
 
 class PostVoting extends HookWidget {
-  const PostVoting();
+  const PostVoting({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class PostVoting extends HookWidget {
           TileToggle(
             icon: Icons.arrow_upward,
             activated: store.postView.myVote == VoteType.up,
-            activeColor: Theme.of(context).colorScheme.secondary,
+            activeColor: Colors.blue,
             onPressed: loggedInAction(store.upVote),
             tooltip: 'upvote',
           ),

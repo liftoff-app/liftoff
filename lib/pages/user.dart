@@ -14,11 +14,12 @@ class UserPage extends HookWidget {
   final String instanceHost;
   final Future<FullPersonView> _userDetails;
 
-  UserPage({required this.userId, required this.instanceHost})
+  UserPage({super.key, required this.userId, required this.instanceHost})
       : _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
             personId: userId, savedOnly: true, sort: SortType.active));
 
-  UserPage.fromName({required this.instanceHost, required String username})
+  UserPage.fromName(
+      {super.key, required this.instanceHost, required String username})
       : userId = null,
         _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
             username: username, savedOnly: true, sort: SortType.active));
@@ -43,7 +44,8 @@ class UserPage extends HookWidget {
       final position = renderbox.localToGlobal(Offset.zero);
 
       return share(
-          buildLemmyGuideUrl(userDetailsSnap.data!.personView.person.actorId),
+          buildLemmyGuideUrl(
+              '@${userDetailsSnap.data!.personView.person.name}@$instanceHost'),
           context: context,
           sharePositionOrigin: Rect.fromPoints(position,
               position.translate(renderbox.size.width, renderbox.size.height)));
@@ -71,7 +73,7 @@ class UserPage extends HookWidget {
 class SendMessageButton extends HookWidget {
   final PersonSafe user;
 
-  const SendMessageButton(this.user);
+  const SendMessageButton(this.user, {super.key});
 
   @override
   Widget build(BuildContext context) {

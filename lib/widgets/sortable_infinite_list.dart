@@ -12,6 +12,7 @@ import 'comment/comment.dart';
 import 'comment_list_options.dart';
 import 'infinite_scroll.dart';
 import 'post/post.dart';
+import 'post/post_store.dart';
 import 'post_list_options.dart';
 
 typedef FetcherWithSorting<T> = Future<List<T>> Function(
@@ -24,18 +25,21 @@ class SortableInfiniteList<T> extends HookWidget {
   final InfiniteScrollController? controller;
   final Function? onStyleChange;
   final Widget noItems;
+  final bool refreshOnFetcherUpdate;
 
   /// if no defaultSort is provided, the defaultSortType
   /// from the configStore will be used
   final SortType? defaultSort;
   final Object Function(T item)? uniqueProp;
   const SortableInfiniteList({
+    super.key,
     required this.fetcher,
     required this.itemBuilder,
     this.controller,
     this.onStyleChange,
     this.noItems = const SizedBox.shrink(),
     this.defaultSort,
+    this.refreshOnFetcherUpdate = false,
     this.uniqueProp,
   });
 
@@ -64,6 +68,7 @@ class SortableInfiniteList<T> extends HookWidget {
       controller: isc,
       batchSize: 20,
       noItems: noItems,
+      refreshOnFetcherUpdate: refreshOnFetcherUpdate,
       uniqueProp: uniqueProp,
     );
   }
@@ -85,6 +90,7 @@ class SortableInfiniteCommentList<T> extends HookWidget {
   final dynamic defaultSort;
   final Object Function(T item)? uniqueProp;
   const SortableInfiniteCommentList({
+    super.key,
     required this.fetcher,
     required this.itemBuilder,
     this.controller,
@@ -123,15 +129,17 @@ class SortableInfiniteCommentList<T> extends HookWidget {
   }
 }
 
-class InfinitePostList extends SortableInfiniteList<PostView> {
+class InfinitePostList extends SortableInfiniteList<PostStore> {
   InfinitePostList({
+    super.key,
     required super.fetcher,
     super.controller,
+    super.refreshOnFetcherUpdate = false,
   }) : super(
           itemBuilder: (post) => Consumer<AppTheme>(
               builder: (context, state, child) => Column(
                     children: [
-                      PostTile.fromPostView(post),
+                      PostTile.fromPostStore(post, fullPost: false),
                       if (state.useAmoled)
                         SizedBox(
                           width: 250,
@@ -156,12 +164,13 @@ class InfinitePostList extends SortableInfiniteList<PostView> {
                     ],
                   )),
           noItems: const Text('there are no posts'),
-          uniqueProp: (item) => item.post.apId,
+          uniqueProp: (item) => item.postView.post.apId,
         );
 }
 
 class InfiniteCommentList extends SortableInfiniteCommentList<CommentView> {
   InfiniteCommentList({
+    super.key,
     required super.fetcher,
     super.controller,
   }) : super(

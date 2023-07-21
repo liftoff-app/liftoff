@@ -27,6 +27,7 @@ class CommentListOptions extends StatelessWidget {
   };
 
   const CommentListOptions({
+    super.key,
     required this.onSortChanged,
     required this.sortValue,
     this.styleButton = true,
@@ -39,7 +40,7 @@ class CommentListOptions extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Row(
                 children: [
-                  FilledButton(
+                  OutlinedButton(
                     onPressed: () {
                       showBottomModal(
                         title: 'sort by',

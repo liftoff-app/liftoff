@@ -11,7 +11,7 @@ import 'community_store.dart';
 class CommunityFollowButton extends HookWidget {
   final CommunityView communityView;
 
-  const CommunityFollowButton(this.communityView);
+  const CommunityFollowButton(this.communityView, {super.key});
 
   @override
   Widget build(BuildContext context) {

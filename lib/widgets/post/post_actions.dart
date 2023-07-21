@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -9,12 +7,13 @@ import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
 import '../write_comment.dart';
+import 'post_more_menu.dart';
 import 'post_store.dart';
 import 'post_voting.dart';
 import 'save_post_button.dart';
 
 class PostActions extends HookWidget {
-  const PostActions();
+  const PostActions({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class PostActions extends HookWidget {
       }
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Row(
           children: [
             const Icon(Icons.comment_rounded),
@@ -50,6 +49,7 @@ class PostActions extends HookWidget {
                 softWrap: false,
               ),
             ),
+            const PostMoreMenuButton(),
             IconButton(
               key: shareButtonKey,
               icon: Icon(shareIcon),
@@ -66,7 +66,7 @@ class PostActions extends HookWidget {
               },
             ),
             const SavePostButton(),
-            if (!Platform.isAndroid && !store.postView.post.locked)
+            if (!store.postView.post.locked)
               IconButton(
                 onPressed: replyLoggedInAction((_) => comment()),
                 icon: const Icon(Icons.reply),

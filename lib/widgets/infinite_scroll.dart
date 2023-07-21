@@ -1,7 +1,6 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'bottom_safe.dart';
 import 'pull_to_refresh.dart';
@@ -52,7 +51,15 @@ class InfiniteScroll<T> extends HookWidget {
   /// duplicates thus perfoming deduplication
   final Object Function(T item)? uniqueProp;
 
+  /// If true, all content will be discarded and refetched when value
+  /// of [fetcher] changes.
+  ///
+  /// NOTE: [fetcher] MUST be memoized if this is set to true.
+  ///       Otherwise, it will cause an infinite loop.
+  final bool refreshOnFetcherUpdate;
+
   const InfiniteScroll({
+    super.key,
     this.batchSize = 10,
     this.leading = const SizedBox.shrink(),
     this.padding,
@@ -62,97 +69,76 @@ class InfiniteScroll<T> extends HookWidget {
     required this.fetcher,
     this.controller,
     this.noItems = const SizedBox.shrink(),
+    this.refreshOnFetcherUpdate = false,
     this.uniqueProp,
   }) : assert(batchSize > 0);
 
   @override
   Widget build(BuildContext context) {
-    final data = useState<List<T>>([]);
-    // holds unique props of the data
-    final dataSet = useRef(HashSet<Object>());
-    final hasMore = useRef(true);
-    final page = useRef(1);
-    final isFetching = useRef(false);
-
-    final uniquePropFunc = uniqueProp ?? (e) => e as Object;
+    final pagingController =
+        useMemoized(() => PagingController<int, T>(firstPageKey: 1), []);
 
     useEffect(() {
-      if (controller != null) {
-        controller?.clear = () {
-          data.value = [];
-          hasMore.value = true;
-          page.value = 1;
-          dataSet.value.clear();
-        };
-        controller?.scrollToTop = () {
-          // to be implemented
-        };
-      }
-
+      controller?.clear = pagingController.refresh;
+      controller?.scrollToTop = () => PrimaryScrollController.of(context)
+          .animateTo(0,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut);
       return null;
     }, []);
 
+    // Need to memoize the callback so we get a single instance
+    // that we can add/remove from the controller.
+    final pageRequestListener = useCallback((pageKey) async {
+      try {
+        final items = await fetcher(pageKey, batchSize);
+        // TODO: check if deduplication is needed
+        // final uniqueItems =
+        //     uniqueProp == null ? items : LinkedHashSet<T>.from(items).toList();
+        final isLastPage = items.length < batchSize;
+        if (isLastPage) {
+          pagingController.appendLastPage(items);
+        } else {
+          pagingController.appendPage(items, pageKey + 1);
+        }
+      } catch (error) {
+        pagingController.error = error;
+      }
+    }, [fetcher]);
+
+    // Because of the way closures and bindings work in dart, a lambda
+    // function we create here will always call the instance of `fetcher`
+    // it was created with, even if the `fetcher` variable changes.
+    //
+    // As such, we have to remove the listener and add a new one every
+    // time `fetcher` changes. The `useCallback` hook above will ensure
+    // we get a new `pageRequstListener` every time `fetcher` changes.
+    useEffect(() {
+      pagingController.addPageRequestListener(pageRequestListener);
+      return () {
+        pagingController.removePageRequestListener(pageRequestListener);
+        if (this.refreshOnFetcherUpdate) {
+          pagingController.refresh();
+        }
+      };
+    }, [pageRequestListener]);
+
     return PullToRefresh(
-      onRefresh: () async {
-        data.value = [];
-        hasMore.value = true;
-        page.value = 1;
-        dataSet.value.clear();
-
-        await Future.delayed(const Duration(seconds: 1));
-      },
-      child: ListView.builder(
-        padding: padding,
-        // +2 for the loading widget and leading widget
-        itemCount: data.value.length + 2,
-        itemBuilder: (_, i) {
-          if (i == 0) {
-            return leading;
-          }
-          i -= 1;
-
-          // if we are done but we have no data it means the list is empty
-          if (!hasMore.value && data.value.isEmpty) {
-            return Center(child: noItems);
-          }
-
-          // reached the bottom, fetch more
-          if (i == data.value.length) {
-            // if there are no more, skip
-            if (!hasMore.value) {
-              return const BottomSafe();
-            }
-
-            // if it's already fetching more, skip
-            if (!isFetching.value) {
-              isFetching.value = true;
-              fetcher(page.value, batchSize).then((incoming) {
-                // if got less than the batchSize, mark the list as done
-                if (incoming.length < batchSize) {
-                  hasMore.value = false;
-                }
-
-                final newData = incoming.where(
-                  (e) => !dataSet.value.contains(uniquePropFunc(e)),
-                );
-
-                // append new data
-                data.value = [...data.value, ...newData];
-                dataSet.value.addAll(newData.map(uniquePropFunc));
-                page.value += 1;
-              }).whenComplete(() => isFetching.value = false);
-            }
-
-            return SafeArea(
-              top: false,
-              child: loadingWidget,
-            );
-          }
-
-          // not last element, render list item
-          return itemBuilder(data.value[i]);
+        onRefresh: () async {
+          pagingController.refresh();
         },
-      ),
-    );
+        child: CustomScrollView(slivers: [
+          SliverToBoxAdapter(child: leading),
+          PagedSliverList<int, T>(
+            pagingController: pagingController,
+            builderDelegate: PagedChildBuilderDelegate<T>(
+              itemBuilder: (context, item, index) => itemBuilder(item),
+              noItemsFoundIndicatorBuilder: (context) => Center(child: noItems),
+              noMoreItemsIndicatorBuilder: (context) => const BottomSafe(),
+              firstPageProgressIndicatorBuilder: (context) => loadingWidget,
+              newPageProgressIndicatorBuilder: (context) => loadingWidget,
+            ),
+          )
+        ]));
   }
 }

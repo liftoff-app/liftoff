@@ -12,6 +12,7 @@ class PostListOptions extends StatelessWidget {
   final bool styleButton;
 
   const PostListOptions({
+    super.key,
     required this.onSortChanged,
     required this.sortValue,
     this.styleButton = true,
@@ -31,7 +32,7 @@ class PostListOptions extends StatelessWidget {
                     onChanged: onSortChanged,
                     mapValueToString: (value) => value.tr(context),
                     buttonBuilder: (context, displayValue, onPressed) =>
-                        FilledButton(
+                        OutlinedButton(
                       onPressed: onPressed,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

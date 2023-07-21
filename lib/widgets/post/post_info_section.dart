@@ -11,19 +11,16 @@ import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../avatar.dart';
-import 'post_more_menu.dart';
-import 'post_status.dart';
 import 'post_store.dart';
 
 class PostInfoSection extends HookWidget {
-  const PostInfoSection();
+  const PostInfoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     final configStore = useStore((ConfigStore store) => store);
 
     return ObserverBuilder<PostStore>(builder: (context, store) {
-      final fullPost = context.read<IsFullPost>();
       final post = store.postView;
       final instanceHost = store.postView.instanceHost;
       final theme = Theme.of(context);
@@ -38,7 +35,7 @@ class PostInfoSection extends HookWidget {
                 onTap: () => Navigator.of(context).push(
                     CommunityPage.fromIdRoute(instanceHost, post.community.id)),
                 noBlank: true,
-                radius: 20,
+                radius: 15,
                 isNsfw: post.community.nsfw),
             Expanded(
               child: Column(
@@ -137,7 +134,6 @@ class PostInfoSection extends HookWidget {
                 ],
               ),
             ),
-            if (!fullPost) const PostMoreMenuButton(),
           ],
         ),
       );

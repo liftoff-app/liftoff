@@ -15,6 +15,10 @@ import '../widgets/cached_network_image.dart';
 import '../widgets/editor/editor.dart';
 import 'pick_image.dart';
 
+// FIXME: Remove this when linting fix for this rule is in Flutter SDK
+// See: https://github.com/dart-lang/linter/issues/4007
+// ignore_for_file: use_build_context_synchronously
+
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
 /// its token is in AccountsStore
@@ -22,7 +26,8 @@ class ManageAccountPage extends HookWidget {
   final String instanceHost;
   final String username;
 
-  const ManageAccountPage({required this.instanceHost, required this.username});
+  const ManageAccountPage(
+      {super.key, required this.instanceHost, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -156,16 +161,12 @@ class _ManageAccount extends HookWidget {
           auth: token!.raw,
           avatar: avatar.value,
           banner: banner.value,
-          matrixUserId: matrixUserController.text.isEmpty
-              ? null
-              : matrixUserController.text,
-          displayName: displayNameController.text.isEmpty
-              ? null
-              : displayNameController.text,
-          bio: bioController.textEditingController.text.isEmpty
-              ? null
-              : bioController.textEditingController.text,
-          email: emailController.text.isEmpty ? null : emailController.text,
+          // Following values must all be set to value or '',
+          // sending null just leaves any existing value unchanged.
+          matrixUserId: matrixUserController.text,
+          displayName: displayNameController.text,
+          bio: bioController.textEditingController.text,
+          email: emailController.text,
         ));
 
         informAcceptedAvatarRef.value?.call();

@@ -80,7 +80,9 @@ class _CommentMoreMenuPopup extends HookWidget {
 
           if (editedComment != null) {
             store.comment = editedComment;
-            Navigator.of(context).pop();
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           }
         }
 
@@ -100,8 +102,9 @@ class _CommentMoreMenuPopup extends HookWidget {
               title: Text(L10n.of(context).open_in_browser),
               onTap: () async {
                 await launchLink(link: comment.link, context: context);
-
-                Navigator.of(context).pop();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               },
             ),
             ListTile(
@@ -142,8 +145,9 @@ class _CommentMoreMenuPopup extends HookWidget {
                     link:
                         'https://translate.google.com/?tl=$targetLanguage&text=$sourceText',
                     context: context);
-
-                Navigator.of(context).pop();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               },
             ),
             ListTile(

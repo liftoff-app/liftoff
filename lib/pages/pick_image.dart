@@ -14,7 +14,7 @@ import '../util/files.dart';
 /// Modal for picking and editing a photo from the OS.
 /// Pops the navigator stack with a [XFile]
 class PickImagePage extends HookWidget {
-  const PickImagePage();
+  const PickImagePage({super.key});
 
   /// read the supplied XFile, check orientation and
   /// provide the corrected XFile.
@@ -94,22 +94,24 @@ class PickImagePage extends HookWidget {
                 ),
               )
             else
-              ClipRect(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 500),
-                  child: ExtendedImage.file(
-                    File(xfile.value!.path),
-                    fit: BoxFit.contain,
-                    mode: ExtendedImageMode.editor,
-                    enableLoadState: true,
-                    extendedImageEditorKey: editorKey,
-                    cacheRawData: true,
-                    initEditorConfigHandler: (ExtendedImageState? state) {
-                      return EditorConfig(
-                        maxScale: 4,
-                        initCropRectType: InitCropRectType.layoutRect,
-                      );
-                    },
+              Flexible(
+                child: ClipRect(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 500),
+                    child: ExtendedImage.file(
+                      File(xfile.value!.path),
+                      fit: BoxFit.contain,
+                      mode: ExtendedImageMode.editor,
+                      enableLoadState: true,
+                      extendedImageEditorKey: editorKey,
+                      cacheRawData: true,
+                      initEditorConfigHandler: (ExtendedImageState? state) {
+                        return EditorConfig(
+                          maxScale: 4,
+                          initCropRectType: InitCropRectType.layoutRect,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
