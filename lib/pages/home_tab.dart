@@ -403,10 +403,6 @@ class InfiniteHomeList extends HookWidget {
     final accStore = useAccountsStore();
     final instanceFilter =
         useStore((ConfigStore store) => store.instanceFilter);
-    // Brutally simple parsing.
-    final banned = instanceFilter == ''
-        ? <String>[]
-        : instanceFilter.split(RegExp(r'\s+'));
 
     /// fetches post from many instances at once and combines them into a single
     /// list
@@ -448,7 +444,7 @@ class InfiniteHomeList extends HookWidget {
       // We assume here that the total list even filtered will be longer
       // than `limit` posts long. If not then the lists ends here.
 
-      final filtered = unfilteredPosts.where((e) => banned.every(
+      final filtered = unfilteredPosts.where((e) => instanceFilter.every(
           (b) => !e.community.originInstanceHost.toLowerCase().contains(b)));
 
       return filtered.toList();
@@ -464,7 +460,7 @@ class InfiniteHomeList extends HookWidget {
       // Get twice as many as we need, so we will keep the pipeline full,
       // unless the user has blocked 'lemmy', in which case their
       // feed will end early.
-      final limitWithBans = banned.isEmpty ? limit : 2 * limit;
+      final limitWithBans = instanceFilter.isEmpty ? limit : 2 * limit;
       final unfilteredPosts = await LemmyApiV3(instanceHost).run(GetPosts(
         type: listingType,
         sort: sort,
@@ -473,7 +469,7 @@ class InfiniteHomeList extends HookWidget {
         savedOnly: false,
         auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
       ));
-      final filtered = unfilteredPosts.where((e) => banned.every(
+      final filtered = unfilteredPosts.where((e) => instanceFilter.every(
           (b) => !e.community.originInstanceHost.toLowerCase().contains(b)));
 
       return filtered.toList();

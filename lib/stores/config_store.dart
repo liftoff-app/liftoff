@@ -83,8 +83,8 @@ abstract class _ConfigStore with Store {
   bool blurNsfw = true;
 
   @observable
-  @JsonKey(defaultValue: '')
-  String instanceFilter = '';
+  @JsonKey(defaultValue: <String>[])
+  List<String> instanceFilter = [];
 
   @observable
   @JsonKey(defaultValue: true)

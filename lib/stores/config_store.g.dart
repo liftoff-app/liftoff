@@ -17,7 +17,10 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..showAvatars = json['showAvatars'] as bool? ?? true
   ..showScores = json['showScores'] as bool? ?? true
   ..blurNsfw = json['blurNsfw'] as bool? ?? true
-  ..instanceFilter = json['instanceFilter'] as String? ?? ''
+  ..instanceFilter = (json['instanceFilter'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
   ..showThumbnail = json['showThumbnail'] as bool? ?? true
   ..titleFontSize = (json['titleFontSize'] as num?)?.toDouble() ?? 16
   ..postHeaderFontSize = (json['postHeaderFontSize'] as num?)?.toDouble() ?? 15
@@ -233,13 +236,13 @@ mixin _$ConfigStore on _ConfigStore, Store {
       Atom(name: '_ConfigStore.instanceFilter', context: context);
 
   @override
-  String get instanceFilter {
+  List<String> get instanceFilter {
     _$instanceFilterAtom.reportRead();
     return super.instanceFilter;
   }
 
   @override
-  set instanceFilter(String value) {
+  set instanceFilter(List<String> value) {
     _$instanceFilterAtom.reportWrite(value, super.instanceFilter, () {
       super.instanceFilter = value;
     });
