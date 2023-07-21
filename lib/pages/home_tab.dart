@@ -409,6 +409,11 @@ class InfiniteHomeList extends HookWidget {
           for (final posts in instancePosts)
             if (i < posts.length) posts[i]
       ];
+      // We assume here that the total list even filtered will be longer
+      // than `limit` posts long. If not then the lists ends here.
+
+      final filtered = unfilteredPosts.where((e) => instanceFilter.every((b) =>
+          !e.postView.community.originInstanceHost.toLowerCase().contains(b)));
 
       return filtered.toList();
     }
@@ -434,31 +439,11 @@ class InfiniteHomeList extends HookWidget {
             auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
           ))
           .toPostStores();
-      final filtered = unfilteredPosts.where((e) => instanceFilter.every(
-          (b) => !e.community.originInstanceHost.toLowerCase().contains(b)));
+      final filtered = unfilteredPosts.where((e) => instanceFilter.every((b) =>
+          !e.postView.community.originInstanceHost.toLowerCase().contains(b)));
 
       return filtered.toList();
     }
-    // Preserved here for history.
-    // FetcherWithSorting<PostView> fetcherFromInstance(
-    //     String instanceHost, PostListingType listingType) {
-    //   return (page, batchSize, sort) => LemmyApiV3(instanceHost).run(GetPosts(
-    //         type: listingType,
-    //         sort: sort,
-    //         page: page,
-    //         limit: batchSize,
-    //         savedOnly: false,
-    //         auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-    //       ));
-    // }
-    // return InfinitePostList(
-    //   fetcher: selectedList.instanceHost == null
-    //       ? (page, limit, sort) =>
-    //           generalFetcher(page, limit, sort, selectedList.listingType)
-    //       : fetcherFromInstance(
-    //           selectedList.instanceHost!, selectedList.listingType),
-    //   controller: controller,
-    // );
 
     final memoizedFetcher = useMemoized(
       () {
