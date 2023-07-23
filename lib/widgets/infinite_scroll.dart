@@ -51,9 +51,7 @@ class InfiniteScroll<T> extends HookWidget {
 
   /// Maps an item to its unique property that will allow to detect possible
   /// duplicates thus perfoming deduplication
-  final Object Function(T item)? uniqueProp;
-
-  Object _defaultUniqueProp(T item) => item as Object;
+  final Object Function(T item) uniqueProp;
 
   /// If true, all content will be discarded and refetched when value
   /// of [fetcher] changes.
@@ -74,7 +72,7 @@ class InfiniteScroll<T> extends HookWidget {
     this.controller,
     this.noItems = const SizedBox.shrink(),
     this.refreshOnFetcherUpdate = false,
-    this.uniqueProp,
+    required this.uniqueProp,
   }) : assert(batchSize > 0);
 
   @override
@@ -99,7 +97,7 @@ class InfiniteScroll<T> extends HookWidget {
       try {
         final newItems = await fetcher(pageKey, batchSize);
         final uniqueNewItems = newItems.where((item) {
-          final uniquePropValue = (uniqueProp ?? _defaultUniqueProp)(item);
+          final uniquePropValue = uniqueProp(item);
           if (dataSet.value.contains(uniquePropValue)) {
             return false;
           }
