@@ -27,10 +27,12 @@ class _PostVideoState extends State<PostVideo> {
   void initState() {
     super.initState();
 
-    _controller = VideoPlayerController.networkUrl(url, httpHeaders: {
-      HttpHeaders.userAgentHeader:
-          Platform.isAndroid ? 'ExoPlayer' : 'Liftoff/1.0'
-    });
+    _controller = VideoPlayerController.networkUrl(url,
+        httpHeaders: {
+          HttpHeaders.userAgentHeader:
+              Platform.isAndroid ? 'ExoPlayer' : 'Liftoff/1.0'
+        },
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true));
 
     _controller.setLooping(true);
 
