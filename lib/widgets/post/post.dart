@@ -104,7 +104,7 @@ class _Post extends HookWidget {
                   ? const [BoxShadow(blurRadius: 5, color: Colors.black45)]
                   : null,
               color: theme.cardColor,
-              borderRadius: store.postRoundedCornersV2
+              borderRadius: store.postRoundedCorners
                   ? const BorderRadius.all(Radius.circular(PostTile.rounding))
                   : null,
             ),
@@ -124,7 +124,7 @@ class _Post extends HookWidget {
                         ]),
                       ),
                     ),
-                  ] else if (store.compactPostViewV2) ...[
+                  ] else if (store.compactPostView) ...[
                     const Row(
                       children: [
                         Expanded(

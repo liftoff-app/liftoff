@@ -46,14 +46,13 @@ class PostListOptions extends StatelessWidget {
                   const Spacer(),
                   if (styleButton)
                     IconButton(
-                      tooltip: store.compactPostViewV2
-                          ? 'Card View'
-                          : 'Compact View',
-                      icon: store.compactPostViewV2
+                      tooltip:
+                          store.compactPostView ? 'Card View' : 'Compact View',
+                      icon: store.compactPostView
                           ? const Icon(Icons.square_rounded)
                           : const Icon(Icons.view_stream),
                       onPressed: () {
-                        store.compactPostViewV2 = !store.compactPostViewV2;
+                        store.compactPostView = !store.compactPostView;
                       },
                     ),
                 ],
