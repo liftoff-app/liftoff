@@ -100,11 +100,11 @@ class _Post extends HookWidget {
           onTrigger: (action) => loggedInAction(action.invoke)(),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              boxShadow: store.postCardShadow
+              boxShadow: store.postCardShadowV2
                   ? const [BoxShadow(blurRadius: 5, color: Colors.black45)]
                   : null,
               color: theme.cardColor,
-              borderRadius: store.postRoundedCorners
+              borderRadius: store.postRoundedCornersV2
                   ? const BorderRadius.all(Radius.circular(PostTile.rounding))
                   : null,
             ),

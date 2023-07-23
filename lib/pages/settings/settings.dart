@@ -212,16 +212,16 @@ class PostStyleConfigPage extends StatelessWidget {
                       SwitchListTile.adaptive(
                         title:
                             Text(L10n.of(context).post_style_rounded_corners),
-                        value: store.postRoundedCorners,
+                        value: store.postRoundedCornersV2,
                         onChanged: (checked) {
-                          store.postRoundedCorners = checked;
+                          store.postRoundedCornersV2 = checked;
                         },
                       ),
                       SwitchListTile.adaptive(
                         title: Text(L10n.of(context).post_style_shadow),
-                        value: store.postCardShadow,
+                        value: store.postCardShadowV2,
                         onChanged: (checked) {
-                          store.postCardShadow = checked;
+                          store.postCardShadowV2 = checked;
                         },
                       ),
                       SwitchListTile.adaptive(

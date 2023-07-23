@@ -64,11 +64,11 @@ abstract class _ConfigStore with Store {
 
   @observable
   @JsonKey(defaultValue: false)
-  bool postRoundedCorners = false;
+  bool postRoundedCornersV2 = false;
 
   @observable
   @JsonKey(defaultValue: false)
-  bool postCardShadow = false;
+  bool postCardShadowV2 = false;
 
   @observable
   @JsonKey(defaultValue: true)
