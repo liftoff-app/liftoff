@@ -80,7 +80,17 @@ class InfiniteScroll<T> extends HookWidget {
     final pagingController =
         useMemoized(() => PagingController<int, T>(firstPageKey: 1), []);
 
+    final dataSet = useRef(HashSet<Object>());
+
     useEffect(() {
+      pagingController.addStatusListener((status) {
+        // if there are less rendered items than unique items, we've probably
+        // refreshed the page. Rebuilding the set will probably be a no-op.
+        if ((pagingController.itemList?.length ?? 0) < dataSet.value.length) {
+          dataSet.value =
+              HashSet.from(pagingController.itemList?.map(uniqueProp) ?? []);
+        }
+      });
       controller?.clear = pagingController.refresh;
       controller?.scrollToTop = () => PrimaryScrollController.of(context)
           .animateTo(0,
@@ -88,8 +98,6 @@ class InfiniteScroll<T> extends HookWidget {
               curve: Curves.easeInOut);
       return null;
     }, []);
-
-    final dataSet = useRef(HashSet<Object>());
 
     // Need to memoize the callback so we get a single instance
     // that we can add/remove from the controller.
