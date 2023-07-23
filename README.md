@@ -16,6 +16,7 @@
 -->
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.liftoffapp.liftoff)
 [<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" height="80">](https://play.google.com/store/apps/details?id=com.liftoffapp.liftoff&pli=1)
+[<img src="https://raw.githubusercontent.com/liftoff-app/liftoff/master/assets/download-on-app-store.svg" height="80">](https://apps.apple.com/gb/app/liftoff/id6450716376)
 [<img src="https://raw.githubusercontent.com/andOTP/andOTP/master/assets/badges/get-it-on-github.png" height="80">](https://github.com/liftoff-app/liftoff/releases/latest)
 
 A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated reddit alternative
