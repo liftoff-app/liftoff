@@ -30,7 +30,7 @@ class SortableInfiniteList<T> extends HookWidget {
   /// if no defaultSort is provided, the defaultSortType
   /// from the configStore will be used
   final SortType? defaultSort;
-  final Object Function(T item)? uniqueProp;
+  final Object Function(T item) uniqueProp;
   const SortableInfiniteList({
     super.key,
     required this.fetcher,
@@ -40,7 +40,7 @@ class SortableInfiniteList<T> extends HookWidget {
     this.noItems = const SizedBox.shrink(),
     this.defaultSort,
     this.refreshOnFetcherUpdate = false,
-    this.uniqueProp,
+    required this.uniqueProp,
   });
 
   @override
@@ -88,7 +88,7 @@ class SortableInfiniteCommentList<T> extends HookWidget {
   /// if no defaultSort is provided, the defaultSortType
   /// from the configStore will be used
   final dynamic defaultSort;
-  final Object Function(T item)? uniqueProp;
+  final Object Function(T item) uniqueProp;
   const SortableInfiniteCommentList({
     super.key,
     required this.fetcher,
@@ -97,7 +97,7 @@ class SortableInfiniteCommentList<T> extends HookWidget {
     this.onStyleChange,
     this.noItems = const SizedBox.shrink(),
     this.defaultSort,
-    this.uniqueProp,
+    required this.uniqueProp,
   });
 
   @override

@@ -87,7 +87,6 @@ class _Post extends HookWidget {
       onTap: isFullPost
           ? null
           : () {
-              final postStore = context.read<PostStore>();
               Navigator.of(context)
                   .push(FullPostPage.fromPostStoreRoute(postStore));
             },
