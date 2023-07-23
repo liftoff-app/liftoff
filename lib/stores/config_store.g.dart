@@ -12,8 +12,8 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..convertWebpToPng = json['convertWebpToPng'] as bool? ?? false
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
   ..compactPostView = json['compactPostView'] as bool? ?? false
-  ..postRoundedCorners = json['postRoundedCorners'] as bool? ?? true
-  ..postCardShadow = json['postCardShadow'] as bool? ?? true
+  ..postRoundedCornersV2 = json['postRoundedCornersV2'] as bool? ?? false
+  ..postCardShadowV2 = json['postCardShadowV2'] as bool? ?? false
   ..showAvatars = json['showAvatars'] as bool? ?? true
   ..showScores = json['showScores'] as bool? ?? true
   ..blurNsfw = json['blurNsfw'] as bool? ?? true
@@ -43,8 +43,8 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'convertWebpToPng': instance.convertWebpToPng,
       'locale': const LocaleConverter().toJson(instance.locale),
       'compactPostView': instance.compactPostView,
-      'postRoundedCorners': instance.postRoundedCorners,
-      'postCardShadow': instance.postCardShadow,
+      'postRoundedCornersV2': instance.postRoundedCornersV2,
+      'postCardShadowV2': instance.postCardShadowV2,
       'showAvatars': instance.showAvatars,
       'showScores': instance.showScores,
       'blurNsfw': instance.blurNsfw,
@@ -151,35 +151,36 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  late final _$postRoundedCornersAtom =
-      Atom(name: '_ConfigStore.postRoundedCorners', context: context);
+  late final _$postRoundedCornersV2Atom =
+      Atom(name: '_ConfigStore.postRoundedCornersV2', context: context);
 
   @override
-  bool get postRoundedCorners {
-    _$postRoundedCornersAtom.reportRead();
-    return super.postRoundedCorners;
+  bool get postRoundedCornersV2 {
+    _$postRoundedCornersV2Atom.reportRead();
+    return super.postRoundedCornersV2;
   }
 
   @override
-  set postRoundedCorners(bool value) {
-    _$postRoundedCornersAtom.reportWrite(value, super.postRoundedCorners, () {
-      super.postRoundedCorners = value;
+  set postRoundedCornersV2(bool value) {
+    _$postRoundedCornersV2Atom.reportWrite(value, super.postRoundedCornersV2,
+        () {
+      super.postRoundedCornersV2 = value;
     });
   }
 
-  late final _$postCardShadowAtom =
-      Atom(name: '_ConfigStore.postCardShadow', context: context);
+  late final _$postCardShadowV2Atom =
+      Atom(name: '_ConfigStore.postCardShadowV2', context: context);
 
   @override
-  bool get postCardShadow {
-    _$postCardShadowAtom.reportRead();
-    return super.postCardShadow;
+  bool get postCardShadowV2 {
+    _$postCardShadowV2Atom.reportRead();
+    return super.postCardShadowV2;
   }
 
   @override
-  set postCardShadow(bool value) {
-    _$postCardShadowAtom.reportWrite(value, super.postCardShadow, () {
-      super.postCardShadow = value;
+  set postCardShadowV2(bool value) {
+    _$postCardShadowV2Atom.reportWrite(value, super.postCardShadowV2, () {
+      super.postCardShadowV2 = value;
     });
   }
 
@@ -503,8 +504,8 @@ useInAppBrowser: ${useInAppBrowser},
 convertWebpToPng: ${convertWebpToPng},
 locale: ${locale},
 compactPostView: ${compactPostView},
-postRoundedCorners: ${postRoundedCorners},
-postCardShadow: ${postCardShadow},
+postRoundedCornersV2: ${postRoundedCornersV2},
+postCardShadowV2: ${postCardShadowV2},
 showAvatars: ${showAvatars},
 showScores: ${showScores},
 blurNsfw: ${blurNsfw},
