@@ -12,10 +12,12 @@ Everything is formatted with `dart format` (no flags) and linted with `flutter a
 
 ## Translations
 
-### Weblate
+We intend to eventually use Weblate to allow you to contribute translation strings to Liftoff, but in the meantime you can look at the files in /assets/i10n -- intl_en.arb is our master file, which contains all the strings that should be translated, and the others are translation files contributed by our users. If you want to add or update a translation file before we get Weblate up and running, you can create an issue in GitHub with the translation file attached and we can add it into the build.
+
+<!-- ### Weblate
 
 Lemmy devs are kindly hosting liftoff translation strings on their [Weblate instance](https://weblate.yerbamate.ml/projects/liftoff/liftoff/). Feel free to contribute strings there, we regularly sync string changes with Weblate.
-
+-->
 We use flutter's native file format for translations: ARB, which itself uses the ICU message syntax. In most cases you will be able to deduce the syntax based on the source string. Here are 3 important examples:
 
 1. Placeholders
