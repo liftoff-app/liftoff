@@ -13,8 +13,8 @@ ThemeData themeFactory(
           canvasColor: Colors.grey[850],
           cardColor: Colors.grey.shade900)
       : ThemeData.light().copyWith(
-          colorScheme: const ColorScheme.light(background: Color(0xfffaf9fc)),
-          canvasColor: const Color(0xfffaf9fc),
+          colorScheme: const ColorScheme.light(background: Color(0xE9EEF8FF)),
+          canvasColor: const Color(0xE9EEF8FF),
         );
   final backgroundColor = amoled ? Colors.black : theme.colorScheme.background;
   final canvasColor = amoled ? Colors.black : theme.canvasColor;
