@@ -10,7 +10,8 @@ import '../fullscreenable_image.dart';
 import 'post_store.dart';
 
 class PostThumbnail extends HookWidget {
-  const PostThumbnail({super.key});
+  final EdgeInsetsGeometry padding;
+  const PostThumbnail({super.key, this.padding = const EdgeInsets.all(10)});
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +23,10 @@ class PostThumbnail extends HookWidget {
         final thumbnailUrl = post.thumbnailUrl;
         final url = post.url;
         return Padding(
-          padding: const EdgeInsets.all(10),
+          padding: padding,
           child: Row(
             children: [
-              if ((!store.hasMedia &&
-                      configStore.showThumbnail &&
-                      configStore.compactPostView) &&
+              if ((!store.hasMedia && configStore.showThumbnail) &&
                   !(post.nsfw && configStore.blurNsfw) &&
                   thumbnailUrl != null &&
                   url != null) ...[
