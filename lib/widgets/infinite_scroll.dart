@@ -99,6 +99,8 @@ class InfiniteScroll<T> extends HookWidget {
       return null;
     }, []);
 
+    final dataSet = useRef(HashSet<Object>());
+
     // Need to memoize the callback so we get a single instance
     // that we can add/remove from the controller.
     final pageRequestListener = useCallback((pageKey) async {
