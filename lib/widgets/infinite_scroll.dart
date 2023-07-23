@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -51,6 +53,8 @@ class InfiniteScroll<T> extends HookWidget {
   /// duplicates thus perfoming deduplication
   final Object Function(T item)? uniqueProp;
 
+  Object _defaultUniqueProp(T item) => item as Object;
+
   /// If true, all content will be discarded and refetched when value
   /// of [fetcher] changes.
   ///
@@ -87,19 +91,30 @@ class InfiniteScroll<T> extends HookWidget {
       return null;
     }, []);
 
+    final dataSet = useRef(HashSet<Object>());
+
     // Need to memoize the callback so we get a single instance
     // that we can add/remove from the controller.
     final pageRequestListener = useCallback((pageKey) async {
       try {
-        final items = await fetcher(pageKey, batchSize);
-        // TODO: check if deduplication is needed
-        // final uniqueItems =
-        //     uniqueProp == null ? items : LinkedHashSet<T>.from(items).toList();
-        final isLastPage = items.length < batchSize;
+        final newItems = await fetcher(pageKey, batchSize);
+        final uniqueNewItems = newItems.where((item) {
+          final uniquePropValue = (uniqueProp ?? _defaultUniqueProp)(item);
+          if (dataSet.value.contains(uniquePropValue)) {
+            return false;
+          }
+
+          dataSet.value.add(uniquePropValue);
+          return true;
+        }).toList();
+
+        // If we got less than `batchSize` items, then we reached the end.
+        // Note: we're checking `newItems` and not `uniqueNewItems`.
+        final isLastPage = newItems.length < batchSize;
         if (isLastPage) {
-          pagingController.appendLastPage(items);
+          pagingController.appendLastPage(uniqueNewItems);
         } else {
-          pagingController.appendPage(items, pageKey + 1);
+          pagingController.appendPage(uniqueNewItems, pageKey + 1);
         }
       } catch (error) {
         pagingController.error = error;
