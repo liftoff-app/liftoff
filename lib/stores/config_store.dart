@@ -60,11 +60,11 @@ abstract class _ConfigStore with Store {
   // post style
   @observable
   @JsonKey(defaultValue: false)
-  bool compactPostView = false;
+  bool compactPostViewV2 = false;
 
   @observable
   @JsonKey(defaultValue: false)
-  bool postRoundedCorners = false;
+  bool postRoundedCornersV2 = false;
 
   @observable
   @JsonKey(defaultValue: false)

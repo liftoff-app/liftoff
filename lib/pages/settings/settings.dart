@@ -204,17 +204,17 @@ class PostStyleConfigPage extends StatelessWidget {
                       _SectionHeading(L10n.of(context).post_view),
                       SwitchListTile.adaptive(
                         title: Text(L10n.of(context).post_style_compact),
-                        value: store.compactPostView,
+                        value: store.compactPostViewV2,
                         onChanged: (checked) {
-                          store.compactPostView = checked;
+                          store.compactPostViewV2 = checked;
                         },
                       ),
                       SwitchListTile.adaptive(
                         title:
                             Text(L10n.of(context).post_style_rounded_corners),
-                        value: store.postRoundedCorners,
+                        value: store.postRoundedCornersV2,
                         onChanged: (checked) {
-                          store.postRoundedCorners = checked;
+                          store.postRoundedCornersV2 = checked;
                         },
                       ),
                       SwitchListTile.adaptive(
@@ -383,12 +383,12 @@ class PostStyleConfigPage extends StatelessWidget {
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockTextPostJson)))),
                       if (state.useAmoled) gradient,
-                      SizedBox(height: store.compactPostView ? 2 : 10),
+                      SizedBox(height: store.compactPostViewV2 ? 2 : 10),
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockMediaPost)))),
                       if (state.useAmoled) gradient,
-                      SizedBox(height: store.compactPostView ? 2 : 10),
+                      SizedBox(height: store.compactPostViewV2 ? 2 : 10),
                       IgnorePointer(
                           child: PostTile.fromPostView(PostView.fromJson(
                               decoder.convert(mockLinkPost)))),

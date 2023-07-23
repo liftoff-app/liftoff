@@ -11,8 +11,8 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..useInAppBrowser = json['useInAppBrowser'] as bool? ?? true
   ..convertWebpToPng = json['convertWebpToPng'] as bool? ?? false
   ..locale = const LocaleConverter().fromJson(json['locale'] as String?)
-  ..compactPostView = json['compactPostView'] as bool? ?? false
-  ..postRoundedCorners = json['postRoundedCorners'] as bool? ?? false
+  ..compactPostViewV2 = json['compactPostViewV2'] as bool? ?? false
+  ..postRoundedCornersV2 = json['postRoundedCornersV2'] as bool? ?? false
   ..postCardShadow = json['postCardShadow'] as bool? ?? false
   ..showAvatars = json['showAvatars'] as bool? ?? true
   ..showScores = json['showScores'] as bool? ?? true
@@ -42,8 +42,8 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'useInAppBrowser': instance.useInAppBrowser,
       'convertWebpToPng': instance.convertWebpToPng,
       'locale': const LocaleConverter().toJson(instance.locale),
-      'compactPostView': instance.compactPostView,
-      'postRoundedCorners': instance.postRoundedCorners,
+      'compactPostViewV2': instance.compactPostViewV2,
+      'postRoundedCornersV2': instance.postRoundedCornersV2,
       'postCardShadow': instance.postCardShadow,
       'showAvatars': instance.showAvatars,
       'showScores': instance.showScores,
@@ -135,35 +135,36 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
-  late final _$compactPostViewAtom =
-      Atom(name: '_ConfigStore.compactPostView', context: context);
+  late final _$compactPostViewV2Atom =
+      Atom(name: '_ConfigStore.compactPostViewV2', context: context);
 
   @override
-  bool get compactPostView {
-    _$compactPostViewAtom.reportRead();
-    return super.compactPostView;
+  bool get compactPostViewV2 {
+    _$compactPostViewV2Atom.reportRead();
+    return super.compactPostViewV2;
   }
 
   @override
-  set compactPostView(bool value) {
-    _$compactPostViewAtom.reportWrite(value, super.compactPostView, () {
-      super.compactPostView = value;
+  set compactPostViewV2(bool value) {
+    _$compactPostViewV2Atom.reportWrite(value, super.compactPostViewV2, () {
+      super.compactPostViewV2 = value;
     });
   }
 
-  late final _$postRoundedCornersAtom =
-      Atom(name: '_ConfigStore.postRoundedCorners', context: context);
+  late final _$postRoundedCornersV2Atom =
+      Atom(name: '_ConfigStore.postRoundedCornersV2', context: context);
 
   @override
-  bool get postRoundedCorners {
-    _$postRoundedCornersAtom.reportRead();
-    return super.postRoundedCorners;
+  bool get postRoundedCornersV2 {
+    _$postRoundedCornersV2Atom.reportRead();
+    return super.postRoundedCornersV2;
   }
 
   @override
-  set postRoundedCorners(bool value) {
-    _$postRoundedCornersAtom.reportWrite(value, super.postRoundedCorners, () {
-      super.postRoundedCorners = value;
+  set postRoundedCornersV2(bool value) {
+    _$postRoundedCornersV2Atom.reportWrite(value, super.postRoundedCornersV2,
+        () {
+      super.postRoundedCornersV2 = value;
     });
   }
 
@@ -502,8 +503,8 @@ disableAnimations: ${disableAnimations},
 useInAppBrowser: ${useInAppBrowser},
 convertWebpToPng: ${convertWebpToPng},
 locale: ${locale},
-compactPostView: ${compactPostView},
-postRoundedCorners: ${postRoundedCorners},
+compactPostViewV2: ${compactPostViewV2},
+postRoundedCornersV2: ${postRoundedCornersV2},
 postCardShadow: ${postCardShadow},
 showAvatars: ${showAvatars},
 showScores: ${showScores},

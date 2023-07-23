@@ -158,7 +158,7 @@ class InfinitePostList extends SortableInfiniteList<PostStore> {
                           ),
                         ),
                       SizedBox(
-                          height: context.read<ConfigStore>().compactPostView
+                          height: context.read<ConfigStore>().compactPostViewV2
                               ? 2
                               : 10),
                     ],

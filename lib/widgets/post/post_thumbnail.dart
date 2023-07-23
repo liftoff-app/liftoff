@@ -27,7 +27,7 @@ class PostThumbnail extends HookWidget {
             children: [
               if ((!store.hasMedia &&
                       configStore.showThumbnail &&
-                      configStore.compactPostView) &&
+                      configStore.compactPostViewV2) &&
                   !(post.nsfw && configStore.blurNsfw) &&
                   thumbnailUrl != null &&
                   url != null) ...[
@@ -64,7 +64,7 @@ class PostThumbnail extends HookWidget {
               ],
               if ((store.hasMedia &&
                       configStore.showThumbnail &&
-                      configStore.compactPostView) &&
+                      configStore.compactPostViewV2) &&
                   !(post.nsfw && configStore.blurNsfw) &&
                   url != null) ...[
                 FullscreenableImage(
