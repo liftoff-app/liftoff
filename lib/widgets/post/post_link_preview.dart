@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../url_launcher.dart';
 import '../../util/observer_consumers.dart';
 import 'post_store.dart';
+import 'post_thumbnail.dart';
 
 class PostLinkPreview extends StatelessWidget {
   const PostLinkPreview({super.key});
@@ -34,32 +35,43 @@ class PostLinkPreview extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5)),
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        const Spacer(),
-                        Text('${store.urlDomain} ',
-                            style: theme.textTheme.bodySmall
-                                ?.apply(fontStyle: FontStyle.italic)),
-                        const Icon(Icons.launch, size: 12),
-                      ],
-                    ),
-                    Text(
-                      store.postView.post.embedTitle ?? '',
-                      style: theme.textTheme.titleMedium
-                          ?.apply(fontWeightDelta: 2),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (store.postView.post.embedDescription?.isNotEmpty ??
-                        false)
-                      Text(
-                        store.postView.post.embedDescription!,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
+                    if (store.postView.post.thumbnailUrl != null)
+                      const PostThumbnail(
+                        padding: EdgeInsets.only(right: 10),
                       ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Spacer(),
+                              Text('${store.urlDomain} ',
+                                  style: theme.textTheme.bodySmall
+                                      ?.apply(fontStyle: FontStyle.italic)),
+                              const Icon(Icons.launch, size: 12),
+                            ],
+                          ),
+                          Text(
+                            store.postView.post.embedTitle ?? '',
+                            style: theme.textTheme.titleMedium
+                                ?.apply(fontWeightDelta: 2),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (store
+                                  .postView.post.embedDescription?.isNotEmpty ??
+                              false)
+                            Text(
+                              store.postView.post.embedDescription!,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
