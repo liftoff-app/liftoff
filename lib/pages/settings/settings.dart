@@ -653,7 +653,7 @@ class GeneralConfigPage extends StatelessWidget {
                       .sublist(0, CommentSortType.values.length - 1),
                   groupValue: store.defaultCommentSort,
                   onChanged: (value) => store.defaultCommentSort = value,
-                  mapValueToString: (value) => value.value,
+                  mapValueToString: (value) => value.tr(context),
                   buttonBuilder: (context, displayValue, onPressed) =>
                       FilledButton(
                     onPressed: onPressed,
@@ -680,7 +680,7 @@ class GeneralConfigPage extends StatelessWidget {
                   ],
                   groupValue: store.defaultListingType,
                   onChanged: (value) => store.defaultListingType = value,
-                  mapValueToString: (value) => value.value,
+                  mapValueToString: (value) => value.tr(context),
                   buttonBuilder: (context, displayValue, onPressed) =>
                       FilledButton(
                     onPressed: onPressed,
