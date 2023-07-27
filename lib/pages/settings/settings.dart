@@ -629,7 +629,7 @@ class GeneralConfigPage extends StatelessWidget {
                   values: SortType.values,
                   groupValue: store.defaultSortType,
                   onChanged: (value) => store.defaultSortType = value,
-                  mapValueToString: (value) => value.value,
+                  mapValueToString: (value) => value.tr(context),
                   buttonBuilder: (context, displayValue, onPressed) =>
                       FilledButton(
                     onPressed: onPressed,
