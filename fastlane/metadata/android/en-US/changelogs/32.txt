@@ -1,0 +1,5 @@
+- Show thumbnails in full height cards
+- Fixed list view refresh
+- Updated defaults for themes
+- Remove duplicates from infinite scroll
+

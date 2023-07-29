@@ -1,4 +1,4 @@
-## Unreleased
+## v0.10.10 - 2023-07-29
 - Fixed issues with video player
 - Show thumbnails in full height cards
 - Fixed list view refresh
