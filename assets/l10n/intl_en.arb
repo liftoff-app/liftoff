@@ -214,6 +214,8 @@
   "@pinned": {},
   "by": "by",
   "@by": {},
+  "switch_account": "Switch account...",
+  "@switch_account": {},
   "view_on": "View on another instance",
   "@view_on": {},
   "foreign_community_info": "Loading the community in the other instance. Note that if this is the first time the community is being viewed in the instance, this process may take a while.",
