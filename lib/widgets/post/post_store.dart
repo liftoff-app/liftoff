@@ -8,11 +8,11 @@ import '../../util/cleanup_url.dart';
 part 'post_store.g.dart';
 
 class PostStore extends _PostStore with _$PostStore {
-  PostStore(super.postView);
+  PostStore(super.postView, super.userData);
 }
 
 abstract class _PostStore with Store {
-  _PostStore(this.postView);
+  _PostStore(this.postView, this.userData);
 
   final votingState = AsyncStore<PostView>();
   final savingState = AsyncStore<PostView>();
@@ -23,6 +23,7 @@ abstract class _PostStore with Store {
 
   @observable
   PostView postView;
+  UserData? userData;
 
   @observable
   ObservableList<CommentView> newComments = ObservableList<CommentView>();
@@ -30,6 +31,7 @@ abstract class _PostStore with Store {
   @computed
   String? get urlDomain =>
       postView.post.url != null ? urlHost(postView.post.url!) : null;
+  bool get isAuthenticated => userData != null;
 
   @computed
   bool get hasMedia {
@@ -55,19 +57,19 @@ abstract class _PostStore with Store {
   }
 
   @action
-  Future<void> save(UserData userData) async {
+  Future<void> save() async {
     final result = await savingState.runLemmy(
         postView.instanceHost,
         SavePost(
             postId: postView.post.id,
             save: !postView.saved,
-            auth: userData.jwt.raw));
+            auth: userData!.jwt.raw));
 
     if (result != null) postView = result;
   }
 
   @action
-  Future<void> report(UserData userData, String reason) async {
+  Future<void> report(String reason) async {
     if (reason.trim().isEmpty) throw ArgumentError('reason must not be empty');
 
     await reportingState.runLemmy(
@@ -75,19 +77,19 @@ abstract class _PostStore with Store {
       CreatePostReport(
         postId: postView.post.id,
         reason: reason,
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
   }
 
   @action
-  Future<void> delete(UserData userData) async {
+  Future<void> delete() async {
     final result = await deletingState.runLemmy(
       postView.instanceHost,
       DeletePost(
         postId: postView.post.id,
         deleted: !postView.post.deleted,
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
 
@@ -95,13 +97,13 @@ abstract class _PostStore with Store {
   }
 
   @action
-  Future<void> blockUser(UserData userData) async {
+  Future<void> blockUser() async {
     final result = await userBlockingState.runLemmy(
         postView.post.instanceHost,
         BlockPerson(
           personId: postView.creator.id,
           block: !postView.creatorBlocked,
-          auth: userData.jwt.raw,
+          auth: userData!.jwt.raw,
         ));
 
     if (result != null) {
@@ -110,13 +112,13 @@ abstract class _PostStore with Store {
   }
 
   @action
-  Future<void> blockCommunity(UserData userData) async {
+  Future<void> blockCommunity() async {
     await communityBlockingState.runLemmy(
         postView.post.instanceHost,
         BlockCommunity(
             communityId: postView.community.id,
             block: true,
-            auth: userData.jwt.raw));
+            auth: userData!.jwt.raw));
   }
 
   @action
@@ -128,23 +130,23 @@ abstract class _PostStore with Store {
   // VOTING
 
   @action
-  Future<void> _vote(UserData userData, VoteType voteType) async {
+  Future<void> _vote(VoteType voteType) async {
     final result = await votingState.runLemmy(
       postView.instanceHost,
       CreatePostLike(
-          postId: postView.post.id, score: voteType, auth: userData.jwt.raw),
+          postId: postView.post.id, score: voteType, auth: userData!.jwt.raw),
     );
 
     if (result != null) postView = result;
   }
 
   @action
-  Future<void> upVote(UserData userData) => _vote(
-      userData, postView.myVote == VoteType.up ? VoteType.none : VoteType.up);
+  Future<void> upVote() =>
+      _vote(postView.myVote == VoteType.up ? VoteType.none : VoteType.up);
 
   @action
-  Future<void> downVote(UserData userData) => _vote(userData,
-      postView.myVote == VoteType.down ? VoteType.none : VoteType.down);
+  Future<void> downVote() =>
+      _vote(postView.myVote == VoteType.down ? VoteType.none : VoteType.down);
 
   @action
   void addComment(CommentView commentView) =>
@@ -152,6 +154,6 @@ abstract class _PostStore with Store {
 }
 
 extension PostStoreBuilder on Future<List<PostView>> {
-  Future<List<PostStore>> toPostStores() =>
-      then((value) => value.map(PostStore.new).toList());
+  Future<List<PostStore>> toPostStores(UserData? userData) => then(
+      (value) => value.map((value) => PostStore(value, userData)).toList());
 }

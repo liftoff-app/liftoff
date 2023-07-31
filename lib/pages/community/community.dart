@@ -142,7 +142,8 @@ class CommunityPage extends HookWidget {
                                   ?.jwt
                                   .raw,
                             ))
-                            .toPostStores(),
+                            .toPostStores(accountsStore
+                                .defaultUserDataFor(community.instanceHost)),
                   ),
                   InfiniteCommentList(
                       fetcher: (page, batchSize, sortType) =>

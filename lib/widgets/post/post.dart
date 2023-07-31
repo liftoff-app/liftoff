@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
 
-import '../../hooks/logged_in_action.dart';
 import '../../liftoff_action.dart';
 import '../../pages/full_post/full_post.dart';
 import '../../stores/config_store.dart';
@@ -32,7 +31,7 @@ class PostTile extends StatelessWidget {
   const PostTile.fromPostStore(this.postStore,
       {super.key, required this.fullPost});
   PostTile.fromPostView(PostView post, {super.key, this.fullPost = false})
-      : postStore = PostStore(post);
+      : postStore = PostStore(post, null);
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +67,6 @@ class _Post extends HookWidget {
     final theme = Theme.of(context);
     final isFullPost = context.read<IsFullPost>();
 
-    final loggedInAction = useLoggedInAction(context
-        .select<PostStore, String>((store) => store.postView.instanceHost));
-
     final postStore = context.read<PostStore>();
     const sensitiveContent = Column(
       children: [
@@ -93,10 +89,12 @@ class _Post extends HookWidget {
       child: ObserverBuilder<ConfigStore>(
         builder: (context, store) => WithSwipeActions(
           actions: [
-            PostUpvoteAction(post: postStore, context: context),
-            PostSaveAction(post: postStore),
+            if (postStore.isAuthenticated) ...[
+              PostUpvoteAction(post: postStore, context: context),
+              PostSaveAction(post: postStore),
+            ]
           ],
-          onTrigger: (action) => loggedInAction(action.invoke)(),
+          onTrigger: (action) => action.invoke(),
           child: DecoratedBox(
             decoration: BoxDecoration(
               boxShadow: store.postCardShadowV2

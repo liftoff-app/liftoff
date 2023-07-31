@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import 'stores/accounts_store.dart';
 import 'widgets/comment/comment_store.dart';
 import 'widgets/post/post_store.dart';
 
@@ -35,7 +34,7 @@ abstract class LiftoffAction {
   /// The function that will be invoked when the action is
   /// triggered.
   /// It will be wrapped in a call to [loggedInAction].
-  Future<void> Function(UserData userData) get invoke;
+  Future<void> Function() get invoke;
 }
 
 //////////////////////// Upvote actions ////////////////////////
@@ -49,7 +48,7 @@ class PostUpvoteAction extends _UpvoteAction {
   });
 
   @override
-  Future<void> Function(UserData userData) get invoke => post.upVote;
+  Future<void> Function() get invoke => post.upVote;
 
   @override
   bool get isActivated => post.postView.myVote == VoteType.up;
@@ -64,7 +63,7 @@ class CommentUpvoteAction extends _UpvoteAction {
   });
 
   @override
-  Future<void> Function(UserData userData) get invoke => comment.upVote;
+  Future<void> Function() get invoke => () async {}; // comment.upVote;
 
   @override
   bool get isActivated => comment.comment.myVote == VoteType.up;
@@ -100,7 +99,7 @@ class PostSaveAction extends _SaveAction {
   });
 
   @override
-  Future<void> Function(UserData userData) get invoke => post.save;
+  Future<void> Function() get invoke => post.save;
 
   @override
   bool get isActivated => post.postView.saved;
@@ -114,7 +113,7 @@ class CommentSaveAction extends _SaveAction {
   });
 
   @override
-  Future<void> Function(UserData userData) get invoke => comment.save;
+  Future<void> Function() get invoke => () async {}; // comment.save
 
   @override
   bool get isActivated => comment.comment.saved;

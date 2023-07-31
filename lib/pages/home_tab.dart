@@ -448,7 +448,7 @@ class InfiniteHomeList extends HookWidget {
                 savedOnly: false,
                 auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
               ))
-              .toPostStores()
+              .toPostStores(accStore.defaultUserDataFor(instanceHost))
       ];
       final instancePosts = await Future.wait(futures);
       final longest = instancePosts.map((e) => e.length).reduce(max);
@@ -473,7 +473,7 @@ class InfiniteHomeList extends HookWidget {
               savedOnly: false,
               auth: userData?.jwt.raw,
             ))
-            .toPostStores();
+            .toPostStores(userData);
 
     final memoizedFetcher = useMemoized(
       () {

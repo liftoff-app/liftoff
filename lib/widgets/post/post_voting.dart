@@ -16,8 +16,12 @@ class PostVoting extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final showScores = useStore((ConfigStore store) => store.showScores);
-    final loggedInAction = useLoggedInAction(context
-        .select<PostStore, String>((store) => store.postView.instanceHost));
+    final isLoggedIn =
+        context.select<PostStore, bool>((store) => store.isAuthenticated);
+    final loggedInAction = loggedInMessage(
+        context
+            .select<PostStore, String>((store) => store.postView.instanceHost),
+        loggedIn: isLoggedIn);
 
     return ObserverBuilder<PostStore>(builder: (context, store) {
       return Row(

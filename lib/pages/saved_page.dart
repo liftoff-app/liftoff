@@ -53,7 +53,7 @@ class SavedPage extends HookWidget {
                           auth: accountStore.defaultUserData!.jwt.raw,
                         ),
                       )
-                      .toPostStores(),
+                      .toPostStores(accountStore.defaultUserData),
             ),
             InfiniteCommentList(
               fetcher: (page, batchSize, sortType) =>

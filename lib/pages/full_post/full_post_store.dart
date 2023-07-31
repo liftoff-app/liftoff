@@ -28,7 +28,7 @@ abstract class _FullPostStore with Store {
   _FullPostStore.fromPostView(PostView postView, {this.commentId})
       : postId = postView.post.id,
         instanceHost = postView.instanceHost,
-        postStore = PostStore(postView);
+        postStore = PostStore(postView, null);
 
   // ignore: unused_element
   _FullPostStore.fromPostStore(PostStore this.postStore)
@@ -106,7 +106,7 @@ abstract class _FullPostStore with Store {
             auth: userData?.jwt.raw));
 
     if (result != null) {
-      postStore ??= PostStore(result.postView);
+      postStore ??= PostStore(result.postView, userData);
       fullPostView = result;
       postStore!.updatePostView(result.postView);
     }

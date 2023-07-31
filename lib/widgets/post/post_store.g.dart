@@ -59,49 +59,48 @@ mixin _$PostStore on _PostStore, Store {
       AsyncAction('_PostStore.save', context: context);
 
   @override
-  Future<void> save(UserData userData) {
-    return _$saveAsyncAction.run(() => super.save(userData));
+  Future<void> save() {
+    return _$saveAsyncAction.run(() => super.save());
   }
 
   late final _$reportAsyncAction =
       AsyncAction('_PostStore.report', context: context);
 
   @override
-  Future<void> report(UserData userData, String reason) {
-    return _$reportAsyncAction.run(() => super.report(userData, reason));
+  Future<void> report(String reason) {
+    return _$reportAsyncAction.run(() => super.report(reason));
   }
 
   late final _$deleteAsyncAction =
       AsyncAction('_PostStore.delete', context: context);
 
   @override
-  Future<void> delete(UserData userData) {
-    return _$deleteAsyncAction.run(() => super.delete(userData));
+  Future<void> delete() {
+    return _$deleteAsyncAction.run(() => super.delete());
   }
 
   late final _$blockUserAsyncAction =
       AsyncAction('_PostStore.blockUser', context: context);
 
   @override
-  Future<void> blockUser(UserData userData) {
-    return _$blockUserAsyncAction.run(() => super.blockUser(userData));
+  Future<void> blockUser() {
+    return _$blockUserAsyncAction.run(() => super.blockUser());
   }
 
   late final _$blockCommunityAsyncAction =
       AsyncAction('_PostStore.blockCommunity', context: context);
 
   @override
-  Future<void> blockCommunity(UserData userData) {
-    return _$blockCommunityAsyncAction
-        .run(() => super.blockCommunity(userData));
+  Future<void> blockCommunity() {
+    return _$blockCommunityAsyncAction.run(() => super.blockCommunity());
   }
 
   late final _$_voteAsyncAction =
       AsyncAction('_PostStore._vote', context: context);
 
   @override
-  Future<void> _vote(UserData userData, VoteType voteType) {
-    return _$_voteAsyncAction.run(() => super._vote(userData, voteType));
+  Future<void> _vote(VoteType voteType) {
+    return _$_voteAsyncAction.run(() => super._vote(voteType));
   }
 
   late final _$_PostStoreActionController =
@@ -119,22 +118,22 @@ mixin _$PostStore on _PostStore, Store {
   }
 
   @override
-  Future<void> upVote(UserData userData) {
+  Future<void> upVote() {
     final _$actionInfo =
         _$_PostStoreActionController.startAction(name: '_PostStore.upVote');
     try {
-      return super.upVote(userData);
+      return super.upVote();
     } finally {
       _$_PostStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  Future<void> downVote(UserData userData) {
+  Future<void> downVote() {
     final _$actionInfo =
         _$_PostStoreActionController.startAction(name: '_PostStore.downVote');
     try {
-      return super.downVote(userData);
+      return super.downVote();
     } finally {
       _$_PostStoreActionController.endAction(_$actionInfo);
     }

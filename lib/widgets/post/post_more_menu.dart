@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../pages/create_post/create_post.dart';
 import '../../pages/full_post/full_post_store.dart';
 import '../../pages/settings/settings.dart';
 import '../../pages/view_on_menu.dart';
-import '../../stores/accounts_store.dart';
 import '../../url_launcher.dart';
 import '../../util/goto.dart';
 import '../../util/icons.dart';
@@ -59,13 +57,10 @@ class PostMoreMenu extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInAction = useLoggedInAction(postStore.postView.instanceHost);
-
-    final isMine = context
-            .read<AccountsStore>()
-            .defaultUserDataFor(postStore.postView.instanceHost)
-            ?.userId ==
-        postStore.postView.creator.id;
+    final isLoggedIn = postStore.isAuthenticated;
+    final isMine = isLoggedIn &&
+        postStore.userData!.userId == postStore.postView.creator.id &&
+        postStore.userData!.instanceHost == postStore.postView.instanceHost;
 
     return ObserverBuilder<PostStore>(
         store: postStore,
@@ -91,77 +86,77 @@ class PostMoreMenu extends HookWidget {
                 title: Text(L10n.of(context).view_on),
                 onTap: () => ViewOnMenu.openForPost(context, post.post.apId),
               ),
-              if (isMine) ...[
-                ListTile(
-                  leading: const Icon(Icons.edit),
-                  title: Text(L10n.of(context).edit),
-                  onTap: () async {
-                    final postView = await Navigator.of(context).push(
-                      CreatePostPage.editRoute(post.post),
-                    );
+              if (isLoggedIn)
+                if (isMine) ...[
+                  ListTile(
+                    leading: const Icon(Icons.edit),
+                    title: Text(L10n.of(context).edit),
+                    onTap: () async {
+                      final postView = await Navigator.of(context).push(
+                        CreatePostPage.editRoute(post.post),
+                      );
 
-                    if (postView != null) {
-                      store.updatePostView(postView);
-                    }
-                  },
-                ),
-                ListTile(
-                  leading:
-                      Icon(post.post.deleted ? Icons.restore : Icons.delete),
-                  title: Text(post.post.deleted
-                      ? L10n.of(context).restore_post
-                      : L10n.of(context).delete_post),
-                  onTap: store.deletingState.isLoading
-                      ? null
-                      : () {
+                      if (postView != null) {
+                        store.updatePostView(postView);
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading:
+                        Icon(post.post.deleted ? Icons.restore : Icons.delete),
+                    title: Text(post.post.deleted
+                        ? L10n.of(context).restore_post
+                        : L10n.of(context).delete_post),
+                    onTap: store.deletingState.isLoading
+                        ? null
+                        : () {
+                            Navigator.of(context).pop();
+                            store.delete();
+                          },
+                  ),
+                ] else
+                  ListTile(
+                    leading: store.userBlockingState.isLoading
+                        ? const CircularProgressIndicator.adaptive()
+                        : const Icon(Icons.block),
+                    title: Text(post.creatorBlocked
+                        ? L10n.of(context).unblock_user
+                        : L10n.of(context).block_user),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      store.blockUser();
+                    },
+                  ),
+              if (isLoggedIn)
+                if (fullPostStore?.fullPostView != null)
+                  ObserverBuilder<FullPostStore>(
+                    store: fullPostStore,
+                    builder: (context, store) {
+                      return ListTile(
+                        leading: store.communityBlockingState.isLoading
+                            ? const CircularProgressIndicator.adaptive()
+                            : const Icon(Icons.block),
+                        title: Text(store.fullPostView!.communityView.blocked
+                            ? L10n.of(context).unblock_community
+                            : L10n.of(context).block_community),
+                        onTap: () {
                           Navigator.of(context).pop();
-                          loggedInAction((token) async {
-                            await store.delete(token);
-                          })();
+                          //loggedInAction(store.blockCommunity)();
                         },
-                ),
-              ] else
-                ListTile(
-                  leading: store.userBlockingState.isLoading
-                      ? const CircularProgressIndicator.adaptive()
-                      : const Icon(Icons.block),
-                  title: Text(post.creatorBlocked
-                      ? L10n.of(context).unblock_user
-                      : L10n.of(context).block_user),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    loggedInAction(store.blockUser)();
-                  },
-                ),
-              if (fullPostStore?.fullPostView != null)
-                ObserverBuilder<FullPostStore>(
-                  store: fullPostStore,
-                  builder: (context, store) {
-                    return ListTile(
-                      leading: store.communityBlockingState.isLoading
-                          ? const CircularProgressIndicator.adaptive()
-                          : const Icon(Icons.block),
-                      title: Text(store.fullPostView!.communityView.blocked
-                          ? L10n.of(context).unblock_community
-                          : L10n.of(context).block_community),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        loggedInAction(store.blockCommunity)();
-                      },
-                    );
-                  },
-                )
-              else
-                ListTile(
-                  leading: store.communityBlockingState.isLoading
-                      ? const CircularProgressIndicator.adaptive()
-                      : const Icon(Icons.block),
-                  title: const Text('Block community'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    loggedInAction(store.blockCommunity)();
-                  },
-                ),
+                      );
+                    },
+                  )
+                else
+                  ListTile(
+                    leading: store.communityBlockingState.isLoading
+                        ? const CircularProgressIndicator.adaptive()
+                        : const Icon(Icons.block),
+                    title: const Text('Block community'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      store.blockCommunity();
+                    },
+                  ),
               ListTile(
                 leading: const Icon(Icons.translate),
                 title: Text(L10n.of(context).translate),
@@ -175,23 +170,22 @@ class PostMoreMenu extends HookWidget {
                   }
                 },
               ),
-              ListTile(
-                leading: store.reportingState.isLoading
-                    ? const CircularProgressIndicator.adaptive()
-                    : const Icon(Icons.flag),
-                title: Text(L10n.of(context).report_post),
-                onTap: store.reportingState.isLoading
-                    ? null
-                    : () {
-                        Navigator.of(context).pop();
-                        loggedInAction((token) async {
+              if (isLoggedIn)
+                ListTile(
+                  leading: store.reportingState.isLoading
+                      ? const CircularProgressIndicator.adaptive()
+                      : const Icon(Icons.flag),
+                  title: Text(L10n.of(context).report_post),
+                  onTap: store.reportingState.isLoading
+                      ? null
+                      : () async {
+                          Navigator.of(context).pop();
                           final reason = await ReportDialog.show(context);
                           if (reason != null) {
-                            await store.report(token, reason);
+                            await store.report(reason);
                           }
-                        })();
-                      },
-              ),
+                        },
+                ),
               ListTile(
                 leading: const Icon(Icons.info_outline),
                 title: Text(L10n.of(context).nerd_stuff),

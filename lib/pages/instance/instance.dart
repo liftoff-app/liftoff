@@ -155,21 +155,22 @@ class InstancePage extends HookWidget {
                   body: TabBarView(
                     children: [
                       InfinitePostList(
-                        fetcher: (page, batchSize, sort) =>
-                            LemmyApiV3(store.instanceHost)
-                                .run(GetPosts(
-                                  // TODO: switch between all and subscribed
-                                  type: PostListingType.all,
-                                  sort: sort,
-                                  limit: batchSize,
-                                  page: page,
-                                  savedOnly: false,
-                                  auth: context
-                                      .defaultUserData(store.instanceHost)
-                                      ?.jwt
-                                      .raw,
-                                ))
-                                .toPostStores(),
+                        fetcher: (page, batchSize, sort) => LemmyApiV3(
+                                store.instanceHost)
+                            .run(GetPosts(
+                              // TODO: switch between all and subscribed
+                              type: PostListingType.all,
+                              sort: sort,
+                              limit: batchSize,
+                              page: page,
+                              savedOnly: false,
+                              auth: context
+                                  .defaultUserData(store.instanceHost)
+                                  ?.jwt
+                                  .raw,
+                            ))
+                            .toPostStores(
+                                context.defaultUserData(store.instanceHost)),
                       ),
                       InfiniteCommentList(
                         fetcher: (page, batchSize, sort) =>

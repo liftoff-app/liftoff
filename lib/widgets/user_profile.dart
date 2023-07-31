@@ -111,7 +111,8 @@ class UserProfile extends HookWidget {
                           .raw,
                     ))
                     .then((val) => val.posts)
-                    .toPostStores(),
+                    .toPostStores(
+                        accountsStore.defaultUserDataFor(instanceHost)),
               ),
               Center(
                 child: ConstrainedBox(

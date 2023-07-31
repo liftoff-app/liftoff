@@ -79,3 +79,27 @@ Function useLoggedInActionForComment() {
     },
   );
 }
+
+VoidCallback Function(
+  void Function() action, [
+  String? message,
+]) loggedInMessage(String instanceHost, {bool loggedIn = false}) {
+  final context = useContext();
+
+  return (action, [message]) {
+    if (!loggedIn) {
+      return () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 7),
+          content: Text(message ??
+              'This thread was retrieved via $instanceHost.\nYou are not logged in there.'),
+          action: SnackBarAction(
+              label: 'log in',
+              onPressed: () => goTo(context, (_) => AccountsConfigPage())),
+        ));
+      };
+    }
+
+    return action;
+  };
+}
