@@ -13,8 +13,9 @@ import 'full_post/full_post.dart';
 
 class ViewOnMenu extends HookWidget {
   final void Function(UserData userData) onSelect;
+  final Widget? title;
 
-  const ViewOnMenu({super.key, required this.onSelect});
+  const ViewOnMenu({super.key, required this.onSelect, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +35,11 @@ class ViewOnMenu extends HookWidget {
 
     return Column(children: [
       ListTile(
-          title: Text(
-        L10n.of(context).view_on,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      )),
+          title: title ??
+              Text(
+                L10n.of(context).view_on,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              )),
       for (final instance in accountsStore.loggedInInstances) ...[
         ListTile(
           title: Text(
@@ -77,10 +79,12 @@ class ViewOnMenu extends HookWidget {
   }
 
   static void open(
-      BuildContext context, void Function(UserData userData) onSelect) {
+      BuildContext context, void Function(UserData userData) onSelect,
+      {Widget? title}) {
     showBottomModal(
       context: context,
       builder: (context) => ViewOnMenu(
+        title: title,
         onSelect: onSelect,
       ),
     );

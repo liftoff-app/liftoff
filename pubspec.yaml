@@ -84,6 +84,7 @@ dependencies:
   http: ^0.13.6
   video_player: ^2.7.0
   collection: ^1.17.1
+  flutter_initicon: ^3.0.0+1
 
 # https://github.com/flutter/flutter/issues/127425
 dependency_overrides:
