@@ -11,6 +11,7 @@ import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../stores/config_store.dart';
+import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
@@ -366,6 +367,8 @@ class InfiniteHomeList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
+    final instanceFilter =
+        useStore((ConfigStore store) => store.instanceFilter);
 
     /// fetches post from many instances at once and combines them into a single
     /// list
@@ -401,27 +404,46 @@ class InfiniteHomeList extends HookWidget {
       final instancePosts = await Future.wait(futures);
       final longest = instancePosts.map((e) => e.length).reduce(max);
 
-      final newPosts = [
+      final unfilteredPosts = [
         for (var i = 0; i < longest; i++)
           for (final posts in instancePosts)
             if (i < posts.length) posts[i]
       ];
+      // We assume here that the total list even filtered will be longer
+      // than `limit` posts long. If not then the lists ends here.
 
-      return newPosts;
+      final filtered = unfilteredPosts.where((e) => instanceFilter.every((b) =>
+          !e.postView.community.originInstanceHost.toLowerCase().contains(b)));
+
+      return filtered.toList();
     }
 
-    FetcherWithSorting<PostStore> fetcherFromInstance(
-            String instanceHost, PostListingType listingType) =>
-        (page, batchSize, sort) => LemmyApiV3(instanceHost)
-            .run(GetPosts(
-              type: listingType,
-              sort: sort,
-              page: page,
-              limit: batchSize,
-              savedOnly: false,
-              auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
-            ))
-            .toPostStores();
+    Future<List<PostStore>> fetcherFromInstance(
+      int page,
+      int limit,
+      SortType sort,
+      String instanceHost,
+      PostListingType listingType,
+    ) async {
+      // Get twice as many as we need, so we will keep the pipeline full,
+      // unless the user has blocked 'lemmy', in which case their
+      // feed will end early.
+      final limitWithBans = instanceFilter.isEmpty ? limit : 2 * limit;
+      final unfilteredPosts = await LemmyApiV3(instanceHost)
+          .run(GetPosts(
+            type: listingType,
+            sort: sort,
+            page: page,
+            limit: limitWithBans,
+            savedOnly: false,
+            auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+          ))
+          .toPostStores();
+      final filtered = unfilteredPosts.where((e) => instanceFilter.every((b) =>
+          !e.postView.community.originInstanceHost.toLowerCase().contains(b)));
+
+      return filtered.toList();
+    }
 
     final memoizedFetcher = useMemoized(
       () {
@@ -429,7 +451,7 @@ class InfiniteHomeList extends HookWidget {
         return selectedInstanceHost == null
             ? (page, limit, sort) =>
                 generalFetcher(page, limit, sort, selectedList.listingType)
-            : fetcherFromInstance(
+            : (page, limit, sort) => fetcherFromInstance(page, limit, sort,
                 selectedInstanceHost, selectedList.listingType);
       },
       [selectedList],

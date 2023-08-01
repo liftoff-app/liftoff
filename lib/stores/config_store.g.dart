@@ -17,6 +17,10 @@ ConfigStore _$ConfigStoreFromJson(Map<String, dynamic> json) => ConfigStore()
   ..showAvatars = json['showAvatars'] as bool? ?? true
   ..showScores = json['showScores'] as bool? ?? true
   ..blurNsfw = json['blurNsfw'] as bool? ?? true
+  ..instanceFilter = (json['instanceFilter'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      []
   ..showThumbnail = json['showThumbnail'] as bool? ?? true
   ..autoPlayVideo = json['autoPlayVideo'] as bool? ?? true
   ..autoMuteVideo = json['autoMuteVideo'] as bool? ?? true
@@ -48,6 +52,7 @@ Map<String, dynamic> _$ConfigStoreToJson(ConfigStore instance) =>
       'showAvatars': instance.showAvatars,
       'showScores': instance.showScores,
       'blurNsfw': instance.blurNsfw,
+      'instanceFilter': instance.instanceFilter,
       'showThumbnail': instance.showThumbnail,
       'autoPlayVideo': instance.autoPlayVideo,
       'autoMuteVideo': instance.autoMuteVideo,
@@ -229,6 +234,22 @@ mixin _$ConfigStore on _ConfigStore, Store {
   set blurNsfw(bool value) {
     _$blurNsfwAtom.reportWrite(value, super.blurNsfw, () {
       super.blurNsfw = value;
+    });
+  }
+
+  late final _$instanceFilterAtom =
+      Atom(name: '_ConfigStore.instanceFilter', context: context);
+
+  @override
+  List<String> get instanceFilter {
+    _$instanceFilterAtom.reportRead();
+    return super.instanceFilter;
+  }
+
+  @override
+  set instanceFilter(List<String> value) {
+    _$instanceFilterAtom.reportWrite(value, super.instanceFilter, () {
+      super.instanceFilter = value;
     });
   }
 
@@ -509,6 +530,7 @@ postCardShadowV2: ${postCardShadowV2},
 showAvatars: ${showAvatars},
 showScores: ${showScores},
 blurNsfw: ${blurNsfw},
+instanceFilter: ${instanceFilter},
 showThumbnail: ${showThumbnail},
 autoPlayVideo: ${autoPlayVideo},
 autoMuteVideo: ${autoMuteVideo},
