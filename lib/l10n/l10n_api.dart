@@ -40,6 +40,23 @@ extension SortTypeL10n on SortType {
   }
 }
 
+extension CommentSortTypeL10n on CommentSortType {
+  String tr(BuildContext context) {
+    switch (this) {
+      case CommentSortType.hot:
+        return L10n.of(context).hot;
+      case CommentSortType.new_:
+        return L10n.of(context).new_;
+      case CommentSortType.old:
+        return L10n.of(context).old;
+      case CommentSortType.top:
+        return L10n.of(context).top;
+      default:
+        throw Exception('unreachable');
+    }
+  }
+}
+
 extension PostListingTypeL10n on PostListingType {
   String tr(BuildContext context) {
     switch (this) {
