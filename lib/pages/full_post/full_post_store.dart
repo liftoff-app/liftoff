@@ -25,10 +25,13 @@ abstract class _FullPostStore with Store {
       this.commentId});
 
   // ignore: unused_element
-  _FullPostStore.fromPostView(PostView postView, {this.commentId})
+  _FullPostStore.fromPostView(PostView postView,
+      // ignore: unused_element
+      {this.commentId,
+      UserData? userData})
       : postId = postView.post.id,
         instanceHost = postView.instanceHost,
-        postStore = PostStore(postView, null);
+        postStore = PostStore(postView, userData);
 
   // ignore: unused_element
   _FullPostStore.fromPostStore(PostStore this.postStore)
@@ -57,6 +60,14 @@ abstract class _FullPostStore with Store {
 
   @observable
   int? commentId;
+
+  UserData? get userData {
+    return postStore?.userData;
+  }
+
+  bool get isAuthenticated {
+    return postStore?.isAuthenticated ?? false;
+  }
 
   final fullPostState = AsyncStore<FullPostView>();
   final commentsState = AsyncStore<List<CommentView>>();
@@ -103,10 +114,10 @@ abstract class _FullPostStore with Store {
             type: CommentListingType.all,
             parentId: commentId,
             maxDepth: 10,
-            auth: userData?.jwt.raw));
+            auth: userData?.jwt.raw ?? this.userData?.jwt.raw));
 
     if (result != null) {
-      postStore ??= PostStore(result.postView, userData);
+      postStore ??= PostStore(result.postView, userData ?? this.userData);
       fullPostView = result;
       postStore!.updatePostView(result.postView);
     }
@@ -121,13 +132,13 @@ abstract class _FullPostStore with Store {
   }
 
   @action
-  Future<void> blockCommunity(UserData userData) async {
+  Future<void> blockCommunity() async {
     final result = await communityBlockingState.runLemmy(
         instanceHost,
         BlockCommunity(
             communityId: fullPostView!.communityView.community.id,
             block: !fullPostView!.communityView.blocked,
-            auth: userData.jwt.raw));
+            auth: userData!.jwt.raw));
     if (result != null) {
       fullPostView =
           fullPostView!.copyWith(communityView: result.communityView);

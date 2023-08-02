@@ -161,17 +161,17 @@ class FullPostPage extends HookWidget {
   static Route fromPostViewRoute(PostView postView, {int? commentId}) =>
       SwipeablePageRoute(
         builder: (context) => MobxProvider(
-          create: (context) =>
-              FullPostStore.fromPostView(postView, commentId: commentId)
-                ..refresh(_tryGetUserData(context, postView.instanceHost)),
+          create: (context) => FullPostStore.fromPostView(postView,
+              commentId: commentId,
+              userData: _tryGetUserData(context, postView.instanceHost))
+            ..refresh(),
           child: const FullPostPage._(),
         ),
       );
   static Route fromPostStoreRoute(PostStore postStore) => SwipeablePageRoute(
         builder: (context) => MobxProvider(
-          create: (context) => FullPostStore.fromPostStore(postStore)
-            ..refresh(
-                _tryGetUserData(context, postStore.postView.instanceHost)),
+          create: (context) =>
+              FullPostStore.fromPostStore(postStore)..refresh(),
           child: const FullPostPage._(),
         ),
       );

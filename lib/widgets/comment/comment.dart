@@ -6,7 +6,6 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
 
 import '../../comment_tree.dart';
-import '../../hooks/logged_in_action.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../liftoff_action.dart';
@@ -33,6 +32,7 @@ class CommentWidget extends StatelessWidget {
   final bool canBeMarkedAsRead;
   final bool detached;
   final bool hideOnRead;
+  final UserData? userData;
 
   const CommentWidget(
     this.commentTree, {
@@ -41,6 +41,7 @@ class CommentWidget extends StatelessWidget {
     this.canBeMarkedAsRead = false,
     this.hideOnRead = false,
     this.userMentionId,
+    this.userData,
     super.key,
   });
 
@@ -62,6 +63,7 @@ class CommentWidget extends StatelessWidget {
     PersonMentionView userMentionView, {
     bool hideOnRead = false,
     Key? key,
+    userData,
   }) : this(
           CommentTree(CommentView.fromJson(userMentionView.toJson())),
           hideOnRead: hideOnRead,
@@ -69,6 +71,7 @@ class CommentWidget extends StatelessWidget {
           detached: true,
           userMentionId: userMentionView.personMention.id,
           key: key,
+          userData: userData,
         );
 
   static void showCommentInfo(BuildContext context, CommentView commentView) {
@@ -94,6 +97,7 @@ class CommentWidget extends StatelessWidget {
           canBeMarkedAsRead: canBeMarkedAsRead,
           detached: detached,
           hideOnRead: hideOnRead,
+          userData: userData,
         );
       },
       builder: (context, child) => Nested(
@@ -136,15 +140,11 @@ class _CommentWidget extends HookWidget {
 
   static const indentWidth = 6.0;
   const _CommentWidget();
-  static UserData? _tryGetUserData(BuildContext context, String instanceHost) {
-    return context.read<AccountsStore>().defaultUserDataFor(instanceHost);
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bodyFontSize = useStore((ConfigStore store) => store.commentBodySize);
-    final loggedInAction = useLoggedInActionForComment();
 
     final body = ObserverBuilder<CommentStore>(
       builder: (context, store) {
@@ -217,11 +217,13 @@ class _CommentWidget extends HookWidget {
           child: Column(
             children: [
               WithSwipeActions(
-                  actions: [
-                    CommentUpvoteAction(comment: store, context: context),
-                    CommentSaveAction(comment: store),
-                  ],
-                  onTrigger: (action) => loggedInAction(action.invoke)(),
+                  actions: store.isAuthenticated
+                      ? [
+                          CommentUpvoteAction(comment: store, context: context),
+                          CommentSaveAction(comment: store),
+                        ]
+                      : [],
+                  onTrigger: (action) => action.invoke,
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     margin: EdgeInsets.only(
@@ -286,9 +288,9 @@ class _CommentWidget extends HookWidget {
                                     children: [
                                       if (creator.isCakeDay) const Text(' 🍰'),
                                       if (creator.id ==
-                                          _tryGetUserData(context,
-                                                  store.comment.instanceHost)
-                                              ?.userId)
+                                              store.userData?.userId &&
+                                          creator.instanceHost ==
+                                              store.userData?.instanceHost)
                                         _CommentTag(
                                             L10n.of(context).comment_tag_you,
                                             Colors.indigo),
@@ -393,6 +395,7 @@ class _CommentWidget extends HookWidget {
               if (!store.collapsed)
                 for (final c in store.children)
                   CommentWidget(c,
+                      userData: store.userData,
                       depth: store.depth + 1,
                       key: Key(c.comment.comment.id.toString())),
             ],

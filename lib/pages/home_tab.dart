@@ -484,7 +484,7 @@ class InfiniteHomeList extends HookWidget {
             : fetcherFromInstance(selectedInstanceHost, selectedUserData,
                 selectedList.listingType);
       },
-      [selectedList],
+      [selectedList, selectedUserData],
     );
 
     return InfinitePostList(

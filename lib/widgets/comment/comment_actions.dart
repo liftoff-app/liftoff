@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
+import '../../pages/view_on_menu.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../tile_action.dart';
@@ -18,14 +18,17 @@ class CommentActions extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInAction = useLoggedInActionForComment();
-
     return ObserverBuilder<CommentStore>(
       builder: (context, store) {
         if (store.collapsed) return const SizedBox();
 
         final comment = store.comment.comment;
         final post = store.comment.post;
+
+        showOpenMenu() {
+          ViewOnMenu.openForPost(context, store.comment.comment.apId,
+              isSingleComment: true);
+        }
 
         reply() async {
           final newComment = await Navigator.of(context).push(
@@ -58,10 +61,10 @@ class CommentActions extends HookWidget {
                 },
               ),
             const Spacer(),
-            if (store.canBeMarkedAsRead)
+            if (store.canBeMarkedAsRead && store.isAuthenticated)
               TileAction(
                 icon: Icons.check,
-                onPressed: loggedInAction(store.markAsRead),
+                onPressed: store.markAsRead,
                 iconColor: comment.distinguished
                     ? Theme.of(context).colorScheme.secondary
                     : null,
@@ -76,31 +79,34 @@ class CommentActions extends HookWidget {
                   commentId: comment.id),
               tooltip: 'go to post',
             ),
-            TileAction(
-              loading: store.savingState.isLoading,
-              icon:
-                  store.comment.saved ? Icons.bookmark : Icons.bookmark_border,
-              onPressed: loggedInAction(store.save),
-              tooltip: '${store.comment.saved ? 'unsave' : 'save'} comment',
-            ),
-            if (!comment.deleted && !comment.removed && !post.locked)
+            if (store.isAuthenticated) ...[
               TileAction(
-                icon: Icons.reply,
-                onPressed: loggedInAction((_) => reply()),
-                tooltip: L10n.of(context).reply,
+                loading: store.savingState.isLoading,
+                icon: store.comment.saved
+                    ? Icons.bookmark
+                    : Icons.bookmark_border,
+                onPressed: store.save,
+                tooltip: '${store.comment.saved ? 'unsave' : 'save'} comment',
               ),
+              if (!comment.deleted && !comment.removed && !post.locked)
+                TileAction(
+                  icon: Icons.reply,
+                  onPressed: store.isAuthenticated ? reply : showOpenMenu,
+                  tooltip: L10n.of(context).reply,
+                ),
+            ],
             TileToggle(
               icon: Icons.arrow_upward,
               activated: store.myVote == VoteType.up,
               activeColor: Colors.blue,
-              onPressed: loggedInAction(store.upVote),
+              onPressed: store.isAuthenticated ? store.upVote : showOpenMenu,
               tooltip: 'upvote',
             ),
             TileToggle(
               icon: Icons.arrow_downward,
               activated: store.myVote == VoteType.down,
               activeColor: Colors.orange,
-              onPressed: loggedInAction(store.downVote),
+              onPressed: store.isAuthenticated ? store.downVote : showOpenMenu,
               tooltip: 'downvote',
             ),
           ],

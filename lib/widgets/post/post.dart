@@ -5,6 +5,7 @@ import 'package:nested/nested.dart';
 
 import '../../liftoff_action.dart';
 import '../../pages/full_post/full_post.dart';
+import '../../stores/accounts_store.dart';
 import '../../stores/config_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
@@ -30,8 +31,9 @@ class PostTile extends StatelessWidget {
 
   const PostTile.fromPostStore(this.postStore,
       {super.key, required this.fullPost});
-  PostTile.fromPostView(PostView post, {super.key, this.fullPost = false})
-      : postStore = PostStore(post, null);
+  PostTile.fromPostView(PostView post, UserData? userData,
+      {super.key, this.fullPost = false})
+      : postStore = PostStore(post, userData);
 
   @override
   Widget build(BuildContext context) {

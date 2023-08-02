@@ -63,7 +63,7 @@ class CommentUpvoteAction extends _UpvoteAction {
   });
 
   @override
-  Future<void> Function() get invoke => () async {}; // comment.upVote;
+  Future<void> Function() get invoke => comment.upVote;
 
   @override
   bool get isActivated => comment.comment.myVote == VoteType.up;
@@ -113,7 +113,7 @@ class CommentSaveAction extends _SaveAction {
   });
 
   @override
-  Future<void> Function() get invoke => () async {}; // comment.save
+  Future<void> Function() get invoke => comment.save;
 
   @override
   bool get isActivated => comment.comment.saved;

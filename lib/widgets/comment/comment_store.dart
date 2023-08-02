@@ -14,7 +14,8 @@ class CommentStore extends _CommentStore with _$CommentStore {
       required super.canBeMarkedAsRead,
       required super.detached,
       required super.hideOnRead,
-      super.userMentionId});
+      super.userMentionId,
+      super.userData});
 }
 
 abstract class _CommentStore with Store {
@@ -48,8 +49,8 @@ abstract class _CommentStore with Store {
 
   @computed
   bool get isMine =>
-      comment.comment.creatorId ==
-      _accountsStore.defaultUserDataFor(comment.instanceHost)?.userId;
+      comment.comment.creatorId == userData?.userId &&
+      comment.comment.instanceHost == userData?.instanceHost;
 
   @computed
   VoteType get myVote => comment.myVote ?? VoteType.none;
@@ -58,6 +59,12 @@ abstract class _CommentStore with Store {
   bool get isOP => comment.comment.creatorId == comment.post.creatorId;
 
   final AccountsStore _accountsStore;
+
+  final UserData? userData;
+
+  bool get isAuthenticated {
+    return userData != null;
+  }
 
   _CommentStore(
     this._accountsStore, {
@@ -68,6 +75,7 @@ abstract class _CommentStore with Store {
     required this.canBeMarkedAsRead,
     required this.detached,
     required this.hideOnRead,
+    this.userData,
   })  : comment = commentTree.comment,
         children = commentTree.children.asObservable();
 
@@ -87,7 +95,7 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> report(UserData userData, String reason) async {
+  Future<void> report(String reason) async {
     if (reason.trim().isEmpty) throw ArgumentError('reason must not be empty');
 
     await reportingState.runLemmy(
@@ -95,19 +103,19 @@ abstract class _CommentStore with Store {
       CreateCommentReport(
         commentId: comment.comment.id,
         reason: reason,
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
   }
 
   @action
-  Future<void> delete(UserData userData) async {
+  Future<void> delete() async {
     final result = await deletingState.runLemmy(
       comment.instanceHost,
       DeleteComment(
         commentId: comment.comment.id,
         deleted: !comment.comment.deleted,
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
 
@@ -115,13 +123,13 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> save(UserData userData) async {
+  Future<void> save() async {
     final result = await savingState.runLemmy(
       comment.instanceHost,
       SaveComment(
         commentId: comment.comment.id,
         save: !comment.saved,
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
 
@@ -129,13 +137,13 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> block(UserData userData) async {
+  Future<void> block() async {
     final result = await blockingState.runLemmy(
       comment.instanceHost,
       BlockPerson(
         personId: comment.creator.id,
         block: !comment.creatorBlocked,
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
     if (result != null) {
@@ -144,14 +152,14 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> markAsRead(UserData userData) async {
+  Future<void> markAsRead() async {
     if (userMentionId != null) {
       final result = await markPersonMentionAsReadState.runLemmy(
         comment.instanceHost,
         MarkPersonMentionAsRead(
           personMentionId: userMentionId!,
           read: !comment.comment.distinguished,
-          auth: userData.jwt.raw,
+          auth: userData!.jwt.raw,
         ),
       );
 
@@ -165,7 +173,7 @@ abstract class _CommentStore with Store {
           MarkCommentAsRead(
             commentReplyId: comment.commentReply!.id,
             read: !comment.comment.distinguished,
-            auth: userData.jwt.raw,
+            auth: userData!.jwt.raw,
           ),
         );
 
@@ -179,13 +187,13 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> _vote(VoteType voteType, UserData userData) async {
+  Future<void> _vote(VoteType voteType) async {
     final result = await votingState.runLemmy(
       comment.instanceHost,
       CreateCommentLike(
         commentId: comment.comment.id,
         score: voteType,
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
 
@@ -193,19 +201,13 @@ abstract class _CommentStore with Store {
   }
 
   @action
-  Future<void> upVote(UserData userData) async {
-    await _vote(
-      myVote == VoteType.up ? VoteType.none : VoteType.up,
-      userData,
-    );
+  Future<void> upVote() async {
+    await _vote(myVote == VoteType.up ? VoteType.none : VoteType.up);
   }
 
   @action
-  Future<void> downVote(UserData userData) async {
-    await _vote(
-      myVote == VoteType.down ? VoteType.none : VoteType.down,
-      userData,
-    );
+  Future<void> downVote() async {
+    await _vote(myVote == VoteType.down ? VoteType.none : VoteType.down);
   }
 
   @action

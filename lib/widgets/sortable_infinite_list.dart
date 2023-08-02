@@ -6,6 +6,7 @@ import '../comment_tree.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
 import '../resources/app_theme.dart';
+import '../stores/accounts_store.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
 import 'comment/comment.dart';
@@ -84,6 +85,7 @@ class SortableInfiniteCommentList<T> extends HookWidget {
   final InfiniteScrollController? controller;
   final Function? onStyleChange;
   final Widget noItems;
+  final UserData? userData;
 
   /// if no defaultSort is provided, the defaultSortType
   /// from the configStore will be used
@@ -97,6 +99,7 @@ class SortableInfiniteCommentList<T> extends HookWidget {
     this.onStyleChange,
     this.noItems = const SizedBox.shrink(),
     this.defaultSort,
+    this.userData,
     required this.uniqueProp,
   });
 
@@ -173,9 +176,11 @@ class InfiniteCommentList extends SortableInfiniteCommentList<CommentView> {
     super.key,
     required super.fetcher,
     super.controller,
+    userData,
   }) : super(
           itemBuilder: (comment) => CommentWidget(
             CommentTree(comment),
+            userData: userData,
             detached: true,
           ),
           noItems: const Text('there are no comments'),

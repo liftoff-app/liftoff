@@ -162,9 +162,8 @@ mixin _$FullPostStore on _FullPostStore, Store {
       AsyncAction('_FullPostStore.blockCommunity', context: context);
 
   @override
-  Future<void> blockCommunity(UserData userData) {
-    return _$blockCommunityAsyncAction
-        .run(() => super.blockCommunity(userData));
+  Future<void> blockCommunity() {
+    return _$blockCommunityAsyncAction.run(() => super.blockCommunity());
   }
 
   late final _$_FullPostStoreActionController =

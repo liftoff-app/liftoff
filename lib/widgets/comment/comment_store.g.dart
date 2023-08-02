@@ -96,64 +96,64 @@ mixin _$CommentStore on _CommentStore, Store {
       AsyncAction('_CommentStore.report', context: context);
 
   @override
-  Future<void> report(UserData userData, String reason) {
-    return _$reportAsyncAction.run(() => super.report(userData, reason));
+  Future<void> report(String reason) {
+    return _$reportAsyncAction.run(() => super.report(reason));
   }
 
   late final _$deleteAsyncAction =
       AsyncAction('_CommentStore.delete', context: context);
 
   @override
-  Future<void> delete(UserData userData) {
-    return _$deleteAsyncAction.run(() => super.delete(userData));
+  Future<void> delete() {
+    return _$deleteAsyncAction.run(() => super.delete());
   }
 
   late final _$saveAsyncAction =
       AsyncAction('_CommentStore.save', context: context);
 
   @override
-  Future<void> save(UserData userData) {
-    return _$saveAsyncAction.run(() => super.save(userData));
+  Future<void> save() {
+    return _$saveAsyncAction.run(() => super.save());
   }
 
   late final _$blockAsyncAction =
       AsyncAction('_CommentStore.block', context: context);
 
   @override
-  Future<void> block(UserData userData) {
-    return _$blockAsyncAction.run(() => super.block(userData));
+  Future<void> block() {
+    return _$blockAsyncAction.run(() => super.block());
   }
 
   late final _$markAsReadAsyncAction =
       AsyncAction('_CommentStore.markAsRead', context: context);
 
   @override
-  Future<void> markAsRead(UserData userData) {
-    return _$markAsReadAsyncAction.run(() => super.markAsRead(userData));
+  Future<void> markAsRead() {
+    return _$markAsReadAsyncAction.run(() => super.markAsRead());
   }
 
   late final _$_voteAsyncAction =
       AsyncAction('_CommentStore._vote', context: context);
 
   @override
-  Future<void> _vote(VoteType voteType, UserData userData) {
-    return _$_voteAsyncAction.run(() => super._vote(voteType, userData));
+  Future<void> _vote(VoteType voteType) {
+    return _$_voteAsyncAction.run(() => super._vote(voteType));
   }
 
   late final _$upVoteAsyncAction =
       AsyncAction('_CommentStore.upVote', context: context);
 
   @override
-  Future<void> upVote(UserData userData) {
-    return _$upVoteAsyncAction.run(() => super.upVote(userData));
+  Future<void> upVote() {
+    return _$upVoteAsyncAction.run(() => super.upVote());
   }
 
   late final _$downVoteAsyncAction =
       AsyncAction('_CommentStore.downVote', context: context);
 
   @override
-  Future<void> downVote(UserData userData) {
-    return _$downVoteAsyncAction.run(() => super.downVote(userData));
+  Future<void> downVote() {
+    return _$downVoteAsyncAction.run(() => super.downVote());
   }
 
   late final _$_CommentStoreActionController =

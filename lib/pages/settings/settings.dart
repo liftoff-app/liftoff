@@ -380,18 +380,22 @@ class PostStyleConfigPage extends StatelessWidget {
                       _SectionHeading(L10n.of(context).preview),
                       const SizedBox(height: 20),
                       IgnorePointer(
-                          child: PostTile.fromPostView(PostView.fromJson(
-                              decoder.convert(mockTextPostJson)))),
+                          child: PostTile.fromPostView(
+                              PostView.fromJson(
+                                  decoder.convert(mockTextPostJson)),
+                              null)),
                       if (state.useAmoled) gradient,
                       SizedBox(height: store.compactPostView ? 2 : 10),
                       IgnorePointer(
-                          child: PostTile.fromPostView(PostView.fromJson(
-                              decoder.convert(mockMediaPost)))),
+                          child: PostTile.fromPostView(
+                              PostView.fromJson(decoder.convert(mockMediaPost)),
+                              null)),
                       if (state.useAmoled) gradient,
                       SizedBox(height: store.compactPostView ? 2 : 10),
                       IgnorePointer(
-                          child: PostTile.fromPostView(PostView.fromJson(
-                              decoder.convert(mockLinkPost)))),
+                          child: PostTile.fromPostView(
+                              PostView.fromJson(decoder.convert(mockLinkPost)),
+                              null)),
                     ],
                   )));
     });

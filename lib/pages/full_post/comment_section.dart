@@ -105,6 +105,7 @@ class CommentSection {
           _centeredWithConstraints(
             child: CommentWidget(
               com,
+              userData: store.userData,
               key: ValueKey(com),
             ),
           ),

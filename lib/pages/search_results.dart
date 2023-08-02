@@ -110,7 +110,8 @@ class _SearchResultsList extends HookWidget {
           case SearchType.posts:
             return Padding(
               padding: const EdgeInsets.only(bottom: 20),
-              child: PostTile.fromPostView(data as PostView),
+              child: PostTile.fromPostView(
+                  data as PostView, accStore.defaultUserDataFor(instanceHost)),
             );
           case SearchType.users:
             return UsersListItem(user: data as PersonViewSafe);
