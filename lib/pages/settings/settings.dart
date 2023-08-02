@@ -24,6 +24,7 @@ import '../manage_account.dart';
 import 'add_account_page.dart';
 import 'add_instance_page.dart';
 import 'blocks/blocks.dart';
+import 'instance_filter_setting_widget.dart';
 import 'mock_post.dart';
 
 /// Page with a list of different settings sections
@@ -623,149 +624,155 @@ class GeneralConfigPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(L10n.of(context).general)),
       body: ObserverBuilder<ConfigStore>(
-        builder: (context, store) => ListView(
-          children: [
-            ListTile(
-              title: Text(L10n.of(context).sort_type),
-              trailing: SizedBox(
-                width: 120,
-                child: RadioPicker<SortType>(
-                  values: SortType.values,
-                  groupValue: store.defaultSortType,
-                  onChanged: (value) => store.defaultSortType = value,
-                  mapValueToString: (value) => value.value,
-                  buttonBuilder: (context, displayValue, onPressed) =>
-                      FilledButton(
-                    onPressed: onPressed,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(displayValue),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
+        builder: (context, store) {
+          return ListView(
+            children: [
+              ListTile(
+                title: Text(L10n.of(context).sort_type),
+                trailing: SizedBox(
+                  width: 120,
+                  child: RadioPicker<SortType>(
+                    values: SortType.values,
+                    groupValue: store.defaultSortType,
+                    onChanged: (value) => store.defaultSortType = value,
+                    mapValueToString: (value) => value.value,
+                    buttonBuilder: (context, displayValue, onPressed) =>
+                        FilledButton(
+                      onPressed: onPressed,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(displayValue),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Text(L10n.of(context).comment_sort_type),
-              trailing: SizedBox(
-                width: 120,
-                child: RadioPicker<CommentSortType>(
-                  values: CommentSortType.values
-                      .sublist(0, CommentSortType.values.length - 1),
-                  groupValue: store.defaultCommentSort,
-                  onChanged: (value) => store.defaultCommentSort = value,
-                  mapValueToString: (value) => value.value,
-                  buttonBuilder: (context, displayValue, onPressed) =>
-                      FilledButton(
-                    onPressed: onPressed,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(displayValue),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
+              ListTile(
+                title: Text(L10n.of(context).comment_sort_type),
+                trailing: SizedBox(
+                  width: 120,
+                  child: RadioPicker<CommentSortType>(
+                    values: CommentSortType.values
+                        .sublist(0, CommentSortType.values.length - 1),
+                    groupValue: store.defaultCommentSort,
+                    onChanged: (value) => store.defaultCommentSort = value,
+                    mapValueToString: (value) => value.value,
+                    buttonBuilder: (context, displayValue, onPressed) =>
+                        FilledButton(
+                      onPressed: onPressed,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(displayValue),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Text(L10n.of(context).type),
-              trailing: SizedBox(
-                width: 120,
-                child: RadioPicker<PostListingType>(
-                  values: const [
-                    PostListingType.all,
-                    PostListingType.local,
-                    PostListingType.subscribed,
-                  ],
-                  groupValue: store.defaultListingType,
-                  onChanged: (value) => store.defaultListingType = value,
-                  mapValueToString: (value) => value.value,
-                  buttonBuilder: (context, displayValue, onPressed) =>
-                      FilledButton(
-                    onPressed: onPressed,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(displayValue),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
+              ListTile(
+                title: Text(L10n.of(context).type),
+                trailing: SizedBox(
+                  width: 120,
+                  child: RadioPicker<PostListingType>(
+                    values: const [
+                      PostListingType.all,
+                      PostListingType.local,
+                      PostListingType.subscribed,
+                    ],
+                    groupValue: store.defaultListingType,
+                    onChanged: (value) => store.defaultListingType = value,
+                    mapValueToString: (value) => value.value,
+                    buttonBuilder: (context, displayValue, onPressed) =>
+                        FilledButton(
+                      onPressed: onPressed,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(displayValue),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Text(L10n.of(context).language),
-              trailing: SizedBox(
-                width: 120,
-                child: RadioPicker<Locale>(
-                  title: L10n.of(context).choose_language,
-                  groupValue: store.locale,
-                  values: L10n.supportedLocales,
-                  mapValueToString: (locale) => locale.languageName,
-                  onChanged: (selected) {
-                    store.locale = selected;
-                  },
-                  buttonBuilder: (context, displayValue, onPressed) =>
-                      FilledButton(
-                    onPressed: onPressed,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(displayValue),
-                        const Icon(Icons.arrow_drop_down),
-                      ],
+              ListTile(
+                title: Text(L10n.of(context).language),
+                trailing: SizedBox(
+                  width: 120,
+                  child: RadioPicker<Locale>(
+                    title: L10n.of(context).choose_language,
+                    groupValue: store.locale,
+                    values: L10n.supportedLocales,
+                    mapValueToString: (locale) => locale.languageName,
+                    onChanged: (selected) {
+                      store.locale = selected;
+                    },
+                    buttonBuilder: (context, displayValue, onPressed) =>
+                        FilledButton(
+                      onPressed: onPressed,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(displayValue),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SwitchListTile.adaptive(
-              title: Text(L10n.of(context).show_everything_feed),
-              subtitle: Text(L10n.of(context).show_everything_feed_explanation),
-              value: store.showEverythingFeed,
-              onChanged: (checked) {
-                store.showEverythingFeed = checked;
-              },
-            ),
-            SwitchListTile.adaptive(
-              title: Text(L10n.of(context).use_in_app_browser),
-              value: store.useInAppBrowser,
-              onChanged: (checked) {
-                store.useInAppBrowser = checked;
-              },
-            ),
-            SwitchListTile.adaptive(
-              title: Text(L10n.of(context).convert_webp_to_png),
-              value: store.convertWebpToPng,
-              onChanged: (checked) {
-                store.convertWebpToPng = checked;
-              },
-            ),
-            const SizedBox(height: 12),
-            _SectionHeading(L10n.of(context).other_settings),
-            SwitchListTile.adaptive(
-              title: Text(L10n.of(context).disable_animations),
-              value: store.disableAnimations,
-              onChanged: (checked) {
-                store.disableAnimations = checked;
-              },
-            ),
-            SwitchListTile.adaptive(
-              title: Text(L10n.of(context).hide_nsfw),
-              subtitle: Text(L10n.of(context).hide_nsfw_explanation),
-              value: store.blurNsfw,
-              onChanged: (checked) {
-                store.blurNsfw = checked;
-              },
-            ),
-          ],
-        ),
+              SwitchListTile.adaptive(
+                title: Text(L10n.of(context).show_everything_feed),
+                subtitle:
+                    Text(L10n.of(context).show_everything_feed_explanation),
+                value: store.showEverythingFeed,
+                onChanged: (checked) {
+                  store.showEverythingFeed = checked;
+                },
+              ),
+              SwitchListTile.adaptive(
+                title: Text(L10n.of(context).use_in_app_browser),
+                value: store.useInAppBrowser,
+                onChanged: (checked) {
+                  store.useInAppBrowser = checked;
+                },
+              ),
+              SwitchListTile.adaptive(
+                title: Text(L10n.of(context).convert_webp_to_png),
+                value: store.convertWebpToPng,
+                onChanged: (checked) {
+                  store.convertWebpToPng = checked;
+                },
+              ),
+              SwitchListTile.adaptive(
+                title: Text(L10n.of(context).disable_animations),
+                value: store.disableAnimations,
+                onChanged: (checked) {
+                  store.disableAnimations = checked;
+                },
+              ),
+              const SizedBox(height: 12),
+              _SectionHeading(L10n.of(context).sensitive_content),
+              SwitchListTile.adaptive(
+                title: Text(L10n.of(context).hide_nsfw),
+                subtitle: Text(L10n.of(context).hide_nsfw_explanation),
+                value: store.blurNsfw,
+                onChanged: (checked) {
+                  store.blurNsfw = checked;
+                },
+              ),
+
+              // Instance Filter setting
+              const InstanceFilterSettingWidget(),
+            ],
+          );
+        },
       ),
     );
   }

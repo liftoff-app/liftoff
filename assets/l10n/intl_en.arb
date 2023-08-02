@@ -707,5 +707,15 @@
   "comment_tag_you": "YOU",
   "@comment_tag_you": {},
   "code_of_conduct_clickthrough": "By accessing the Lemmy network using Liftoff! you agree to adhere to our Code of Conduct",
-  "@code_of_conduct_clickthrough": {}
+  "@code_of_conduct_clickthrough": {},
+  "instance_filter": "Instance filter",
+  "@instance_filter": {},
+  "instance_filter_explanation": "A list of terms in names of instances you wish to block from all your post feeds. A good start is: nsfw porn yiff",
+  "@instance_filter_explanation": {},
+  "instance_filter_add": "Add term",
+  "@instance_filter_add": {},
+  "instance_filter_none": "No filters chosen",
+  "@instance_filter_none": {},
+  "sensitive_content": "Sensitive Content",
+  "@sensitive_content": {}
 }
