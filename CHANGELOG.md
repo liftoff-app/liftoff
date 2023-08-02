@@ -1,3 +1,10 @@
+## v0.10.10 - 2023-07-29
+- Fixed issues with video player
+- Show thumbnails in full height cards
+- Fixed list view refresh
+- Updated defaults for themes
+- Remove duplicates from infinite scroll
+
 ## v0.10.9 - 2023-07-14
 - More design tweaks (zachatrocity)
 - Improvements to swipe actions (shocklateboy92)
