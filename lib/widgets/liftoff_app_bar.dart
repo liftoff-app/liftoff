@@ -103,10 +103,7 @@ class LiftoffAppBar extends HookWidget implements PreferredSizeWidget {
           onPressed: () => Navigator.pop(context, true),
         )
       else if (closeButton)
-        IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context, true),
-        ),
+        const CloseButton(),
     ]);
 
     return SafeArea(
@@ -114,19 +111,25 @@ class LiftoffAppBar extends HookWidget implements PreferredSizeWidget {
         children: [
           ColoredBox(
             color: bgc.value,
-            child: Flexible(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: preferredSize.height),
-                child: AppBar(
-                  leading: leadingActions,
-                  leadingWidth: backButton ? 100 : null,
-                  backgroundColor: bgc.value,
-                  title: title,
-                  flexibleSpace: flexibleSpace,
-                  actions: actions,
-                  bottom: bottom,
+            child: Flex(
+              direction: Axis.horizontal,
+              children: [
+                Flexible(
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(maxHeight: preferredSize.height),
+                    child: AppBar(
+                      leading: leadingActions,
+                      leadingWidth: (backButton || closeButton) ? 100 : null,
+                      backgroundColor: bgc.value,
+                      title: title,
+                      flexibleSpace: flexibleSpace,
+                      actions: actions,
+                      bottom: bottom,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ],

@@ -76,7 +76,7 @@ class CommunitiesTab extends HookWidget {
     if (communitiesRefreshable.snapshot.hasError ||
         instancesRefreshable.snapshot.hasError) {
       return Scaffold(
-        appBar: LiftoffAppBar(backgroundColor: Theme.of(context).canvasColor),
+        appBar: const LiftoffAppBar(),
         body: Center(
           child: FailedToLoad(
               refresh: communitiesRefreshable.snapshot.error != null
@@ -88,9 +88,9 @@ class CommunitiesTab extends HookWidget {
       );
     } else if (!communitiesRefreshable.snapshot.hasData ||
         !instancesRefreshable.snapshot.hasData) {
-      return Scaffold(
-        appBar: LiftoffAppBar(backgroundColor: Theme.of(context).canvasColor),
-        body: const Center(
+      return const Scaffold(
+        appBar: LiftoffAppBar(),
+        body: Center(
           child: CircularProgressIndicator.adaptive(),
         ),
       );
@@ -147,7 +147,6 @@ class CommunitiesTab extends HookWidget {
 
     return Scaffold(
       appBar: LiftoffAppBar(
-        backgroundColor: Theme.of(context).cardColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.style),
