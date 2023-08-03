@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../widgets/liftoff_app_bar.dart';
 import '../widgets/post/post_store.dart';
 import '../widgets/sortable_infinite_list.dart';
 
@@ -17,9 +18,9 @@ class SavedPage extends HookWidget {
     final accountStore = useAccountsStore();
 
     if (accountStore.hasNoAccount) {
-      Scaffold(
-        appBar: AppBar(),
-        body: const Center(
+      const Scaffold(
+        appBar: LiftoffAppBar(),
+        body: Center(
           child: Text('no account found'),
         ),
       );
@@ -28,7 +29,9 @@ class SavedPage extends HookWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
+        appBar: LiftoffAppBar(
+          canChangeAccount: false,
+          backButton: true,
           title: Text(L10n.of(context).saved),
           bottom: TabBar(
             indicatorColor: Theme.of(context).colorScheme.primary,

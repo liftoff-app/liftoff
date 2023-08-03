@@ -15,6 +15,7 @@ import '../../util/icons.dart';
 import '../../util/mobx_provider.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/failed_to_load.dart';
+import '../../widgets/liftoff_app_bar.dart';
 import '../../widgets/post/post.dart';
 import '../../widgets/post/post_more_menu.dart';
 import '../../widgets/post/post_store.dart';
@@ -58,7 +59,7 @@ class FullPostPage extends HookWidget {
 
           if (postStore == null) {
             return Scaffold(
-              appBar: AppBar(),
+              appBar: const LiftoffAppBar(),
               body: Center(
                 child: (store.fullPostState.errorTerm == null)
                     ? const CircularProgressIndicator.adaptive()
@@ -95,18 +96,28 @@ class FullPostPage extends HookWidget {
           }
 
           return Scaffold(
-            appBar: AppBar(
-              flexibleSpace: GestureDetector(
-                onTap: tapScrollAction,
-              ),
-              centerTitle: false,
-              leadingWidth: 25,
+            appBar: LiftoffAppBar(
+              // flexibleSpace: GestureDetector(
+              //   onTap: tapScrollAction,
+              // ),
+              //centerTitle: false,
+              //leadingWidth: 25,
+              backButton: true,
               title: GestureDetector(
                 onTap: tapScrollAction,
-                child: Text(
-                  '${post.community.originPreferredName}: '
-                  '"${post.post.name}"',
-                  overflow: TextOverflow.fade,
+                child: Column(
+                  children: [
+                    Text(
+                      '${post.community.originPreferredName}@${post.community.originInstanceHost}',
+                      style: Theme.of(context).textTheme.titleLarge,
+                      overflow: TextOverflow.fade,
+                    ),
+                    Text(
+                      '"${post.post.name}"',
+                      style: Theme.of(context).textTheme.titleMedium,
+                      overflow: TextOverflow.fade,
+                    ),
+                  ],
                 ),
               ),
               actions: [
