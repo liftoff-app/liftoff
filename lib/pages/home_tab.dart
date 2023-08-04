@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
@@ -19,9 +18,6 @@ import '../widgets/infinite_scroll.dart';
 import '../widgets/liftoff_app_bar.dart';
 import '../widgets/post/post_store.dart';
 import '../widgets/sortable_infinite_list.dart';
-import 'create_post/create_post.dart';
-import 'full_post/full_post.dart';
-import 'inbox.dart';
 import 'instance/instance.dart';
 import 'settings/add_account_page.dart';
 import 'settings/settings.dart';
@@ -33,8 +29,6 @@ class HomeTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInAction = useAnyLoggedInAction();
-
     final accStore = useAccountsStore();
     final defaultListingType =
         useStore((ConfigStore store) => store.defaultListingType);
@@ -245,14 +239,17 @@ class HomeTab extends HookWidget {
           // titleTextStyle: theme.textTheme.titleLarge
           //     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
           title: TextButton(
+            style: const ButtonStyle(
+                padding: MaterialStatePropertyAll(EdgeInsets.zero)),
             onPressed: handleListChange,
             child: Row(
               children: [
                 Flexible(
                   child: Text(
                     title,
+                    // style: Theme.of(context).textTheme.titleLarge,
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w500),
+                        fontSize: 16, fontWeight: FontWeight.w500),
                     overflow: TextOverflow.fade,
                     softWrap: false,
                     textAlign: TextAlign.left,
@@ -270,34 +267,34 @@ class HomeTab extends HookWidget {
           // floating: true,
           // snap: true,
           actions: [
-            if (!Platform.isAndroid) // Replaces FAB
-              IconButton(
-                icon: const Icon(Icons.add_box_outlined),
-                onPressed: loggedInAction((_) async {
-                  final postView = await Navigator.of(context).push(
-                    CreatePostPage.route(),
-                  );
+            // if (!Platform.isAndroid) // Replaces FAB
+            //   IconButton(
+            //     icon: const Icon(Icons.add_box_outlined),
+            //     onPressed: loggedInAction((_) async {
+            //       final postView = await Navigator.of(context).push(
+            //         CreatePostPage.route(),
+            //       );
 
-                  if (postView != null && context.mounted) {
-                    await Navigator.of(context)
-                        .push(FullPostPage.fromPostViewRoute(postView));
-                  }
-                }),
-              ),
-            if (accStore.totalNotificationCount > 0)
-              Badge(
-                offset: const Offset(-5, 5),
-                label: Text(accStore.totalNotificationCount.toString()),
-                child: IconButton(
-                  icon: const Icon(Icons.notifications),
-                  onPressed: () => goTo(context, (_) => const InboxPage()),
-                ),
-              )
-            else
-              IconButton(
-                icon: const Icon(Icons.notifications),
-                onPressed: () => goTo(context, (_) => const InboxPage()),
-              ),
+            //       if (postView != null && context.mounted) {
+            //         await Navigator.of(context)
+            //             .push(FullPostPage.fromPostViewRoute(postView));
+            //       }
+            //     }),
+            //   ),
+            // if (accStore.totalNotificationCount > 0)
+            //   Badge(
+            //     offset: const Offset(-5, 5),
+            //     label: Text(accStore.totalNotificationCount.toString()),
+            //     child: IconButton(
+            //       icon: const Icon(Icons.notifications),
+            //       onPressed: () => goTo(context, (_) => const InboxPage()),
+            //     ),
+            //   )
+            // else
+            //   IconButton(
+            //     icon: const Icon(Icons.notifications),
+            //     onPressed: () => goTo(context, (_) => const InboxPage()),
+            //   ),
             PopupMenuButton(itemBuilder: (context) {
               return [
                 const PopupMenuItem<int>(

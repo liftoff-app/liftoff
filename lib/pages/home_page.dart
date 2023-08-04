@@ -5,10 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../app_link_handler.dart';
+import '../hooks/logged_in_action.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/brightness.dart';
 import 'communities_tab.dart';
+import 'create_post/create_post.dart';
 import 'create_post/create_post_fab.dart';
+import 'full_post/full_post.dart';
 import 'home_tab.dart';
 import 'profile_tab.dart';
 import 'search_tab.dart';
@@ -29,6 +32,7 @@ class HomePage extends HookWidget {
     final currentTab = useState(0);
     final snackBarShowing = useState(false);
     final accStore = useAccountsStore();
+    final loggedInAction = useAnyLoggedInAction();
 
     useEffect(() {
       Future.microtask(
@@ -114,6 +118,21 @@ class HomePage extends HookWidget {
                 tabButton(Icons.home),
                 tabButton(Icons.list),
                 if (Platform.isAndroid) const SizedBox.shrink(),
+                if (!Platform.isAndroid)
+                  if (!Platform.isAndroid) // Replaces FAB
+                    IconButton(
+                      icon: const Icon(Icons.add_box_outlined),
+                      onPressed: loggedInAction((_) async {
+                        final postView = await Navigator.of(context).push(
+                          CreatePostPage.route(),
+                        );
+
+                        if (postView != null && context.mounted) {
+                          await Navigator.of(context)
+                              .push(FullPostPage.fromPostViewRoute(postView));
+                        }
+                      }),
+                    ),
                 if (Platform.isAndroid) const SizedBox.shrink(),
                 tabButton(Icons.search),
                 tabButton(Icons.person),

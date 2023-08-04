@@ -106,15 +106,18 @@ class FullPostPage extends HookWidget {
               title: GestureDetector(
                 onTap: tapScrollAction,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${post.community.originPreferredName}@${post.community.originInstanceHost}',
-                      style: Theme.of(context).textTheme.titleLarge,
-                      overflow: TextOverflow.fade,
+                      post.post.name,
+                      style: Theme.of(context).textTheme.titleSmall,
+                      //?.copyWith(fontWeight: FontWeight.w500),
+                      maxLines: 2,
+                      // overflow: TextOverflow.fade,
                     ),
                     Text(
-                      '"${post.post.name}"',
-                      style: Theme.of(context).textTheme.titleMedium,
+                      '${post.community.originPreferredName}@${post.community.originInstanceHost}',
+                      style: Theme.of(context).textTheme.bodySmall,
                       overflow: TextOverflow.fade,
                     ),
                   ],
