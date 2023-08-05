@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/infinite_scroll.dart';
-import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
