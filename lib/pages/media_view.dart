@@ -79,6 +79,12 @@ class MediaViewPage extends HookWidget {
       );
     }
 
+    // Keep a record of the default style and reset it once we're done here.
+    final originalStyle = Theme.of(context).appBarTheme.systemOverlayStyle!;
+    useEffect(() {
+      return () => SystemChrome.setSystemUIOverlayStyle(originalStyle);
+    });
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
