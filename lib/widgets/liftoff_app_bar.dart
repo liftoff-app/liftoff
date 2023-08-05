@@ -167,34 +167,29 @@ class LiftoffAppBar extends HookWidget implements PreferredSizeWidget {
     return SafeArea(
       child: Column(
         children: [
-          ColoredBox(
-            color: bgc,
-            // everything from here down to AppBar is required in order
-            // to allow TabBars to render correctly.
-            child: Flex(
-              direction: Axis.horizontal,
-              children: [
-                Flexible(
-                  child: ConstrainedBox(
-                    constraints:
-                        BoxConstraints(maxHeight: preferredSize.height),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: AppBar(
-                        centerTitle: false,
-                        titleSpacing: 5,
-                        leading: leadingActions,
-                        leadingWidth: (backButton || closeButton) ? 90 : null,
-                        title: title,
-                        flexibleSpace: flexibleSpace,
-                        actions: actions,
-                        bottom: bottom,
-                      ),
+          Flex(
+            direction: Axis.horizontal,
+            children: [
+              Flexible(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: preferredSize.height),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: AppBar(
+                      centerTitle: false,
+                      titleSpacing: 5,
+                      backgroundColor: bgc,
+                      leading: leadingActions,
+                      leadingWidth: (backButton || closeButton) ? 90 : null,
+                      title: title,
+                      flexibleSpace: flexibleSpace,
+                      actions: actions,
+                      bottom: bottom,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

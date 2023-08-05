@@ -118,21 +118,20 @@ class HomePage extends HookWidget {
                 tabButton(Icons.home),
                 tabButton(Icons.list),
                 if (Platform.isAndroid) const SizedBox.shrink(),
-                if (!Platform.isAndroid)
-                  if (!Platform.isAndroid) // Replaces FAB
-                    IconButton(
-                      icon: const Icon(Icons.add_box_outlined),
-                      onPressed: loggedInAction((_) async {
-                        final postView = await Navigator.of(context).push(
-                          CreatePostPage.route(),
-                        );
+                if (!Platform.isAndroid) // Replaces FAB
+                  IconButton(
+                    icon: const Icon(Icons.add_box_outlined),
+                    onPressed: loggedInAction((_) async {
+                      final postView = await Navigator.of(context).push(
+                        CreatePostPage.route(),
+                      );
 
-                        if (postView != null && context.mounted) {
-                          await Navigator.of(context)
-                              .push(FullPostPage.fromPostViewRoute(postView));
-                        }
-                      }),
-                    ),
+                      if (postView != null && context.mounted) {
+                        await Navigator.of(context)
+                            .push(FullPostPage.fromPostViewRoute(postView));
+                      }
+                    }),
+                  ),
                 if (Platform.isAndroid) const SizedBox.shrink(),
                 tabButton(Icons.search),
                 tabButton(Icons.person),
