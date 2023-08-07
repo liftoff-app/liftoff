@@ -116,6 +116,20 @@ jobs:
       - name: Build
         run: |
           flutter build linux --release --target lib/main_prod.dart
+      
+      - name: Package AppImage
+        run: |
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage
+          wget -qO AppDir/AppRun https://github.com/AppImage/AppImageKit/releases/download/13/AppRun-x86_64
+          chmod +x appimagetool-x86_64.AppImage AppDir/AppRun
+          cp -r build/linux/x64/release/bundle/* AppDir
+          ./appimagetool-x86_64 AppDir liftoff.AppImage
+        
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linux-appimage
+          path: liftoff.AppImage
+
 
   windows:
     name: Windows
