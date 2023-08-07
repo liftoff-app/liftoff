@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,6 +37,19 @@ class AccountsStore extends ChangeNotifier {
   @protected
   @JsonKey(defaultValue: {})
   late Map<String, int> notificationCount = {};
+
+  static Uint8List? avatarBytesFromJson(String? json) =>
+      const Base64Decoder().convert(json ?? '');
+  static String avatarBytesToJson(Uint8List? bytes) =>
+      (bytes == null || bytes.isEmpty)
+          ? ''
+          : const Base64Encoder().convert(bytes);
+  @protected
+  @JsonKey(
+      defaultValue: null,
+      fromJson: avatarBytesFromJson,
+      toJson: avatarBytesToJson)
+  late Uint8List? avatar;
 
   static Future<AccountsStore> load() async {
     final prefs = await _prefs;
@@ -122,6 +136,8 @@ class AccountsStore extends ChangeNotifier {
 
   String? get defaultInstanceHost => defaultAccount?.split('@')[1];
 
+  String? get defaultUserAtInstance => defaultAccount?.toString();
+
   UserData? get defaultUserData {
     if (defaultAccount == null) {
       return null;
@@ -195,9 +211,36 @@ class AccountsStore extends ChangeNotifier {
 
   int get totalPrivateMessageCount => notificationCount['privateMessages'] ?? 0;
 
+  // Future<void> loadAvatarBytes(UserData userData) async {
+  //   avatar = await LemmyApiV3(userData.instanceHost)
+  //       .run(GetPersonDetails(
+  //     personId: userData.userId,
+  //   ))
+  //       .then((FullPersonView? p) {
+  //     if (p == null || p.personView.person.avatar == null) return null;
+  //     return http
+  //         .get(Uri.parse(p.personView.person.avatar!))
+  //         .then((value) => value.bodyBytes);
+  //   });
+
+  //   notifyListeners();
+  // }
+
+  Uint8List? get avatarBytes => avatar;
+
   /// sets globally default account
-  Future<void> setDefaultAccount(String instanceHost, String username) {
+  Future<void> setDefaultAccount(String instanceHost, String username) async {
     defaultAccount = '$username@$instanceHost';
+    avatar = await LemmyApiV3(instanceHost)
+        .run(GetPersonDetails(
+      username: username,
+    ))
+        .then((FullPersonView? p) {
+      if (p == null || p.personView.person.avatar == null) return null;
+      return http
+          .get(Uri.parse(p.personView.person.avatar!))
+          .then((value) => value.bodyBytes);
+    });
 
     notifyListeners();
     return save();

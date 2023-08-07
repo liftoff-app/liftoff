@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v3.dart';
 
-import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../pages/inbox.dart';
 import '../pages/profile_tab.dart';
@@ -47,39 +45,27 @@ class LiftoffAppBar extends HookWidget implements PreferredSizeWidget {
     final accStore = useAccountsStore();
     final defaultInstance = accStore.defaultInstanceHost;
     late final CircleAvatar avi;
-    late final String? validatedUser;
+    late final bool validUser;
     const dragThreshold = 10;
     final dragStart = useState<double>(0);
     final dragEnd = useState<double>(0);
+    const invalidAvi = CircleAvatar(backgroundColor: Colors.grey);
 
     // Generate the most suitable user image.
     if (defaultInstance == null) {
-      avi = const CircleAvatar(backgroundColor: Colors.grey);
-      validatedUser = null;
+      avi = invalidAvi;
+      validUser = false;
     } else {
       final defaultUserData = accStore.defaultUserDataFor(defaultInstance);
       if (defaultUserData == null) {
-        avi = const CircleAvatar(backgroundColor: Colors.grey);
-        validatedUser = null;
+        avi = invalidAvi;
+        validUser = false;
       } else {
-        final personDetails = useMemoFuture(() async {
-          return await LemmyApiV3(defaultInstance).run(GetPersonDetails(
-            personId: defaultUserData.userId,
-          ));
-        }, [defaultUserData, defaultInstance]);
-
-        validatedUser = (personDetails.hasData && personDetails.data != null)
-            ? '${personDetails.data!.personView.person.name}@${personDetails.data!.personView.instanceHost}'
-            : null;
-        avi = (validatedUser != null) &&
-                personDetails.data!.personView.person.avatar != null
-            ? CircleAvatar(
-                backgroundImage:
-                    NetworkImage(personDetails.data!.personView.person.avatar!))
-            : const CircleAvatar(
-                // TODO: copy @jcgurango's initicon work.
-                backgroundColor: Colors.grey,
-              );
+        validUser = true;
+        final avatar = accStore.avatarBytes;
+        avi = avatar != null && avatar.isNotEmpty
+            ? CircleAvatar(backgroundImage: Image.memory(avatar).image)
+            : invalidAvi;
       }
     }
 
@@ -100,23 +86,18 @@ class LiftoffAppBar extends HookWidget implements PreferredSizeWidget {
     changeAccount(value) {
       final [user, instance] = value.split('@');
       accStore.setDefaultAccount(instance, user);
-      // Needs the caller to take responsibility for rebuilding the page
-      // if needed on account change.
+      // Allow the caller to react if needed on account change.
       if (onAccountChange != null) onAccountChange!();
     }
 
     /// Renders the user image wrapped in a GestureDetector,
-    /// suitable for calling from a `RadioPicker`.
+    /// suitable for calling from `RadioPicker`.
     Widget buttonBuilder(context, displayValue, onPressed) {
       final button = GestureDetector(
-        onTap: () => goTo(
-            context,
-            (_) => validatedUser == null
-                ? const UserProfileTab()
-                : const InboxPage()),
+        onTap: () => goTo(context,
+            (_) => !validUser ? const UserProfileTab() : const InboxPage()),
         onDoubleTap: () => goTo(context, (_) => const UserProfileTab()),
-        onLongPress:
-            validatedUser == null ? () => const UserProfileTab() : onPressed,
+        onLongPress: !validUser ? () => const UserProfileTab() : onPressed,
         onVerticalDragStart: (details) {
           dragStart.value = details.localPosition.dy;
         },
@@ -126,8 +107,8 @@ class LiftoffAppBar extends HookWidget implements PreferredSizeWidget {
         onVerticalDragEnd: (details) {
           final delta = dragStart.value - dragEnd.value;
           if (delta.abs() > dragThreshold) {
-            if (userList.length > 1 && validatedUser != null) {
-              var currIndex = userList.indexOf(validatedUser);
+            if (userList.length > 1 && validUser) {
+              var currIndex = userList.indexOf(accStore.defaultUserAtInstance!);
               if (currIndex == -1) return;
               currIndex += delta.sign.toInt();
               if (currIndex < 0) currIndex = userList.length - 1;
@@ -150,7 +131,7 @@ class LiftoffAppBar extends HookWidget implements PreferredSizeWidget {
 
     final accountChanger = RadioPicker<String>(
       values: userList,
-      groupValue: '${accStore.defaultUsername}@${accStore.defaultInstanceHost}',
+      groupValue: accStore.defaultUserAtInstance!,
       onChanged: changeAccount,
       buttonBuilder: buttonBuilder,
     );
