@@ -123,7 +123,7 @@ jobs:
           wget -qO AppDir/AppRun https://github.com/AppImage/AppImageKit/releases/download/13/AppRun-x86_64
           chmod +x appimagetool-x86_64.AppImage AppDir/AppRun
           cp -r build/linux/x64/release/bundle/* AppDir
-          ./appimagetool-x86_64 AppDir liftoff.AppImage
+          ./appimagetool-x86_64.AppImage AppDir liftoff.AppImage
         
       - uses: actions/upload-artifact@v2
         with:
