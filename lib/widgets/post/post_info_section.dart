@@ -33,7 +33,8 @@ class PostInfoSection extends HookWidget {
                 url: post.community.icon ?? post.creator.avatar,
                 padding: const EdgeInsets.only(right: 10),
                 onTap: () => Navigator.of(context).push(
-                    CommunityPage.fromIdRoute(instanceHost, post.community.id)),
+                    CommunityPage.fromIdRoute(
+                        store.userData, instanceHost, post.community.id)),
                 noBlank: true,
                 radius: 15,
                 isNsfw: post.community.nsfw),
@@ -59,7 +60,7 @@ class PostInfoSection extends HookWidget {
                           style: const TextStyle(fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => Navigator.of(context).push(
-                                CommunityPage.fromIdRoute(
+                                CommunityPage.fromIdRoute(store.userData,
                                     instanceHost, post.community.id)),
                         ),
                         const TextSpan(

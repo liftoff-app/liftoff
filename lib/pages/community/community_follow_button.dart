@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../util/observer_consumers.dart';
 import '../view_on_menu.dart';
@@ -16,11 +15,6 @@ class CommunityFollowButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final loggedInAction = useLoggedInAction(
-        context.read<CommunityStore>().instanceHost, fallback: () {
-      ViewOnMenu.openForCommunity(context, communityView.community.actorId);
-    });
 
     return ObserverBuilder<CommunityStore>(builder: (context, store) {
       return ElevatedButtonTheme(
@@ -37,7 +31,10 @@ class CommunityFollowButton extends HookWidget {
               child: ElevatedButton(
                 onPressed: store.subscribingState.isLoading
                     ? () {}
-                    : loggedInAction(store.subscribe),
+                    : store.isAuthenticated
+                        ? store.subscribe
+                        : () => ViewOnMenu.openForCommunity(
+                            context, communityView.community.actorId),
                 child: store.subscribingState.isLoading
                     ? const SizedBox(
                         width: 15,

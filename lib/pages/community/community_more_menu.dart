@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../url_launcher.dart';
 import '../../util/extensions/api.dart';
@@ -20,9 +19,8 @@ class CommunityMoreMenu extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = context.read<CommunityStore>();
     final communityView = fullCommunityView.communityView;
-
-    final loggedInAction = useLoggedInAction(communityView.instanceHost);
 
     return Column(
       children: [
@@ -40,8 +38,8 @@ class CommunityMoreMenu extends HookWidget {
           onTap: () => ViewOnMenu.openForCommunity(
               context, communityView.community.actorId),
         ),
-        ObserverBuilder<CommunityStore>(builder: (context, store) {
-          return ListTile(
+        if (store.isAuthenticated)
+          ListTile(
             leading: store.blockingState.isLoading
                 ? const CircularProgressIndicator.adaptive()
                 : const Icon(Icons.block),
@@ -49,12 +47,11 @@ class CommunityMoreMenu extends HookWidget {
                 '${fullCommunityView.communityView.blocked ? L10n.of(context).unblock : L10n.of(context).block} ${communityView.community.preferredName}'),
             onTap: store.blockingState.isLoading
                 ? null
-                : loggedInAction((userData) {
-                    store.block(userData);
+                : () {
+                    store.block();
                     Navigator.of(context).pop();
-                  }),
-          );
-        }),
+                  },
+          ),
         ListTile(
           leading: const Icon(Icons.info_outline),
           title: Text(L10n.of(context).nerd_stuff),

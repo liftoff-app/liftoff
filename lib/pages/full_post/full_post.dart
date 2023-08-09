@@ -74,7 +74,7 @@ class FullPostPage extends HookWidget {
 
           comment() async {
             final newComment = await Navigator.of(context).push(
-              WriteComment.toPostRoute(post.post),
+              WriteComment.toPostRoute(store.userData!, post.post),
             );
 
             if (newComment != null) {

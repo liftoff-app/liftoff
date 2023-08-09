@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../../l10n/l10n.dart';
-import '../../stores/accounts_store.dart';
 import '../../util/extensions/spaced.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_safe.dart';
@@ -25,9 +24,7 @@ class CommmunityAboutTab extends StatelessWidget {
 
     return PullToRefresh(
       onRefresh: () async {
-        await context.read<CommunityStore>().refresh(context
-            .read<AccountsStore>()
-            .defaultUserDataFor(fullCommunityView.instanceHost));
+        await context.read<CommunityStore>().refresh();
       },
       child: ListView(
         padding: const EdgeInsets.only(top: 20),

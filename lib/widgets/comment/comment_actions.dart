@@ -33,6 +33,7 @@ class CommentActions extends HookWidget {
         reply() async {
           final newComment = await Navigator.of(context).push(
             WriteComment.toCommentRoute(
+              user: store.userData!,
               comment: comment,
               post: post,
             ),

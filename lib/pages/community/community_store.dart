@@ -14,23 +14,32 @@ abstract class _CommunityStore with Store {
   final String instanceHost;
   final String? communityName;
   final int? id;
+  final UserData? userData;
 
   // ignore: unused_element
   _CommunityStore.fromName({
+    // ignore: unused_element
+    this.userData,
     required String this.communityName,
     required this.instanceHost,
   }) : id = null;
 
   // ignore: unused_element
-  _CommunityStore.fromId({required this.id, required this.instanceHost})
+  _CommunityStore.fromId(
+      // ignore: unused_element
+      {this.userData,
+      required this.id,
+      required this.instanceHost})
       : communityName = null;
 
   final communityState = AsyncStore<FullCommunityView>();
   final subscribingState = AsyncStore<CommunityView>();
   final blockingState = AsyncStore<BlockedCommunity>();
 
+  bool get isAuthenticated => userData != null;
+
   @action
-  Future<void> refresh(UserData? userData) async {
+  Future<void> refresh() async {
     await communityState.runLemmy(
       instanceHost,
       GetCommunity(
@@ -42,7 +51,7 @@ abstract class _CommunityStore with Store {
     );
   }
 
-  Future<void> block(UserData userData) async {
+  Future<void> block() async {
     final state = communityState.asyncState;
     if (state is! AsyncStateData<FullCommunityView>) {
       throw StateError('communityState should be ready at this point');
@@ -53,7 +62,7 @@ abstract class _CommunityStore with Store {
       BlockCommunity(
         communityId: state.data.communityView.community.id,
         block: !state.data.communityView.blocked,
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
 
@@ -64,7 +73,7 @@ abstract class _CommunityStore with Store {
   }
 
   @action
-  Future<void> subscribe(UserData userData) async {
+  Future<void> subscribe() async {
     final state = communityState.asyncState;
 
     if (state is! AsyncStateData<FullCommunityView>) {
@@ -85,7 +94,7 @@ abstract class _CommunityStore with Store {
             return true;
           }
         }(),
-        auth: userData.jwt.raw,
+        auth: userData!.jwt.raw,
       ),
     );
 

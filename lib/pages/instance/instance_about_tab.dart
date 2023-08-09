@@ -152,6 +152,7 @@ class InstanceAboutTab extends HookWidget {
                         ListTile(
                           onTap: () => Navigator.of(context).push(
                             CommunityPage.fromIdRoute(
+                              null,
                               store.instanceHost,
                               c.community.id,
                             ),

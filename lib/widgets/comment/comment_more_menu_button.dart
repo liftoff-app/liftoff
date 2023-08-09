@@ -69,6 +69,7 @@ class _CommentMoreMenuPopup extends HookWidget {
         handleEdit() async {
           final editedComment = await Navigator.of(context).push(
             WriteComment.editRoute(
+              user: store.userData!,
               comment: comment,
               post: post,
             ),

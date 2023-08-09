@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/delayed_loading.dart';
-import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
 import '../stores/accounts_store.dart';
 import '../util/text_color.dart';
@@ -15,20 +14,23 @@ import 'markdown_text.dart';
 /// on submit pops the navigator stack with a [CommentView]
 /// or `null` if cancelled
 class WriteComment extends HookWidget {
+  final UserData user;
   final Post post;
   final Comment? comment;
   final bool _isEdit;
 
-  const WriteComment.toPost(this.post, {super.key})
+  const WriteComment.toPost(this.user, this.post, {super.key})
       : comment = null,
         _isEdit = false;
   const WriteComment.toComment({
     super.key,
+    required this.user,
     required Comment this.comment,
     required this.post,
   }) : _isEdit = false;
   const WriteComment.edit({
     super.key,
+    required this.user,
     required Comment this.comment,
     required this.post,
   }) : _isEdit = true;
@@ -37,7 +39,6 @@ class WriteComment extends HookWidget {
   Widget build(BuildContext context) {
     final showFancy = useState(false);
     final delayed = useDelayedLoading();
-    final loggedInAction = useLoggedInAction(post.instanceHost);
 
     final editorController = useEditorController(
       instanceHost: post.instanceHost,
@@ -67,7 +68,7 @@ class WriteComment extends HookWidget {
       );
     }();
 
-    handleSubmit(UserData userData) async {
+    handleSubmit() async {
       final api = LemmyApiV3(post.instanceHost);
 
       delayed.start();
@@ -77,14 +78,14 @@ class WriteComment extends HookWidget {
             return api.run(EditComment(
               commentId: comment!.id,
               content: editorController.textEditingController.text,
-              auth: userData.jwt.raw,
+              auth: user.jwt.raw,
             ));
           } else {
             return api.run(CreateComment(
               content: editorController.textEditingController.text,
               postId: post.id,
               parentId: comment?.id,
-              auth: userData.jwt.raw,
+              auth: user.jwt.raw,
             ));
           }
         }();
@@ -132,9 +133,7 @@ class WriteComment extends HookWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       FilledButton(
-                        onPressed: delayed.pending
-                            ? () {}
-                            : loggedInAction(handleSubmit),
+                        onPressed: delayed.pending ? () {} : handleSubmit,
                         child: delayed.loading
                             ? SizedBox(
                                 height: 20,
@@ -165,27 +164,31 @@ class WriteComment extends HookWidget {
     );
   }
 
-  static Route<CommentView> toPostRoute(Post post) => MaterialPageRoute(
-        builder: (context) => WriteComment.toPost(post),
+  static Route<CommentView> toPostRoute(UserData user, Post post) =>
+      MaterialPageRoute(
+        builder: (context) => WriteComment.toPost(user, post),
         fullscreenDialog: true,
       );
 
   static Route<CommentView> toCommentRoute({
+    required UserData user,
     required Comment comment,
     required Post post,
   }) =>
       MaterialPageRoute(
         builder: (context) =>
-            WriteComment.toComment(comment: comment, post: post),
+            WriteComment.toComment(user: user, comment: comment, post: post),
         fullscreenDialog: true,
       );
 
   static Route<CommentView> editRoute({
+    required UserData user,
     required Comment comment,
     required Post post,
   }) =>
       MaterialPageRoute(
-        builder: (context) => WriteComment.edit(comment: comment, post: post),
+        builder: (context) =>
+            WriteComment.edit(user: user, comment: comment, post: post),
         fullscreenDialog: true,
       );
 }

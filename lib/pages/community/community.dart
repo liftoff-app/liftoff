@@ -4,7 +4,6 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
 import 'package:swipeable_page_route/swipeable_page_route.dart';
 
-import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
 import '../../util/async_store.dart';
@@ -32,7 +31,6 @@ class CommunityPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final accountsStore = useAccountsStore();
     final scrollController = useScrollController();
 
     return Nested(
@@ -61,9 +59,7 @@ class CommunityPage extends HookWidget {
             body: Center(
                 child: (communityState.errorTerm != null)
                     ? FailedToLoad(
-                        refresh: () => store.refresh(context
-                            .read<AccountsStore>()
-                            .defaultUserDataFor(store.instanceHost)),
+                        refresh: () => store.refresh(),
                         message: communityState.errorTerm!.tr(context),
                       )
                     : const CircularProgressIndicator.adaptive()),
@@ -137,28 +133,22 @@ class CommunityPage extends HookWidget {
                               page: page,
                               limit: batchSize,
                               savedOnly: false,
-                              auth: accountsStore
-                                  .defaultUserDataFor(community.instanceHost)
-                                  ?.jwt
-                                  .raw,
+                              auth: store.userData?.jwt.raw,
                             ))
-                            .toPostStores(accountsStore
-                                .defaultUserDataFor(community.instanceHost)),
+                            .toPostStores(store.userData),
                   ),
                   InfiniteCommentList(
                       fetcher: (page, batchSize, sortType) =>
                           LemmyApiV3(community.instanceHost).run(GetComments(
                             communityId: community.community.id,
-                            auth: accountsStore
-                                .defaultUserDataFor(community.instanceHost)
-                                ?.jwt
-                                .raw,
+                            auth: store.userData?.jwt.raw,
                             type: CommentListingType.local,
                             sort: sortType,
                             limit: batchSize,
                             page: page,
                             savedOnly: false,
-                          ))),
+                          )),
+                      userData: store.userData),
                   CommmunityAboutTab(fullCommunityView),
                 ],
               ),
@@ -173,9 +163,7 @@ class CommunityPage extends HookWidget {
     return SwipeablePageRoute(
       builder: (context) {
         return MobxProvider.value(
-          value: store
-            ..refresh(
-                context.read<AccountsStore>().defaultUserDataFor(instanceHost)),
+          value: store..refresh(),
           child: const CommunityPage(),
         );
       },
@@ -189,10 +177,11 @@ class CommunityPage extends HookWidget {
     );
   }
 
-  static Route fromIdRoute(String instanceHost, int id) {
+  static Route fromIdRoute(UserData? userData, String instanceHost, int id) {
     return _route(
       instanceHost,
-      CommunityStore.fromId(id: id, instanceHost: instanceHost),
+      CommunityStore.fromId(
+          userData: userData, id: id, instanceHost: instanceHost),
     );
   }
 
@@ -207,9 +196,10 @@ class CommunityPage extends HookWidget {
             builder: (buildContext, object) {
               return MobxProvider.value(
                 value: CommunityStore.fromId(
+                    userData: userData,
                     id: object.community!.community.id,
                     instanceHost: userData.instanceHost)
-                  ..refresh(userData),
+                  ..refresh(),
                 child: const CommunityPage(),
               );
             });

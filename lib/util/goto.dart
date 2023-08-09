@@ -43,7 +43,7 @@ abstract class goToCommunity {
   static void byId(
           BuildContext context, String instanceHost, int communityId) =>
       Navigator.of(context)
-          .push(CommunityPage.fromIdRoute(instanceHost, communityId));
+          .push(CommunityPage.fromIdRoute(null, instanceHost, communityId));
 
   static void byName(
           BuildContext context, String instanceHost, String communityName) =>

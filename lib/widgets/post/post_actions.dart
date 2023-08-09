@@ -26,7 +26,7 @@ class PostActions extends HookWidget {
     return ObserverBuilder<PostStore>(builder: (context, store) {
       comment() async {
         final newComment = await Navigator.of(context).push(
-          WriteComment.toPostRoute(store.postView.post),
+          WriteComment.toPostRoute(store.userData!, store.postView.post),
         );
 
         if (newComment != null) {
