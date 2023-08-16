@@ -7,6 +7,7 @@ import '../pages/full_post/full_post.dart';
 import '../pages/media_view.dart';
 import '../pages/user.dart';
 
+import '../stores/accounts_store.dart';
 import '../stores/config_store.dart';
 import '../util/observer_consumers.dart';
 
@@ -53,19 +54,25 @@ abstract class goToCommunity {
 
 // ignore: camel_case_types
 abstract class goToUser {
-  static void byId(BuildContext context, String instanceHost, int userId) =>
-      goToSwipeable(context,
-          (context) => UserPage(instanceHost: instanceHost, userId: userId));
+  static void byId(BuildContext context, String instanceHost, int userId,
+          UserData? userData) =>
+      goToSwipeable(
+          context,
+          (context) => UserPage(
+              instanceHost: instanceHost, userId: userId, userData: userData));
 
-  static void byName(
-          BuildContext context, String instanceHost, String userName) =>
+  static void byName(BuildContext context, String instanceHost, String userName,
+          UserData? userData) =>
       goToSwipeable(
           context,
           (context) => UserPage.fromName(
-              instanceHost: instanceHost, username: userName));
+              instanceHost: instanceHost,
+              username: userName,
+              userData: userData));
 
-  static void fromPersonSafe(BuildContext context, PersonSafe personSafe) =>
-      goToUser.byId(context, personSafe.instanceHost, personSafe.id);
+  static void fromPersonSafe(
+          BuildContext context, PersonSafe personSafe, UserData? userData) =>
+      goToUser.byId(context, personSafe.instanceHost, personSafe.id, userData);
 }
 
 void goToPost(BuildContext context, String instanceHost, int postId,

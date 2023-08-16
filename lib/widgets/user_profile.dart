@@ -8,6 +8,7 @@ import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../pages/instance/instance.dart';
 import '../pages/manage_account.dart';
+import '../stores/accounts_store.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/text_color.dart';
@@ -22,21 +23,26 @@ import 'sortable_infinite_list.dart';
 class UserProfile extends HookWidget {
   final String instanceHost;
   final int userId;
+  final UserData? userData;
 
   final FullPersonView? _fullUserView;
 
   const UserProfile(
-      {super.key, required this.userId, required this.instanceHost})
+      {super.key,
+      required this.userId,
+      required this.instanceHost,
+      required this.userData})
       : _fullUserView = null;
 
-  UserProfile.fromFullPersonView(FullPersonView this._fullUserView, {super.key})
+  UserProfile.fromFullPersonView(
+      FullPersonView this._fullUserView, this.userData,
+      {super.key})
       : userId = _fullUserView.personView.person.id,
         instanceHost = _fullUserView.instanceHost;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final accountsStore = useAccountsStore();
     final userDetailsSnap = useMemoFuture(() async {
       if (_fullUserView != null) return _fullUserView;
 
@@ -44,7 +50,7 @@ class UserProfile extends HookWidget {
         personId: userId,
         savedOnly: false,
         sort: SortType.active,
-        auth: accountsStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+        auth: userData?.jwt.raw,
       ));
     }, [userId, instanceHost]);
 
@@ -105,14 +111,10 @@ class UserProfile extends HookWidget {
                       sort: SortType.active,
                       page: page,
                       limit: batchSize,
-                      auth: accountsStore
-                          .defaultUserDataFor(instanceHost)
-                          ?.jwt
-                          .raw,
+                      auth: userData?.jwt.raw,
                     ))
                     .then((val) => val.posts)
-                    .toPostStores(
-                        accountsStore.defaultUserDataFor(instanceHost)),
+                    .toPostStores(userData),
               ),
               Center(
                 child: ConstrainedBox(
@@ -120,17 +122,14 @@ class UserProfile extends HookWidget {
                   child: InfiniteCommentList(
                     fetcher: (page, batchSize, sort) => LemmyApiV3(instanceHost)
                         .run(GetPersonDetails(
-                          personId: userView.person.id,
-                          savedOnly: false,
-                          sort: SortType.active,
-                          page: page,
-                          limit: batchSize,
-                          auth: accountsStore
-                              .defaultUserDataFor(instanceHost)
-                              ?.jwt
-                              .raw,
-                        ))
+                            personId: userView.person.id,
+                            savedOnly: false,
+                            sort: SortType.active,
+                            page: page,
+                            limit: batchSize,
+                            auth: userData?.jwt.raw))
                         .then((val) => val.comments),
+                    userData: userData,
                   ),
                 ),
               ),

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/logged_in_action.dart';
+import '../stores/accounts_store.dart';
 import '../util/icons.dart';
 import '../util/share.dart';
 import '../widgets/user_profile.dart';
@@ -13,16 +14,30 @@ class UserPage extends HookWidget {
   final int? userId;
   final String instanceHost;
   final Future<FullPersonView> _userDetails;
+  final UserData? userData;
 
-  UserPage({super.key, required this.userId, required this.instanceHost})
+  UserPage(
+      {super.key,
+      required this.userId,
+      required this.instanceHost,
+      required this.userData})
       : _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
-            personId: userId, savedOnly: true, sort: SortType.active));
+            personId: userId,
+            savedOnly: true,
+            sort: SortType.active,
+            auth: userData?.jwt.raw));
 
   UserPage.fromName(
-      {super.key, required this.instanceHost, required String username})
+      {super.key,
+      required this.instanceHost,
+      required String username,
+      required this.userData})
       : userId = null,
         _userDetails = LemmyApiV3(instanceHost).run(GetPersonDetails(
-            username: username, savedOnly: true, sort: SortType.active));
+            username: username,
+            savedOnly: true,
+            sort: SortType.active,
+            auth: userData?.jwt.raw));
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +46,7 @@ class UserPage extends HookWidget {
 
     final body = () {
       if (userDetailsSnap.hasData) {
-        return UserProfile.fromFullPersonView(userDetailsSnap.data!);
+        return UserProfile.fromFullPersonView(userDetailsSnap.data!, userData);
       } else if (userDetailsSnap.hasError) {
         return const Center(child: Text('Could not find that user.'));
       } else {
@@ -56,7 +71,9 @@ class UserPage extends HookWidget {
       appBar: AppBar(
         actions: [
           if (userDetailsSnap.hasData) ...[
-            SendMessageButton(userDetailsSnap.data!.personView.person),
+            if (userData != null)
+              SendMessageButton(
+                  userDetailsSnap.data!.personView.person, userData!),
             IconButton(
               key: shareButtonKey,
               icon: Icon(shareIcon),
@@ -72,8 +89,9 @@ class UserPage extends HookWidget {
 
 class SendMessageButton extends HookWidget {
   final PersonSafe user;
+  final UserData userData;
 
-  const SendMessageButton(this.user, {super.key});
+  const SendMessageButton(this.user, this.userData, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +102,8 @@ class SendMessageButton extends HookWidget {
       onPressed: loggedInAction(
         (token) => Navigator.of(context).push(
           WriteMessagePage.sendRoute(
-            instanceHost: user.instanceHost,
             recipient: user,
+            userData: userData,
           ),
         ),
       ),

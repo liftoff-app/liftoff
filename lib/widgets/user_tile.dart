@@ -26,7 +26,7 @@ class PersonTile extends StatelessWidget {
                   MarkdownText(person.bio!, instanceHost: person.instanceHost),
             )
           : null,
-      onTap: () => goToUser.fromPersonSafe(context, person),
+      onTap: () => goToUser.fromPersonSafe(context, person, null),
       leading: Avatar(url: person.avatar),
     );
   }

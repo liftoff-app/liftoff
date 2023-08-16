@@ -31,7 +31,7 @@ class BlockPersonTile extends StatelessWidget {
             ),
             onTap: () {
               goToUser.byId(
-                  context, store.person.instanceHost, store.person.id);
+                  context, store.person.instanceHost, store.person.id, null);
             },
           );
         },

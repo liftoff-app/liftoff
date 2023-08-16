@@ -258,7 +258,7 @@ class _CommentWidget extends HookWidget {
                                       padding: const EdgeInsets.only(right: 5),
                                       child: InkWell(
                                         onTap: () => goToUser.fromPersonSafe(
-                                            context, creator),
+                                            context, creator, store.userData),
                                         child: Avatar(
                                           url: creator.avatar,
                                           radius: 10,
@@ -269,7 +269,7 @@ class _CommentWidget extends HookWidget {
                                   Flexible(
                                     child: InkWell(
                                       onTap: () => goToUser.fromPersonSafe(
-                                          context, creator),
+                                          context, creator, store.userData),
                                       child: Text(
                                         creator.originPreferredName,
                                         maxLines: 1,

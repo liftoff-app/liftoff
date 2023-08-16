@@ -6,38 +6,7 @@ import '../util/extensions/api.dart';
 import '../util/goto.dart';
 import '../util/observer_consumers.dart';
 import '../widgets/avatar.dart';
-import '../widgets/infinite_scroll.dart';
 import '../widgets/markdown_text.dart';
-
-/// Infinite list of Users fetched by the given fetcher
-class UsersListPage extends StatelessWidget {
-  final String title;
-  final Fetcher<PersonViewSafe> fetcher;
-
-  const UsersListPage({super.key, required this.fetcher, this.title = ''});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.cardColor,
-        title: Text(title),
-      ),
-      body: InfiniteScroll<PersonViewSafe>(
-        fetcher: fetcher,
-        itemBuilder: (user) => Column(
-          children: [
-            const Divider(),
-            UsersListItem(user: user),
-          ],
-        ),
-        uniqueProp: (user) => user.person.actorId,
-      ),
-    );
-  }
-}
 
 class UsersListItem extends StatelessWidget {
   final PersonViewSafe user;
@@ -68,7 +37,7 @@ class UsersListItem extends StatelessWidget {
               ),
             )
           : const SizedBox.shrink(),
-      onTap: () => goToUser.fromPersonSafe(context, user.person),
+      onTap: () => goToUser.fromPersonSafe(context, user.person, null),
       leading: Avatar(url: user.person.avatar),
     );
   }

@@ -75,7 +75,9 @@ Future<void> linkLauncher({
   if (url.startsWith('@')) {
     final usernameSplit = url.replaceFirst(RegExp('@'), '').split('@');
     push(() => UserPage.fromName(
-        instanceHost: usernameSplit[1], username: usernameSplit[0]));
+        instanceHost: usernameSplit[1],
+        username: usernameSplit[0],
+        userData: null));
     return;
   }
 
@@ -87,8 +89,8 @@ Future<void> linkLauncher({
 
   // CHECK IF LINK TO USER
   if (url.startsWith('/u/')) {
-    return push(() =>
-        UserPage.fromName(instanceHost: instanceHost, username: chonks[2]));
+    return push(() => UserPage.fromName(
+        instanceHost: instanceHost, username: chonks[2], userData: null));
   }
 
   // CHECK IF LINK TO COMMUNITY
@@ -116,7 +118,7 @@ Future<void> linkLauncher({
         return goToCommunity.byName(context, matchedInstance, split[2]);
 
       case 'u':
-        return goToUser.byName(context, matchedInstance, split[2]);
+        return goToUser.byName(context, matchedInstance, split[2], null);
 
       case 'post':
         if (split.length == 3) {

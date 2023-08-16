@@ -38,7 +38,7 @@ class AppLinkHandler extends HookWidget {
               goToCommunity.byName(context, uri.host, target);
               break;
             case 'u':
-              goToUser.byName(context, uri.host, target);
+              goToUser.byName(context, uri.host, target, null);
               break;
             case 'post':
               goToPost(context, uri.host, int.parse(target));

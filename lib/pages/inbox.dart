@@ -351,7 +351,8 @@ class PrivateMessageTile extends HookWidget {
               ),
               InkWell(
                 borderRadius: BorderRadius.circular(10),
-                onTap: () => goToUser.fromPersonSafe(context, otherSide),
+                onTap: () => goToUser.fromPersonSafe(context, otherSide,
+                    accStore.defaultUserDataFor(pmv.value.instanceHost)),
                 child: Row(
                   children: [
                     if (otherSide.avatar != null)
@@ -428,8 +429,9 @@ class PrivateMessageTile extends HookWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     WriteMessagePage.sendRoute(
-                      instanceHost: pmv.value.instanceHost,
                       recipient: otherSide,
+                      userData:
+                          accStore.defaultUserDataFor(pmv.value.instanceHost)!,
                     ),
                   );
                 },
@@ -439,8 +441,11 @@ class PrivateMessageTile extends HookWidget {
                 icon: Icons.edit,
                 tooltip: L10n.of(context).edit,
                 onPressed: () async {
-                  final val = await Navigator.of(context)
-                      .push(WriteMessagePage.editRoute(pmv.value));
+                  final val = await Navigator.of(context).push(
+                      WriteMessagePage.editRoute(
+                          pmv.value,
+                          accStore
+                              .defaultUserDataFor(pmv.value.instanceHost)!));
                   if (val != null) pmv.value = val;
                 },
               ),

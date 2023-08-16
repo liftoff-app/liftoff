@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
 import '../stores/accounts_store.dart';
 import '../util/extensions/api.dart';
@@ -13,7 +12,7 @@ import '../widgets/markdown_text.dart';
 /// Page for writing and editing a private message
 class WriteMessagePage extends HookWidget {
   final PersonSafe recipient;
-  final String instanceHost;
+  final UserData userData;
 
   /// if it's non null then this page is used for edit
   final PrivateMessage? privateMessage;
@@ -23,14 +22,13 @@ class WriteMessagePage extends HookWidget {
   const WriteMessagePage.send({
     super.key,
     required this.recipient,
-    required this.instanceHost,
+    required this.userData,
   })  : privateMessage = null,
         _isEdit = false;
 
-  WriteMessagePage.edit(PrivateMessageView pmv, {super.key})
+  WriteMessagePage.edit(PrivateMessageView pmv, this.userData, {super.key})
       : privateMessage = pmv.privateMessage,
         recipient = pmv.recipient,
-        instanceHost = pmv.instanceHost,
         _isEdit = true;
 
   @override
@@ -39,15 +37,15 @@ class WriteMessagePage extends HookWidget {
     final bodyController =
         useTextEditingController(text: privateMessage?.content);
     final loading = useState(false);
-    final loggedInAction = useLoggedInAction(instanceHost);
     final submit = _isEdit ? L10n.of(context).save : 'send';
     final title = _isEdit ? 'Edit message' : L10n.of(context).send_message;
 
-    handleSubmit(UserData userData) async {
+    handleSubmit() async {
       if (_isEdit) {
         loading.value = true;
         try {
-          final msg = await LemmyApiV3(instanceHost).run(EditPrivateMessage(
+          final msg =
+              await LemmyApiV3(userData.instanceHost).run(EditPrivateMessage(
             auth: userData.jwt.raw,
             privateMessageId: privateMessage!.id,
             content: bodyController.text,
@@ -64,7 +62,7 @@ class WriteMessagePage extends HookWidget {
       } else {
         loading.value = true;
         try {
-          await LemmyApiV3(instanceHost).run(CreatePrivateMessage(
+          await LemmyApiV3(userData.instanceHost).run(CreatePrivateMessage(
             auth: userData.jwt.raw,
             content: bodyController.text,
             recipientId: recipient.id,
@@ -99,7 +97,7 @@ class WriteMessagePage extends HookWidget {
           padding: const EdgeInsets.all(16),
           child: MarkdownText(
             bodyController.text,
-            instanceHost: instanceHost,
+            instanceHost: userData.instanceHost,
           ),
         ),
       ],
@@ -126,7 +124,7 @@ class WriteMessagePage extends HookWidget {
             Align(
               alignment: Alignment.centerRight,
               child: FilledButton(
-                onPressed: loading.value ? () {} : loggedInAction(handleSubmit),
+                onPressed: loading.value ? () {} : handleSubmit,
                 child: loading.value
                     ? SizedBox(
                         height: 20,
@@ -147,19 +145,20 @@ class WriteMessagePage extends HookWidget {
 
   static Route<PrivateMessageView> sendRoute({
     required PersonSafe recipient,
-    required String instanceHost,
+    required UserData userData,
   }) =>
       MaterialPageRoute(
         builder: (context) => WriteMessagePage.send(
           recipient: recipient,
-          instanceHost: instanceHost,
+          userData: userData,
         ),
         fullscreenDialog: true,
       );
 
-  static Route<PrivateMessageView> editRoute(PrivateMessageView pmv) =>
+  static Route<PrivateMessageView> editRoute(
+          PrivateMessageView pmv, UserData userData) =>
       MaterialPageRoute(
-        builder: (context) => WriteMessagePage.edit(pmv),
+        builder: (context) => WriteMessagePage.edit(pmv, userData),
         fullscreenDialog: true,
       );
 }

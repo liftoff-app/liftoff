@@ -35,6 +35,7 @@ class ModlogTable extends StatelessWidget {
                     context,
                     user.instanceHost,
                     user.id,
+                    null,
                   ),
           ),
         ],

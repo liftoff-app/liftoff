@@ -206,10 +206,7 @@ class ModlogEntry {
                   if (mod != null)
                     GestureDetector(
                       onTap: () => goToUser.byId(
-                        context,
-                        mod!.instanceHost,
-                        mod!.id,
-                      ),
+                          context, mod!.instanceHost, mod!.id, null),
                       child: Row(
                         children: [
                           Avatar(

@@ -105,9 +105,7 @@ class PostInfoSection extends HookWidget {
                           style: const TextStyle(fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => goToUser.fromPersonSafe(
-                                  context,
-                                  post.creator,
-                                ),
+                                context, post.creator, store.userData),
                         ),
                         TextSpan(
                           text:
