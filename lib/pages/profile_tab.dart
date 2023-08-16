@@ -20,7 +20,8 @@ class UserProfileTab extends HookWidget {
 
     final actions = [
       IconButton(
-        onPressed: () => goTo(context, (context) => const SavedPage()),
+        onPressed: () => goTo(
+            context, (context) => SavedPage(accountsStore.defaultUserData!)),
         icon: const Icon(Icons.bookmark),
       ),
       IconButton(

@@ -4,13 +4,16 @@ import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../stores/accounts_store.dart';
 import '../widgets/post/post_store.dart';
 import '../widgets/sortable_infinite_list.dart';
 
 /// Page with saved posts/comments. Fetches such saved data from the default user
 /// Assumes there is at least one logged in user
 class SavedPage extends HookWidget {
-  const SavedPage({super.key});
+  final UserData userData;
+
+  const SavedPage(this.userData, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +53,10 @@ class SavedPage extends HookWidget {
                           savedOnly: true,
                           page: page,
                           limit: batchSize,
-                          auth: accountStore.defaultUserData!.jwt.raw,
+                          auth: userData.jwt.raw,
                         ),
                       )
-                      .toPostStores(accountStore.defaultUserData),
+                      .toPostStores(userData),
             ),
             InfiniteCommentList(
               fetcher: (page, batchSize, sortType) =>
@@ -64,9 +67,10 @@ class SavedPage extends HookWidget {
                   savedOnly: true,
                   page: page,
                   limit: batchSize,
-                  auth: accountStore.defaultUserData!.jwt.raw,
+                  auth: userData.jwt.raw,
                 ),
               ),
+              userData: userData,
             ),
           ],
         ),
