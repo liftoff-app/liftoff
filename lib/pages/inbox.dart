@@ -40,7 +40,7 @@ class InboxPage extends HookWidget {
     if (accStore.hasNoAccount) {
       return Scaffold(
         appBar: AppBar(),
-        body: const Center(child: Text('no accounts added')),
+        body: const Center(child: Text('no accounts added')), // TODO localize this string
       );
     }
 
@@ -108,12 +108,12 @@ class InboxPage extends HookWidget {
               IconButton(
                 icon: const Icon(Icons.checklist),
                 onPressed: markAllAsRead,
-                tooltip: 'Mark all as read',
+                tooltip: 'Mark all as read', // TODO localize this string
               ),
             IconButton(
               icon: Icon(unreadOnly.value ? Icons.mail : Icons.mail_outline),
               onPressed: toggleUnreadOnly,
-              tooltip: unreadOnly.value ? 'show all' : 'show only unread',
+              tooltip: unreadOnly.value ? 'show all' : 'show only unread', // TODO localize this string
             )
           ],
           bottom: TabBar(
@@ -153,7 +153,7 @@ class InboxPage extends HookWidget {
             child: TabBarView(
               children: [
                 SortableInfiniteList<CommentView>(
-                  noItems: const Text('no replies'),
+                  noItems: const Text('no replies'), // TODO localize this string
                   controller: isc,
                   defaultSort: SortType.new_,
                   fetcher: (page, batchSize, sortType) =>
@@ -173,7 +173,7 @@ class InboxPage extends HookWidget {
                   uniqueProp: (item) => item.comment.apId,
                 ),
                 SortableInfiniteList<PersonMentionView>(
-                  noItems: const Text('no mentions'),
+                  noItems: const Text('no mentions'), // TODO localize this string
                   controller: isc,
                   defaultSort: SortType.new_,
                   fetcher: (page, batchSize, sortType) =>
@@ -194,7 +194,7 @@ class InboxPage extends HookWidget {
                 InfiniteScroll<PrivateMessageView>(
                   noItems: const Padding(
                     padding: EdgeInsets.only(top: 60),
-                    child: Text('no messages'),
+                    child: Text('no messages'), // TODO localize this string
                   ),
                   controller: isc,
                   fetcher: (page, batchSize) =>
@@ -264,7 +264,7 @@ class PrivateMessageTile extends HookWidget {
           return Column(
             children: [
               ListTile(
-                title: Text(raw.value ? 'Show fancy' : 'Show raw'),
+                title: Text(raw.value ? 'Show fancy' : 'Show raw'), // TODO localize this string
                 leading: markdownModeIcon(fancy: !raw.value),
                 onTap: () {
                   raw.value = !raw.value;
@@ -281,7 +281,7 @@ class PrivateMessageTile extends HookWidget {
                 },
               ),
               ListTile(
-                title: const Text('Nerd stuff'),
+                title: const Text('Nerd stuff'), // TODO localize this string
                 leading: const Icon(Icons.info_outline),
                 onTap: () {
                   pop();

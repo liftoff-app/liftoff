@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/logged_in_action.dart';
+import '../l10n/gen/l10n.dart';
 import '../util/icons.dart';
 import '../util/share.dart';
 import '../widgets/user_profile.dart';
@@ -33,7 +34,7 @@ class UserPage extends HookWidget {
       if (userDetailsSnap.hasData) {
         return UserProfile.fromFullPersonView(userDetailsSnap.data!);
       } else if (userDetailsSnap.hasError) {
-        return const Center(child: Text('Could not find that user.'));
+        return Center(child: Text(L10n.of(context).couldnt_find_that_account));
       } else {
         return const Center(child: CircularProgressIndicator.adaptive());
       }

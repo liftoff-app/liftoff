@@ -48,7 +48,8 @@ class FullPostPage extends HookWidget {
           asyncStore: fullPostStore.communityBlockingState,
           successMessageBuilder: (context, data) {
             final name = data.communityView.community.originPreferredName;
-            return '${data.blocked ? 'Blocked' : 'Unblocked'} $name';
+            return '${data.blocked ?
+              L10n.of(context).blocked : L10n.of(context).unblocked} $name';
           },
         ),
       ],

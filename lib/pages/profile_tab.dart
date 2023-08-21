@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../hooks/stores.dart';
+import '../l10n/gen/l10n.dart';
 import '../util/goto.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/user_profile.dart';
@@ -38,13 +39,13 @@ class UserProfileTab extends HookWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('No account was added.'),
+              Text(L10n.of(context).add_user),
               FilledButton.icon(
                 onPressed: () {
                   goTo(context, (_) => AccountsConfigPage());
                 },
                 icon: const Icon(Icons.add),
-                label: const Text('Add account'),
+                label: Text(L10n.of(context).add_account),
               )
             ],
           ),
@@ -56,7 +57,7 @@ class UserProfileTab extends HookWidget {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: RadioPicker<String>(
-          title: 'account',
+          title: L10n.of(context).accounts,
           values: accountsStore.loggedInInstances
               .expand(
                 (instanceHost) => accountsStore

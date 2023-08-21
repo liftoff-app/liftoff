@@ -53,26 +53,30 @@ class CommmunityAboutTab extends StatelessWidget {
                     label: Text(L10n.of(context)
                         .number_of_users_online(onlineUsers ?? 0))),
                 Chip(
-                    label:
-                        Text('${community.counts.usersActiveDay} users / day')),
+                    label: Text('${L10n.of(context)
+                        .number_of_users(community.counts.usersActiveDay)}'
+                        ' / ${L10n.of(context).day}')),
                 Chip(
-                    label: Text(
-                        '${community.counts.usersActiveWeek} users / week')),
+                    label: Text('${L10n.of(context)
+                        .number_of_users(community.counts.usersActiveWeek)}'
+                        ' / ${L10n.of(context).week}')),
                 Chip(
-                    label: Text(
-                        '${community.counts.usersActiveMonth} users / month')),
+                    label: Text('${L10n.of(context)
+                        .number_of_users(community.counts.usersActiveMonth)}'
+                        ' / ${L10n.of(context).month}')),
                 Chip(
-                    label: Text(
-                        '${community.counts.usersActiveHalfYear} users / 6 months')),
+                    label: Text('${L10n.of(context)
+                        .number_of_users(community.counts.usersActiveHalfYear)}'
+                        ' / 6 ${L10n.of(context).month}s')),
                 Chip(
                     label: Text(L10n.of(context)
                         .number_of_subscribers(community.counts.subscribers))),
                 Chip(
-                    label: Text(
-                        '${community.counts.posts} post${community.counts.posts == 1 ? '' : 's'}')),
+                    label: Text(L10n.of(context)
+                        .number_of_posts(community.counts.posts ))),
                 Chip(
-                    label: Text(
-                        '${community.counts.comments} comment${community.counts.comments == 1 ? '' : 's'}')),
+                    label: Text(L10n.of(context)
+                        .number_of_comments(community.counts.comments, 0))), // TODO why does this need 2 args???
               ].spaced(8),
             ),
           ),

@@ -69,11 +69,10 @@ class CommentSection {
       // sorting menu goes here
       if (postComments != null && postComments.isEmpty && newComments.isEmpty)
         _centeredWithConstraints(
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 50),
-            child: Text(
-              'no comments yet',
-              style: TextStyle(fontStyle: FontStyle.italic),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 50),
+            child: Text(L10n.of(context).no_comments_yet,
+              style: const TextStyle(fontStyle: FontStyle.italic),
             ),
           ),
         )

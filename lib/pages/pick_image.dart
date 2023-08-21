@@ -76,7 +76,7 @@ class PickImagePage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Image'),
+        title: Text(L10n.of(context).edit_image),
       ),
       body: Center(
         child: Column(

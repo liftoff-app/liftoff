@@ -73,7 +73,7 @@ class CreatePostPage extends HookWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Create post'),
+          title: Text(L10n.of(context).create_post),
           actions: [
             ObserverBuilder<CreatePostStore>(
               builder: (context, store) => IconButton(

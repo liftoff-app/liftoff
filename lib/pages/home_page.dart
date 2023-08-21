@@ -74,7 +74,7 @@ class HomePage extends HookWidget {
                     snackBarShowing.value = true;
                     ScaffoldMessenger.of(context)
                         .showSnackBar(const SnackBar(
-                          content: Text('Tap back again to leave'),
+                          content: Text('Tap back again to leave'), // TODO localize this string
                         ))
                         .closed
                         .then((SnackBarClosedReason reason) =>

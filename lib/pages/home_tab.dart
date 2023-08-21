@@ -93,7 +93,7 @@ class HomeTab extends HookWidget {
 
           final everythingChoices = [
             const ListTile(
-              title: Text('EVERYTHING'),
+              title: Text('EVERYTHING'), // TODO localize this string
               dense: true,
               contentPadding: EdgeInsets.zero,
               visualDensity:
@@ -227,7 +227,7 @@ class HomeTab extends HookWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(child: Text('there needs to be at least one instance')),
+            Center(child: Text('there needs to be at least one instance')), // TODO localize this string
           ],
         ),
       );
@@ -306,21 +306,21 @@ class HomeTab extends HookWidget {
                         value: 0,
                         child: ListTile(
                           leading: Icon(Icons.keyboard_double_arrow_up),
-                          title: Text('Back to top'),
+                          title: Text('Back to top'), // TODO localize this string
                         ),
                       ),
                       const PopupMenuItem<int>(
                         value: 1,
                         child: ListTile(
                           leading: Icon(Icons.refresh),
-                          title: Text('Refresh'),
+                          title: Text('Refresh'), // TODO localize this string
                         ),
                       ),
                       const PopupMenuItem<int>(
                         value: 2,
                         child: ListTile(
                           leading: Icon(Icons.settings),
-                          title: Text('Settings'),
+                          title: Text('Settings'), // TODO localize this string
                         ),
                       ),
                       // PopupMenuItem<int>(

@@ -25,7 +25,7 @@ class SearchTab extends HookWidget {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(
-          child: Text('You do not have any instances added'),
+          child: Text('You do not have any instances added'), // TODO localize this string
         ),
       );
     }

@@ -36,6 +36,8 @@
   "@posts": {},
   "comments": "Comments",
   "@comments": {},
+  "comment": "Comment",
+  "@comment": {},
   "modlog": "Modlog",
   "@modlog": {},
   "modlog_reason": "Reason",
@@ -236,8 +238,10 @@
   "@not_an_admin": {},
   "couldnt_find_post": "Couldn't find post.",
   "@couldnt_find_post": {},
-  "not_logged_in": "Not logged in.",
-  "@not_logged_in": {},
+  "not_logged_in": "Not logged in",
+  "@not_logged_in": {
+    "description": "a message to the user informing them they are not logged into a Lemmy instance"
+  },
   "site_ban": "You have been banned from the site",
   "@site_ban": {},
   "community_ban": "You have been banned from this community.",
@@ -256,6 +260,10 @@
   "@couldnt_update_comment": {},
   "no_comment_edit_allowed": "Not allowed to edit comment.",
   "@no_comment_edit_allowed": {},
+  "no_comments_yet": "no comments yet",
+  "@no_comments_yet": {
+    "description": "informers the user that the post has zero comments in-place of comment thread"
+  },
   "couldnt_save_comment": "Couldn't save comment.",
   "@couldnt_save_comment": {},
   "couldnt_get_comments": "Couldn't get comments.",
@@ -446,6 +454,8 @@
   },
   "block": "Block",
   "@block": {},
+  "blocked": "Blocked",
+  "@blocked": {},
   "block_user": "Block user",
   "@block_user": {},
   "no_users_blocked": "No users blocked",
@@ -456,6 +466,8 @@
   "@no_communities_blocked": {},
   "unblock": "Unblock",
   "@unblock": {},
+  "unblocked": "Unblocked",
+  "@unblocked": {},
   "unblock_user": "Unblock user",
   "@unblock_user": {},
   "unblock_community": "Unblock community",
@@ -538,10 +550,32 @@
   "@nerd_stuff": {},
   "open_in_browser": "Open in browser",
   "@open_in_browser": {},
+  "share": "share",
+  "@share": {
+    "description": "tooltip for user for sharing"
+  },
   "share_text": "Share text",
-  "@share_text": {},
+  "@share_text": {
+    "description": "tooltip for user to share text"
+
+  },
   "share_url": "Share URL",
-  "@share_url": {},
+  "@share_url": {
+    "description": "tooltip for user to share a URL"
+
+  },
+  "share_link": "Share Link",
+  "@share_link": {
+    "description": "tooltip for user to share a link"
+  },
+  "share_image": "Share Image",
+  "@share_image": {
+    "description": "tooltip on button/selector for user to share an image"
+  },
+  "share_file": "Share File",
+  "@share_file": {
+    "description": "tooltip on button/selector for user to share a file or image"
+  },
   "translate": "Translate",
   "@translate": {},
   "make_text_selectable": "Make text selectable",
@@ -698,6 +732,10 @@
   "@use_this_image": {},
   "photo_picker_explanation": "Pick an image, then adjust the crop box to the right shape.\n\nYou can then drag the image until it's in the right place. \n\nResizing the crop box will zoom the selection in and out.",
   "@photo_picker_explanation": {},
+  "edit_image": "Edit Image",
+  "@edit_image": {
+    "description": "notes to the user that the image can me edited"
+  },
   "accounts_explanation": "The first instance on this screen will be treated as your default in other screens, and the marked account will be the default on that instance.\n\nPress and hold on an account to make it your default on that instance.\n\nPress and hold an instance or account to remove it from this app. You can add it back later. You may lose some local settings but your bookmarks, subscriptions etc will still be held on your instance.",
   "@accounts_explanation": {},
   "comment_tag_op": "OP",
@@ -705,5 +743,19 @@
   "comment_tag_you": "YOU",
   "@comment_tag_you": {},
   "code_of_conduct_clickthrough": "By accessing the Lemmy network using Liftoff! you agree to adhere to our Code of Conduct",
-  "@code_of_conduct_clickthrough": {}
+  "@code_of_conduct_clickthrough": {},
+  "join": "{tense, select, past{joined} present{join} future{will join} other{join}}",
+  "@join": {
+    "description": "the verb describing the act of adding a lemmy community to the user's subscriptions",
+    "placeholder" : {
+      "tense": {
+        "type": "String"
+      }
+    }
+  },
+  "download": "download",
+  "@download": {},
+  "create_post": "Create Post",
+  "@create_post": {}
+
 }

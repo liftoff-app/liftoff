@@ -10,6 +10,7 @@ import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
+import '../l10n/gen/l10n.dart';
 import '../stores/accounts_store.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/iterators.dart';
@@ -164,8 +165,9 @@ class CommunitiesTab extends HookWidget {
       body: PullToRefresh(
         onRefresh: refresh,
         child: amountOfDisplayInstances == 0
-            ? const Center(
-                child: Text('You are not logged in to any instances'),
+            ? Center(
+                child: Text(L10n.of(context).not_logged_in),
+                //child: Text('You are not logged in to any instances'), // TODO localize this string
               )
             : ListView(
                 children: [

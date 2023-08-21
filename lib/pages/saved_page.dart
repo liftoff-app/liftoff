@@ -16,11 +16,11 @@ class SavedPage extends HookWidget {
   Widget build(BuildContext context) {
     final accountStore = useAccountsStore();
 
-    if (accountStore.hasNoAccount) {
+    if (accountStore.hasNoAccount) { // TODO this doesn't work but body shows error from failed API call
       Scaffold(
         appBar: AppBar(),
-        body: const Center(
-          child: Text('no account found'),
+        body: Center(
+          child: Text(L10n.of(context).not_logged_in),
         ),
       );
     }

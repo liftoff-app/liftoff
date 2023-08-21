@@ -15,6 +15,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../l10n/gen/l10n.dart';
 import '../stores/config_store.dart';
 import '../util/convert_webp.dart';
 import '../util/icons.dart';
@@ -54,7 +55,7 @@ class MediaViewPage extends HookWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.link),
-              title: const Text('Share link'),
+              title: Text(L10n.of(context).share_link),
               onTap: () {
                 Navigator.of(context).pop();
                 share(url, context: context);
@@ -62,7 +63,7 @@ class MediaViewPage extends HookWidget {
             ),
             ListTile(
               leading: const Icon(Icons.image),
-              title: const Text('Share file'),
+              title: Text(L10n.of(context).share_image),
               onTap: () async {
                 Navigator.of(context).pop();
                 final File file =
@@ -70,7 +71,7 @@ class MediaViewPage extends HookWidget {
                 if (Platform.isAndroid || Platform.isIOS) {
                   await Share.shareXFiles([XFile(file.path)]);
                 } else if (Platform.isLinux || Platform.isWindows) {
-                  _showSnackBar(context, 'sharing does not work on Desktop');
+                  _showSnackBar(context, 'sharing does not work on Desktop'); // TODO localize this string
                 }
               },
             ),
@@ -93,12 +94,12 @@ class MediaViewPage extends HookWidget {
               actions: [
                 IconButton(
                   icon: Icon(shareIcon),
-                  tooltip: 'share',
+                  tooltip: L10n.of(context).share,
                   onPressed: sharePhoto,
                 ),
                 IconButton(
                   icon: const Icon(Icons.file_download),
-                  tooltip: 'download',
+                  tooltip: L10n.of(context).download,
                   onPressed: () async {
                     File file = await DefaultCacheManager().getSingleFile(url);
                     final filePath = file.path;
@@ -129,7 +130,7 @@ class MediaViewPage extends HookWidget {
                     if (Platform.isAndroid || Platform.isIOS) {
                       if (!await requestMediaPermission()) {
                         _showSnackBar(context,
-                            'Media permission revoked. Please go to the settings to fix');
+                            'Media permission revoked. Please go to the settings to fix'); // TODO localize this string
                         return;
                       }
                       var result = await GallerySaver.saveImage(file.path,
