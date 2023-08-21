@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "app_icon_monochrome.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -15,6 +16,7 @@
       "scale" : "1x"
     },
     {
+      "filename" : "app_icon_monochrome 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -29,6 +31,7 @@
       "scale" : "2x"
     },
     {
+      "filename" : "app_icon_monochrome 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
