@@ -20,7 +20,10 @@ class BlockPersonTile extends StatelessWidget {
       child: ObserverBuilder<UserBlockStore>(
         builder: (context, store) {
           return ListTile(
-            leading: Avatar(url: store.person.avatar),
+            leading: Avatar(
+              url: store.person.avatar,
+              originPreferredName: store.person.originPreferredName,
+            ),
             title: Text(store.person.originPreferredName),
             trailing: IconButton(
               icon: store.unblockingState.isLoading
@@ -50,7 +53,10 @@ class BlockCommunityTile extends HookWidget {
       child: ObserverBuilder<CommunityBlockStore>(
         builder: (context, store) {
           return ListTile(
-            leading: Avatar(url: store.community.icon),
+            leading: Avatar(
+              url: store.community.icon,
+              originPreferredName: store.community.originPreferredName,
+            ),
             title: Text(store.community.originPreferredName),
             trailing: IconButton(
               icon: store.unblockingState.isLoading

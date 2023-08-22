@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../../l10n/l10n.dart';
+import '../../util/extensions/api.dart';
 import '../../util/extensions/context.dart';
 import '../../util/extensions/spaced.dart';
 import '../../util/goto.dart';
@@ -158,7 +159,10 @@ class InstanceAboutTab extends HookWidget {
                             ),
                           ),
                           title: Text(c.community.name),
-                          leading: Avatar(url: c.community.icon),
+                          leading: Avatar(
+                              url: c.community.icon,
+                              originPreferredName:
+                                  c.community.originPreferredName),
                         )
                     ],
                   ),

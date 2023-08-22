@@ -85,7 +85,10 @@ class CommunitiesListItem extends StatelessWidget {
           : const SizedBox.shrink(),
       onTap: () => goToCommunity.byId(
           context, community.instanceHost, community.community.id),
-      leading: Avatar(url: community.community.icon),
+      leading: Avatar(
+        url: community.community.icon,
+        originPreferredName: community.community.originPreferredName,
+      ),
     );
   }
 }

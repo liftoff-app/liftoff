@@ -366,12 +366,15 @@ class _AboutTab extends HookWidget {
       child: const Divider(),
     );
 
-    communityTile(String name, String? icon, int id) => ListTile(
+    communityTile(
+            String name, String originPreferredName, String? icon, int id) =>
+        ListTile(
           dense: true,
           onTap: () => goToCommunity.byId(context, instanceHost, id),
           title: Text('!$name'),
           leading: Avatar(
             url: icon,
+            originPreferredName: originPreferredName,
             radius: 20,
           ),
         );
@@ -416,7 +419,10 @@ class _AboutTab extends HookWidget {
               in List.from(userDetails.moderates)
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
-                comm.community.name, comm.community.icon, comm.community.id),
+                comm.community.name,
+                comm.community.originPreferredName,
+                comm.community.icon,
+                comm.community.id),
           divider,
         ],
         if (followsSnap.hasData && followsSnap.data!.isNotEmpty) ...[
@@ -432,7 +438,10 @@ class _AboutTab extends HookWidget {
               in List.from(followsSnap.data!)
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
-                comm.community.name, comm.community.icon, comm.community.id)
+                comm.community.name,
+                comm.community.originPreferredName,
+                comm.community.icon,
+                comm.community.id)
         ]
       ],
     );

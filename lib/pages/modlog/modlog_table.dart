@@ -23,6 +23,7 @@ class ModlogTable extends StatelessWidget {
           WidgetSpan(
             child: Avatar(
               url: user.avatar,
+              originPreferredName: user.originPreferredName,
               noBlank: true,
               radius: 10,
             ),
@@ -48,6 +49,7 @@ class ModlogTable extends StatelessWidget {
           WidgetSpan(
             child: Avatar(
               url: community.icon,
+              originPreferredName: community.originPreferredName,
               noBlank: true,
               radius: 10,
             ),
