@@ -51,12 +51,14 @@ class CommentWidget extends StatelessWidget {
     bool hideOnRead = false,
     bool detached = true,
     Key? key,
+    UserData? userData,
   }) : this(
           CommentTree(cv),
           detached: detached,
           canBeMarkedAsRead: canBeMarkedAsRead,
           hideOnRead: hideOnRead,
           key: key,
+          userData: userData,
         );
 
   CommentWidget.fromPersonMentionView(

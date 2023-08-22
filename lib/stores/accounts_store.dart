@@ -167,6 +167,22 @@ class AccountsStore extends ChangeNotifier {
     ];
   }
 
+  List<UserData> allUserData() {
+    return [
+      for (final instance in accounts.keys)
+        for (final account in accounts[instance]!.keys) ...[
+          userDataFor(instance, account)!
+        ]
+    ];
+  }
+
+  UserData userDataFromString(String userDataString) {
+    final parts = userDataString.split('@');
+    assert(parts.length == 2);
+
+    return userDataFor(parts[1], parts[0])!;
+  }
+
   Future<void> checkNotifications(UserData? userData) async {
     if (userData == null) {
       return;
@@ -227,6 +243,10 @@ class AccountsStore extends ChangeNotifier {
     }
 
     return accounts[instanceHost]!.isEmpty;
+  }
+
+  List<String> anonymousInstances() {
+    return accounts.keys.where(isAnonymousFor).toList();
   }
 
   /// `true` if no added instance has an account assigned to it
@@ -354,6 +374,11 @@ class UserData {
       _$UserDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserDataToJson(this);
+
+  @override
+  String toString() {
+    return '$username@$instanceHost';
+  }
 }
 //if (data.verify_email_sent) {
 //   toast(i18n.t("verify_email_sent"));

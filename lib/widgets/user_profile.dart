@@ -415,7 +415,7 @@ class _AboutTab extends HookWidget {
               ),
             ),
           ),
-          for (final comm
+          for (CommunityModeratorView comm
               in List.from(userDetails.moderates)
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(
@@ -434,7 +434,7 @@ class _AboutTab extends HookWidget {
               ),
             ),
           ),
-          for (final comm
+          for (CommunityFollowerView comm
               in List.from(followsSnap.data!)
                 ..sort((a, b) => a.community.name.compareTo(b.community.name)))
             communityTile(

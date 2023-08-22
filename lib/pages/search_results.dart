@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
-import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../stores/accounts_store.dart';
 import '../widgets/comment/comment.dart';
 import '../widgets/post/post.dart';
 import '../widgets/sortable_infinite_list.dart';
@@ -11,15 +11,16 @@ import 'communities_list.dart';
 import 'users_list.dart';
 
 class SearchResultsPage extends HookWidget {
-  final String instanceHost;
+  final String? instanceHost;
+  final UserData? userData;
   final String query;
 
   SearchResultsPage({
     super.key,
     required this.instanceHost,
+    required this.userData,
     required this.query,
-  })  : assert(instanceHost.isNotEmpty),
-        assert(query.isNotEmpty);
+  }) : assert(query.isNotEmpty);
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
@@ -42,18 +43,22 @@ class SearchResultsPage extends HookWidget {
             children: [
               _SearchResultsList(
                   instanceHost: instanceHost,
+                  userData: userData,
                   query: query,
                   type: SearchType.posts),
               _SearchResultsList(
                   instanceHost: instanceHost,
+                  userData: userData,
                   query: query,
                   type: SearchType.comments),
               _SearchResultsList(
                   instanceHost: instanceHost,
+                  userData: userData,
                   query: query,
                   type: SearchType.users),
               _SearchResultsList(
                   instanceHost: instanceHost,
+                  userData: userData,
                   query: query,
                   type: SearchType.communities),
             ],
@@ -65,25 +70,26 @@ class SearchResultsPage extends HookWidget {
 class _SearchResultsList extends HookWidget {
   final SearchType type;
   final String query;
-  final String instanceHost;
+  final String? instanceHost;
+  final UserData? userData;
 
   const _SearchResultsList({
     required this.type,
     required this.query,
     required this.instanceHost,
+    required this.userData,
   });
 
   @override
   Widget build(BuildContext context) {
-    final accStore = useAccountsStore();
-
     return SortableInfiniteList<Object>(
       fetcher: (page, batchSize, sort) async {
-        final s = await LemmyApiV3(instanceHost).run(Search(
+        final s = await LemmyApiV3(userData?.instanceHost ?? instanceHost!)
+            .run(Search(
           q: query,
           sort: sort,
           type: type,
-          auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+          auth: userData?.jwt.raw,
           page: page,
           limit: batchSize,
         ));
@@ -104,14 +110,14 @@ class _SearchResultsList extends HookWidget {
       itemBuilder: (data) {
         switch (type) {
           case SearchType.comments:
-            return CommentWidget.fromCommentView(data as CommentView);
+            return CommentWidget.fromCommentView(data as CommentView,
+                userData: userData);
           case SearchType.communities:
             return CommunitiesListItem(community: data as CommunityView);
           case SearchType.posts:
             return Padding(
               padding: const EdgeInsets.only(bottom: 20),
-              child: PostTile.fromPostView(
-                  data as PostView, accStore.defaultUserDataFor(instanceHost)),
+              child: PostTile.fromPostView(data as PostView, userData),
             );
           case SearchType.users:
             return UsersListItem(user: data as PersonViewSafe);

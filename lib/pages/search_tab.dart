@@ -16,12 +16,14 @@ class SearchTab extends HookWidget {
     final searchInputController = useListenable(useTextEditingController());
 
     final accStore = useAccountsStore();
+    final userData =
+        useState(accStore.allUserData().firstWhereOrNull((_) => true));
     // null if there are no added instances
-    final instanceHost = useState(
-      accStore.instances.firstWhereOrNull((_) => true),
-    );
+    final instanceHost = useState(userData.value == null
+        ? accStore.anonymousInstances().firstWhereOrNull((_) => true)
+        : null);
 
-    if (instanceHost.value == null) {
+    if (instanceHost.value == null && userData.value == null) {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(
@@ -34,7 +36,8 @@ class SearchTab extends HookWidget {
         ? goTo(
             context,
             (context) => SearchResultsPage(
-              instanceHost: instanceHost.value!,
+              instanceHost: instanceHost.value,
+              userData: userData.value,
               query: searchInputController.text,
             ),
           )
@@ -67,14 +70,26 @@ class SearchTab extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: Text('instance:',
+                child: Text('account:',
                     style: Theme.of(context).textTheme.titleMedium),
               ),
               Expanded(
                 child: RadioPicker<String>(
-                  values: accStore.instances.toList(),
-                  groupValue: instanceHost.value!,
-                  onChanged: (value) => instanceHost.value = value,
+                  values: accStore
+                      .allUserData()
+                      .map((user) => user.toString())
+                      .toList()
+                    ..addAll(accStore.anonymousInstances()),
+                  groupValue: (userData.value ?? instanceHost.value).toString(),
+                  onChanged: (value) {
+                    if (value.contains('@')) {
+                      userData.value = accStore.userDataFromString(value);
+                      instanceHost.value = null;
+                    } else {
+                      userData.value = null;
+                      instanceHost.value = value;
+                    }
+                  },
                   buttonBuilder: (context, displayValue, onPressed) =>
                       FilledButton(
                     onPressed: onPressed,
