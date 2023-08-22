@@ -37,6 +37,7 @@ class PickPersonDialog extends StatelessWidget {
           return ListTile(
             leading: Avatar(
               url: user.person.avatar,
+              originPreferredName: user.person.originPreferredName,
               radius: 20,
             ),
             title: Text(user.person.originPreferredName),
@@ -98,6 +99,7 @@ class PickCommunityDialog extends StatelessWidget {
           return ListTile(
             leading: Avatar(
               url: community.community.icon,
+              originPreferredName: community.community.originPreferredName,
               radius: 20,
             ),
             title: Text(community.community.originPreferredName),

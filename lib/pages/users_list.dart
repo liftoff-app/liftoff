@@ -69,7 +69,9 @@ class UsersListItem extends StatelessWidget {
             )
           : const SizedBox.shrink(),
       onTap: () => goToUser.fromPersonSafe(context, user.person),
-      leading: Avatar(url: user.person.avatar),
+      leading: Avatar(
+          url: user.person.avatar,
+          originPreferredName: user.person.originPreferredName),
     );
   }
 }

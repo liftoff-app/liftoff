@@ -30,7 +30,8 @@ class PostInfoSection extends HookWidget {
         child: Row(
           children: [
             Avatar(
-                url: post.community.icon ?? post.creator.avatar,
+                url: post.community.icon,
+                originPreferredName: post.community.originPreferredName,
                 padding: const EdgeInsets.only(right: 10),
                 onTap: () => Navigator.of(context).push(
                     CommunityPage.fromIdRoute(instanceHost, post.community.id)),

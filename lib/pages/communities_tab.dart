@@ -181,6 +181,7 @@ class CommunitiesTab extends HookWidget {
                           onLongPress: () => toggleCollapse(i),
                           leading: Avatar(
                             url: instances[i].icon,
+                            originPreferredName: instances[i].instanceHost,
                             alwaysShow: true,
                           ),
                           title: Text(
@@ -213,6 +214,8 @@ class CommunitiesTab extends HookWidget {
                                     Avatar(
                                       radius: 15,
                                       url: comm.community.icon,
+                                      originPreferredName:
+                                          comm.community.originPreferredName,
                                       alwaysShow: true,
                                     ),
                                     const SizedBox(width: 10),

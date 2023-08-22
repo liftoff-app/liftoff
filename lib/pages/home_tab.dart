@@ -3,7 +3,6 @@ import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/infinite_scroll.dart';
@@ -15,6 +14,7 @@ import '../stores/accounts_store.dart';
 import '../stores/config_store.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
+import '../widgets/avatar.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
@@ -335,17 +335,11 @@ class HomeTab extends HookWidget {
                               .length >
                           1)
                     IconButton(
-                        icon: personDetails.hasData &&
-                                personDetails.data != null &&
-                                personDetails.data!.personView.person.avatar !=
-                                    null
-                            ? CircleAvatar(
-                                backgroundImage: NetworkImage(personDetails
-                                    .data!.personView.person.avatar!))
-                            : Initicon(
-                                text: selectedUserData!.username,
-                                size: 32,
-                              ),
+                        icon: Avatar(
+                          originPreferredName: selectedUserData!.username,
+                          url: personDetails.data?.personView.person.avatar,
+                          radius: 16,
+                        ),
                         onPressed: () => ViewOnMenu.open(context, (userData) {
                               selectedUsername.value = userData.username;
                               Navigator.of(context).pop();

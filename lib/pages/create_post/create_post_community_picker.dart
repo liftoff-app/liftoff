@@ -69,6 +69,7 @@ class CreatePostCommunityPicker extends HookWidget {
               return ListTile(
                 leading: Avatar(
                   url: community.community.icon,
+                  originPreferredName: community.community.originPreferredName,
                   radius: 20,
                 ),
                 title: Text(_communityString(community)),

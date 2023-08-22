@@ -214,6 +214,7 @@ class ModlogEntry {
                         children: [
                           Avatar(
                             url: mod!.avatar,
+                            originPreferredName: mod!.originPreferredName,
                             noBlank: true,
                             radius: 10,
                           ),

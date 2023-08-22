@@ -259,6 +259,8 @@ class _CommentWidget extends HookWidget {
                                             context, creator),
                                         child: Avatar(
                                           url: creator.avatar,
+                                          originPreferredName:
+                                              creator.originPreferredName,
                                           radius: 10,
                                           noBlank: true,
                                         ),
