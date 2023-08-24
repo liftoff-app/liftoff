@@ -18,7 +18,6 @@ class CommunityOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final shadow = BoxShadow(color: theme.canvasColor, blurRadius: 5);
 
     final community = fullCommunityView.communityView;
 
@@ -68,55 +67,53 @@ class CommunityOverview extends StatelessWidget {
         SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 45),
+              const SizedBox(height: 60),
               if (icon != null) icon,
               const SizedBox(height: 10),
               // NAME
-              RichText(
-                overflow: TextOverflow.ellipsis,
-                text: TextSpan(
-                  style:
-                      theme.textTheme.titleMedium?.copyWith(shadows: [shadow]),
-                  children: [
-                    const TextSpan(
-                      text: '!',
-                      style: TextStyle(fontWeight: FontWeight.w200),
-                    ),
-                    TextSpan(
-                      text: community.community.name,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    const TextSpan(
-                      text: '@',
-                      style: TextStyle(fontWeight: FontWeight.w200),
-                    ),
-                    TextSpan(
-                      text: community.community.originInstanceHost,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Navigator.of(context).push(
-                              InstancePage.route(
-                                community.community.originInstanceHost,
+              BlurBox(
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    style: theme.textTheme.titleMedium,
+                    children: [
+                      const TextSpan(
+                        text: '!',
+                        style: TextStyle(fontWeight: FontWeight.w200),
+                      ),
+                      TextSpan(
+                        text: community.community.name,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      const TextSpan(
+                        text: '@',
+                        style: TextStyle(fontWeight: FontWeight.w200),
+                      ),
+                      TextSpan(
+                        text: community.community.originInstanceHost,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Navigator.of(context).push(
+                                InstancePage.route(
+                                  community.community.originInstanceHost,
+                                ),
                               ),
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-              // TITLE/MOTTO
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  '${community.community.title}${community.community.instanceHost != community.community.originInstanceHost ? ' (via ${community.community.instanceHost})' : ''}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    shadows: [shadow],
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+
+              // TITLE/MOTTO
+              const SizedBox(height: 8),
+              BlurBox(
+                child: Text(
+                  '${community.community.title}${community.community.instanceHost != community.community.originInstanceHost ? ' (via ${community.community.instanceHost})' : ''}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.w300),
+                ),
+              ),
+              const SizedBox(height: 15),
               Stack(
                 alignment: Alignment.center,
                 children: [
@@ -124,14 +121,24 @@ class CommunityOverview extends StatelessWidget {
                   Row(
                     children: [
                       const Spacer(),
-                      const Icon(Icons.people, size: 20),
-                      const SizedBox(width: 3),
-                      Text(community.counts.subscribers.compact(context)),
+                      BlurBox(
+                          child: Row(children: [
+                        const Icon(Icons.people, size: 20),
+                        const SizedBox(width: 3),
+                        Text(
+                          community.counts.subscribers.compact(context),
+                        ),
+                      ])),
                       const Spacer(flex: 4),
-                      const Icon(Icons.record_voice_over, size: 20),
-                      const SizedBox(width: 3),
-                      // TODO: v0.18.x migration
-                      Text((fullCommunityView.online ?? 0).compact(context)),
+                      BlurBox(
+                          child: Row(children: [
+                        const Icon(Icons.record_voice_over, size: 20),
+                        const SizedBox(width: 3),
+                        // TODO: v0.18.x migration
+                        Text(
+                          (fullCommunityView.online ?? 0).compact(context),
+                        ),
+                      ])),
                       const Spacer(),
                     ],
                   ),
@@ -142,6 +149,31 @@ class CommunityOverview extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class BlurBox extends StatelessWidget {
+  final Widget child;
+
+  const BlurBox({required this.child, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: theme.canvasColor.withOpacity(0.3),
+            blurRadius: 1,
+            spreadRadius: 1,
+          )
+        ],
+        color: theme.canvasColor.withOpacity(0.3),
+      ),
+      child: Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5), child: child),
     );
   }
 }

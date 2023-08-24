@@ -54,6 +54,7 @@ class UserPage extends HookWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.grey.withOpacity(0.3),
         actions: [
           if (userDetailsSnap.hasData) ...[
             SendMessageButton(userDetailsSnap.data!.personView.person),

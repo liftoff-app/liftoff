@@ -55,6 +55,7 @@ class UserProfileTab extends HookWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.grey.withOpacity(0.3),
         title: RadioPicker<String>(
           title: 'account',
           values: accountsStore.loggedInInstances
