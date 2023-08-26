@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 
+import '../app.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
@@ -40,7 +41,7 @@ class InboxPage extends HookWidget {
     if (accStore.hasNoAccount) {
       return Scaffold(
         appBar: AppBar(),
-        body: const Center(child: Text('no accounts added')), // TODO localize this string
+        body: Center(child: Text(L10n.of(context).couldnt_find_that_account)),
       );
     }
 
@@ -108,12 +109,13 @@ class InboxPage extends HookWidget {
               IconButton(
                 icon: const Icon(Icons.checklist),
                 onPressed: markAllAsRead,
-                tooltip: 'Mark all as read', // TODO localize this string
+                tooltip: L10n.of(context).mark_all_as_read,
               ),
             IconButton(
               icon: Icon(unreadOnly.value ? Icons.mail : Icons.mail_outline),
               onPressed: toggleUnreadOnly,
-              tooltip: unreadOnly.value ? 'show all' : 'show only unread', // TODO localize this string
+              tooltip: unreadOnly.value ?
+                L10n.of(context).show_all : L10n.of(context).show_only_unread,
             )
           ],
           bottom: TabBar(
@@ -153,7 +155,7 @@ class InboxPage extends HookWidget {
             child: TabBarView(
               children: [
                 SortableInfiniteList<CommentView>(
-                  noItems: const Text('no replies'), // TODO localize this string
+                  noItems: Text(L10n.of(context).no_replies),
                   controller: isc,
                   defaultSort: SortType.new_,
                   fetcher: (page, batchSize, sortType) =>
@@ -173,7 +175,7 @@ class InboxPage extends HookWidget {
                   uniqueProp: (item) => item.comment.apId,
                 ),
                 SortableInfiniteList<PersonMentionView>(
-                  noItems: const Text('no mentions'), // TODO localize this string
+                  noItems: Text(L10n.of(context).no_mentions),
                   controller: isc,
                   defaultSort: SortType.new_,
                   fetcher: (page, batchSize, sortType) =>
@@ -192,9 +194,9 @@ class InboxPage extends HookWidget {
                   uniqueProp: (item) => item.personMention.id,
                 ),
                 InfiniteScroll<PrivateMessageView>(
-                  noItems: const Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: Text('no messages'), // TODO localize this string
+                  noItems: Padding(
+                    padding: const EdgeInsets.only(top: 60),
+                    child: Text(L10n.of(context).no_messages),
                   ),
                   controller: isc,
                   fetcher: (page, batchSize) =>
@@ -264,7 +266,9 @@ class PrivateMessageTile extends HookWidget {
           return Column(
             children: [
               ListTile(
-                title: Text(raw.value ? 'Show fancy' : 'Show raw'), // TODO localize this string
+                title: Text(raw.value ?
+                  L10n.of(context).show_fancy_text :
+                  L10n.of(context).show_raw_text),
                 leading: markdownModeIcon(fancy: !raw.value),
                 onTap: () {
                   raw.value = !raw.value;
@@ -281,7 +285,7 @@ class PrivateMessageTile extends HookWidget {
                 },
               ),
               ListTile(
-                title: const Text('Nerd stuff'), // TODO localize this string
+                title: Text(L10n.of(context).nerd_stuff),
                 leading: const Icon(Icons.info_outline),
                 onTap: () {
                   pop();

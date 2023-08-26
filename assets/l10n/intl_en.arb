@@ -102,6 +102,7 @@
   "@all": {},
   "replies": "Replies",
   "@replies": {},
+
   "mentions": "Mentions",
   "@mentions": {},
   "from": "from",
@@ -114,6 +115,8 @@
   "@more": {},
   "mark_as_read": "mark as read",
   "@mark_as_read": {},
+  "mark_all_as_read": "mark all as read",
+  "@mark_all_as_read": {},
   "mark_as_unread": "mark as unread",
   "@mark_as_unread": {},
   "reply": "reply",
@@ -164,6 +167,10 @@
   "@hide_nsfw_explanation": {},
   "show_nsfw": "Show NSFW content",
   "@show_nsfw": {},
+  "show_all": "show all",
+  "@show_all": {},
+  "show_only_unread": "show only unread",
+  "@show_only_unread": {},
   "send_notifications_to_email": "Send notifications to Email",
   "@send_notifications_to_email": {},
   "remove_account": "Remove account",
@@ -263,6 +270,18 @@
   "no_comments_yet": "no comments yet",
   "@no_comments_yet": {
     "description": "informers the user that the post has zero comments in-place of comment thread"
+  },
+  "no_replies": "no replies",
+  "@no_replies": {
+    "description": "informers the user that the post has no replies yet"
+  },
+  "no_mentions": "no mentions",
+  "@no_mentions": {
+    "description": "informers the user that the post has no mentions yet"
+  },
+  "no_messages": "no messages",
+  "@no_messages": {
+    "description": "informers the user that the post has no messages yet"
   },
   "couldnt_save_comment": "Couldn't save comment.",
   "@couldnt_save_comment": {},
@@ -710,6 +729,10 @@
   "@cancel": {
     "description": "Cancel button on popup"
   },
+  "tap_back_again_to_leave": "tap back again to leave",
+  "@tap_back_again_to_leave": {
+    "description": "inform the user that another press of the 'back' button will close the app"
+  },
   "editor_add_link_label": "label",
   "@editor_add_link_label": {
     "description": "palceholder for link label on an Add link popup in markdown editor"
@@ -722,10 +745,22 @@
   "@instance_error": {},
   "instance_record_notfound": "Hmm... it seems like your instance couldn't find what you were looking for.",
   "@instance_record_notfound": {},
+  "looking_for": "Looking for {item}",
+  "@looking_for": {
+    "description": "used in search bar to remind user what they searched for",
+    "placeholders" : {
+      "item": {
+        "type": "String",
+        "example": "..."
+      }
+    }
+  },
   "try_again": "Try Again",
   "@try_again": {},
   "kbin_instances_not_supported": "Please note that kbin instances are not supported at present.",
   "@kbin_instances_not_supported": {},
+  "no_instances_added": "You do not have any instances added",
+  "@no_instances_added": {},
   "pick_a_photo": "Pick a photo",
   "@pick_a_photo": {},
   "use_this_image": "Use this image",

@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../l10n/l10n.dart';
 import '../app_link_handler.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/brightness.dart';
+
 import 'communities_tab.dart';
 import 'create_post/create_post_fab.dart';
 import 'home_tab.dart';
@@ -73,8 +75,8 @@ class HomePage extends HookWidget {
                     // show snackbar warning
                     snackBarShowing.value = true;
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(
-                          content: Text('Tap back again to leave'), // TODO localize this string
+                        .showSnackBar(SnackBar(
+                          content: Text(L10n.of(context).tap_back_again_to_leave),
                         ))
                         .closed
                         .then((SnackBarClosedReason reason) =>

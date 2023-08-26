@@ -26,7 +26,7 @@ class SearchResultsPage extends HookWidget {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Looking for "$query"'), // TODO localize this string
+            title: Text(L10n.of(context).looking_for(query)),
             bottom: TabBar(
               isScrollable: true,
               indicatorColor: Theme.of(context).colorScheme.primary,

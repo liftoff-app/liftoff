@@ -71,7 +71,7 @@ class MediaViewPage extends HookWidget {
                 if (Platform.isAndroid || Platform.isIOS) {
                   await Share.shareXFiles([XFile(file.path)]);
                 } else if (Platform.isLinux || Platform.isWindows) {
-                  _showSnackBar(context, 'sharing does not work on Desktop'); // TODO localize this string
+                  _showSnackBar(context, 'sharing does not work on Desktop');
                 }
               },
             ),
@@ -130,7 +130,7 @@ class MediaViewPage extends HookWidget {
                     if (Platform.isAndroid || Platform.isIOS) {
                       if (!await requestMediaPermission()) {
                         _showSnackBar(context,
-                            'Media permission revoked. Please go to the settings to fix'); // TODO localize this string
+                            'Media permission revoked. Please go to the settings to fix');
                         return;
                       }
                       var result = await GallerySaver.saveImage(file.path,

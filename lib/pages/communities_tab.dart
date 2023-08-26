@@ -167,7 +167,6 @@ class CommunitiesTab extends HookWidget {
         child: amountOfDisplayInstances == 0
             ? Center(
                 child: Text(L10n.of(context).not_logged_in),
-                //child: Text('You are not logged in to any instances'), // TODO localize this string
               )
             : ListView(
                 children: [
