@@ -3,6 +3,7 @@ import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/infinite_scroll.dart';
@@ -14,7 +15,6 @@ import '../stores/accounts_store.dart';
 import '../stores/config_store.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
-import '../widgets/avatar.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
@@ -90,29 +90,21 @@ class HomeTab extends HookWidget {
     ]);
 
     // specific account selection
-    final selectedUsername = useState<String?>(null);
     final defaultUserData =
         accStore.defaultUserDataFor(selectedList.value.instanceHost!);
-    final selectedUserData = selectedList.value.instanceHost != null
-        ? (selectedUsername.value != null
-            ? (accStore.userDataFor(selectedList.value.instanceHost!,
-                    selectedUsername.value!) ??
-                defaultUserData)
-            : defaultUserData)
-        : null;
     final personDetails = useMemoFuture(() async {
-      if (selectedUserData != null) {
-        return await LemmyApiV3(selectedUserData.instanceHost)
+      if (defaultUserData != null) {
+        return await LemmyApiV3(defaultUserData.instanceHost)
             .run(GetPersonDetails(
-          personId: selectedUserData.userId,
+          personId: defaultUserData.userId,
           savedOnly: false,
           sort: SortType.active,
-          auth: selectedUserData.jwt.raw,
+          auth: defaultUserData.jwt.raw,
         ));
       }
 
       return null;
-    }, [selectedUserData]);
+    }, [defaultUserData]);
 
     handleListChange() async {
       final val = await showBottomModal<SelectedList>(
@@ -335,13 +327,20 @@ class HomeTab extends HookWidget {
                               .length >
                           1)
                     IconButton(
-                        icon: Avatar(
-                          originPreferredName: selectedUserData!.username,
-                          url: personDetails.data?.personView.person.avatar,
-                          radius: 16,
-                        ),
+                        icon: personDetails.hasData &&
+                                personDetails.data != null &&
+                                personDetails.data!.personView.person.avatar !=
+                                    null
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(personDetails
+                                    .data!.personView.person.avatar!))
+                            : Initicon(
+                                text: defaultUserData!.username,
+                                size: 32,
+                              ),
                         onPressed: () => ViewOnMenu.open(context, (userData) {
-                              selectedUsername.value = userData.username;
+                              accStore.setDefaultAccountFor(
+                                  userData.instanceHost, userData.username);
                               Navigator.of(context).pop();
                             }, title: Text(L10n.of(context).switch_account))),
                   PopupMenuButton(itemBuilder: (context) {
@@ -389,7 +388,7 @@ class HomeTab extends HookWidget {
           body: InfiniteHomeList(
             controller: isc,
             selectedList: selectedList.value,
-            selectedUserData: selectedUserData,
+            selectedUserData: defaultUserData,
           ),
         ),
       ),

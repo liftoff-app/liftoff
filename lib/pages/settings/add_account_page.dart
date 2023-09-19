@@ -59,7 +59,7 @@ class AddAccountPage extends HookWidget {
         // succeeded. This means that a users' very first account creation will
         // run properly.
         if (isFirstAccount) {
-          await accountsStore.setDefaultAccount(
+          accountsStore.setDefaultAccount(
               selectedInstance.value, usernameController.text);
         }
 
@@ -73,7 +73,7 @@ class AddAccountPage extends HookWidget {
 
         // addAccount() run failed, so clear the account.
         if (isFirstAccount && accountsStore.hasNoAccount) {
-          await accountsStore.clearDefaultAccount();
+          accountsStore.clearDefaultAccount();
         }
 
         // if first account try to import settings

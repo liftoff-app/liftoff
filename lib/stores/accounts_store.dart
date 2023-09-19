@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -32,8 +33,10 @@ class AccountsStore extends ChangeNotifier {
   @JsonKey(defaultValue: {})
   late Map<String, int> notificationCount = {};
 
+  AccountsStore? parent;
+
   /// automatically sets default accounts
-  Future<void> _assignDefaultAccounts() async {
+  void _assignDefaultAccounts() {
     // remove dangling defaults
     defaultAccounts.entries
         .map((dft) {
@@ -63,8 +66,7 @@ class AccountsStore extends ChangeNotifier {
       if (!defaultAccounts.containsKey(instanceHost)) {
         // select first account in this instance, if any
         if (!isAnonymousFor(instanceHost)) {
-          await setDefaultAccountFor(
-              instanceHost, usernamesFor(instanceHost).first);
+          setDefaultAccountFor(instanceHost, usernamesFor(instanceHost).first);
         }
       }
     }
@@ -75,8 +77,7 @@ class AccountsStore extends ChangeNotifier {
       for (final instanceHost in instances) {
         // select first account in this instance, if any
         if (!isAnonymousFor(instanceHost)) {
-          await setDefaultAccount(
-              instanceHost, usernamesFor(instanceHost).first);
+          setDefaultAccount(instanceHost, usernamesFor(instanceHost).first);
         }
       }
     }
@@ -182,22 +183,21 @@ class AccountsStore extends ChangeNotifier {
       accounts[instanceHost]?.keys ?? const Iterable.empty();
 
   /// sets globally default account
-  Future<void> setDefaultAccount(String instanceHost, String username) async {
+  void setDefaultAccount(String instanceHost, String username) {
     defaultAccount = '$username@$instanceHost';
 
     notifyListeners();
   }
 
   /// clear the globally default account
-  Future<void> clearDefaultAccount() async {
+  void clearDefaultAccount() {
     defaultAccount = null;
 
     notifyListeners();
   }
 
   /// sets default account for given instance
-  Future<void> setDefaultAccountFor(
-      String instanceHost, String username) async {
+  void setDefaultAccountFor(String instanceHost, String username) {
     defaultAccounts[instanceHost] = username;
 
     notifyListeners();
@@ -244,7 +244,7 @@ class AccountsStore extends ChangeNotifier {
       username: userData.name,
     );
 
-    await _assignDefaultAccounts();
+    _assignDefaultAccounts();
     notifyListeners();
   }
 
@@ -269,26 +269,26 @@ class AccountsStore extends ChangeNotifier {
 
     accounts[instanceHost] = HashMap();
 
-    await _assignDefaultAccounts();
+    _assignDefaultAccounts();
     notifyListeners();
   }
 
   /// This also removes all accounts assigned to this instance
-  Future<void> removeInstance(String instanceHost) async {
+  void removeInstance(String instanceHost) {
     accounts.remove(instanceHost);
 
-    await _assignDefaultAccounts();
+    _assignDefaultAccounts();
     notifyListeners();
   }
 
-  Future<void> removeAccount(String instanceHost, String username) async {
+  void removeAccount(String instanceHost, String username) {
     if (!accounts.containsKey(instanceHost)) {
       throw Exception("instance doesn't exist");
     }
 
     accounts[instanceHost]!.remove(username);
 
-    await _assignDefaultAccounts();
+    _assignDefaultAccounts();
     notifyListeners();
   }
 
@@ -298,6 +298,14 @@ class AccountsStore extends ChangeNotifier {
 
   Map<String, dynamic> toJson() {
     return _$AccountsStoreToJson(this);
+  }
+
+  /// Returns a new account store with another account selected as the default instead.
+  AccountsStore selectAccount(String instanceHost, String username) {
+    return AccountsStore.fromJson(jsonDecode(jsonEncode(toJson())))
+      ..setDefaultAccountFor(instanceHost, username)
+      ..setDefaultAccount(instanceHost, username)
+      ..parent = this;
   }
 }
 
