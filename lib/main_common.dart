@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
@@ -14,6 +15,33 @@ import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 import 'util/mobx_provider.dart';
 
+const prefsKey = 'v4:AccountsStore';
+final _prefs = SharedPreferences.getInstance();
+
+Future<AccountsStore> loadAccountsStore() async {
+  final prefs = await _prefs;
+
+  // Migrate old accounts store which didn't store instanceHost or username.
+  final accountsStoreJson =
+      jsonDecode(prefs.getString(prefsKey) ?? '{}') as Map<String, dynamic>;
+
+  if (accountsStoreJson.containsKey('accounts')) {
+    final accountsJson = accountsStoreJson['accounts'] as Map<String, dynamic>;
+
+    for (final instanceEntry in accountsJson.entries) {
+      for (final accountEntry in instanceEntry.value.entries) {
+        if (!accountEntry.value.containsKey('instanceHost') ||
+            !accountEntry.value.containsKey('username')) {
+          accountEntry.value['instanceHost'] = instanceEntry.key;
+          accountEntry.value['username'] = accountEntry.key;
+        }
+      }
+    }
+  }
+
+  return AccountsStore.fromJson(accountsStoreJson);
+}
+
 Future<void> mainCommon(AppConfig appConfig) async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -23,7 +51,13 @@ Future<void> mainCommon(AppConfig appConfig) async {
   _setupLogger(appConfig, logConsoleStore);
   _setupTimeago();
 
-  final accountsStore = await AccountsStore.load();
+  final accountsStore = await loadAccountsStore();
+
+  accountsStore.addListener(() async {
+    final prefs = await _prefs;
+
+    await prefs.setString(prefsKey, jsonEncode(accountsStore.toJson()));
+  });
 
   runApp(
     MultiProvider(

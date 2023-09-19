@@ -1,19 +1,14 @@
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lemmy_api_client/v3.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'accounts_store.g.dart';
 
 /// Store that manages all accounts
 @JsonSerializable()
 class AccountsStore extends ChangeNotifier {
-  static const prefsKey = 'v4:AccountsStore';
-  static final _prefs = SharedPreferences.getInstance();
-
   /// Map containing user data (jwt token, userId) of specific accounts.
   /// If a token is in this map, the user is considered logged in
   /// for that account.
@@ -36,37 +31,6 @@ class AccountsStore extends ChangeNotifier {
   @protected
   @JsonKey(defaultValue: {})
   late Map<String, int> notificationCount = {};
-
-  static Future<AccountsStore> load() async {
-    final prefs = await _prefs;
-
-    // Migrate old accounts store which didn't store instanceHost or username.
-    final accountsStoreJson =
-        jsonDecode(prefs.getString(prefsKey) ?? '{}') as Map<String, dynamic>;
-
-    if (accountsStoreJson.containsKey('accounts')) {
-      final accountsJson =
-          accountsStoreJson['accounts'] as Map<String, dynamic>;
-
-      for (final instanceEntry in accountsJson.entries) {
-        for (final accountEntry in instanceEntry.value.entries) {
-          if (!accountEntry.value.containsKey('instanceHost') ||
-              !accountEntry.value.containsKey('username')) {
-            accountEntry.value['instanceHost'] = instanceEntry.key;
-            accountEntry.value['username'] = accountEntry.key;
-          }
-        }
-      }
-    }
-
-    return _$AccountsStoreFromJson(accountsStoreJson);
-  }
-
-  Future<void> save() async {
-    final prefs = await _prefs;
-
-    await prefs.setString(prefsKey, jsonEncode(_$AccountsStoreToJson(this)));
-  }
 
   /// automatically sets default accounts
   Future<void> _assignDefaultAccounts() async {
@@ -195,30 +159,6 @@ class AccountsStore extends ChangeNotifier {
 
   int get totalPrivateMessageCount => notificationCount['privateMessages'] ?? 0;
 
-  /// sets globally default account
-  Future<void> setDefaultAccount(String instanceHost, String username) {
-    defaultAccount = '$username@$instanceHost';
-
-    notifyListeners();
-    return save();
-  }
-
-  /// clear the globally default account
-  Future<void> clearDefaultAccount() {
-    defaultAccount = null;
-
-    notifyListeners();
-    return save();
-  }
-
-  /// sets default account for given instance
-  Future<void> setDefaultAccountFor(String instanceHost, String username) {
-    defaultAccounts[instanceHost] = username;
-
-    notifyListeners();
-    return save();
-  }
-
   /// An instance is considered anonymous if it was not
   /// added or there are no accounts assigned to it.
   bool isAnonymousFor(String instanceHost) {
@@ -240,6 +180,28 @@ class AccountsStore extends ChangeNotifier {
   /// Usernames that are assigned to a given instance
   Iterable<String> usernamesFor(String instanceHost) =>
       accounts[instanceHost]?.keys ?? const Iterable.empty();
+
+  /// sets globally default account
+  Future<void> setDefaultAccount(String instanceHost, String username) async {
+    defaultAccount = '$username@$instanceHost';
+
+    notifyListeners();
+  }
+
+  /// clear the globally default account
+  Future<void> clearDefaultAccount() async {
+    defaultAccount = null;
+
+    notifyListeners();
+  }
+
+  /// sets default account for given instance
+  Future<void> setDefaultAccountFor(
+      String instanceHost, String username) async {
+    defaultAccounts[instanceHost] = username;
+
+    notifyListeners();
+  }
 
   /// adds a new account
   /// if it's the first account ever the account is
@@ -284,7 +246,6 @@ class AccountsStore extends ChangeNotifier {
 
     await _assignDefaultAccounts();
     notifyListeners();
-    return save();
   }
 
   /// adds a new instance with no accounts associated with it.
@@ -310,7 +271,6 @@ class AccountsStore extends ChangeNotifier {
 
     await _assignDefaultAccounts();
     notifyListeners();
-    return save();
   }
 
   /// This also removes all accounts assigned to this instance
@@ -319,7 +279,6 @@ class AccountsStore extends ChangeNotifier {
 
     await _assignDefaultAccounts();
     notifyListeners();
-    return save();
   }
 
   Future<void> removeAccount(String instanceHost, String username) async {
@@ -331,7 +290,14 @@ class AccountsStore extends ChangeNotifier {
 
     await _assignDefaultAccounts();
     notifyListeners();
-    return save();
+  }
+
+  static AccountsStore fromJson(Map<String, dynamic> json) {
+    return _$AccountsStoreFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return _$AccountsStoreToJson(this);
   }
 }
 
