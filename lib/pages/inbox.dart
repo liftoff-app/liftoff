@@ -58,8 +58,10 @@ class InboxPage extends HookWidget {
 
         isc.clear();
       } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(e.toString())));
+        }
       }
       await accStore.checkNotifications(accStore.defaultUserData);
     }

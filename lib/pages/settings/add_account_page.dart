@@ -93,17 +93,23 @@ class AddAccountPage extends HookWidget {
           Navigator.of(context).pop();
         }
       } on VerifyEmailException {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(L10n.of(context).verification_email_sent),
-        ));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(L10n.of(context).verification_email_sent),
+          ));
+        }
       } on RegistrationApplicationSentException {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(L10n.of(context).registration_application_sent),
-        ));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(L10n.of(context).registration_application_sent),
+          ));
+        }
       } on Exception catch (err) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(err.toString()),
-        ));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(err.toString()),
+          ));
+        }
       }
       loading.cancel();
     }

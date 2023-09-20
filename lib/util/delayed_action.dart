@@ -19,8 +19,10 @@ Future<void> delayedAction<T>({
     val = await LemmyApiV3(instanceHost).run<T>(query);
     onSuccess?.call(val as T);
   } catch (e) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(e.toString())));
+    if (context.mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   } finally {
     cleanup?.call(val);
     delayedLoading.cancel();

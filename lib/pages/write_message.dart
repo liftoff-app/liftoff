@@ -56,9 +56,11 @@ class WriteMessagePage extends HookWidget {
             Navigator.of(context).pop(msg);
           }
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(e.toString()),
-          ));
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(e.toString()),
+            ));
+          }
         }
         loading.value = false;
       } else {
@@ -75,9 +77,11 @@ class WriteMessagePage extends HookWidget {
           // TODO: maybe send notification so that infinite list
           //       containing this widget adds new message?
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(e.toString()),
-          ));
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(e.toString()),
+            ));
+          }
         } finally {
           loading.value = false;
         }
