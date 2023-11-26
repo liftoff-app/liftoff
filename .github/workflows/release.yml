@@ -34,7 +34,7 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          flutter-version: '3.10.6'
 
       - name: Get dependencies
         run: flutter pub get
@@ -86,7 +86,7 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          flutter-version: '3.10.6'
 
       - name: Get additional dependencies
         run: |
@@ -116,7 +116,7 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          flutter-version: '3.10.6'
 
       - name: Build
         run: |
