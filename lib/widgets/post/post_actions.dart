@@ -41,12 +41,21 @@ class PostActions extends HookWidget {
             const Icon(Icons.comment_rounded),
             const SizedBox(width: 6),
             Expanded(
-              child: Text(
-                L10n.of(context).number_of_comments(
-                    store.postView.counts.comments,
-                    store.postView.counts.comments),
-                overflow: TextOverflow.fade,
-                softWrap: false,
+              child: LayoutBuilder(
+                builder: (context, constraint) {
+                  // If the space is too small for the word
+                  // "comments" to display fully, don't show it.
+                  final txt = (constraint.maxWidth < 100.0)
+                      ? store.postView.counts.comments.toString()
+                      : L10n.of(context).number_of_comments(
+                          store.postView.counts.comments,
+                          store.postView.counts.comments);
+
+                  return Text(
+                    txt,
+                    softWrap: false,
+                  );
+                },
               ),
             ),
             const PostMoreMenuButton(),

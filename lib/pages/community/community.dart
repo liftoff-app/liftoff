@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -88,7 +90,7 @@ class CommunityPage extends HookWidget {
                 SliverAppBar(
                   expandedHeight: community.community.icon == null ? 220 : 300,
                   pinned: true,
-                  backgroundColor: theme.cardColor,
+                  backgroundColor: theme.canvasColor,
                   title: RevealAfterScroll(
                     scrollController: scrollController,
                     after: community.community.icon == null ? 110 : 190,
@@ -107,7 +109,25 @@ class CommunityPage extends HookWidget {
                             CommunityMoreMenu.open(context, fullCommunityView)),
                   ],
                   flexibleSpace: FlexibleSpaceBar(
-                    background: CommunityOverview(fullCommunityView),
+                    background: Stack(
+                      children: [
+                        CommunityOverview(fullCommunityView),
+                        Expanded(
+                          child: ClipRect(
+                            child: SizedBox(
+                              height: 70,
+                              width: double.infinity,
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                                child: ColoredBox(
+                                    color: Colors.grey.withOpacity(0.3)),
+                              ),
+                              // ColoredBox(color: Colors.grey.withOpacity(0.5)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   bottom: PreferredSize(
                     preferredSize: const TabBar(tabs: []).preferredSize,
