@@ -1,0 +1,9 @@
+# Created with jdDesktopEntryEdit 1.1
+[Desktop Entry]
+Type=Application
+Name=Liftoff
+Comment=A mobile client for Lemmy
+Icon=io.github.liftoff_app.liftoff
+TryExec=liftoff
+Exec=liftoff
+Categories=Network;

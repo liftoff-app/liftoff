@@ -114,6 +114,39 @@ Future<void> updateChangelog(Version version) async {
 
   await File('fastlane/metadata/android/en-US/changelogs/${version.code}.txt')
       .writeAsString(currentChangelog.split('\n').skip(2).join('\n'));
+
+  var appStreamList = new XmlElement(new XmlName('ul'));
+  currentChangelog.split('\n').forEach((String element) {
+    if (element.isNotEmpty && element.startsWith('-')) {
+      var appStreamListElement = new XmlElement(new XmlName('li'));
+      appStreamListElement.innerText = element.substring(2);
+      appStreamList.children.add(appStreamListElement);
+    }
+  });
+
+  var appStreamDescription = new XmlElement(new XmlName('description'));
+  appStreamDescription.children.add(appStreamList);
+
+  var appStreamURL = new XmlElement(new XmlName('url'));
+  appStreamURL.innerText =
+      'https://github.com/liftoff-app/liftoff/releases/tag/v${version.toStringNoCode()}';
+
+  var currentRelaseTag = new XmlElement(new XmlName('release'));
+  currentRelaseTag.setAttribute('version', 'v${version.toStringNoCode()}');
+  currentRelaseTag.setAttribute('date', dateString);
+  currentRelaseTag.setAttribute('type', 'stable');
+  currentRelaseTag.children.add(appStreamURL);
+  currentRelaseTag.children.add(appStreamDescription);
+
+  final appStreamFile = File('io.github.liftoff_app.liftoff.metainfo.xml');
+  var appStreamXML = XmlDocument.parse(await appStreamFile.readAsString());
+  var releasesTag = appStreamXML.rootElement.getElement('releases');
+  if (releasesTag != null) {
+    releasesTag.children.insert(0, currentRelaseTag);
+  } else {
+    print("Can't find releases tag");
+  }
+  appStreamFile.writeAsString(appStreamXML.toXmlString(pretty: true));
 }
 
 Future<void> runGitCommands(Version version) async {
