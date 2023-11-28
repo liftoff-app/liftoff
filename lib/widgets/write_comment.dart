@@ -92,8 +92,10 @@ class WriteComment extends HookWidget {
           Navigator.of(context).pop(res.commentView);
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to post comment')));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to post comment')));
+        }
       }
       delayed.cancel();
     }

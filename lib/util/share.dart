@@ -24,7 +24,9 @@ Future<void> share(
       sharePositionOrigin: sharePositionOrigin,
     );
   } on MissingPluginException {
-    await _fallbackShare(text, context: context);
+    if (context.mounted) {
+      await _fallbackShare(text, context: context);
+    }
   }
 }
 

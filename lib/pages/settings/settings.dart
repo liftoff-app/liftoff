@@ -808,7 +808,7 @@ class _AccountOptions extends HookWidget {
             ),
           ) ??
           false) {
-        await accountsStore.removeAccount(instanceHost, username);
+        accountsStore.removeAccount(instanceHost, username);
         if (context.mounted) {
           Navigator.of(context).pop();
         }
@@ -892,7 +892,7 @@ class AccountsConfigPage extends HookWidget {
             ),
           ) ??
           false) {
-        await accountsStore.removeInstance(instanceHost);
+        accountsStore.removeInstance(instanceHost);
         if (context.mounted) {
           Navigator.of(context).pop();
         }

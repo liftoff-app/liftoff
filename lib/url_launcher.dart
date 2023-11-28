@@ -41,8 +41,10 @@ Future<void> _launchCustomTab(BuildContext context, String link) async {
       ),
     );
   } catch (e) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(e.toString())));
+    if (context.mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
     await ul.launchUrl(Uri.parse(link),
         mode: ul.LaunchMode.externalApplication);
   }

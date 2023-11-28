@@ -46,6 +46,8 @@ class CommunityOverview extends StatelessWidget {
                   color: Colors.transparent,
                   child: Avatar(
                     url: community.community.icon,
+                    originPreferredName:
+                        community.community.originPreferredName,
                     radius: 83 / 2,
                     alwaysShow: true,
                   ),

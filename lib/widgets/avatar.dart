@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 
 import '../hooks/stores.dart';
 import '../stores/config_store.dart';
@@ -12,6 +13,7 @@ class Avatar extends HookWidget {
   const Avatar(
       {super.key,
       required this.url,
+      required this.originPreferredName,
       this.radius = 25,
       this.noBlank = false,
       this.alwaysShow = false,
@@ -19,6 +21,7 @@ class Avatar extends HookWidget {
       this.onTap,
       this.isNsfw = false});
 
+  final String? originPreferredName;
   final String? url;
   final double radius;
   final bool noBlank;
@@ -33,6 +36,12 @@ class Avatar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    var usedName = originPreferredName;
+
+    if (usedName?[0] == '!' || usedName?[0] == '@') {
+      usedName = originPreferredName!.substring(1);
+    }
+
     final showAvatars =
         useStore((ConfigStore store) => store.showAvatars) || alwaysShow;
 
@@ -49,7 +58,7 @@ class Avatar extends HookWidget {
 
     final imageUrl = url;
 
-    if (imageUrl == null || !showAvatars) {
+    if ((imageUrl == null && usedName == null) || !showAvatars) {
       return blankWidget;
     }
 
@@ -62,15 +71,19 @@ class Avatar extends HookWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(radius),
-        child: ClipOval(
-          child: CachedNetworkImage(
-            height: radius * 2,
-            width: radius * 2,
-            imageUrl: imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __) => blankWidget,
-          ),
-        ),
+        child: imageUrl != null
+            ? ClipOval(
+                child: CachedNetworkImage(
+                height: radius * 2,
+                width: radius * 2,
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __) => blankWidget,
+              ))
+            : (Initicon(
+                text: usedName!,
+                size: radius * 2,
+              )),
       ),
     );
   }

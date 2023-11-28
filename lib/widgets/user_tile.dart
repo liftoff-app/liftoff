@@ -27,7 +27,8 @@ class PersonTile extends StatelessWidget {
             )
           : null,
       onTap: () => goToUser.fromPersonSafe(context, person),
-      leading: Avatar(url: person.avatar),
+      leading: Avatar(
+          url: person.avatar, originPreferredName: person.originPreferredName),
     );
   }
 }

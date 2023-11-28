@@ -3,6 +3,7 @@ import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/infinite_scroll.dart';
@@ -10,6 +11,7 @@ import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
+import '../stores/accounts_store.dart';
 import '../stores/config_store.dart';
 import '../util/extensions/api.dart';
 import '../util/goto.dart';
@@ -24,6 +26,7 @@ import 'inbox.dart';
 import 'instance/instance.dart';
 import 'settings/add_account_page.dart';
 import 'settings/settings.dart';
+import 'view_on_menu.dart';
 
 /// First thing users sees when opening the app
 /// Shows list of posts from all or just specific instances
@@ -85,6 +88,23 @@ class HomeTab extends HookWidget {
       accStore.hasNoAccount,
       accStore.instances.length,
     ]);
+
+    // specific account selection
+    final defaultUserData =
+        accStore.defaultUserDataFor(selectedList.value.instanceHost!);
+    final personDetails = useMemoFuture(() async {
+      if (defaultUserData != null) {
+        return await LemmyApiV3(defaultUserData.instanceHost)
+            .run(GetPersonDetails(
+          personId: defaultUserData.userId,
+          savedOnly: false,
+          sort: SortType.active,
+          auth: defaultUserData.jwt.raw,
+        ));
+      }
+
+      return null;
+    }, [defaultUserData]);
 
     handleListChange() async {
       final val = await showBottomModal<SelectedList>(
@@ -301,6 +321,28 @@ class HomeTab extends HookWidget {
                       icon: const Icon(Icons.notifications),
                       onPressed: () => goTo(context, (_) => const InboxPage()),
                     ),
+                  if (selectedList.value.instanceHost != null &&
+                      accStore
+                              .allUserDataFor(selectedList.value.instanceHost!)
+                              .length >
+                          1)
+                    IconButton(
+                        icon: personDetails.hasData &&
+                                personDetails.data != null &&
+                                personDetails.data!.personView.person.avatar !=
+                                    null
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(personDetails
+                                    .data!.personView.person.avatar!))
+                            : Initicon(
+                                text: defaultUserData!.username,
+                                size: 32,
+                              ),
+                        onPressed: () => ViewOnMenu.open(context, (userData) {
+                              accStore.setDefaultAccountFor(
+                                  userData.instanceHost, userData.username);
+                              Navigator.of(context).pop();
+                            }, title: Text(L10n.of(context).switch_account))),
                   PopupMenuButton(itemBuilder: (context) {
                     return [
                       const PopupMenuItem<int>(
@@ -346,6 +388,7 @@ class HomeTab extends HookWidget {
           body: InfiniteHomeList(
             controller: isc,
             selectedList: selectedList.value,
+            selectedUserData: defaultUserData,
           ),
         ),
       ),
@@ -357,11 +400,13 @@ class HomeTab extends HookWidget {
 class InfiniteHomeList extends HookWidget {
   final InfiniteScrollController controller;
   final SelectedList selectedList;
+  final UserData? selectedUserData;
 
   const InfiniteHomeList({
     super.key,
     required this.selectedList,
     required this.controller,
+    required this.selectedUserData,
   });
 
   @override
@@ -423,6 +468,7 @@ class InfiniteHomeList extends HookWidget {
       int limit,
       SortType sort,
       String instanceHost,
+      UserData? userData,
       PostListingType listingType,
     ) async {
       // Get twice as many as we need, so we will keep the pipeline full,
@@ -436,7 +482,7 @@ class InfiniteHomeList extends HookWidget {
             page: page,
             limit: limitWithBans,
             savedOnly: false,
-            auth: accStore.defaultUserDataFor(instanceHost)?.jwt.raw,
+            auth: userData?.jwt.raw,
           ))
           .toPostStores();
       final filtered = unfilteredPosts.where((e) => instanceFilter.every((b) =>
@@ -451,8 +497,13 @@ class InfiniteHomeList extends HookWidget {
         return selectedInstanceHost == null
             ? (page, limit, sort) =>
                 generalFetcher(page, limit, sort, selectedList.listingType)
-            : (page, limit, sort) => fetcherFromInstance(page, limit, sort,
-                selectedInstanceHost, selectedList.listingType);
+            : (page, limit, sort) => fetcherFromInstance(
+                page,
+                limit,
+                sort,
+                selectedInstanceHost,
+                selectedUserData,
+                selectedList.listingType);
       },
       [selectedList],
     );

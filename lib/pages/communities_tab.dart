@@ -102,8 +102,10 @@ class CommunitiesTab extends HookWidget {
           communitiesRefreshable.refresh(),
         ]);
       } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(e.toString())));
+        }
       }
     }
 
@@ -181,6 +183,7 @@ class CommunitiesTab extends HookWidget {
                           onLongPress: () => toggleCollapse(i),
                           leading: Avatar(
                             url: instances[i].icon,
+                            originPreferredName: instances[i].instanceHost,
                             alwaysShow: true,
                           ),
                           title: Text(
@@ -213,6 +216,8 @@ class CommunitiesTab extends HookWidget {
                                     Avatar(
                                       radius: 15,
                                       url: comm.community.icon,
+                                      originPreferredName:
+                                          comm.community.originPreferredName,
                                       alwaysShow: true,
                                     ),
                                     const SizedBox(width: 10),
@@ -263,9 +268,11 @@ class _CommunitySubscribeToggle extends HookWidget {
         ));
         subbed.value = !subbed.value;
       } on Exception catch (err) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to ${subbed.value ? 'un' : ''}follow: $err'),
-        ));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Failed to ${subbed.value ? 'un' : ''}follow: $err'),
+          ));
+        }
       }
 
       delayed.cancel();

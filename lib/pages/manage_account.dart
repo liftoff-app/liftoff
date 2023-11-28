@@ -223,8 +223,7 @@ class _ManageAccount extends HookWidget {
         removeDelayedLoading.start();
 
         try {
-          await accountsStore.removeAccount(
-              user.instanceHost, user.person.name);
+          accountsStore.removeAccount(user.instanceHost, user.person.name);
           Navigator.of(context).pop();
         } on Exception catch (err) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -285,8 +284,7 @@ class _ManageAccount extends HookWidget {
           //   auth: token.raw,
           // ));
 
-          await accountsStore.removeAccount(
-              user.instanceHost, user.person.name);
+          accountsStore.removeAccount(user.instanceHost, user.person.name);
           Navigator.of(context).pop();
         } on Exception catch (err) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

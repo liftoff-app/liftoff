@@ -168,8 +168,11 @@ class _ToolbarBody extends HookWidget {
                     }
                   }
                 } on Exception catch (_) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(L10n.of(context).failed_to_upload_image)));
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content:
+                            Text(L10n.of(context).failed_to_upload_image)));
+                  }
                 }
               }),
               icon: store.imageUploadState.isLoading

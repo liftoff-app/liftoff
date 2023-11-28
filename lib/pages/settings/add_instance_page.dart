@@ -56,9 +56,11 @@ class AddInstancePage extends HookWidget {
           Navigator.of(context).pop(inst);
         }
       } on Exception catch (err) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(err.toString()),
-        ));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(err.toString()),
+          ));
+        }
       }
     }
 
