@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../url_launcher.dart';
 import '../widgets/bottom_safe.dart';
+import '../widgets/liftoff_app_bar.dart';
 
 /// Displays a markdown document full-screen, and allows the user
 /// to click on links within that document for opening in the
@@ -16,7 +17,7 @@ class DisplayDocumentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(title)),
+        appBar: LiftoffAppBar(title: Text(title)),
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [

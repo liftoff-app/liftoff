@@ -27,7 +27,8 @@ AccountsStore _$AccountsStoreFromJson(Map<String, dynamic> json) =>
           (json['notificationCount'] as Map<String, dynamic>?)?.map(
                 (k, e) => MapEntry(k, e as int),
               ) ??
-              {};
+              {}
+      ..avatar = AccountsStore.avatarBytesFromJson(json['avatar'] as String?);
 
 Map<String, dynamic> _$AccountsStoreToJson(AccountsStore instance) =>
     <String, dynamic>{
@@ -35,6 +36,7 @@ Map<String, dynamic> _$AccountsStoreToJson(AccountsStore instance) =>
       'defaultAccounts': instance.defaultAccounts,
       'defaultAccount': instance.defaultAccount,
       'notificationCount': instance.notificationCount,
+      'avatar': AccountsStore.avatarBytesToJson(instance.avatar),
     };
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(

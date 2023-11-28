@@ -17,6 +17,7 @@ import '../util/goto.dart';
 import '../util/text_color.dart';
 import '../widgets/avatar.dart';
 import '../widgets/failed_to_load.dart';
+import '../widgets/liftoff_app_bar.dart';
 import '../widgets/pull_to_refresh.dart';
 import 'instance/instance.dart';
 
@@ -75,7 +76,7 @@ class CommunitiesTab extends HookWidget {
     if (communitiesRefreshable.snapshot.hasError ||
         instancesRefreshable.snapshot.hasError) {
       return Scaffold(
-        appBar: AppBar(),
+        appBar: const LiftoffAppBar(),
         body: Center(
           child: FailedToLoad(
               refresh: communitiesRefreshable.snapshot.error != null
@@ -87,9 +88,9 @@ class CommunitiesTab extends HookWidget {
       );
     } else if (!communitiesRefreshable.snapshot.hasData ||
         !instancesRefreshable.snapshot.hasData) {
-      return Scaffold(
-        appBar: AppBar(),
-        body: const Center(
+      return const Scaffold(
+        appBar: LiftoffAppBar(),
+        body: Center(
           child: CircularProgressIndicator.adaptive(),
         ),
       );
@@ -145,7 +146,7 @@ class CommunitiesTab extends HookWidget {
         isCollapsed.value.mapWithIndex((e, j) => j == i ? !e : e).toList();
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: LiftoffAppBar(
         actions: [
           IconButton(
             icon: const Icon(Icons.style),

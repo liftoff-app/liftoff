@@ -18,9 +18,9 @@ import '../widgets/cached_network_image.dart';
 import '../widgets/comment/comment.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/info_table_popup.dart';
+import '../widgets/liftoff_app_bar.dart';
 import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
-import '../widgets/radio_picker.dart';
 import '../widgets/sortable_infinite_list.dart';
 import '../widgets/tile_action.dart';
 import 'write_message.dart';
@@ -38,9 +38,9 @@ class InboxPage extends HookWidget {
     final currentTab = useState(0);
 
     if (accStore.hasNoAccount) {
-      return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text('no accounts added')),
+      return const Scaffold(
+        appBar: LiftoffAppBar(),
+        body: Center(child: Text('no accounts added')),
       );
     }
 
@@ -67,42 +67,47 @@ class InboxPage extends HookWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: RadioPicker<String>(
-            values: accStore.loggedInInstances
-                .expand(
-                  (instanceHost) => accStore
-                      .usernamesFor(instanceHost)
-                      .map((username) => '$username@$instanceHost'),
-                )
-                .toList(),
-            groupValue:
-                '${accStore.defaultUsername}@${accStore.defaultInstanceHost}',
-            onChanged: (value) {
-              final [user, instance] = value.split('@');
-              accStore.setDefaultAccount(instance, user);
-              selected.value = instance;
-              isc.clear();
-            },
-            buttonBuilder: (context, displayValue, onPressed) => TextButton(
-              onPressed: onPressed,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      displayValue,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500),
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
-                  ),
-                  const Icon(Icons.arrow_drop_down),
-                ],
-              ),
-            ),
-          ),
+        appBar: LiftoffAppBar(
+          backButton: true,
+          title: const Text('Inboxes'),
+          onAccountChange: () {
+            isc.clear();
+          },
+          // RadioPicker<String>(
+          //   values: accStore.loggedInInstances
+          //       .expand(
+          //         (instanceHost) => accStore
+          //             .usernamesFor(instanceHost)
+          //             .map((username) => '$username@$instanceHost'),
+          //       )
+          //       .toList(),
+          //   groupValue:
+          //       '${accStore.defaultUsername}@${accStore.defaultInstanceHost}',
+          //   onChanged: (value) {
+          //     final [user, instance] = value.split('@');
+          //     accStore.setDefaultAccount(instance, user);
+          //     selected.value = instance;
+          //     isc.clear();
+          //   },
+          //   buttonBuilder: (context, displayValue, onPressed) => TextButton(
+          //     onPressed: onPressed,
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Flexible(
+          //           child: Text(
+          //             displayValue,
+          //             style: const TextStyle(
+          //                 fontSize: 20, fontWeight: FontWeight.w500),
+          //             overflow: TextOverflow.fade,
+          //             softWrap: false,
+          //           ),
+          //         ),
+          //         const Icon(Icons.arrow_drop_down),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           actions: [
             if (currentTab.value == 0)
               IconButton(

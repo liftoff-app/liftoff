@@ -8,6 +8,7 @@ import '../l10n/l10n.dart';
 import '../stores/accounts_store.dart';
 import '../util/text_color.dart';
 import 'editor/editor.dart';
+import 'liftoff_app_bar.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
 
@@ -103,9 +104,10 @@ class WriteComment extends HookWidget {
         : ('Replying to ${comment == null ? 'post' : 'comment'}');
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: LiftoffAppBar(
         title: Text(titleText),
-        leading: const CloseButton(),
+        closeButton: true,
+        // leading: const CloseButton(),
         actions: [
           IconButton(
             icon: markdownModeIcon(fancy: showFancy.value),

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/infinite_scroll.dart';
-import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
@@ -16,11 +14,9 @@ import '../util/goto.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/cached_network_image.dart';
 import '../widgets/infinite_scroll.dart';
+import '../widgets/liftoff_app_bar.dart';
 import '../widgets/post/post_store.dart';
 import '../widgets/sortable_infinite_list.dart';
-import 'create_post/create_post.dart';
-import 'full_post/full_post.dart';
-import 'inbox.dart';
 import 'instance/instance.dart';
 import 'settings/add_account_page.dart';
 import 'settings/settings.dart';
@@ -32,8 +28,6 @@ class HomeTab extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInAction = useAnyLoggedInAction();
-
     final accStore = useAccountsStore();
     final defaultListingType =
         useStore((ConfigStore store) => store.defaultListingType);
@@ -237,110 +231,111 @@ class HomeTab extends HookWidget {
     return SafeArea(
       bottom: false,
       child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return [
-              SliverAppBar(
-                titleSpacing: 6,
-                iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-                backgroundColor: theme.canvasColor,
-                titleTextStyle: theme.textTheme.titleLarge
-                    ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-                title: TextButton(
-                  onPressed: handleListChange,
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_drop_down,
-                      ),
-                    ],
+        appBar: LiftoffAppBar(
+          // titleSpacing: 6,
+          // iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+          // backgroundColor: theme.canvasColor,
+          // titleTextStyle: theme.textTheme.titleLarge
+          //     ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+          title: TextButton(
+            style: const ButtonStyle(
+                padding: MaterialStatePropertyAll(EdgeInsets.zero)),
+            onPressed: handleListChange,
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    title,
+                    // style: Theme.of(context).textTheme.titleLarge,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500),
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    textAlign: TextAlign.left,
                   ),
                 ),
-                elevation: 0,
-                automaticallyImplyLeading: false,
-                expandedHeight: 50,
-                floating: true,
-                snap: true,
-                actions: [
-                  if (!Platform.isAndroid) // Replaces FAB
-                    IconButton(
-                      icon: const Icon(Icons.add_box_outlined),
-                      onPressed: loggedInAction((_) async {
-                        final postView = await Navigator.of(context).push(
-                          CreatePostPage.route(),
-                        );
+                const Icon(
+                  Icons.arrow_drop_down,
+                ),
+              ],
+            ),
+          ),
+          // elevation: 0,
+          // automaticallyImplyLeading: false,
+          // expandedHeight: 50,
+          // floating: true,
+          // snap: true,
+          actions: [
+            // if (!Platform.isAndroid) // Replaces FAB
+            //   IconButton(
+            //     icon: const Icon(Icons.add_box_outlined),
+            //     onPressed: loggedInAction((_) async {
+            //       final postView = await Navigator.of(context).push(
+            //         CreatePostPage.route(),
+            //       );
 
-                        if (postView != null && context.mounted) {
-                          await Navigator.of(context)
-                              .push(FullPostPage.fromPostViewRoute(postView));
-                        }
-                      }),
-                    ),
-                  if (accStore.totalNotificationCount > 0)
-                    Badge(
-                      offset: const Offset(-5, 5),
-                      label: Text(accStore.totalNotificationCount.toString()),
-                      child: IconButton(
-                        icon: const Icon(Icons.notifications),
-                        onPressed: () =>
-                            goTo(context, (_) => const InboxPage()),
-                      ),
-                    )
-                  else
-                    IconButton(
-                      icon: const Icon(Icons.notifications),
-                      onPressed: () => goTo(context, (_) => const InboxPage()),
-                    ),
-                  PopupMenuButton(itemBuilder: (context) {
-                    return [
-                      const PopupMenuItem<int>(
-                        value: 0,
-                        child: ListTile(
-                          leading: Icon(Icons.keyboard_double_arrow_up),
-                          title: Text('Back to top'),
-                        ),
-                      ),
-                      const PopupMenuItem<int>(
-                        value: 1,
-                        child: ListTile(
-                          leading: Icon(Icons.refresh),
-                          title: Text('Refresh'),
-                        ),
-                      ),
-                      const PopupMenuItem<int>(
-                        value: 2,
-                        child: ListTile(
-                          leading: Icon(Icons.settings),
-                          title: Text('Settings'),
-                        ),
-                      ),
-                      // PopupMenuItem<int>(
-                      //   value: 2,
-                      //   child: Text("Logout"),
-                      // ),
-                    ];
-                  }, onSelected: (value) {
-                    if (value == 0) {
-                      isc.scrollToTop();
-                    } else if (value == 1) {
-                      isc.clear();
-                    } else if (value == 2) {
-                      goTo(context, (_) => const SettingsPage());
-                    }
-                  }),
-                ],
-              )
-            ];
+            //       if (postView != null && context.mounted) {
+            //         await Navigator.of(context)
+            //             .push(FullPostPage.fromPostViewRoute(postView));
+            //       }
+            //     }),
+            //   ),
+            // if (accStore.totalNotificationCount > 0)
+            //   Badge(
+            //     offset: const Offset(-5, 5),
+            //     label: Text(accStore.totalNotificationCount.toString()),
+            //     child: IconButton(
+            //       icon: const Icon(Icons.notifications),
+            //       onPressed: () => goTo(context, (_) => const InboxPage()),
+            //     ),
+            //   )
+            // else
+            //   IconButton(
+            //     icon: const Icon(Icons.notifications),
+            //     onPressed: () => goTo(context, (_) => const InboxPage()),
+            //   ),
+            PopupMenuButton(itemBuilder: (context) {
+              return [
+                const PopupMenuItem<int>(
+                  value: 0,
+                  child: ListTile(
+                    leading: Icon(Icons.keyboard_double_arrow_up),
+                    title: Text('Back to top'),
+                  ),
+                ),
+                const PopupMenuItem<int>(
+                  value: 1,
+                  child: ListTile(
+                    leading: Icon(Icons.refresh),
+                    title: Text('Refresh'),
+                  ),
+                ),
+                const PopupMenuItem<int>(
+                  value: 2,
+                  child: ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text('Settings'),
+                  ),
+                ),
+                // PopupMenuItem<int>(
+                //   value: 2,
+                //   child: Text("Logout"),
+                // ),
+              ];
+            }, onSelected: (value) {
+              if (value == 0) {
+                isc.scrollToTop();
+              } else if (value == 1) {
+                isc.clear();
+              } else if (value == 2) {
+                goTo(context, (_) => const SettingsPage());
+              }
+            }),
+          ],
+        ),
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return [];
           },
           // list of images for scrolling
           body: InfiniteHomeList(
